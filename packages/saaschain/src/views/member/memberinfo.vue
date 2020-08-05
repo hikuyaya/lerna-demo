@@ -1,0 +1,1638 @@
+<template>
+    <div class="member-relation">
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="全部会员" name="allMember">
+                <el-form ref="allMembertable" inline :model="allMemberForm">
+                    <el-form-item label="会员查询：">
+                        <el-input clearable v-model="allMemberForm.name" placeholder="姓名/手机号/卡号"
+                                  style="width: 180px;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="会员类型：">
+                        <el-select clearable v-model.trim="allMemberForm.mtype" filterable placeholder="请选择"
+                                   style="width: 160px;">
+                            <el-option :key="item.id" :label="item.name" :value="item.code"
+                                       v-for="item in dictStatusList"></el-option>
+                        </el-select>
+                        <el-popover
+                                placement="right"
+                                title="提示"
+                                width="310"
+                                trigger="hover"
+                        >
+                            <el-button slot="reference"><i class="el-icon-question"></i></el-button>
+                            <ul class="tips-content">
+                                <li>储值卡会员：开过储值卡的会员</li>
+                                <li>套餐会员：买过套餐的会员</li>
+                                <li>资格卡会员：开过资格卡的会员</li>
+                                <li>潜在会员：有会员资料，没办卡的会员</li>
+                                <li>新客：只录入资料的会员</li>
+                            </ul>
+                        </el-popover>
+                    </el-form-item>
+                    <el-form-item style="margin-bottom:0">
+                        <el-button @click="allMemberSearch" type="primary">查询</el-button>
+                        <el-button @click="openSeniorSearch" type="primary">高级查询</el-button>
+                        <el-button @click="exportMember" type="primary">会员导出</el-button>
+                        <el-button @click="sendMessage" type="primary">会员发送短信</el-button>
+                    </el-form-item>
+                </el-form>
+                <div style="padding-bottom: 5px">本次查询出{{memberHj.count}}位会员，卡金总余额:{{memberHj.zkj}}元, 赠送金总余额:{{memberHj.zzs}}元</div>
+                <el-table :data="memberTables" :span-method="objectSpanMethod" style="width: 100%">
+                    <el-table-column prop="memname" label="姓名" width="80"></el-table-column>
+                    <el-table-column prop="mobile" label="手机号" width="110"></el-table-column>
+                    <el-table-column prop="sex" label="性别" width="40">
+                        <template slot-scope="scope">
+                        {{scope.row.sex == '1' ? "男" : "女"}}
+                    </template></el-table-column>
+                    <el-table-column prop="regdate" label="注册日期" width="100"></el-table-column>
+                    <el-table-column label="卡账户信息" align="center">
+                        <el-table-column prop="cardno" label="卡号" width="100"></el-table-column>
+                        <el-table-column prop="cardname" label="卡名称" width="110"></el-table-column>
+                        <el-table-column prop="cardtype" label="卡类型" width="70">
+                            <template slot-scope="scope">
+                                {{scope.row.cardtype == '1' ? "储值卡" : ""}}
+                                {{scope.row.cardtype == '2' ? "资格卡" : ""}}
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="smoney" label="储值总额" width="80"></el-table-column>
+                        <el-table-column prop="money" label="卡余额" width="80"></el-table-column>
+                        <el-table-column prop="gmoney" label="赠送余额" width="80"></el-table-column>
+                        <el-table-column prop="status" label="状态" width="90"></el-table-column>
+                        <el-table-column prop="exprite" label="到期日期" width="100"></el-table-column>
+                    </el-table-column>
+                    <el-table-column prop="servTotal" label="消费总额" width="80"></el-table-column>
+                    <el-table-column prop="servNum" label="消费次数" width="80"></el-table-column>
+                    <el-table-column prop="name" label="操作" width="70">
+                        <template slot-scope="scope">
+                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="getMember(scope.row)">详细</el-link>
+                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="removeMem(scope.row)">移除</el-link>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div style="margin-top: 8px;">
+                    <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="pageInfo.page"
+                            :page-sizes="[10, 20, 50, 100, 500]"
+                            :page-size="pageInfo.limit"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="pageInfo.total">
+                    </el-pagination>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="套餐会员" name="assignment">
+                <el-form ref="memberpackfrom" inline :model="memberpackfrom">
+                    <el-form-item label="会员查询：">
+                        <el-input clearable v-model="memberpackfrom.name" placeholder="姓名/手机号"
+                                  style="width: 140px;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="套餐名称：">
+                        <el-select clearable v-model.trim="memberpackfrom.piid" filterable placeholder="请选择"
+                                   style="width: 140px;">
+                            <el-option :key="item.id" :label="item.spname" :value="item.spcode" v-for="item in selectPackages"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="项目名称：">
+                        <el-select clearable v-model.trim="memberpackfrom.servid" filterable placeholder="请选择"
+                                   style="width: 140px;">
+                            <el-option :key="item.id" :label="item.servname" :value="item.servcode" v-for="item in selectServices"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="产品名称：">
+                        <el-select clearable v-model.trim="memberpackfrom.pid" filterable placeholder="请选择"
+                                   style="width: 140px;">
+                            <el-option :key="item.id" :label="item.pname" :value="item.pcode" v-for="item in selectProducts"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="到期日期：">
+                        <el-date-picker style="width: 240px;"
+                            v-model="memberpackfrom.date"
+                            value-format="yyyy-MM-dd"
+                            type="daterange"
+                            range-separator="至"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item style="margin-bottom:0">
+                        <el-button @click="queryMemberPackages()" type="primary">查询</el-button>
+                    </el-form-item>
+                </el-form>
+                <div style="padding-bottom: 5px">本次查询出的所有会员套餐项目总剩次数:{{memberpackhj.servsum}}次， 总剩余金额:{{memberpackhj.servje}}元；产品总剩余数量{{memberpackhj.packsum}}个</div>
+                <el-table ref="memberpacktable" :data="memberpackData" :span-method="objectSpanMethod2" style="width: 100%">
+                    <el-table-column prop="memname" label="姓名" width="100"></el-table-column>
+                    <el-table-column prop="mobile" label="手机号" width="120"></el-table-column>
+                    <el-table-column prop="sex" label="性别" width="60">
+                        <template slot-scope="scope">
+                            {{scope.row.sex == '1' ? "男" : "女"}}
+                        </template></el-table-column>
+                    <el-table-column prop="mpname" label="套餐名称" width="180"></el-table-column>
+                    <el-table-column label="套餐明细" align="center">
+                        <el-table-column prop="servname" label="项目/产品名称" width="240"></el-table-column>
+                        <el-table-column prop="total" label="总数量" width="100"></el-table-column>
+                        <el-table-column prop="snum" label="剩余数量" width="100"></el-table-column>
+                        <el-table-column prop="lessmoney" label="剩余金额" width="100"></el-table-column>
+                        <el-table-column prop="expiryTime" label="到期日期" width="160"></el-table-column>
+                    </el-table-column>
+                    <el-table-column prop="name" label="操作" width="100">
+                        <template slot-scope="scope">
+                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="getMember(scope.row)">详细</el-link>
+                        </template>
+                    </el-table-column>
+                </el-table>
+                <div style="margin-top: 8px;">
+                    <el-pagination
+                            @size-change="handleSizeChange2"
+                            @current-change="handleCurrentChange2"
+                            :current-page="memberpackfrom.page"
+                            :page-sizes="[10, 20, 50, 100, 500]"
+                            :page-size="memberpackfrom.limit"
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="memberpackfrom.total">
+                    </el-pagination>
+                </div>
+            </el-tab-pane>
+            <el-tab-pane label="已移除会员" name="removeMember">
+                <el-form ref="memberDelfrom" inline :model="memberDelfrom">
+                    <el-form-item label="会员查询：">
+                        <el-input clearable v-model="memberDelfrom.name" placeholder="姓名/手机号"  style="width: 180px;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="移除日期：">
+                        <el-date-picker class="margl5" style="width: 240px;"
+                                        v-model="memberDelfrom.date"
+                                        value-format="yyyy-MM-dd"
+                                        type="daterange"
+                                        range-separator="至"
+                                        start-placeholder="开始日期"
+                                        end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item style="margin-bottom:0">
+                        <el-button @click="queryDelMembers()" type="primary">查询</el-button>
+                    </el-form-item>
+                </el-form>
+                <yid-table pagination ref="memberDelTable">
+                    <yid-table-column label="姓名" min-width="80" prop="memname"></yid-table-column>
+                    <yid-table-column label="性别" min-width="50" prop="sex">
+                        <template slot-scope="scope">
+                            {{scope.row.sex == '1' ? "男" : "女"}}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="手机号" min-width="100" prop="mobile"></yid-table-column>
+                    <yid-table-column label="卡号" min-width="100" prop="cardno"></yid-table-column>
+                    <yid-table-column label="卡名称" min-width="120" prop="cardname"></yid-table-column>
+                    <yid-table-column label="储值总额" min-width="80" prop="smoney"></yid-table-column>
+                    <yid-table-column label="卡金余额" min-width="80" prop="money"></yid-table-column>
+                    <yid-table-column label="赠送金余额" min-width="90" prop="gmoney"></yid-table-column>
+                    <yid-table-column label="移除时间" min-width="150" prop="deldate"></yid-table-column>
+                    <yid-table-column label="操作门店" min-width="80" prop="delshopname"></yid-table-column>
+                    <yid-table-column label="操作" min-width="80" prop="content" fixed="right">
+                        <template slot-scope="scope">
+                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="recoverMem(scope.row)">恢复</el-link>
+                        </template>
+                    </yid-table-column>
+                </yid-table>
+            </el-tab-pane>
+            <el-tab-pane label="已过期卡会员" name="expiredCard">
+                <el-form ref="memberExporfrom" inline :model="memberExporfrom">
+                    <el-form-item label="会员查询：">
+                        <el-input clearable v-model="memberExporfrom.name" placeholder="姓名/手机号/卡号"  style="width: 180px;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="到期日期：">
+                        <el-date-picker class="margl5" style="width: 240px;"
+                                        v-model="memberExporfrom.date"
+                                        value-format="yyyy-MM-dd"
+                                        type="daterange"
+                                        range-separator="至"
+                                        start-placeholder="开始日期"
+                                        end-placeholder="结束日期">
+                        </el-date-picker>
+                    </el-form-item>
+                    <el-form-item style="margin-bottom:0">
+                        <el-button @click="queryExpritMembers()" type="primary">查询</el-button>
+                    </el-form-item>
+                </el-form>
+                <yid-table pagination ref="memberExproTable">
+                    <yid-table-column label="姓名" min-width="100" prop="memname"></yid-table-column>
+                    <yid-table-column label="性别" min-width="50" prop="sex">
+                        <template slot-scope="scope">
+                            {{scope.row.sex == '1' ? "男" : "女"}}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="手机号" min-width="110" prop="mobile"></yid-table-column>
+                    <yid-table-column label="卡号" min-width="100" prop="cardno"></yid-table-column>
+                    <yid-table-column label="卡名称" min-width="100" prop="cardname"></yid-table-column>
+                    <yid-table-column label="储值总额" min-width="80" prop="smoney"></yid-table-column>
+                    <yid-table-column label="卡金余额" min-width="80" prop="money"></yid-table-column>
+                    <yid-table-column label="赠送金余额" min-width="90" prop="gmoney"></yid-table-column>
+                    <yid-table-column label="上次消费日" min-width="140" prop="latelyTime"></yid-table-column>
+                    <yid-table-column label="到期日" min-width="140" prop="exprite"></yid-table-column>
+                </yid-table>
+            </el-tab-pane>
+            <el-tab-pane label="生日会员查询" name="birthMember">
+                <el-form ref="memberBirthfrom" inline :model="memberBirthfrom">
+                    <el-form-item label="查询方式：">
+                        <el-select clearable v-model="memberBirthfrom.type">
+                            <el-option value="month" label="按月"></el-option>
+                            <el-option value="day" label="按天"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-date-picker v-model="memberBirthfrom.day"
+                                        :value-format="yyyy-MM-dd"
+                                        v-if="memberBirthfrom.type=='day'?true:false"
+                                        placeholder="选择日期">
+                        </el-date-picker>
+                        <el-select v-model="memberBirthfrom.month" v-if="memberBirthfrom.type=='month'?true:false">
+                            <el-option value="01" label="1月"></el-option>
+                            <el-option value="02" label="2月"></el-option>
+                            <el-option value="03" label="3月"></el-option>
+                            <el-option value="04" label="4月"></el-option>
+                            <el-option value="05" label="5月"></el-option>
+                            <el-option value="06" label="6月"></el-option>
+                            <el-option value="07" label="7月"></el-option>
+                            <el-option value="08" label="8月"></el-option>
+                            <el-option value="09" label="9月"></el-option>
+                            <el-option value="10" label="10月"></el-option>
+                            <el-option value="11" label="11月"></el-option>
+                            <el-option value="12" label="12月"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item style="margin-bottom:0">
+                        <el-button @click="queryDirthdayMembers()" type="primary">查询</el-button>
+                        <el-button @click="sendMessage()" type="primary">发送短信</el-button>
+                    </el-form-item>
+                </el-form>
+                <yid-table pagination ref="memberBirthTable">
+                    <yid-table-column label="姓名" min-width="100" prop="memname"></yid-table-column>
+                    <yid-table-column label="性别" min-width="70" prop="sex">
+                        <template slot-scope="scope">
+                            {{scope.row.sex == '1' ? "男" : "女"}}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="手机号" min-width="150" prop="mobile"></yid-table-column>
+                    <yid-table-column label="生日" min-width="150" prop="birthday">
+                        <template slot-scope="scope">
+                            {{scope.row.birthday | dateFormat }}
+                        </template>
+                    </yid-table-column>
+                </yid-table>
+            </el-tab-pane>
+            <el-tab-pane label="会员导入" name="improtMember">
+                <table style="border:1px dashed #000; padding: 10px 5px;">
+                    <tr><td style="border:0px;">操作提示：</td></tr>
+                    <tr>
+                        <td class="tableTd">1.可从管理平台批量导入会员，并下载对应模板填写相关信息后保存提交上传。</td></tr>
+                    <tr>
+                        <td class="tableTd">2.储值卡会员和资格卡会员导入时，手机号已存在且会员卡号已存在的则不导入；套餐会员导入时，手机号已存在且套餐已存在，则导入的套餐将覆盖原有套餐，请谨慎操作！</td></tr>
+                    <tr><td class="tableTd">3.标识“*”的选项为必填项。</td></tr>
+                    <tr><td class="tableTd">4.导入会员后可从全部会员列表中找到该条会员数据。</td></tr>
+                </table>
+                <el-row class="margsx10">
+                    <el-col :span="3" :offset="2"><i style="color: red">*</i>下载导入模板：</el-col>
+                    <el-col :span="3"><el-link type="primary" @click="downExcelTemplate1()">储值卡会员模板</el-link></el-col>
+                    <el-col :span="3"><el-link type="primary" @click="downExcelTemplate2()">资格卡会员模板</el-link></el-col>
+                    <el-col :span="3"><el-link type="primary" @click="downExcelTemplate3()">套餐会员模板</el-link></el-col>
+                </el-row>
+                <el-row class="margsx10">
+                    <el-row class="margsx10">
+                        <el-col :span="3" :offset="2"><i style="color: red">*</i>选择导入类型：</el-col>
+                        <el-col :span="6"><el-select v-model="memberImport.type">
+                            <el-option value="1" label="储值卡会员"></el-option>
+                            <el-option value="2" label="资格卡会员"></el-option>
+                            <el-option value="3" label="套餐会员"></el-option>
+                        </el-select></el-col>
+                    </el-row>
+                    <el-col :span="3" :offset="2"><i style="color: red">*</i>选择导入文件：</el-col>
+                    <el-col :span="12">
+                        <el-upload
+                            class="upload-demo"
+                            action="http://www.baidu.com"
+                            :before-upload="importMembers">
+                        <el-button size="small" type="primary">点击上传</el-button>
+                        <div slot="tip" class="el-upload__tip">*支持上传 .xls .xlsx后缀文件，表格中一行为一条数据，一次最多可导入1000条数据。</div>
+                        </el-upload>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="3" :offset="5"><el-button @click="sureImportMembers()" type="primary">确定导入</el-button></el-col>
+                </el-row>
+                <yid-table pagination ref="memberImportTable" style="margin-top: 20px;">
+                    <yid-table-column label="导入时间" min-width="140" prop="impdate"></yid-table-column>
+                    <yid-table-column label="导入类型" min-width="80" prop="imptype">
+                        <template slot-scope="scope">
+                            {{scope.row.imptype == '1' ? "储值卡会员" : ""}}
+                            {{scope.row.imptype == '2' ? "资格卡会员" : ""}}
+                            {{scope.row.imptype == '3' ? "套餐会员" : ""}}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="预计导入数" min-width="110" prop="sumimps"></yid-table-column>
+                    <yid-table-column label="成功数" min-width="80" prop="sussimp"></yid-table-column>
+                    <yid-table-column label="失败数" min-width="80" prop="fails">
+                        <template slot-scope="scope">
+                            <div>{{scope.row.fails}}</div>
+                            <div v-show="scope.row.fails > 0"><el-link type="primary" @click="exportServs(scope.row)">下载</el-link></div>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="操作人" min-width="140" prop="oper"></yid-table-column>
+                </yid-table>
+            </el-tab-pane>
+        </el-tabs>
+
+        <yid-dialog :title="searchDialog.title" :visible.sync="searchDialog.visible" width="860px">
+            <el-form label-width="140px" ref="copyForm" :inline="true" class="demo-form-inline">
+                <el-form-item label="性别：" prop="sex" label-width="90px">
+                    <div style="width: 300px;">
+                    <el-select clearable v-model="allMemberForm.sex">
+                        <el-option value="1" label="男"></el-option>
+                        <el-option value="2" label="女"></el-option>
+                    </el-select>
+                    </div>
+                </el-form-item>
+                <el-form-item label="卡金余额：" prop="money" label-width="90px">
+                    <el-input clearable type="number" v-model="allMemberForm.smoney" style="width: 120px;"></el-input>
+                    -
+                    <el-input clearable type="number" v-model="allMemberForm.emoney" style="width: 120px;"></el-input>
+                </el-form-item>
+                <el-form-item label="注册日期：" prop="regdate" label-width="90px">
+                    <div style="width: 300px;">
+                     <el-date-picker clearable style="width: 140px;" v-model="allMemberForm.sregdate" value-format="yyyy-MM-dd" type="date"  placeholder="选择日期"></el-date-picker>
+                    -<el-date-picker clearable style="width: 140px;" v-model="allMemberForm.eregdate" value-format="yyyy-MM-dd" type="date"  placeholder="选择日期"></el-date-picker>
+                    </div>
+                </el-form-item>
+                <el-form-item label="储值总额：" prop="smoney" label-width="90px">
+                    <div style="width: 300px;">
+                    <el-input clearable type="number" v-model="allMemberForm.ssmoney" style="width: 120px;"></el-input>
+                    -
+                    <el-input clearable type="number" v-model="allMemberForm.esmoney" style="width: 120px;"></el-input>
+                    </div>
+                </el-form-item>
+                <el-form-item label="未来店：" prop="daynum" label-width="90px">
+                    <div style="width: 300px;">
+                    <el-input clearable type="number" v-model="allMemberForm.daynum" style="width: 100px;"></el-input>至今天（有多少天未到店）
+                    </div>
+                </el-form-item>
+                <el-form-item label="赠送余额：" prop="gmoney" label-width="90px">
+                    <div style="width: 300px;">
+                    <el-input clearable type="number" v-model="allMemberForm.sgmoney" style="width: 120px;"></el-input>
+                    -
+                    <el-input clearable type="number" v-model="allMemberForm.egmoney" style="width: 120px;"></el-input>
+                    </div>
+                </el-form-item>
+                <el-form-item label="消费总额：" prop="servTotal" label-width="90px">
+                    <div style="width: 300px;">
+                    <el-input clearable type="number" v-model="allMemberForm.stotal" style="width: 120px;"></el-input>
+                    -
+                    <el-input clearable type="number" v-model="allMemberForm.etotal" style="width: 120px;"></el-input>
+                    </div>
+                </el-form-item>
+                <el-form-item label="到期日期：" prop="exprite" label-width="90px">
+                    <div style="width: 300px;">
+                       <el-date-picker clearable style="width: 140px;" v-model="allMemberForm.sexprite" value-format="yyyy-MM-dd" type="date"  placeholder="选择日期"></el-date-picker>
+                    - <el-date-picker clearable style="width: 140px;" v-model="allMemberForm.eexprite" value-format="yyyy-MM-dd" type="date"  placeholder="选择日期"></el-date-picker>
+                    </div>
+                </el-form-item>
+                <el-form-item label="消费次数：" prop="servNum" label-width="90px">
+                    <div style="width: 300px;">
+                    <el-input clearable type="number" v-model="allMemberForm.snum" style="width: 120px;"></el-input>
+                    -
+                    <el-input clearable type="number" v-model="allMemberForm.enum" style="width: 120px;"></el-input>
+                    </div>
+                </el-form-item>
+                <el-form-item label="顾客来源：" prop="channel" label-width="90px">
+                    <div style="width: 300px;">
+                    <el-select clearable value-key="id" filterable placeholder="请选择" v-model.trim="allMemberForm.channel">
+                        <el-option :key="item.id" :label="item.dcname" :value="item.id"
+                                   v-for="item in distChannelList"></el-option>
+                    </el-select>
+                    </div>
+                </el-form-item>
+                <el-form-item label="录入渠道：" prop="channel" label-width="90px">
+                    <div style="width: 300px;">
+                    <el-select clearable value-key="id" filterable placeholder="请选择" v-model.trim="allMemberForm.inchanel">
+                        <el-option :key="item.value" :label="item.name" :value="item.value"
+                                   v-for="item in inchanels"></el-option>
+                    </el-select>
+                    </div>
+                </el-form-item>
+                <el-row >
+                    <el-col :span="6" :offset="6"><el-button @click="cancel">取消</el-button></el-col>
+                    <el-col :span="6" :offset="4"><el-button @click="seniorSearch" type="primary">提交</el-button></el-col>
+                </el-row>
+            </el-form>
+        </yid-dialog>
+
+        <yid-dialog :title="meminfoDialog.title" :visible.sync="meminfoDialog.visible" width="1150px">
+            <el-row style="padding-left: 45px;margin: 0;" width="980px" justify="center">
+            <el-col :span="3"><el-button @click="meminfoDialog.showNum=1" type="primary" :plain="meminfoDialog.showNum!=1">基础资料</el-button></el-col>
+            <el-col :span="3"><el-button @click="meminfoDialog.showNum=2" type="primary" :plain="meminfoDialog.showNum!=2">资料修改</el-button></el-col>
+            <el-col :span="3"><el-button @click="meminfoDialog.showNum=3" type="primary" :plain="meminfoDialog.showNum!=3">账户调整</el-button></el-col>
+            <el-col :span="3"><el-button @click="meminfoDialog.showNum=4" type="primary" :plain="meminfoDialog.showNum!=4">卡金流水</el-button></el-col>
+            <el-col :span="3"><el-button @click="meminfoDialog.showNum=5" type="primary" :plain="meminfoDialog.showNum!=5">套餐记录</el-button></el-col>
+            <el-col :span="3"><el-button @click="meminfoDialog.showNum=6" type="primary" :plain="meminfoDialog.showNum!=6">消费记录</el-button></el-col>
+            <el-col :span="3"><el-button @click="meminfoDialog.showNum=7" type="primary" :plain="meminfoDialog.showNum!=7">资料修改日志</el-button></el-col>
+            <el-col :span="3"><el-button @click="meminfoDialog.showNum=8" type="primary" :plain="meminfoDialog.showNum!=8">寄存记录</el-button></el-col>
+            </el-row>
+            <div class="meminfo" v-show="meminfoDialog.showNum==1">
+                <div>会员基础信息</div>
+                <table border="1" cellspacing="0" >
+                    <tr><td align="right" width="22%">手机号码:</td>
+                        <td width="28%"><label class="marg5">{{memberDesc.mobile}}</label></td>
+                        <td align="right" width="22%">姓名:</td>
+                        <td><label class="marg5" width="28%">{{memberDesc.memname}}</label></td></tr>
+                    <tr><td align="right">生日:</td>
+                        <td><label class="marg5">{{memberDesc.birthday}}</label></td>
+                        <td align="right">性别:</td>
+                        <td><label class="marg5">{{memberDesc.sex=="1"?"男":"女"}}</label></td></tr>
+                    <tr><td align="right">顾客来源:</td>
+                        <td><label class="marg5">{{memberDesc.channelName}}</label></td>
+                        <td align="right">上次消费时间:</td>
+                        <td><label class="marg5">{{memberDesc.latelyTime}}</label></td></tr>
+                    <tr><td align="right">录入渠道:</td>
+                        <td><label class="marg5">{{memberDesc.inchanel | formatValue(inchanels)}}</label></td>
+                        <td align="right">上次消费金额:</td>
+                        <td><label class="marg5">{{memberDesc.latelyJe}}</label></td></tr>
+                    <tr><td align="right">积分:</td>
+                        <td><label class="marg5">0</label></td>
+                        <td align="right">上次服务员工:</td>
+                        <td><label class="marg5">{{memberDesc.lastEename}}</label></td></tr>
+                    <tr><td align="right">住址:</td><td colspan="3"><label class="marg5">{{memberDesc.address}}</label></td></tr>
+                    <tr><td align="right">预约权限:</td><td><el-link type="primary" class="marg5">[关闭预约权限]</el-link></td>
+                        <td align="right">会员消费密码:</td><td><el-link type="primary" class="marg5">[重置密码]</el-link></td></tr>
+                </table>
+                <div>卡信息:
+                    <el-select v-model="cardinfo.id" @change="changeCardinfo()" style="width: 260px;">
+                    <el-option v-for="card in memberDesc.cards" :key="card.id" :value="card.id" :label="card.cardno+'('+card.cardname+')'"></el-option>
+                   </el-select>
+                </div>
+                <table border="1" cellspacing="0" >
+                    <tr><td align="right" width="22%">卡号:</td>
+                        <td width="28%"><label class="marg5">{{cardinfo.cardno}}</label></td>
+                        <td align="right" width="22%">卡金余额:</td>
+                        <td width="28%"><label class="marg5">{{cardinfo.money}}</label></td>
+                    </tr>
+                    <tr><td align="right">储值总额:</td>
+                        <td><label class="marg5">{{cardinfo.smoney}}</label></td>
+                        <td align="right">赠送金余额:</td>
+                        <td><label class="marg5">{{cardinfo.gmoney}}</label></td>
+                    </tr>
+                    <tr><td align="right">项目折扣:</td>
+                        <td><label class="marg5">{{cardinfo.serDis}}折</label></td>
+                        <td align="right">产品折扣:</td>
+                        <td><label class="marg5">{{cardinfo.proDis}}折</label></td>
+                    </tr>
+                    <tr><td align="right">开卡门店 :</td>
+                        <td><label class="marg5">{{cardinfo.shopname}}</label></td>
+                        <td align="right">到期日期:</td>
+                        <td><label class="marg5">{{cardinfo.exprite}}</label></td>
+                    </tr>
+                    <tr><td align="right">开卡日期:</td>
+                        <td><label class="marg5">{{cardinfo.makedate}}</label></td>
+                        <td align="right"></td><td></td>
+                    </tr>
+                </table>
+                <div>套餐信息</div>
+                <table border="1" cellspacing="0"  class="taoctable">
+                    <tr><td rowspan="2" width="22%">套餐名称</td><td colspan="5">套餐明细</td></tr>
+                    <tr><td>项目/产品名称</td><td>总数量</td><td>剩余数量</td><td>剩余金额</td><td>到期日期</td></tr>
+                    <tr v-for="item in memberDesc.packages" style="height: 26px;">
+                        <td>{{item.mpname}}</td><td>{{item.servname}}</td>
+                        <td>{{item.total}}</td><td>{{item.snum}}</td>
+                        <td>{{item.lessmoney}}</td><td>{{item.expiryTime}}</td>
+                    </tr>
+                </table>
+                <div>跟进信息</div>
+                <table border="1" cellspacing="0" >
+                    <tr><td align="right" width="22%">兴趣爱好:</td>
+                        <td width="28%"><label class="marg5">{{memberDesc.hobby}}</label></td>
+                        <td align="right" width="22%">学历:</td>
+                        <td width="28%"><label class="marg5">{{memberDesc.education}}</label></td>
+                    </tr>
+                    <tr><td align="right">消费习惯:</td>
+                        <td><label class="marg5">{{memberDesc.saleHabit}}</label></td>
+                        <td align="right">职业:</td>
+                        <td><label class="marg5">{{memberDesc.job}}</label></td>
+                    </tr>
+                    <tr><td align="right">饮食习惯:</td>
+                        <td><label class="marg5">{{memberDesc.foodHabit}}</label></td>
+                        <td align="right">年收入:</td>
+                        <td><label class="marg5">{{memberDesc.incomes}}</label></td>
+                    </tr>
+                    <tr><td align="right">运动习惯 :</td>
+                        <td><label class="marg5">{{memberDesc.sportHabit}}</label></td>
+                        <td align="right">伴侣职业:</td>
+                        <td><label class="marg5">{{memberDesc.partnerJob}}</label></td>
+                    </tr>
+                    <tr><td align="right">其他:</td><td colspan="3"><label class="marg5">{{memberDesc.others}}</label></td></tr>
+                </table>
+                <div>智能分析
+                     <el-button size="small" icon="el-icon-arrow-left" @click="downMemberStatic"></el-button>
+                     <el-button size="small">{{memberStatic.yearmonth}}</el-button>
+                     <el-button size="small" @click="upMemberStatic"><i class="el-icon-arrow-right" ></i></el-button>
+                </div>
+                <table border="1" cellspacing="0" >
+                    <tr><td align="right" width="22%">当月消费金额:</td>
+                        <td width="28%"><label class="marg5">{{memberStatic.cmMoney}}</label></td>
+                        <td align="right"  width="22%">当月消费次数:</td>
+                        <td width="28%"><label class="marg5">{{memberStatic.cmNum}}</label></td></tr>
+                    <tr><td align="right">
+                        <el-popover placement="right" width="400" trigger="hover">
+                            <el-button slot="reference"><i class="el-icon-question"></i></el-button>
+                        <ul class="tips-content">
+                            <li>从当前月回溯12个月的消费金额</li>
+                        </ul></el-popover>近一年消费金额:</td>
+                        <td><label class="marg5">{{memberStatic.cyMoney}}</label></td>
+                        <td align="right">
+                        <el-popover placement="right" width="400" trigger="hover">
+                            <el-button slot="reference"><i class="el-icon-question"></i></el-button>
+                        <ul class="tips-content">
+                              <li>从当前月回溯12个月的消费次数</li>
+                        </ul></el-popover>近一年消费次数:</td>
+                        <td><label class="marg5">{{memberStatic.cyNum}}</label></td></tr>
+                    <tr><td align="right">平均月消费金额:</td>
+                        <td><label class="marg5">{{memberStatic.serviceJe}}</label></td>
+                        <td align="right">平均月消费次数:</td>
+                        <td><label class="marg5">{{memberStatic.serviceRate | formatNumber }}</label></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="meminfo" v-show="meminfoDialog.showNum==2">
+                <div>会员信息</div>
+                <table border="1" cellspacing="0" >
+                    <tr><td align="right" width="20%">手机号码:</td><td width="30%"><el-input v-model="membercard.mobile"/></td>
+                        <td align="right" width="20%">姓名:</td><td width="30%"><el-input v-model="membercard.memname"/></td></tr>
+                    <tr><td align="right">生日:</td>
+                        <td><el-date-picker v-model="membercard.birthday" type="date" placeholder="选择日期"></el-date-picker></td>
+                        <td align="right">性别:</td>
+                        <td style="padding-left: 5px">
+                            <el-radio v-model="membercard.sex" label="1">男</el-radio>
+                            <el-radio v-model="membercard.sex" label="2">女</el-radio>
+                       </td>
+                    </tr>
+                    <tr><td align="right">住址:</td><td colspan="3"><el-input v-model="membercard.address"/></td></tr>
+                </table>
+                <div>卡信息:<el-select style="width: 260px;" v-model="membercard.cardid" @change="changeMemberCard()">
+                    <el-option v-for="card in memberDesc.cards" :key="card.id" :value="card.id" :label="card.cardno+'('+card.cardname+')'"></el-option></el-select>
+                </div>
+                <table border="1" cellspacing="0" >
+                    <tr><td align="right" width="20%">卡号:</td><td width="30%"><label class="margl0">{{membercard.cardno}}</label></td>
+                        <td align="right" width="20%">会员卡级别:</td><td width="30%">
+                            <el-select v-model="membercard.chid" width="300px">
+                                <el-option v-for="card in cardlist" :value="card.id" :label="card.cpname" :disabled="card.status=='2'"></el-option>
+                            </el-select>
+                        </td></tr>
+                    <tr><td align="right">到期日期:</td>
+                        <td><el-date-picker v-model="membercard.exprite" type="date" placeholder="选择日期"></el-date-picker><br/>
+                            <lable style="font-size: 10px">*如此卡没有有效期请不要填</lable> </td>
+                        <td align="right">卡备注:</td><td><el-input v-model="membercard.cardmemo"/></td>
+                    </tr>
+                </table>
+                <el-row><el-col :offset="22" :span="1"><el-button type="primary" @click="saveMemberCard()">确认修改</el-button></el-col></el-row>
+            </div>
+            <div class="meminfo" v-show="meminfoDialog.showNum==3">
+                <div>修改卡内余额及赠送金额:<el-select v-model="cardmoney.id" @change="changeCardmoney()">
+                    <el-option v-for="card in memberDesc.cards" v-if="card.cardtype=='1'" style="width: 280px;"
+                               :key="card.id"
+                               :value="card.id"
+                               :label="card.cardno+'('+card.cardname+')'">
+                    </el-option></el-select></div>
+                <table border="1" cellspacing="0" >
+                    <tr><td align="right">会员卡内可用金额:</td><td><el-input type="number" v-model="cardmoney.nmoney"/></td>
+                        <td align="right">赠送可用金额:</td><td><el-input type="number" v-model="cardmoney.ngmoney"/></td></tr>
+                    <tr><td align="left" colspan="4">提示：卡内余额是指充值卡内原本剩下的金额。此功能用于恢复使用本平台以前的会员卡里的卡金，此处填入的数字不进入当日的店内现金报表，但此操作将被记录在"会员资料修改日志”和“卡金流水”中。</td></tr>
+                </table>
+                <el-row><el-col :offset="22" :span="1"><el-button type="primary" @click="updateCardmoney()">确认修改</el-button></el-col></el-row>
+            </div>
+            <div class="meminfo" v-show="meminfoDialog.showNum==4">
+                <div>
+                    <label style="color: red">*</label>卡信息:
+                    <el-select v-model="cardrecordform.cardno" style="width:320px;">
+                    <el-option v-for="card in memberDesc.cards" :value="card.cardno" :label="card.cardno+'('+card.cardname+')'"></el-option>
+                   </el-select><!--1充值2消费3买套餐4买产品5退卡6退项目7退产品-->
+                    单据类型:<el-select clearable v-model="cardrecordform.btype" style="width:160px;" >
+                    <el-option value="1" label="充值"></el-option>
+                    <el-option value="2" label="消费"></el-option>
+                    <el-option value="3" label="买套餐"></el-option>
+                    <el-option value="4" label="买产品"></el-option>
+                    <el-option value="5" label="退卡"></el-option>
+                    <el-option value="6" label="退项目"></el-option>
+                    <el-option value="7" label="退产品"></el-option>
+                    <el-option value="8" label="卡调整"></el-option>
+                </el-select>
+                    卡金类型:<el-select clearable v-model="cardrecordform.mtype" style="width:160px;">
+                    <el-option value="1" label="卡金"></el-option>
+                    <el-option value="2" label="赠送金"></el-option>
+                </el-select><br/>
+                    发生日期:<el-date-picker class="margl5"
+                        v-model="cardrecordform.date" format="yyyy-MM-dd"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                       </el-date-picker>
+                    <el-button type="primary" @click="queryCardRecords()" style="margin-left: 10px;">查询</el-button>
+                </div>
+                <yid-table pagination ref="cardrecords">
+                    <yid-table-column label="单号" min-width="160" prop="billcode"></yid-table-column>
+                    <yid-table-column label="单据类型" min-width="80" prop="btype">
+                        <template slot-scope="scope">
+                            {{scope.row.btype | formatValue(cardbtype)}}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="变动金额" min-width="80" prop="money"></yid-table-column>
+                    <yid-table-column label="结存余额" min-width="80" prop="balance"></yid-table-column>
+                    <yid-table-column label="卡金类型" min-width="80" prop="mtype">
+                        <template slot-scope="scope">
+                            {{scope.row.mtype=='1'?'卡金':'赠送'}}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="发生时间" min-width="160" prop="createdTime"></yid-table-column>
+                    <yid-table-column label="操作门店" min-width="80" prop="shopname"></yid-table-column>
+                    <yid-table-column label="操作人" min-width="80" prop="createdBy"></yid-table-column>
+                </yid-table>
+            </div>
+            <div class="meminfo" v-show="meminfoDialog.showNum==5">
+                <div>
+                    套餐名称:<el-select v-model="packrecordform.mpname" style="width:280px;">
+                    <el-option v-for="pack in selectPackages" :value="pack.spname" :label="pack.spname"></el-option>
+                </el-select>
+                    发生日期:<el-date-picker class="margl5"
+                        v-model="packrecordform.date" value-format="yyyy-MM-dd"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                     </el-date-picker>
+                    <el-button type="primary" @click="queryPackageList()" style="margin-left: 10px;">查询</el-button>
+                </div>
+                <yid-table pagination ref="packageRecords">
+                    <yid-table-column label="单号" min-width="160" prop="billcode"></yid-table-column>
+                    <yid-table-column label="套餐名称" min-width="120" prop="mpname"></yid-table-column>
+                    <yid-table-column label="项目名称/产品名称" min-width="140" prop="sername">
+                        <template slot-scope="scope">
+                            {{ scope.row.sername | jsonSernameFormate }}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="扣减数量" min-width="80" prop="saleNum"></yid-table-column>
+                    <yid-table-column label="剩余数量" min-width="80" prop="surplusNum"></yid-table-column>
+                    <yid-table-column label="消费时间" min-width="180" prop="saleTime"></yid-table-column>
+                    <yid-table-column label="门店" min-width="80" prop="shopname"></yid-table-column>
+                    <yid-table-column label="操作人" min-width="100" prop="oper"></yid-table-column>
+                </yid-table>
+            </div>
+            <div class="meminfo" v-show="meminfoDialog.showNum==6">
+            <div>
+                发生日期:<el-date-picker class="margl5"
+                    v-model="memberfrom.date" value-format="yyyy-MM-dd"
+                    style="margin-left: 5px"
+                    type="daterange"
+                    range-separator="至"
+                    start-placeholder="开始日期"
+                    end-placeholder="结束日期">
+            </el-date-picker>
+                <el-button type="primary" @click="queryMemberRecords()" style="margin-left: 10px;">查询</el-button>
+            </div>
+            <yid-table pagination ref="memberRedcords">
+                <yid-table-column label="单号" min-width="180" prop="billcode"></yid-table-column>
+                <yid-table-column label="消费内容" min-width="160" prop="sers"></yid-table-column>
+                <yid-table-column label="消费金额" min-width="80" prop="payje"></yid-table-column>
+                <yid-table-column label="付款方式" min-width="160" prop="payinfo">
+                    <template slot-scope="scope">
+                        {{ scope.row.payinfo | jsonStringFormate }}
+                    </template>
+                </yid-table-column>
+                <yid-table-column label="消费时间" min-width="160" prop="saleTime"></yid-table-column>
+                <yid-table-column label="消费门店" min-width="80" prop="shopname"></yid-table-column>
+                <yid-table-column label="服务人员" min-width="80" prop="eeids"></yid-table-column>
+                <yid-table-column label="操作人" min-width="80" prop="oper"></yid-table-column>
+            </yid-table>
+        </div>
+            <div class="meminfo" v-show="meminfoDialog.showNum==7">
+                <div>
+                    更改时间:<el-date-picker class="margl5" style="width: 220px;"
+                        v-model="memberlogfrom.date" value-format="yyyy-MM-dd"
+                        type="daterange"
+                        range-separator="至"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期">
+                </el-date-picker>
+                    <el-button type="primary" @click="queryMemberEditlogs()" style="margin-left: 10px;">查询</el-button>
+                </div>
+                <yid-table pagination ref="memberlog">
+                    <yid-table-column label="序号" type="index" width="60" ></yid-table-column>
+                    <yid-table-column label="更改人" min-width="140" prop="updatedBy"></yid-table-column>
+                    <yid-table-column label="更改时间" min-width="140" prop="opertime"></yid-table-column>
+                    <yid-table-column label="执行操作" min-width="320" prop="opercontent"></yid-table-column>
+                </yid-table>
+            </div>
+            <div class="meminfo" v-show="meminfoDialog.showNum==8">
+                <div>
+                    购买时间:<el-date-picker class="margl5"
+                                         v-model="storefrom.date" value-format="yyyy-MM-dd"
+                                         type="daterange"
+                                         range-separator="至"
+                                         start-placeholder="开始日期"
+                                         end-placeholder="结束日期">
+                            </el-date-picker>
+                    订单编号:<el-input clearable v-model="storefrom.billcode" placeholder="订单编号" style="width: 130px;"></el-input>
+                    商品编号:<el-input clearable v-model="storefrom.pcode" placeholder="商品编号" style="width: 120px;"></el-input>
+                    商品名称:<el-input clearable v-model="storefrom.pname" placeholder="商品名称" style="width: 130px;"></el-input>
+                    <el-button type="primary" @click="queryMemberStores()" class="margl5">查询</el-button>
+                </div>
+                <yid-table pagination ref="memberStores" :data="this.storeData">
+                    <yid-table-column label="商品编号" min-width="80" prop="pcode"></yid-table-column>
+                    <yid-table-column label="商品名称" min-width="140" prop="pname"></yid-table-column>
+                    <yid-table-column label="寄存数量" min-width="80" prop="total"></yid-table-column>
+                    <yid-table-column label="购买时间" min-width="160" prop="createdTime"></yid-table-column>
+                    <yid-table-column label="订单编号" min-width="130" prop="billcode"></yid-table-column>
+                    <yid-table-column label="已领取/剩余" min-width="100">
+                        <template slot-scope="scope">
+                            {{  scope.row.outnum}} / {{scope.row.checknum }}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column  label="提货记录" width="100" type="expand">
+                        <template slot-scope="scope">
+                            <yid-table ref="memberStorelogs" style="margin-top: 5px;" :data="scope.row.logs">
+                                <yid-table-column prop="billcode" label="出库单号" min-width="130" ></yid-table-column>
+                                <yid-table-column prop="createdTime" label="操作时间" min-width="160" ></yid-table-column>
+                                <yid-table-column prop="btype" label="类型" min-width="80" ></yid-table-column>
+                                <yid-table-column prop="num" label="出库数量" min-width="80" ></yid-table-column>
+                                <yid-table-column prop="stock" label="剩余库存" min-width="80" ></yid-table-column>
+                                <yid-table-column prop="createdBy" label="操作人" min-width="80"></yid-table-column>
+                                <yid-table-column prop="memo" label="备注" min-width="100"></yid-table-column>
+                            </yid-table>
+                        </template>
+                    </yid-table-column>
+                </yid-table>
+            </div>
+        </yid-dialog>
+
+    </div>
+</template>
+
+<script>
+    import service from '@src/service'
+    import yid from '@src/library'
+    import {exportExecl,imporExecl} from "../../library/helper/memberexecl";
+    import moment from 'moment';
+    import download from '@src/library/http/download'
+    moment.locale();
+
+    export default {
+        name: "member-relation",
+        data() {
+            return {
+                activeName: 'allMember',
+                searchForm: {
+                    memnametel: '',
+                    tags: '',
+                    sex: '',
+                    mintotalmoney: '',
+                    maxtotalmoney: '',
+                    minServTotal: '',
+                    maxServTotal: '',
+                    minServNum: '',
+                    maxServNum: '',
+                    lastDay: '',
+                    channel: '',
+                    eeid: '',
+                    isOnline: '',
+                },
+                dictStatusList: [
+                    {id: '1', code: '2', name: '储值卡会员'},
+                    {id: '2', code: '3', name: '套餐会员'},
+                    {id: '3', code: '4', name: '资格卡会员'},
+                    {id: '4', code: '1', name: '潜在会员'},
+                    {id: '5', code: '0', name: '新客'}
+                ],
+                distChannelList: [],
+                inchanels: [{value:"1",name:'门店业务端'},{value:"2",name:'门店管理端'},{value:"3",name:'顾客手机端'},{value:"4",name:'设计师端'}],
+                cardbtype: [{value:"1",name:"充值"},{value:"2",name:"消费"},{value:"3",name:"买套餐"},{value:"4",name:"买产品"},
+                            {value:"5",name:"退卡"},{value:"6",name:"退项目"},{value:"7",name:"退产品"},
+                            {value:"8",name:"卡帐户调整"},{value:"9",name:"退款"}],
+                employeeList: [],
+                pageInfo: {page: 1, limit: 10, total: 0},
+                model: {
+                    startTime: '',
+                    endTime: ''
+                },
+                meminfoDialog: {
+                    title: '会员资料详细',
+                    visible: false,
+                    showNum:1
+                },
+                allMemberForm:{
+                    name:'',
+                    mtype:'',
+                    sex:'',
+                    channel:'',
+                    inchanel:'',
+                    sregdate:'',
+                    eregdate:'',
+                    daynum:'',
+                    stotal:'',
+                    etotal:'',
+                    snum:'',
+                    enum:'',
+                    smoney:'',
+                    emoney:'',
+                    sgmoney:'',
+                    egmoney:'',
+                    ssmoney:'',
+                    esmoney:'',
+                    sexprite:'',
+                    eexprite:'',
+                },
+                memberHj:{
+                    count:0, zkj:0, zzs:0
+                },
+                memberTables:[],
+                searchDialog: {
+                    title: '高级查询',
+                    visible: false,
+                },
+                seniorForm: {},
+                memberDesc: {
+                    memid:'',
+                    memname:'',
+                    mobile:'',
+                    sex:'',
+                    birthday:'',
+                    channelName:'',
+                    inchanel:'',
+                    lastEename:'',
+                    latelyTime:'',
+                    latelyJe:'',
+                    address:'',
+                    hobby:'',
+                    education:'',
+                    job:'',
+                    incomes:'',
+                    partnerJob:'',
+                    saleHabit:'',
+                    foodHabit:'',
+                    sportHabit:'',
+                    others:'',
+                    cards:[],
+                    cardindex:'',
+                    packages:[],
+                },
+                memberStatic: {yearmonth:"", cmMoney:'', cmNum:'', cyMoney:'', cyNum:'', servNum:'', serviceRate:'', serviceJe:''},
+                cardinfo: {id:"",cardno:"",money:"",gmoney:"",smoney:"",serDis:"",proDis:"",shopname:"",exprite:"",makedate:""},
+                membercard: { memid:"",memname:"",  mobile:"", sex:"", birthday:"", cardid:"", chid:"", nchid:"", exprite:"", cardmemo:"" ,address: ""},
+                cardmoney: { id:"",cardtype:"",money:"",gmoney:"",nmoney:"",ngmoney:"",bmoney:"",bgmoney:"" },
+                cardlist:[],
+                cardrecordform:{ memid:'', cardid:'', btype:'', mtype:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0},
+                packrecordform:{ memid:'',mpname:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0},
+                packagelist:[],
+                memberfrom: { memid:'', date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 },
+                memberlogfrom: { memid:'', date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 },
+                memberpackfrom: { name:'', piid:'',servid:'',pid:'',date:[], page: 1, limit: 10, total: 0 },
+                memberpackData: [],
+                memberpackhj: {servsum:0,packsum:0,servje:0,packje:0 },
+                memberDelfrom: { name:'' , date:[], page: 1, limit: 10, total: 0},
+                memberExporfrom: { name:'', date:[], page: 1, limit: 10, total: 0},
+                memberBirthfrom: { type:'', day:'', month:'', page: 1, limit: 10, total: 0},
+                memberImport:{ type: '', members:[] },
+                memberImpform:{
+                    page: 1, limit: 10, total: 0
+                },
+                memberImpdata:[
+                    [""],
+                    ["mobile","memname","sex","cardno","cpcode","cpname","impmoney","impgmoney","impexprite","impbirthday","cardmemo","jf","impregdate"],
+                    ["mobile","memname","sex","cardno","cpcode","cpname","impexprite","impbirthday","cardmemo","impregdate"],
+                    ["mobile","memname","sex","type","servcode","sl","money","impexprite"]
+                ],
+                memberExpdata:[
+                    {
+                        memname: '姓名',
+                        mobile: '手机号',
+                        sex: '性别',
+                        shopname: '门店',
+                        money: '卡金总余额',
+                        univalent: '客单价',
+                        servTotal: '消费总额',
+                        servNum: '消费次数',
+                        serviceRate: '消费频率',
+                        latelyTime: '上次消费时间',
+                        lastEename: '上次服务员工',
+                        tags: '会员状态',
+                    },{
+                        mobile: '手机号',
+                        memname: '姓名',
+                        sex: '性别',
+                        cardno: '会员卡号',
+                        cpcode: '储值卡编码',
+                        cpname: '储值卡名称',
+                        impmoney: '卡内余额（元）',
+                        impgmoney: '赠送金余额（元）',
+                        impexprite: '到期日期',
+                        impbirthday: '生日',
+                        memo: '卡备注',
+                        jf: '积分',
+                        impregdate: '注册日期',
+                        errorInfo: '错误信息'
+                      }, {
+                            mobile: '手机号',
+                            memname: '姓名',
+                            sex: '性别',
+                            cardno: '会员卡号',
+                            cpcode: '储值卡编码',
+                            cpname: '储值卡名称',
+                            impexprite: '到期日期',
+                            impbirthday: '生日',
+                            memo: '卡备注',
+                            errorInfo: '错误信息'
+                        }, {
+                            mobile: '手机号',
+                            memname: '姓名',
+                            sex: '性别',
+                            pcode: '套餐编码',
+                            type: '类型',
+                            name: '项目/产品编码',
+                            memo: '卡备注',
+                            sl: '剩余数量',
+                            money: '剩余金额（元）'
+                      }
+                    ],
+                selectPackages:[],
+                selectServices:[],
+                selectProducts:[],
+                storefrom: {
+                   mimid:'', date:[], billcode:'', pcode:'', pname:'',page: 1, limit: 10, total: 0
+                },
+                storeData:[]
+            }
+        },
+        filters: {
+            jsonStringFormate(str){
+                if(str){
+                    let info=""
+                    try{
+                        const list=JSON.parse(str);
+                        list.forEach(l =>{
+                            info=info+l.payname+":"+l.money+" "
+                        })
+                        return info;
+                    }catch (e){
+                        return str
+                    }
+                }else{
+                    return "";
+                }
+            },
+            jsonSernameFormate(str){
+                if(str){
+                    try{
+                        const list=JSON.parse(str);
+                        if(list && list.length>0){
+                            let info=""
+                            list.forEach(l =>{
+                                info=info+l.sname+","
+                            })
+                            return info
+                        }else{
+                            return str
+                        }
+                    }catch (e){
+                        return str
+                    }
+
+                }else{
+                    return "";
+                }
+            },
+            dateFormat(str){
+                if(str){
+                    return str.substring(0,10)
+                }else{
+                    return ""
+                }
+            },
+            formatNumber(num){
+                if(num){
+                    return num.toFixed(2)
+                }
+            },
+            formatValue(str,stsList){
+                let label=""
+                stsList.map(m =>{
+                    if(m.value == str){
+                        label=m.name
+                    }
+                })
+                if(label){
+                    return label
+                }else{
+                    return str
+                }
+            }
+        },
+        mounted() {
+            this.init();
+        },
+        methods: {
+            init(){
+                service.member.memberinfo.queryCardList().then(res =>{
+                    if(res.resp_code=="200"){
+                        this.cardlist=res.data;
+                    }
+                })
+                service.member.memberinfo.selectPackages({status:'1'}).then(res => {
+                    if(res.resp_code=="200"){
+                        this.selectPackages=res.data;
+                    }
+                })
+                service.member.memberinfo.selectServices({status:'1'}).then(res => {
+                    if(res.resp_code=="200"){
+                        this.selectServices=res.data;
+                    }
+                })
+                service.member.memberinfo.selectProducts({status:'1'}).then(res => {
+                    if(res.resp_code=="200"){
+                        this.selectProducts=res.data;
+                    }
+                })
+                service.memInfo.distchannelListAll({isDel: '0'}).then(res => {
+                    if (res.resp_code == 200) {
+                        this.distChannelList = res.data;
+                    }
+                })
+            },
+            handleSizeChange(val) {
+                this.pageInfo.limit=val;
+                this.allMemberSearch();
+            },
+            handleCurrentChange(val) {
+                this.pageInfo.page=val;
+                this.allMemberSearch();
+            },
+            handleSizeChange2(val) {
+                this.memberpackfrom.limit=val;
+                this.queryMemberPackages();
+            },
+            handleCurrentChange2(val) {
+                this.memberpackfrom.page=val;
+                this.queryMemberPackages();
+            },
+            objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex<4 || columnIndex>11) {
+                    if (row.rownum > 0) {
+                        return {
+                            rowspan: row.rownum,
+                            colspan: 1
+                        };
+                    } else {
+                        return {
+                            rowspan: 0,
+                            colspan: 0
+                        };
+                    }
+                }
+            },
+            objectSpanMethod2({ row, column, rowIndex, columnIndex }) {
+                if (columnIndex<4 || columnIndex>8) {
+                    if (row.rownum > 0) {
+                        return {
+                            rowspan: row.rownum,
+                            colspan: 1
+                        };
+                    } else {
+                        return {
+                            rowspan: 0,
+                            colspan: 0
+                        };
+                    }
+                }
+            },
+            handleClick(tab) {
+                if (tab.name == 'allMember') {
+                    this.search();
+                } else if (tab.name == 'assignment') {
+                    //this.getjobList();
+                } else if (tab.name == 'logs') {
+                    //ServiceLog.methods.searchLog()
+                } else if(tab.name == 'improtMember'){
+                    this.queryImportMembers();
+                }
+            },
+            removeMem(row) {
+                yid.util.confirm('删除会员将会删除会员下所有卡账户，您确认要删除会员信息吗？', '', '', () => {
+                    const params = {id:row.memshopid,isDel:'1',revision:row.revision}
+                    service.member.userinfo.removeUserinfo(params).then(res => {
+                        if (res.resp_code == 200) {
+                            this.allMemberSearch();
+                        }
+                    });
+                })
+            },
+            recoverMem(row) {
+                const params = {id:row.memshopid,isDel:'0',revision:row.revision}
+                service.member.userinfo.removeUserinfo(params).then(res => {
+                    if (res.resp_code == 200) {
+                        this.queryDelMembers();
+                    }
+                });
+            },
+            allMemberSearch(){
+                const params = {...this.allMemberForm,...this.pageInfo}
+                service.member.memberinfo.queryAllMember(params).then(res =>{
+                    if(res.resp_code=="200"){
+                        this.memberTables=res.data;
+                        this.memberTables.forEach(each =>{
+                            if(each.isDel=="1"){
+                                each.status="注销"
+                            }else if(each.exprite && each.exprite < moment().format("YYYY-MM-DD HH:mm:ss")){
+                                this.cardlist.map(m =>{
+                                    if(m.id == each.shid && m.expireLimit == "0"){
+                                        each.status="过期(不可用)"
+                                    }else{
+                                        each.status="过期(可用)"
+                                    }
+                                })
+                            }else if(each.cardno){
+                                each.status="正常"
+                            }else{
+                                each.status=""
+                            }
+                        })
+                        this.pageInfo.total = res.count;
+                    }
+                })
+                service.member.memberinfo.queryAllMemberHj(params).then(res =>{
+                    if(res.resp_code=="200"){
+                        this.memberHj.count = res.data.zsum || 0;
+                        this.memberHj.zkj = res.data.zkj || 0;
+                        this.memberHj.zzs = res.data.zzs || 0;
+                    }
+                })
+            },
+            openSeniorSearch(){
+                this.searchDialog.visible=true;
+            },
+            seniorSearch() {
+                this.allMemberSearch();
+                this.searchDialog.visible = false;
+            },
+            cancel() {
+                this.searchDialog.visible = false;
+            },
+            exportMember(){
+                const head = {
+                    memname: '姓名',
+                    mobile: '手机号',
+                    sex: '性别',
+                    regdate: '注册日期',
+                    cardno: '卡号',
+                    cardname: '卡名称',
+                    cardtype: '卡类型',
+                    smoney: '储值总额',
+                    money: '卡余额',
+                    gmoney: '赠送余额',
+                    exprite: '到期日期',
+                    servTotal: '消费总额',
+                    servNum: '消费次数'
+                }
+                service.member.memberinfo.exportMember(this.allMemberForm).then(res => {
+                    if(res.resp_code=="200"){
+                        res.data.forEach(item =>{
+                            if(item.sex=="1"){
+                                item.sertype="男";
+                            }else{
+                                item.sertype="女";
+                            }
+                            if(item.cardtype=="1"){
+                                item.issale="储值卡";
+                            }else{
+                                item.issale="资格卡";
+                            }
+                        })
+                        exportExecl(head,res.data,"会员资料导出");
+                    }else{
+                        yid.util.error(res.resp_msg);
+                    }
+                })
+            },
+            sendMessage(){
+                this.$router.push({path: '/setting/msgConfig'})
+            },
+            getMember(row){
+                service.member.memberinfo.queryMember({memid:row.memid}).then(res => {
+                    if(res.resp_code=="200"){
+                        if(res.data){
+                            this.memberDesc=res.data;
+                            //默认赋值
+                            if(this.memberDesc.cards &&　this.memberDesc.cards.length>0){
+                                this.memberDesc.cardindex=0;
+                                const id=this.memberDesc.cards[0].id
+                                this.membercard.cardid=id;
+                                this.cardinfo.id=id
+                                this.changeCardinfo();
+                                this.changeCardmoney();
+                            }else{
+                                this.memberDesc.cardindex=undefined;
+                                this.membercard.cardid='';
+                                this.cardinfo.id='';
+                                this.cardmoney.id='';
+                            }
+                            this.changeMemberCard();
+                            this.queryMemberStatic("",0);
+                            this.meminfoDialog.visible=true;
+                            //清空查询条件
+                            this.cardrecordform={memid:res.data.memid,cardid:'',btype:'',mtype:'',date:[],sdate:'',edate:'',page: 1,limit: 10,total: 0};
+                            this.packrecordform={memid:res.data.memid,mpname:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0};
+                            this.memberfrom={memid:res.data.memid, date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 };
+                            this.memberlogfrom={memid:res.data.memid, date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 };
+                            this.storefrom={memid:res.data.memid, date:[], billcode:'', pcode:'', pname:'',page: 1, limit: 10, total: 0 };
+                        }
+                    }else{
+                        yid.util.error(res.resp_msg);
+                    }
+                })
+            },
+            changeCardinfo(){
+                const that =this;
+                this.memberDesc.cards.forEach(card =>{
+                    if(that.cardinfo.id == card.id){
+                        for(let i in that.cardinfo){
+                            if(card[i]){
+                                that.cardinfo[i]=card[i];
+                            }
+                        }
+                    }
+                })
+            },
+            changeCardmoney(){
+                let i=0;
+                this.memberDesc.cards.forEach(card =>{
+                    if(card.cardtype=='1' && i==0){
+                        this.cardmoney.id=card.id;
+                        this.cardmoney.cardtype=card.cardtype;
+                        this.cardmoney.money=card.money;
+                        this.cardmoney.gmoney=card.gmoney;
+                        this.cardmoney.nmoney=card.money;
+                        this.cardmoney.ngmoney=card.gmoney;
+                        i++;
+                    }
+                })
+            },
+            queryMemberStatic(yearmonth,offset){
+                service.member.memberinfo.queryMemberStatis({memid:this.memberDesc.memid,yearmonth:yearmonth,offset:offset}).then(res => {
+                    if(res.resp_code=="200"){
+                        this.memberStatic=res.data;
+                    }else{
+                        yid.util.error(res.resp_msg);
+                    }
+                })
+            },
+            changeMemberCard(){
+                //会员资料
+                this.membercard.memid=this.memberDesc.memid;
+                this.membercard.memname=this.memberDesc.memname;
+                this.membercard.mobile=this.memberDesc.mobile;
+                this.membercard.sex=this.memberDesc.sex;
+                this.membercard.birthday=this.memberDesc.birthday;
+                this.membercard.address=this.memberDesc.address;
+                if(this.membercard.cardid){
+                    this.memberDesc.cards.forEach(card =>{
+                        if(this.membercard.cardid == card.id){
+                            this.membercard.chid=String(card.chid);
+                            this.membercard.cardno=card.cardno;
+                            this.membercard.exprite=card.exprite;
+                            this.membercard.cardmemo=card.cardmemo;
+                        }
+                    })
+                }
+            },
+            upMemberStatic(){
+                this.queryMemberStatic(this.memberStatic.yearmonth,1);
+            },
+            downMemberStatic(){
+                this.queryMemberStatic(this.memberStatic.yearmonth,-1);
+            },
+            saveMemberCard(){
+                service.member.memberinfo.saveMemberCard(this.membercard).then(res =>{
+                    if(res.resp_code=="200"){
+                        yid.util.success(res.resp_msg);
+                    }else{
+                        yid.util.error(res.resp_msg);
+                    }
+                })
+            },
+            updateCardmoney(){
+                if(Number(this.cardmoney.nmoney) == Number(this.cardmoney.money)
+                    && Number(this.cardmoney.ngmoney) == Number(this.cardmoney.gmoney)){
+                    $yid.util.error("金额没有变动");
+                    return
+                }
+                if(Number(this.cardmoney.nmoney) != Number(this.cardmoney.money)){
+                    this.cardmoney.bmoney=Number(this.cardmoney.nmoney)-Number(this.cardmoney.money)
+                }else{
+                    this.cardmoney.bmoney=null
+                }
+                if(Number(this.cardmoney.ngmoney) != Number(this.cardmoney.gmoney)){
+                    this.cardmoney.bgmoney=Number(this.cardmoney.ngmoney)-Number(this.cardmoney.gmoney)
+                }else{
+                    this.cardmoney.bgmoney=null
+                }
+                const cardmoney={
+                    cardid:this.cardmoney.id,
+                    memid:this.memberDesc.memid,
+                    cardtype:this.cardmoney.cardtype,
+                    money:this.cardmoney.money,
+                    gmoney:this.cardmoney.gmoney,
+                    nmoney:Number(this.cardmoney.nmoney),
+                    ngmoney:Number(this.cardmoney.ngmoney),
+                    bmoney:this.cardmoney.bmoney,
+                    bgmoney:this.cardmoney.bgmoney
+                }
+                service.member.memberinfo.updateCardmoney(cardmoney).then(res =>{
+                    if(res.resp_code=="200"){
+                        yid.util.success(res.resp_msg);
+                    }else{
+//                        this.cardmoney.money=res.data.money;
+//                        this.cardmoney.gmoney=res.data.gmoney;
+//                        this.cardmoney.nmoney=res.data.money;
+//                        this.cardmoney.ngmoney=res.data.gmoney;
+                        yid.util.error(res.resp_msg);
+                    }
+                })
+            },
+            queryCardRecords(){
+                if(!this.cardrecordform.cardno){
+                    yid.util.error("选择卡号");
+                    return;
+                }
+                this.cardrecordform.memid=this.memberDesc.memid;
+                if(this.cardrecordform.date && this.cardrecordform.date.length>1){
+                    this.cardrecordform.sdate=this.cardrecordform.date[0];
+                    this.cardrecordform.edate=this.cardrecordform.date[1];
+                }else{
+                    this.cardrecordform.sdate=null;
+                    this.cardrecordform.edate=null;
+                }
+                const params = {...this.cardrecordform}
+                const fetch = service.member.memberinfo.queryCardRecords;
+                this.$refs.cardrecords.reloadData({
+                    fetch,
+                    params,
+                });
+            },
+            queryPackageList(){
+                this.packrecordform.memid=this.memberDesc.memid;
+                if(this.packrecordform.date && this.packrecordform.date.length>1){
+                    this.packrecordform.sdate=this.packrecordform.date[0];
+                    this.packrecordform.edate=this.packrecordform.date[1];
+                }else{
+                    this.packrecordform.sdate=null;
+                    this.packrecordform.edate=null;
+                }
+                const params = {...this.packrecordform}
+                const fetch = service.member.memberinfo.queryPackageRecords
+                this.$refs.packageRecords.reloadData({
+                    fetch,
+                    params,
+                });
+            },
+            queryMemberRecords(){
+                this.memberfrom.memid=this.memberDesc.memid;
+                if(this.memberfrom.date && this.memberfrom.date.length>1){
+                    this.memberfrom.sdate=this.memberfrom.date[0];
+                    this.memberfrom.edate=this.memberfrom.date[1];
+                }else{
+                    this.memberfrom.sdate=null;
+                    this.memberfrom.edate=null;
+                }
+                const params = {...this.memberfrom}
+                const fetch = service.member.memberinfo.queryMemberRecords
+                this.$refs.memberRedcords.reloadData({
+                    fetch,
+                    params,
+                });
+            },
+            queryMemberEditlogs(){
+                this.memberlogfrom.memid=this.memberDesc.memid;
+                if(this.memberlogfrom.date && this.memberlogfrom.date.length>1){
+                    this.memberlogfrom.sdate=this.memberlogfrom.date[0];
+                    this.memberlogfrom.edate=this.memberlogfrom.date[1];
+                }else{
+                    this.memberlogfrom.sdate=null;
+                    this.memberlogfrom.edate=null;
+                }
+                const params = {...this.memberlogfrom}
+                const fetch = service.member.memberinfo.queryMemberEditlogs
+                this.$refs.memberlog.reloadData({
+                    fetch,
+                    params,
+                });
+            },
+            queryMemberPackages(){
+                if(this.memberpackfrom.date && this.memberpackfrom.date.length>1){
+                    this.memberpackfrom.sdate=this.memberpackfrom.date[0];
+                    this.memberpackfrom.edate=this.memberpackfrom.date[1];
+                }else{
+                    this.memberpackfrom.sdate=null;
+                    this.memberpackfrom.edate=null;
+                }
+                service.member.memberinfo.queryMemberpagePackages(this.memberpackfrom).then(res =>{
+                    if(res.resp_code=="200"){
+                        this.memberpackData=res.data;
+                        this.memberpackfrom.total = res.count;
+                    }
+                })
+                service.member.memberinfo.queryPackageHj(this.memberpackfrom).then(res =>{
+                    if(res.resp_code=="200"){
+                        this.memberpackhj = res.data || {servsum:0,packsum:0,servje:0,packje:0};
+                    }
+                })
+            },
+            queryDelMembers(){
+                if(this.memberDelfrom.date && this.memberDelfrom.date.length>1){
+                    this.memberDelfrom.sdate=this.memberDelfrom.date[0];
+                    this.memberDelfrom.edate=this.memberDelfrom.date[1];
+                }else{
+                    this.memberDelfrom.sdate=null;
+                    this.memberDelfrom.edate=null;
+                }
+                const fetch = service.member.memberinfo.queryDelMembers;
+                const params = {...this.memberDelfrom}
+                this.$refs.memberDelTable.reloadData({
+                    fetch,
+                    params
+                });
+            },
+            queryExpritMembers(){
+                if(this.memberExporfrom.date && this.memberExporfrom.date.length>1){
+                    this.memberExporfrom.sdate=this.memberExporfrom.date[0];
+                    this.memberExporfrom.edate=this.memberExporfrom.date[1];
+                    this.memberExporfrom.datetime=null;
+                }else{
+                    this.memberExporfrom.sdate=null;
+                    this.memberExporfrom.edate=null;
+                    this.memberExporfrom.datetime= moment().format("YYYY-MM-DD HH:mm:ss");
+                }
+                const fetch = service.member.memberinfo.queryExpritMembers;
+                const params = {...this.memberExporfrom}
+                this.$refs.memberExproTable.reloadData({
+                    fetch,
+                    params
+                });
+            },
+            queryDirthdayMembers(){
+                if(this.memberBirthfrom.type=="day" && !this.memberBirthfrom.day){
+                   yid.util.error("请选择日期");
+                   return;
+                }
+                if(this.memberBirthfrom.type=="month" && !this.memberBirthfrom.month){
+                    yid.util.error("请选择月份");
+                    return;
+                }
+                if(!this.memberBirthfrom.type){
+                    this.memberBirthfrom.day=''
+                    this.memberBirthfrom.month=''
+                }
+                const fetch = service.member.memberinfo.queryDirthdayMembers;
+                const params = {...this.memberBirthfrom}
+                this.$refs.memberBirthTable.reloadData({
+                    fetch,
+                    params
+                });
+            },
+            importMembers(file){
+                if(!this.memberImport.type){
+                    yid.util.error("没有导入类型");
+                    return;
+                }
+                this.memberImport.members=[];
+                imporExecl(file,this.memberImport.members,this.memberImpdata[this.memberImport.type]);
+            },
+            sureImportMembers(){
+                if(!this.memberImport.type){
+                    yid.util.error("没有导入类型");
+                    return;
+                }
+                if(!this.memberImport.members){
+                    yid.util.error("没有导入数据");
+                    return;
+                }
+                service.member.memberinfo.memberImport(this.memberImport).then(res =>{
+                    if(res.resp_code=="200"){
+                        yid.util.success(res.resp_msg);
+                        this.queryImportMembers();
+                    }else{
+                        yid.util.error(res.resp_msg);
+                    }
+                })
+            },
+            queryImportMembers(){
+                const fetch = service.member.memberinfo.queryMemberImplogs;
+                const params = {...this.memberImpform}
+                this.$refs.memberImportTable.reloadData({
+                    fetch,
+                    params
+                });
+            },
+            exportServs(row){
+                service.member.memberinfo.queryMemberLog({impid:row.id}).then(res => {
+                    if(res.resp_code=="200"){
+                        const datas=[];
+                        if(res.data && res.data.length>0){
+                            res.data.forEach(item =>{
+                                datas.push(JSON.parse(item.content));
+                            })
+                        }
+                        if(datas.length>0){
+                            exportExecl(this.memberExpdata[row.imptype],datas,"导入失败会员");
+                        }
+                    }else{
+                        yid.util.error(res.resp_msg);
+                    }
+                })
+            },
+            queryMemberStores(){
+                if(this.storefrom.date && this.storefrom.date.length>1){
+                    this.storefrom.sdate=this.storefrom.date[0];
+                    this.storefrom.edate=this.storefrom.date[1];
+                }else{
+                    this.storefrom.sdate=null;
+                    this.storefrom.edate=null;
+                }
+                const params = {...this.storefrom}
+                delete params.date
+                service.member.memberinfo.queryMemberStorelogs(params).then(res =>{
+                    if(res.resp_code=="200"){
+                        this.storeData = res.data;
+                        this.storefrom.total = res.count;
+                    }
+                })
+            },
+            downExcelTemplate1(){
+                download($yid.config.API.BASE + '/api-member/memberinfo/excelTemplate1', {})
+            },
+            downExcelTemplate2(){
+                download($yid.config.API.BASE + '/api-member/memberinfo/excelTemplate2', {})
+            },
+            downExcelTemplate3(){
+                download($yid.config.API.BASE + '/api-member/memberinfo/excelTemplate3', {})
+            },
+        }
+    }
+</script>
+
+<style scoped lang="scss">
+    .margl5{
+        margin-left: 15px
+    }
+
+    .margl0{
+        margin-left: 10px
+    }
+
+    .marg5{
+        margin-left: 5px
+    }
+
+    .margsx10{
+        margin: 10px auto
+    }
+
+    .member-relation {
+    }
+
+    table tr td {
+        border:1px solid rgba(96, 93, 99, 0.62);
+    }
+
+    table thead td{
+        border:1px solid rgba(96, 93, 99, 0.62);
+    }
+
+    .meminfo{
+        width: 1000px;
+        margin:0 auto;
+    }
+
+    .meminfo div {
+        margin-top: 10px;
+        padding: 5px;
+        font-weight:bold;
+    }
+
+    .meminfo table {
+        width: 980px;
+        height: 180px;
+        cellspacing: 0;
+        cellpadding: 0;
+    }
+
+    .taoctable tr td {
+        text-align:center;
+    }
+
+    .tableTd {
+        border: 0px;
+        padding-left: 10px;
+    }
+
+</style>

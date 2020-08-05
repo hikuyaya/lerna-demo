@@ -1,0 +1,15 @@
+/* 第三方外部 ICON 框架 */
+
+@import './../font/iconfont.css';
+
+[class^='iconfont-'],
+[class*=' iconfont'] {
+  display: inline-block;
+  font-family: iconfont !important;
+  font-weight: 400;
+  font-style: normal;
+  font-variant: normal;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

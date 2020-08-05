@@ -1,6 +1,6 @@
 import yid from '@src/library'
 
-const prefix = 'api-base';
+const prefix = 'api-chain';
 
 export function branchAndPosition() {
     const url = `${prefix}/position/list/position`

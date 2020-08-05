@@ -39,7 +39,7 @@ axios.interceptors.request.use(
      if($yid.cache.get($yid.type.USER.TOKEN)) {
          request.headers.authorization = 'Bearer ' + $yid.cache.get($yid.type.USER.TOKEN)
          request.headers['x-tenant-header'] =  $yid.cache.get($yid.type.USER.TENANTID);
-        // request.headers['saas-version'] = 'gkbn'
+         request.headers['saas-version'] = 'barry2020'
      }
      if($yid.cache.get($yid.type.USER.APPID)) {
         request.headers['x-appId-header'] =  $yid.cache.get($yid.type.USER.APPID)

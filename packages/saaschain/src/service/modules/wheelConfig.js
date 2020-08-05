@@ -1,6 +1,6 @@
 import yid from '@src/library'
 
-const prefix = 'api-cashier/wheelconfig';
+const prefix = 'api-chain/wheelconfig';
 
 export function deleteCwc(id) {
     return yid.http.delete(`${prefix}/`+id)

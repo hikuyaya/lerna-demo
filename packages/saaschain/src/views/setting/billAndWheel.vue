@@ -41,56 +41,6 @@
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
-            <el-tab-pane label="员工轮牌配置" name="wheel">
-                <el-button @click="addWheel()" type="primary">新增</el-button>
-                <yid-table ref="wcTable" :data="wheelConfigData" style="margin-top: 15px;">
-                    <yid-table-column label="名称" min-width="100" prop="cwcname"></yid-table-column>
-                    <yid-table-column label="对应级别类型" min-width="150" prop="cwcPsname"></yid-table-column>
-                    <yid-table-column label="位置" min-width="150" prop="_postion"></yid-table-column>
-                    <yid-table-column label="每日洗牌" min-width="150" prop="_dayClean"></yid-table-column>
-                    <yid-table-column label="收银联动" min-width="150" prop="_withCashier"></yid-table-column>
-                    <yid-table-column label="操作" min-width="250">
-                        <template slot-scope="scope">
-                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="deleteWheel(scope.row.id)">
-                                删除
-                            </el-link>
-                        </template>
-                    </yid-table-column>
-                </yid-table>
-            </el-tab-pane>
-            <el-tab-pane label="轮牌临休配置" name="rest">
-                <el-button @click="addWheelRest()" type="primary">新增</el-button>
-                <yid-table ref="wcRestTable" :data="wheelRestData" style="margin-top: 15px; width: 420px;">
-                    <yid-table-column label="名称" min-width="130">
-                        <template slot-scope="scope">
-                            <el-input v-show="scope.row.edit" size="small" v-model="scope.row.cwrname"/>
-                            <span v-show="!scope.row.edit">{{ scope.row.cwrname }}</span>
-                        </template>
-                    </yid-table-column>
-                    <yid-table-column label="时长（分）" min-width="130">
-                        <template slot-scope="scope">
-                            <el-input v-show="scope.row.edit" size="small" v-model="scope.row.time"/>
-                            <span v-show="!scope.row.edit">{{ scope.row.time }}</span>
-                        </template>
-                    </yid-table-column>
-                    <yid-table-column label="操作" min-width="140">
-                        <template slot-scope="scope">
-                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="scope.row.edit=true"
-                                     v-show="!scope.row.edit">
-                                编辑
-                            </el-link>
-                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="updateWheelRest(scope.row)"
-                                     v-show="scope.row.edit">
-                                保存
-                            </el-link>
-                            <el-link type="primary" style="margin: 0 10px 0 10px;"
-                                     @click="deleteWheelRest(scope.row.id)">
-                                删除
-                            </el-link>
-                        </template>
-                    </yid-table-column>
-                </yid-table>
-            </el-tab-pane>
             <el-tab-pane label="小票打印设置" name="printset">
                 <yid-table ref="printsetTable" :data="printsetData" style="margin-top: 15px; width: 780px;">
                     <yid-table-column label="小票模板编号"prop="code"  min-width="150"></yid-table-column>

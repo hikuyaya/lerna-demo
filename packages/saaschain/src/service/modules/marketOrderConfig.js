@@ -1,6 +1,6 @@
 import yid from '@src/library'
 
-const prefix = 'api-cashier/makeorderconfig';
+const prefix = 'api-chain/makeorderconfig';
 
 //获取门店收银单设置数据
 export function orderConfig() {

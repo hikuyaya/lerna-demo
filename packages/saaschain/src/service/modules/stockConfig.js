@@ -1,5 +1,5 @@
 import yid from '@src/library'
-const prefix = 'api-stock/config';
+const prefix = 'api-chain/stockconfig';
 
 //获取库存配置数据
 export function orderConfig() {

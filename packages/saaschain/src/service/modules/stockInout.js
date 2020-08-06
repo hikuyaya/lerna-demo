@@ -1,5 +1,5 @@
 import yid from '@src/library'
-const prefix = 'api-stock/dictinout';
+const prefix = 'api-chain/dictinout';
 
 //查询配置列表
 export function dictinoutList(params) {

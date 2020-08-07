@@ -41,7 +41,7 @@ import cashier from "./modules/cashier"
 import pay from "./modules/config/pay"
 import payment from "./modules/config/payment"
 import royalty from './modules/finance/royalty'
-
+import chain from "./modules/chain"
 
 export default {
   IM,
@@ -86,6 +86,7 @@ export default {
   pay,
   payment,
   royalty,
+  chain,
 }
 
 

@@ -41,6 +41,68 @@
                     </el-form-item>
                 </el-form>
             </el-tab-pane>
+
+            <el-tab-pane label="员工轮牌配置" name="wheel">
+                <el-button @click="addWheel()" type="primary">新增</el-button>
+                <el-form ref="wheelform" :model="wheelform" inline label-width="160px" color="#000" style="color: #000; font-weight: bold">
+                    <el-form-item label="门店：">
+                        <el-select clearable v-model.trim="wheelform.shopid" filterable :filter-method="filterShop" placeholder="请选择" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label=""><el-button type="primary" @click="getWheelConfig()">查询</el-button></el-form-item><br/>
+                </el-form>
+                <yid-table ref="wcTable" :data="wheelConfigData" style="margin-top: 15px;">
+                    <yid-table-column label="名称" min-width="100" prop="cwcname"></yid-table-column>
+                    <yid-table-column label="对应级别类型" min-width="150" prop="cwcPsname"></yid-table-column>
+                    <yid-table-column label="位置" min-width="150" prop="_postion"></yid-table-column>
+                    <yid-table-column label="每日洗牌" min-width="150" prop="_dayClean"></yid-table-column>
+                    <yid-table-column label="收银联动" min-width="150" prop="_withCashier"></yid-table-column>
+                    <yid-table-column label="操作" min-width="250">
+                        <template slot-scope="scope">
+                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="deleteWheel(scope.row.id)">
+                                删除
+                            </el-link>
+                        </template>
+                    </yid-table-column>
+                </yid-table>
+            </el-tab-pane>
+            <!--<el-tab-pane label="轮牌临休配置" name="rest">
+                <el-button @click="addWheelRest()" type="primary">新增</el-button>
+                <yid-table ref="wcRestTable" :data="wheelRestData" style="margin-top: 15px; width: 420px;">
+                    <yid-table-column label="名称" min-width="130">
+                        <template slot-scope="scope">
+                            <el-input v-show="scope.row.edit" size="small" v-model="scope.row.cwrname"/>
+                            <span v-show="!scope.row.edit">{{ scope.row.cwrname }}</span>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="时长（分）" min-width="130">
+                        <template slot-scope="scope">
+                            <el-input v-show="scope.row.edit" size="small" v-model="scope.row.time"/>
+                            <span v-show="!scope.row.edit">{{ scope.row.time }}</span>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="操作" min-width="140">
+                        <template slot-scope="scope">
+                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="scope.row.edit=true"
+                                     v-show="!scope.row.edit">
+                                编辑
+                            </el-link>
+                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="updateWheelRest(scope.row)"
+                                     v-show="scope.row.edit">
+                                保存
+                            </el-link>
+                            <el-link type="primary" style="margin: 0 10px 0 10px;"
+                                     @click="deleteWheelRest(scope.row.id)">
+                                删除
+                            </el-link>
+                        </template>
+                    </yid-table-column>
+                </yid-table>
+            </el-tab-pane>-->
             <el-tab-pane label="小票打印设置" name="printset">
                 <yid-table ref="printsetTable" :data="printsetData" style="margin-top: 15px; width: 780px;">
                     <yid-table-column label="小票模板编号"prop="code"  min-width="150"></yid-table-column>
@@ -277,6 +339,12 @@
                 psList: [],
                 printsetData: [],
                 printitemData: [],
+
+                allShopList:[],
+                filterShopList:[],
+                wheelform: {
+                    shopid: ""
+                }
             }
         },
         methods: {
@@ -286,7 +354,9 @@
                 })
             },
             getWheelConfig() {
-                service.wheelConfig.getCwc().then(res => {
+                console.log(this.wheelform);
+
+                service.wheelConfig.getCwc(this.wheelform.shopid).then(res => {
                     this.wheelConfigData = res.data
                 })
             },
@@ -495,6 +565,22 @@
                     return;
                 }
                 this.stationList.splice(index,1);
+            },
+            getShopList() {
+                service.chain.shop.shopList({status:'0'}).then(res => {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
             }
         },
         mounted() {
@@ -505,6 +591,7 @@
         created() {
             this.getJobList()
             this.getMarketOrderConfig()
+            this.getShopList()
         },
         watch: {
             activeName(v) {
@@ -596,7 +683,8 @@
                     this.wcDialog.model.cwcPscode === '' ? (this.wcDialog.model.cwcPscode = this.dtPs[i].id) : (this.wcDialog.model.cwcPscode = this.wcDialog.model.cwcPscode + ',' + this.dtPs[i].id)
                     this.wcDialog.model.cwcPsname === '' ? (this.wcDialog.model.cwcPsname = this.dtPs[i].psname) : (this.wcDialog.model.cwcPsname = this.wcDialog.model.cwcPsname + ',' + this.dtPs[i].psname)
                 })
-            }
+            },
+
         }
     }
 

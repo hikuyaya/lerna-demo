@@ -58,7 +58,7 @@
 
         methods: {
             getData(){
-                const fetch = service.push.insideMsg.list;
+                const fetch = service.push.insideMsg.listchain;
                 const params = {...this.pageInfo}
                 this.$refs.table.reloadData({
                     fetch,
@@ -85,7 +85,7 @@
             publish(){
                 this.$refs["publishForm"].validate((valid) => {
                     if(valid){
-                        service.push.insideMsg.publish({content:this.publishForm.content,title:this.publishForm.title,isDel:"0"}).then(res=>{
+                        service.push.insideMsg.publishChain({content:this.publishForm.content,title:this.publishForm.title,isDel:"0"}).then(res=>{
                             if(res.resp_code == 200) {
                                 this.getData();
                                 this.closeDialog();

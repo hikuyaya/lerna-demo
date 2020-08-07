@@ -13,9 +13,14 @@ export function batchSave(params) {
     return yid.http.post(`${prefix}batchSave`, params)
 }
 
+export function listchain(params) {
+    return yid.http.get(`${prefix}list/accountchain`, {params})
+}
+
 //系统消息
 export default {
     list,
     publish,
-    batchSave
+    batchSave,
+    listchain
 }

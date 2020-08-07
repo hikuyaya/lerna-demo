@@ -30,7 +30,7 @@
         },
         methods: {
             getData(){
-                const fetch = service.push.adminMstatus.list;
+                const fetch = service.push.adminMstatus.listchain;
                 const params = {...this.pageInfo}
                 this.$refs.table.reloadData({
                     fetch,

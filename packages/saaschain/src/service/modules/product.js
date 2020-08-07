@@ -1,5 +1,5 @@
 import yid from '@src/library'
-const prefix = 'api-base/product';
+const prefix = 'api-chain/product';
 
 export function productList(params) {
     return yid.http.get(`${prefix}`, {params})

@@ -14,6 +14,10 @@ export function memServicelogExport(params) {
     return yid.http.get(`${prefix}/memServicelogExport`, {params})
 }
 
+export function listLogForChain(params) {
+    return yid.http.get(`${prefix}/chain/list/log`, {params})
+}
+
 export default {
     //服务日志列表
     listLog,

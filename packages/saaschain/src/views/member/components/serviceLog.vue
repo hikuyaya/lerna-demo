@@ -34,7 +34,12 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="门店：">
-                <el-input clearable v-model.trim="searchForm.shopcodename" placeholder="门店名称/门店编码"  style="width: 180px;"></el-input>
+                    <el-select clearable v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 180px;">
+                        <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                            <span style="float: left">{{ item.shopcode }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                        </el-option>
+                    </el-select>
             </el-form-item>
             <el-form-item label="服务人员：">
                 <el-select clearable v-model="searchForm.craftsman" filterable placeholder="请选择">
@@ -119,6 +124,7 @@
                     craftsman : '',
                     status : '',
                     returnStatus : '',
+                    shopid:''
                 },
                 pageInfo:{page:1,limit:10},
                 status: [{
@@ -138,7 +144,9 @@
                     value: '3',
                     label: '已预约'
                 }],
-                employeeList : []
+                employeeList : [],
+                allShopList:[],
+                filterShopList:[]
             }
         },
         mounted(){
@@ -156,6 +164,7 @@
             this.searchForm.createTimeRange.push(date1)
             this.searchForm.createTimeRange.unshift(date1)
             this.getCraftsmans();
+            this.getShopList({status:"0"});
         },
         computed:{
             searchFormReq: function () {
@@ -185,6 +194,7 @@
                 reqObj.craftsman = this.searchForm.craftsman
                 reqObj.status = this.searchForm.status
                 reqObj.returnStatus = this.searchForm.returnStatus
+                reqObj.shopid = this.searchForm.shopid
                 return reqObj;
             }
         },
@@ -198,7 +208,7 @@
                 })
             },
             getData(reqParams){
-                const fetch = service.member.servicerecords.listLog
+                const fetch = service.member.servicerecords.listLogForChain
                 const params = {...this.pageInfo,...reqParams}
                 this.$refs.table.reloadData({
                     fetch,
@@ -209,6 +219,22 @@
                 this.pageInfo.page=1
                 this.getData(this.searchFormReq);
             },
+            getShopList(params){
+                service.chain.shop.shopList(params).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
+            }
         }
     }
 </script>

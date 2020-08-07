@@ -4,13 +4,8 @@
             <el-tab-pane label="会员分析查询" name="analyze">
                 <el-form ref="searchForm" inline :model="searchForm">
                     <el-form-item label="门店：">
-                        <el-select clearable v-model.trim="searchForm.pcodename"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
-                            <!--<template>-->
-                                <!--<div class = "optionHeader">-->
-                                    <!--<span style="float: left">门店编码</span>-->
-                                    <!--<span style="float: left;">门店名称</span>-->
-                                <!--</div>-->
-                            <!--</template>-->
+
+                        <el-select clearable v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
                             <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
                                 <span style="float: left">{{ item.shopcode }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
@@ -58,9 +53,6 @@
                         </template>
                     </yid-table-column>
                 </yid-table>
-            </el-tab-pane>
-            <el-tab-pane label="会员分配" name="assignment">
-                <Assignment />
             </el-tab-pane>
             <el-tab-pane label="服务日志表" name="logs">
                 <ServiceLog />
@@ -115,13 +107,11 @@
 <script>
     import service from '@src/service'
     import yid from '@src/library'
-    import Assignment from "./components/assignment";
     import ServiceLog from "./components/serviceLog";
     import {exportExecl} from "../../library/helper/execl";
     export default {
         name: "member-relation",
         components: {
-            Assignment,
             ServiceLog,
         },
         data() {
@@ -141,6 +131,7 @@
                     channel : '',
                     eeid : '',
                     isOnline :'',
+                    shopid:''
                 },
                 dictStatusList : [],
                 distChannelList : [],
@@ -167,7 +158,7 @@
         },
         methods:{
             getData(reqParams){
-                const fetch = service.member.userinfo.relationList
+                const fetch = service.member.userinfo.relationListForChain
                 const params = {...this.pageInfo,...reqParams}
                 this.$refs.table.reloadData({
                     fetch,
@@ -308,7 +299,6 @@
             },
             filterShop(v){
                 this.filterShopList = this.allShopList.filter((item) => {
-                    debugger
                     // 如果直接包含输入值直接返回true
                     if (item.shopname.indexOf(v) !== -1) return true
                     if (item.shopcode.indexOf(v) !== -1) return true

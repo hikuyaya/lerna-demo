@@ -26,6 +26,10 @@ export function eelistApp(params) {
     return yid.http.get(`${prefix}/eelistApp`, {params})
 }
 
+export function relationListForChain(params) {
+    return yid.http.get(`${prefix}/chain/relation/list`, {params})
+}
+
 export default {
     relationList,
     editEmployee,
@@ -34,4 +38,5 @@ export default {
     relationExport,
     /**获取未分配数量**/
     eelistApp,
+    relationListForChain
 }

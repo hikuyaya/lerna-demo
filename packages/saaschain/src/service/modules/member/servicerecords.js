@@ -25,4 +25,5 @@ export default {
     memServicelogList,
     //顾客评价记录导出
     memServicelogExport,
+    listLogForChain
 }

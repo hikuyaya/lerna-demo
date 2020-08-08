@@ -5,11 +5,11 @@ const cardfix = 'api-base/cardinfo';
 const servpackfix = 'api-base/servicePackage';
 
 export function queryAllMember(params) {
-    return yid.http.get(`${prefix}/pageMembers`, {params})
+    return yid.http.get(`${prefix}/chain/pageMembers`, {params})
 }
 
 export function queryAllMemberHj(params) {
-    return yid.http.get(`${prefix}/queryAllMemberHj`, {params})
+    return yid.http.get(`${prefix}/chain/queryAllMemberHj`, {params})
 }
 
 export function exportMember(params) {
@@ -53,23 +53,23 @@ export function queryMemberEditlogs(params) {
 }
 
 export function queryMemberpagePackages(params) {
-    return yid.http.post(`${prefix}/pagePackages`, params)
+    return yid.http.post(`${prefix}/chain/pagePackages`, params)
 }
 
 export function queryPackageHj(params) {
-    return yid.http.post(`${prefix}/queryPackageHj`, params)
+    return yid.http.post(`${prefix}/chain/queryPackageHj`, params)
 }
 
 export function queryDelMembers(params) {
-    return yid.http.post(`${prefix}/queryDelMembers`, params)
+    return yid.http.post(`${prefix}/chain/queryDelMembers`, params)
 }
 
 export function queryExpritMembers(params) {
-    return yid.http.post(`${prefix}/queryExpritMembers`, params)
+    return yid.http.post(`${prefix}/chain/queryExpritMembers`, params)
 }
 
 export function queryDirthdayMembers(params) {
-    return yid.http.post(`${prefix}/queryDirthdayMembers`, params)
+    return yid.http.post(`${prefix}/chain/queryDirthdayMembers`, params)
 }
 
 export function memberImport(params) {

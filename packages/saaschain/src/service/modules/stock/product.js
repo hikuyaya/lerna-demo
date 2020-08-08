@@ -7,7 +7,7 @@ export function list(params) {
 }
 
 export function listByPage(params) {
-    return yid.http.get(`${prefix}list`, {params})
+    return yid.http.get(`${prefix}chain/list`, {params})
 }
 
 export function save(params) {

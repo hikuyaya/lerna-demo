@@ -29,6 +29,14 @@
                             </ul>
                         </el-popover>
                     </el-form-item>
+                    <el-form-item label="门店：">
+                    <el-select clearable v-model.trim="allMemberForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                        <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                            <span style="float: left">{{ item.shopcode }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                        </el-option>
+                    </el-select>
+                    </el-form-item>
                     <el-form-item style="margin-bottom:0">
                         <el-button @click="allMemberSearch" type="primary">查询</el-button>
                         <el-button @click="openSeniorSearch" type="primary">高级查询</el-button>
@@ -118,6 +126,14 @@
                     <el-form-item style="margin-bottom:0">
                         <el-button @click="queryMemberPackages()" type="primary">查询</el-button>
                     </el-form-item>
+                    <el-form-item label="门店：">
+                        <el-select clearable v-model.trim="memberpackfrom.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                 </el-form>
                 <div style="padding-bottom: 5px">本次查询出的所有会员套餐项目总剩次数:{{memberpackhj.servsum}}次， 总剩余金额:{{memberpackhj.servje}}元；产品总剩余数量{{memberpackhj.packsum}}个</div>
                 <el-table ref="memberpacktable" :data="memberpackData" :span-method="objectSpanMethod2" style="width: 100%">
@@ -171,6 +187,14 @@
                     <el-form-item style="margin-bottom:0">
                         <el-button @click="queryDelMembers()" type="primary">查询</el-button>
                     </el-form-item>
+                    <el-form-item label="门店：">
+                        <el-select clearable v-model.trim="memberDelfrom.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                 </el-form>
                 <yid-table pagination ref="memberDelTable">
                     <yid-table-column label="姓名" min-width="80" prop="memname"></yid-table-column>
@@ -211,6 +235,14 @@
                     </el-form-item>
                     <el-form-item style="margin-bottom:0">
                         <el-button @click="queryExpritMembers()" type="primary">查询</el-button>
+                    </el-form-item>
+                    <el-form-item label="门店：">
+                        <el-select clearable v-model.trim="memberExporfrom.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-form>
                 <yid-table pagination ref="memberExproTable">
@@ -262,6 +294,14 @@
                     <el-form-item style="margin-bottom:0">
                         <el-button @click="queryDirthdayMembers()" type="primary">查询</el-button>
                         <el-button @click="sendMessage()" type="primary">发送短信</el-button>
+                    </el-form-item>
+                    <el-form-item label="门店：">
+                        <el-select clearable v-model.trim="memberBirthfrom.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                 </el-form>
                 <yid-table pagination ref="memberBirthTable">
@@ -843,6 +883,7 @@
                     esmoney:'',
                     sexprite:'',
                     eexprite:'',
+                    shopid:""
                 },
                 memberHj:{
                     count:0, zkj:0, zzs:0
@@ -888,12 +929,12 @@
                 packagelist:[],
                 memberfrom: { memid:'', date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 },
                 memberlogfrom: { memid:'', date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 },
-                memberpackfrom: { name:'', piid:'',servid:'',pid:'',date:[], page: 1, limit: 10, total: 0 },
+                memberpackfrom: { name:'', piid:'',servid:'',pid:'',shopid:"",date:[], page: 1, limit: 10, total: 0 },
                 memberpackData: [],
                 memberpackhj: {servsum:0,packsum:0,servje:0,packje:0 },
-                memberDelfrom: { name:'' , date:[], page: 1, limit: 10, total: 0},
-                memberExporfrom: { name:'', date:[], page: 1, limit: 10, total: 0},
-                memberBirthfrom: { type:'', day:'', month:'', page: 1, limit: 10, total: 0},
+                memberDelfrom: { name:'' ,shopid:"", date:[], page: 1, limit: 10, total: 0},
+                memberExporfrom: { name:'', shopid:"",date:[], page: 1, limit: 10, total: 0},
+                memberBirthfrom: { type:'', day:'', shopid:"",month:'', page: 1, limit: 10, total: 0},
                 memberImport:{ type: '', members:[] },
                 memberImpform:{
                     page: 1, limit: 10, total: 0
@@ -962,7 +1003,9 @@
                 storefrom: {
                    mimid:'', date:[], billcode:'', pcode:'', pname:'',page: 1, limit: 10, total: 0
                 },
-                storeData:[]
+                storeData:[],
+                allShopList:[],
+                filterShopList:[]
             }
         },
         filters: {
@@ -1031,6 +1074,7 @@
         },
         mounted() {
             this.init();
+            this.getShopList({status:"0"});
         },
         methods: {
             init(){
@@ -1576,6 +1620,22 @@
             downExcelTemplate3(){
                 download($yid.config.API.BASE + '/api-member/memberinfo/excelTemplate3', {})
             },
+            getShopList(params){
+                service.chain.shop.shopList(params).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
+            }
         }
     }
 </script>

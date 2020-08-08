@@ -2,7 +2,7 @@ import yid from '@src/library'
 
 const prefix = 'api-stock/out/';
 export function list(params) {
-    return yid.http.get(`${prefix}findListWithPro`, {params})
+    return yid.http.get(`${prefix}chain/findListWithPro`, {params})
 }
 
 export function save(params) {

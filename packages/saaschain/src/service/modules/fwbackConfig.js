@@ -3,7 +3,7 @@ import yid from '@src/library'
 const prefix = 'api-base';
 const prefixPush = 'api-push';
 export function getServiceType(params) {
-    return yid.http.get(`${prefix}/servicetype/list/all`, {params})
+    return yid.http.get(`api-chain/servicetype/list/all`, {params})
 }
 
 export function getServiceInfoByTypeId(params) {
@@ -33,6 +33,12 @@ export function getServiceWxReturnById(id) {
     const url = `${prefixPush}/servicewxreturn/id/${id}`
     return yid.http.get(url)
 }
+
+export function brandList() {
+    const url = `api-chain/brand/list/allBrand`
+    return yid.http.get(url)
+}
+
 export default {
     /** 类别 */
     getServiceType,
@@ -42,5 +48,7 @@ export default {
     getServiceWxReturnById,
     addWxtask,
     getWxtaskBywrIdAndtype,
-    deletWxTaskById
+    deletWxTaskById,
+
+    brandList
 }

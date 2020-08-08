@@ -4,15 +4,15 @@ const prefix = 'api-chain/wheelrest';
 
 export function deleteCwr(id) {
     let param={id:id,isDel:'1'}
-    return yid.http.post(`${prefix}/`,param)
+    return yid.http.post(`api-cashier/wheelrest/`,param)
 }
 
 export function saveCwr(param) {
-    return yid.http.post(`${prefix}/`,param)
+    return yid.http.post(`api-cashier/wheelrest/`,param)
 }
 
-export function getCwr() {
-    return yid.http.get(`${prefix}/list/shop`)
+export function getCwr(param) {
+    return yid.http.get(`api-cashier/wheelrest/chain/list/shop?shopid=`+param)
 }
 
 export function getPostions(params) {

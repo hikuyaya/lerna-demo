@@ -1,11 +1,19 @@
 <template>
     <div class="fwhfConfig">
+        <el-form ref="searchForm" :model="searchForm" inline label-width="60px" color="#000" style="color: #000; font-weight: bold; margin-top: 20px;">
+            <el-form-item label="品牌：">
+                <el-select clearable v-model.trim="searchForm.brandId" filterable :filter-method="filterBrand" placeholder="请选择" style="width: 160px;">
+                    <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in filterBrandList">
+                        <!--<span style="float: left">{{ item.shopcode }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>-->
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item label=""><el-button type="primary" @click="getFwhfConfig()">查询</el-button></el-form-item><br/>
+        </el-form>
         <div class="con">
             <div class="conleft">
                 <div>
-
-
-                    </el-tabs>
                     <el-tabs v-model="editableTabsValue" @tab-click="tabClick" type="card">
                         <el-tab-pane
                                 :key="item.id"
@@ -243,38 +251,18 @@
                 wrid:0,
                 type:1,
                 wxtask:[],
-                selectReobj:{}
+                selectReobj:{},
+                searchForm: {
+                    brandId: ""
+                },
+                allBrandList: [],
+                filterBrandList:[],
             }
         },
         mounted() {
-
-            yid.service.fwbackConfig.getServiceType(null).then(res => {
-
-                console.log("sssss",res.data)
-
-                this.tabs=res.data
-                this.editableTabsValue=res.data[0].id,
-                this.editableTabsName=res.data[0].sname
-
-                let parm={servtid:this.editableTabsValue,isDel:'0',page:1,limit:1000}
-                yid.service.fwbackConfig.getServiceWxReturn(parm).then(res => {
-
-                    console.log("res111111111111111111",res);
-                    this.wxreturns=res.data
-
-
-                }).catch((res)=> {
-
-                });
-
-
-
-
-            }).catch((res)=> {
-
-            });
-
+            this.getBrandList()
         },
+
         methods: {
             delMb(id)
             {
@@ -387,7 +375,11 @@
 
                 obj.serStatus=callback;
                 yid.service.fwbackConfig.saveServiceWxReturn(obj).then(res => {
-                    yid.service.fwbackConfig.getServiceType(null).then(res => {
+                    let param = {
+                        brandId: this.searchForm.brandId,
+                        status: "1"
+                    }
+                    yid.service.fwbackConfig.getServiceType(param).then(res => {
 
                         console.log("sssss",res.data)
 
@@ -420,7 +412,11 @@
             {
                 obj.cusStatus=callback;
                 yid.service.fwbackConfig.saveServiceWxReturn(obj).then(res => {
-                    yid.service.fwbackConfig.getServiceType(null).then(res => {
+                    let param = {
+                        brandId: this.searchForm.brandId,
+                        status: "1"
+                    }
+                    yid.service.fwbackConfig.getServiceType(param).then(res => {
 
                         console.log("sssss",res.data)
 
@@ -504,7 +500,8 @@
                         servtid: this.editableTabsValue,
                         servtname: this.editableTabsName,
                         servids: servids,
-                        servnames: servnames
+                        servnames: servnames,
+                         brandid: this.searchForm.brandId
                     }
                 }
                 else
@@ -514,13 +511,14 @@
                         servtid: this.editableTabsValue,
                         servtname: this.editableTabsName,
                         servids: servids,
-                        servnames: servnames
+                        servnames: servnames,
+                         brandid: this.searchForm.brandId
                     }
                 }
                 console.log("pm",pm)
                     yid.service.fwbackConfig.saveServiceWxReturn(pm).then(res => {
 
-                        let parm={servtid:this.editableTabsValue,isDel:'0',page:1,limit:1000}
+                        let parm={servtid:this.editableTabsValue,isDel:'0',brandId:this.searchForm.brandId,page:1,limit:1000}
                         yid.service.fwbackConfig.getServiceWxReturn(parm).then(ppres => {
 
 
@@ -708,6 +706,52 @@
             },
             getMbConfig(){
                 this.$router.push("./messMbConfig");
+            },
+            getBrandList() {
+                service.fwbackConfig.brandList().then(res => {
+                    if(res.resp_code == 200) {
+                        this.filterBrandList = res.data;
+                        this.allBrandList = Object.assign(this.filterBrandList);//保留原数据
+                    }
+                })
+            },
+            filterBrand(v){
+                this.filterBrandList = this.allBrandList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.name.indexOf(v) !== -1) return true
+                })
+            },
+            getFwhfConfig(){
+                let brandId = this.searchForm.brandId;
+                if(brandId==""){
+                    this.$message({ type: 'error', message: '请选择一个品牌'});
+                    return
+                }
+                let param = {
+                    brandId: brandId,
+                    status: "1"
+                }
+                yid.service.fwbackConfig.getServiceType(param).then(res => {
+
+                    console.log("sssss",res.data)
+
+                    this.tabs=res.data
+                    this.editableTabsValue=res.data[0].id,
+                        this.editableTabsName=res.data[0].sname
+
+                    let parm={servtid:this.editableTabsValue,isDel:'0',page:1,limit:1000}
+                    yid.service.fwbackConfig.getServiceWxReturn(parm).then(res => {
+
+                        console.log("res111111111111111111",res);
+                        this.wxreturns=res.data
+
+
+                    }).catch((res)=> {
+
+                    });
+                }).catch((res)=> {
+
+                });
             }
         },
 

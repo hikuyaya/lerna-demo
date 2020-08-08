@@ -43,8 +43,8 @@
             </el-tab-pane>
 
             <el-tab-pane label="员工轮牌配置" name="wheel">
-                <el-button @click="addWheel()" type="primary">新增</el-button>
-                <el-form ref="wheelform" :model="wheelform" inline label-width="160px" color="#000" style="color: #000; font-weight: bold">
+                <!--<el-button @click="addWheel()" type="primary">新增</el-button>-->
+                <el-form ref="wheelform" :model="wheelform" inline label-width="60px" color="#000" style="color: #000; font-weight: bold; margin-top: 20px;">
                     <el-form-item label="门店：">
                         <el-select clearable v-model.trim="wheelform.shopid" filterable :filter-method="filterShop" placeholder="请选择" style="width: 160px;">
                             <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
@@ -70,8 +70,20 @@
                     </yid-table-column>
                 </yid-table>
             </el-tab-pane>
-            <!--<el-tab-pane label="轮牌临休配置" name="rest">
-                <el-button @click="addWheelRest()" type="primary">新增</el-button>
+
+            <el-tab-pane label="轮牌临休配置" name="rest">
+                <!--<el-button @click="addWheelRest()" type="primary">新增</el-button>-->
+                <el-form ref="resetform" :model="resetform" inline label-width="60px" color="#000" style="color: #000; font-weight: bold; margin-top: 20px;">
+                    <el-form-item label="门店：">
+                        <el-select clearable v-model.trim="resetform.shopid" filterable :filter-method="filterShop2" placeholder="请选择" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList2">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label=""><el-button type="primary" @click="getWheelRest()">查询</el-button></el-form-item><br/>
+                </el-form>
                 <yid-table ref="wcRestTable" :data="wheelRestData" style="margin-top: 15px; width: 420px;">
                     <yid-table-column label="名称" min-width="130">
                         <template slot-scope="scope">
@@ -102,7 +114,7 @@
                         </template>
                     </yid-table-column>
                 </yid-table>
-            </el-tab-pane>-->
+            </el-tab-pane>
             <el-tab-pane label="小票打印设置" name="printset">
                 <yid-table ref="printsetTable" :data="printsetData" style="margin-top: 15px; width: 780px;">
                     <yid-table-column label="小票模板编号"prop="code"  min-width="150"></yid-table-column>
@@ -339,10 +351,14 @@
                 psList: [],
                 printsetData: [],
                 printitemData: [],
-
                 allShopList:[],
                 filterShopList:[],
                 wheelform: {
+                    shopid: ""
+                },
+                allShopList2:[],
+                filterShopList2:[],
+                resetform: {
                     shopid: ""
                 }
             }
@@ -361,7 +377,7 @@
                 })
             },
             getWheelRest() {
-                service.wheelRest.getCwr().then(res => {
+                service.wheelRest.getCwr(this.resetform.shopid).then(res => {
                     res.data.map(e => {
                         e.edit = false
                     })
@@ -571,11 +587,21 @@
                     if(res.resp_code == 200) {
                         this.filterShopList = res.data;
                         this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                        this.filterShopList2 = res.data;
+                        this.allShopList2 = Object.assign(this.filterShopList2);//保留原数据
                     }
                 })
             },
             filterShop(v){
                 this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
+            },
+            filterShop2(v){
+                this.filterShopList2 = this.allShopList2.filter((item) => {
                     // 如果直接包含输入值直接返回true
                     if (item.shopname.indexOf(v) !== -1) return true
                     if (item.shopcode.indexOf(v) !== -1) return true

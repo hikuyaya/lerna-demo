@@ -16,7 +16,7 @@ export function getCwc(param) {
 }
 
 
-export default {
+    export default {
     /** 删除轮牌设置 */
     deleteCwc,
     /** 更新轮牌设置 */

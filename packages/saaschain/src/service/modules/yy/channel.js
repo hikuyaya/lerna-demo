@@ -1,6 +1,6 @@
 import yid from '@src/library'
 
-const prefix = 'api-yy/channel';
+const prefix = 'api-chain/channel';
 
 export function getCode(params) {
     return yid.http.get(`${prefix}/getCode`, {params})

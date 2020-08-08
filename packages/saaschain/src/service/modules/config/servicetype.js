@@ -1,6 +1,6 @@
 import yid from '@src/library'
 
-const prefix = 'api-base/servicetype';
+const prefix = 'api-chain/servicetype';
 
 export function getServicetypes(params) {
     return yid.http.get(`${prefix}/list/all`,{params})

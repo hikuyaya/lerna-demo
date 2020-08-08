@@ -1,6 +1,6 @@
 import yid from '@src/library'
 
-const prefix = 'api-yy/config';
+const prefix = 'api-chain/config';
 
 export function getYYconfig(params) {
     return yid.http.get(`${prefix}/getYYconfig`, {params})

@@ -1,6 +1,20 @@
 <template>
     <div>
+        <el-form ref="searchForm" inline :model="searchForm">
+            <el-form-item label="门店：">
+                <el-select clearable v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                    <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                        <span style="float: left">{{ item.shopcode }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                    </el-option>
+                </el-select>
+            </el-form-item>
+            <el-form-item style="margin-bottom:0">
+                <el-button @click="seachRecords" type="primary">查询</el-button>
+            </el-form-item>
+        </el-form>
         <el-form ref="form" :model="configForm" label-width="180px" color="#000" style="color: #000; font-weight: bold">
+
             <label>1、迟到：</label>
                <el-input v-model="configForm.allowCd" onKeypress="return(/[\d]/.test(String.fromCharCode(event.keyCode)))" style="width: 80px"></el-input> 分钟算正常<br/><br/>
             <label>2、早退：</label>
@@ -131,6 +145,10 @@
             return {
                 isAddress : false,
                 isWifi : false,
+                searchForm : {
+
+                    shopid:''
+                },
                 configForm : {
                     id : '',
                     address : '',
@@ -196,6 +214,8 @@
                     bssid : '',
                     mac : '',
                 },
+                allShopList:[],
+                filterShopList:[]
             }
         },
         mounted() {
@@ -211,7 +231,8 @@
         created() {
             //查询添加迟到/早退规则列表
             this.getCheckRuleList();
-            this.getShopConfigList();
+            this.getShopConfigList("");
+            this.getShopList({status:"0"});
         },
         methods: {
             getCheckRuleList(){
@@ -229,6 +250,7 @@
                 })
             },
             getShopConfigList(){
+
                 service.pers.shopConfig.shopconfigList({}).then(res=>{
                     if(res.resp_code == 200) {
                         if(res.data.length > 0){
@@ -254,6 +276,41 @@
                                 this.addressData.push({address:'',lat:'',lng:'',accuracy:'100'});
                             }
                         }else{
+                            this.wifiData.push({bssid:'',mac:''});
+                            this.addressData.push({address:'',lat:'',lng:'',accuracy:'100'});
+                        }
+                    }
+                })
+            },
+            seachRecords(){
+                service.pers.shopConfig.shopconfigList({shopid:this.searchForm.shopid}).then(res=>{
+                    if(res.resp_code == 200) {
+
+                        if(res.data.length > 0){
+                            this.configForm = res.data[0];
+                            this.wifiData = [];
+                            this.addressData = [];
+                            //给列表赋值
+                            if(res.data[0].bssid != null && res.data[0].bssid.length > 0){
+                                this.isWifi = true;
+                                this.wifiForm.bssid = res.data[0].bssid;
+                                this.wifiForm.mac = res.data[0].mac;
+                                this.wifiData.push({bssid:this.wifiForm.bssid,mac:this.wifiForm.mac})
+                            }else{
+                                this.wifiData.push({bssid:'',mac:''})
+                            }
+                            if(res.data[0].address != null && res.data[0].address.length > 0){
+                                this.isAddress = true;
+                                this.addressForm.address = res.data[0].address;
+                                this.addressForm.lat = res.data[0].lat;
+                                this.addressForm.lng = res.data[0].lng;
+                                this.addressData.push({address:this.addressForm.address,lat:this.addressForm.lat,lng:this.addressForm.lng,accuracy:res.data[0].accuracy})
+                            }else{
+                                this.addressData.push({address:'',lat:'',lng:'',accuracy:'100'});
+                            }
+                        }else{
+                           // alert(1)
+                            this.configForm={}
                             this.wifiData.push({bssid:'',mac:''});
                             this.addressData.push({address:'',lat:'',lng:'',accuracy:'100'});
                         }
@@ -413,6 +470,22 @@
                     }
                 })
             },
+            getShopList(params){
+                service.chain.shop.shopList(params).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
+            }
         }
     }
 </script>

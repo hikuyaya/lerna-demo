@@ -1,6 +1,14 @@
 <template>
     <div class="check_chstatistics">
         <el-form ref="searchForm" inline :model="searchForm">
+            <el-form-item label="门店：">
+                <el-select clearable v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                    <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                        <span style="float: left">{{ item.shopcode }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="选择日期：">
                 <el-date-picker
                         v-model="searchForm.cmonth"
@@ -42,6 +50,8 @@
                     cmonth : '',
                 },
                 pageInfo:{page:1,limit:50},
+                allShopList:[],
+                filterShopList:[]
             }
         },
         mounted(){
@@ -54,6 +64,7 @@
             let date1 = year + "-" + month
             this.searchForm.cmonth = date1
             this.getData(this.searchForm);
+            this.getShopList({status:"0"});
         },
         methods:{
             getData(reqParams){
@@ -72,6 +83,22 @@
                 let params = this.searchForm;
                 download($yid.config.API.BASE + '/api-pers/checkchstatistics/list/excel', params)
             },
+            getShopList(params){
+                service.chain.shop.shopList(params).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
+            }
         }
     }
 </script>

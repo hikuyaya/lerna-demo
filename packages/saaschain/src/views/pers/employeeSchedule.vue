@@ -1,6 +1,15 @@
 <template>
     <div class="employeeSchedule">
         <el-form :model="ruleForm" ref="ruleForm" inline>
+
+            <el-form-item label="门店：">
+                <el-select clearable v-model.trim="ruleForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                    <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                        <span style="float: left">{{ item.shopcode }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="选择月份：" prop="month">
                 <el-date-picker
                         :clearable="false"
@@ -126,7 +135,8 @@
                     pslid : '',
                     eename : '',
                     isDel : '0',
-                    status : '1'
+                    status : '1',
+                    shopid : '',
                 },
                 mutiImportDialog: {
                     title: '',
@@ -204,6 +214,7 @@
             this.getCheckClassAll();
             this.getDayWeeks();
             this.getScheduleList();
+            this.getShopList({status:"0"});
         },
         methods:{
             getScheduleList(){
@@ -490,6 +501,22 @@
                     this.$refs.multipleTable.clearSelection();
                 }
             },
+            getShopList(params){
+                service.chain.shop.shopList(params).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
+            }
         }
     }
 </script>

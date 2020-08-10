@@ -541,6 +541,16 @@ export const MENU = {
           icon: null,
           canShow: true
       },
+    {
+      id: 102,
+      pid: 10,
+      name: '门店品牌管理',
+      title: '门店品牌管理',
+      path: '/shop/shopbrand',
+      component: 'shop/shopbrand',
+      icon: null,
+      canShow: true
+    },
       { id: 11, pid: null, name: '付款配置', title: null, path: null, icon: 'iconfont-channelmanagement' },
       {
           id: 111,

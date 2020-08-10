@@ -3,7 +3,7 @@ import yid from '@src/library'
 const prefix = 'api-pers/awarddesc';
 
 export function awarddescList(params) {
-    return yid.http.post(`${prefix}/awarddescList`, params)
+    return yid.http.get(`${prefix}/chain/awarddescList`, {params})
 }
 
 export function batchUpate(params) {
@@ -16,7 +16,7 @@ export function batchImport(params) {
 }
 
 export function awarddescSum(params) {
-    return yid.http.post(`${prefix}/awarddescSum`, params)
+    return yid.http.get(`${prefix}/chain/awarddescSum`, {params})
 }
 export default {
     awarddescList,

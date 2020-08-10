@@ -3,7 +3,7 @@ import yid from '@src/library'
 const prefix = 'api-pers';
 
 export function getERList(params) {
-    return yid.http.post(`${prefix}/employeeroyalty/list`, params)
+    return yid.http.post(`${prefix}/employeeroyalty/chain/list`, params)
 }
 
 export default {

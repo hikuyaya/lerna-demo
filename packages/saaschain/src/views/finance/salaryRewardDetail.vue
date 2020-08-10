@@ -12,6 +12,16 @@
                 </el-date-picker>
             </el-form-item>
 
+            <el-form-item label="门店：">
+
+                <el-select clearable v-model.trim="ruleForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                    <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                        <span style="float: left">{{ item.shopcode }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                    </el-option>
+                </el-select>
+            </el-form-item>
+
             <el-form-item label="">
                 <el-button @click="getAwardDescList" type="primary">查询</el-button>
                 &nbsp;&nbsp;&nbsp;
@@ -115,6 +125,7 @@
                 tableData : [],
                 ruleForm: {
                     month: '',
+                    shopid:""
                 },
                 mutiImportDialog: {
                     title: '',
@@ -122,8 +133,10 @@
                     importData: []
                 },
                 myheaders:{},
-                zmoney : '',
-                fmoney:'',
+                zmoney : '0',
+                fmoney:'0',
+                allShopList:[],
+                filterShopList:[]
             }
         },
         computed: {
@@ -148,6 +161,7 @@
             });
 
             this.getAwardDescList();
+            this.getShopList({status:"0"});
         },
         methods:{
             getAwardDescList(){
@@ -156,6 +170,8 @@
                     return;
                 }
                 this.tableData = [];
+                this.zmoney = '0';
+                this.fmoney = '0';
                 if (this.ruleForm.month instanceof Date)
                     this.ruleForm.month = this.ruleForm.month.formatDate("yyyy-MM");
                 service.pers.awardDesc.awarddescList(this.ruleForm).then(res => {
@@ -163,8 +179,10 @@
                         this.tableData = res.data;
                         //查询奖励项和扣罚项合计
                         service.pers.awardDesc.awarddescSum(this.ruleForm).then(res1=>{
-                            this.zmoney = res1.data.zmoney;
-                            this.fmoney = res1.data.fmoney;
+                            if(res1.data != null && res1.data != ''){
+                                this.zmoney = res1.data.zmoney;
+                                this.fmoney = res1.data.fmoney;
+                            }
                         })
                     }
                 })
@@ -281,6 +299,22 @@
                 return sums;
 
             },
+            getShopList(params){
+                service.chain.shop.shopList(params).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
+            }
         }
     }
 </script>

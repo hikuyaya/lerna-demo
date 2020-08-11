@@ -207,38 +207,7 @@
                         </div>
                     </el-col>
                 </el-row>
-               <!-- <el-row :gutter="40">
-                    <el-col :span="6">
-                        <div class="grid-content">
-                            <div class="b">¥20</div>
-                            <div>200条</div>
-                            <div>0.1元／条</div>
-                        </div>
-                    </el-col>
-                    <el-col :span="6">
-                        <div class="grid-content">
-                            <div class="b">¥20</div>
-                            <div>200条</div>
-                            <div>0.1元／条</div>
-                        </div>
-                    </el-col>
-                    <el-col :span="6">
-                        <div class="grid-content">
-                            <div class="b">¥20</div>
-                            <div>200条</div>
-                            <div>0.1元／条</div>
-                        </div>
-                    </el-col>
-                    <el-col :span="6">
-                        <div class="grid-content">
-                            <div class="b">¥20</div>
-                            <div>200条</div>
-                            <div>0.1元／条</div>
-                        </div>
-                    </el-col>
-                </el-row>-->
             </el-tab-pane>
-
         </el-tabs>
 
         <yid-dialog :title="tempDialog.title" :visible.sync="tempDialog.visible" @close="" width="600px">
@@ -390,10 +359,6 @@
                                 placeholder="请在框中输入你要发送的手机号，手机之间用逗号或换行回车符分开"
                         >
                         </el-input>
-                       <!-- <el-select v-model="form.knowledge" style="width:90%" clearable multiple filterable allow-create default-first-option placeholder="请在框中输入你要发送的手机号，手机之间用回车添加">
-                            <el-option v-for="item in knowledge" :key="item.value" :label="item.label" :value="item.label"></el-option>
-                        </el-select>-->
-
                     </el-form-item>
                 </template>
                 <el-form-item>
@@ -591,35 +556,42 @@
                 ],
                 value1: '',
                 birthdayFrom:{
+                    id: "",
                     autosend:false,
                     autoMessage:"",
                 },
                 chargingList:[],
 
-                worksNameArr:""
+                worksNameArr:"",
+
+                pageInfo:{page:1,limit:10},
             }
         },
 
         mounted() {
            console.log("部门")
 
-            const params = {status:'1'}
+            const params = {status:'1',isDel:'0'}
             yid.service.sms.getBranchByTenantId(params).then(res => {
                 // 存储登录信息到本地缓存
                 console.log("sssss",res.data)
                 let firstAll={id:"0",bname:"请选择"}
                 res.data.unshift(firstAll);
                 this.qfForm.branchdepoptions=res.data;
+
+            }).catch((res)=> {
+
+            });
+            yid.service.sms.getBranchByTenantId2(params).then(res => {
+                // 存储登录信息到本地缓存
+                console.log("ssssschain",res.data)
+                let firstAll={id:"0",bname:"请选择"}
+                res.data.unshift(firstAll);
                 this.modelAddForm.branchdepoptions=res.data;
 
             }).catch((res)=> {
 
             });
-
-
-
-
-
         },
 
         methods: {
@@ -683,14 +655,7 @@
                 var reg=/,$/gi;
                 this.modelAddForm.servids= this.tempsid.replace(reg,"");
                 this.modelAddForm.servnames=this.tempsname.replace(reg,"");
-
-
-
-
-
             },
-
-
 
             changedep()
             {
@@ -702,10 +667,6 @@
                     console.log("部门下的员工",res.data)
                     console.log("employees",this.qfForm.employees)
                     this.qfForm.employees=res.data
-
-
-                    //this.modelAddForm.branchdepoptions=res.data;
-
 
                 }).catch((res)=> {
 
@@ -725,14 +686,10 @@
 
                 this.modelservice="";
                 let params={branch:this.modelAddForm.modelbranchid}
-                yid.service.sms.getServiceTypeeByBranhid(params).then(res => {
+                yid.service.sms.getServiceTypeeByBranhid2(params).then(res => {
                     // 存储登录信息到本地缓存
                     console.log("部门下项目分类",res.data)
                     this.modelAddForm.servicetypes=res.data
-                    /* let firstAll={id:"0",bname:"所有部们"}
-                     res.data.unshift(firstAll);
-                     this.branchdepoptions=res.data;*/
-
 
                 }).catch((res)=> {
 
@@ -754,6 +711,7 @@
                 }
 
                 let birthdayParm={
+                    id: this.birthdayFrom.id,
                     isAuto:autovalue,
                     scontent:this.birthdayFrom.autoMessage
                 }
@@ -893,25 +851,6 @@ if(this.qfForm.sendtels=="")
                         return false
                     }
                 });
-
-/*
-                console.log("typeValue",this.typeValue)
-
-                let params={typeValue:this.typeValue,messageContent:this.messageContent,
-                    addcw:this.addcw,sendtype:this.sendtype,sendtime:this.sendtime
-
-                 };
-
-                console.log("params",params)
-               /!* const params = this.model
-                yid.service.sms.list(params).then(res => {
-                    // 存储登录信息到本地缓存
-                  console.log("sssss")
-                }).catch((res)=> {
-
-                });*!/
-              */
-
             },
             tempAlert(tag = false) {
                 this.tempDialog.title = '项目回访短信模板';
@@ -929,9 +868,9 @@ if(this.qfForm.sendtels=="")
                             servids:this.modelAddForm.servids,
                             scontent:this.modelAddForm.modelText,
                             afterDay:this.modelAddForm.xfday,
-                            branchid:this.modelAddForm.modelbranchid,
-                            branchname:this.modelAddForm.modelbranchname
-
+                            branchid:this.modelAddForm.modelbranchid=="0"?"":this.modelAddForm.modelbranchid,
+                            branchname:this.modelAddForm.modelbranchname,
+                            isDel: "0"
                         }
                         yid.service.sms.savesmsreturn(parm).then(res => {
 
@@ -1029,12 +968,19 @@ if(this.qfForm.sendtels=="")
                     }).catch((res)=> {
 
                     });
+                    /*const fetch = yid.service.sms.getSmsreturnPage(returnParams);
+                    const params = {...this.pageInfo,...returnParams}
+                    this.$refs.table.reloadData({
+                        fetch,
+                        params,
+                    });*/
                 }
                 if(tab.name == 'remind'){
 //第三个
-                    yid.service.sms.getBirthdaySms(1).then(res => {
+                    yid.service.sms.getBirthdaySms().then(res => {
                         // 存储登录信息到本地缓存
                         console.log("sssss",res.data)
+                        this.birthdayFrom.id = res.data.id
                         if(res.data.isAuto=="1")
                         {
                             this.birthdayFrom.autosend=true;

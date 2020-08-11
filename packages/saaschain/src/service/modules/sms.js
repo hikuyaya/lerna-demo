@@ -3,6 +3,8 @@ import yid from '@src/library'
 const prefix = 'api-base';
 const prefixPush = 'api-push';
 const prefixUser = 'api-member';
+const prefixChain = 'api-chain';
+
 export function list(params) {
 
     return yid.http.get(`${prefix}/list`, params)
@@ -10,7 +12,9 @@ export function list(params) {
 export function getBranchByTenantId(params) {
     return yid.http.get(`${prefix}/branch/list/all`, { params })
 }
-
+export function getBranchByTenantId2(params) {
+    return yid.http.get(`${prefixChain}/branch/list/all`, { params })
+}
 
 export function getemployeeByBranhid(params) {
     return yid.http.get(`${prefix}/employee/list/all`, { params })
@@ -19,7 +23,9 @@ export function getemployeeByBranhid(params) {
 export function getServiceTypeeByBranhid(params) {
     return yid.http.get(`${prefix}/servicetype/list/all`, { params })
 }
-
+export function getServiceTypeeByBranhid2(params) {
+    return yid.http.get(`${prefixChain}/servicetype/list/all`, { params })
+}
 
 export function sendSmsMessage(params) {
     return yid.http.post(`${prefixPush}/smstask`, params )
@@ -33,23 +39,23 @@ export function findConditionSms(params) {
 }
 
 export function savesmsreturn(params) {
-    return yid.http.post(`${prefixPush}/servicesmsreturn`, params )
+    return yid.http.post(`${prefixChain}/servicesmsreturn`, params )
 }
 
 export function getSmsreturnPage(params) {
-    return yid.http.get(`${prefixPush}/servicesmsreturn`, { params } )
+    return yid.http.get(`${prefixChain}/servicesmsreturn`, { params } )
 }
 
 export function saveBirthdaySms(params) {
-    return yid.http.post(`${prefixPush}/birthdaysms`, params  )
+    return yid.http.post(`${prefixChain}/birthdaysms`, params  )
 }
 
 
 export function getSmsRecordList(params) {
     return yid.http.get(`${prefixPush}/smstask`, {params}  )
 }
-export function getBirthdaySms(id) {
-    const url = `${prefixPush}/birthdaysms/id/${id}`
+export function getBirthdaySms() {
+    const url = `${prefixChain}/birthdaysms/list/findAllByShop`
     return yid.http.get(url)
 
 }
@@ -89,5 +95,7 @@ export default {
     deleteTaskByID,
     updateTaskConnetById,
     getCharging,
-    getstaskreply
+    getstaskreply,
+    getBranchByTenantId2,
+    getServiceTypeeByBranhid2,
 }

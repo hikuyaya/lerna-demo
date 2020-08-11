@@ -3,11 +3,11 @@ import yid from '@src/library'
 const prefix = 'api-pers/employeestream';
 
 export function streamList(params) {
-    return yid.http.get(`${prefix}/streamList`, {params})
+    return yid.http.get(`${prefix}/chain/streamList`, {params})
 }
 
 export function streamListExport(params) {
-    return yid.http.get(`${prefix}/streamListExport`, {params})
+    return yid.http.get(`${prefix}/chain/streamListExport`, {params})
 }
 
 export default {

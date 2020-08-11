@@ -1,9 +1,18 @@
 <template>
     <div class="member-review">
         <el-form ref="searchForm" inline :model="searchForm">
+            <el-form-item label="选择门店：">
+                <el-select clearable v-model="searchForm.shopid" filterable :filter-method="filterShop" placeholder="请选择">
+                    <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                        <span style="float: left">{{ item.shopcode }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="会员查询：">
                 <el-input clearable v-model="searchForm.memcodename" placeholder="姓名/手机号"  style="width: 180px;"></el-input>
             </el-form-item>
+            <br/>
             <el-form-item label="评价时间：">
                 <el-date-picker
                         v-model="searchForm.saleTime"
@@ -63,6 +72,7 @@
         data() {
             return {
                 searchForm : {
+                    shopid: '',
                     memcodename : '',
                     saleTime : [],
                     rate : '',
@@ -78,9 +88,12 @@
                     label : '差评'
                 }],
                 pageInfo:{page:1,limit:10},
+                allShopList:[],
+                filterShopList:[],
             }
         },
         mounted(){
+            this.getShopList();
             let d = new Date
             let year = d.getFullYear()
             let month = d.getMonth()+1
@@ -114,6 +127,7 @@
                 }
                 reqObj.memcodename = this.searchForm.memcodename
                 reqObj.rate = this.searchForm.rate
+                reqObj.shopid = this.searchForm.shopid
                 return reqObj;
             }
         },
@@ -179,6 +193,22 @@
                     }else{
                         yid.util.error(res.resp_msg);
                     }
+                })
+            },
+            getShopList() {
+                service.chain.shop.shopList({status:'0'}).then(res => {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
                 })
             },
         }

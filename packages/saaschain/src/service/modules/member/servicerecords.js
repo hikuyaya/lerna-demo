@@ -7,11 +7,11 @@ export function listLog(params) {
 }
 
 export function memServicelogList(params) {
-    return yid.http.get(`${prefix}/memServicelogList`, {params})
+    return yid.http.get(`${prefix}/chain/memServicelogList`, {params})
 }
 
 export function memServicelogExport(params) {
-    return yid.http.get(`${prefix}/memServicelogExport`, {params})
+    return yid.http.get(`${prefix}/chain/memServicelogExport`, {params})
 }
 
 export function listLogForChain(params) {

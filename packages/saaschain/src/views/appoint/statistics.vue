@@ -8,10 +8,6 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="门店" name="store">
                 <el-form inline ref="model" :model="model">
-                    <el-form-item label="门店：">
-                        <el-input clearable placeholder="门店名称/门店编码" style="width: 180px;"
-                                  v-model="model.shopcode"></el-input>
-                    </el-form-item>
                     <el-form-item label="统计时间：">
                         <el-date-picker
                                 placeholder
@@ -33,6 +29,15 @@
                         </el-select>
                     </el-form-item>
                     <br/>
+                    <el-form-item label="门店：">
+
+                        <el-select clearable v-model.trim="model.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item style="margin-bottom:0">
                         <el-button @click="getStatisShopList" type="primary">查询</el-button>
                         <el-button @click="excel" type="primary">导出</el-button>
@@ -68,10 +73,6 @@
             </el-tab-pane>
             <el-tab-pane label="员工" name="staff">
                 <el-form inline ref="model2" :model="model2">
-                    <el-form-item label="门店：">
-                        <el-input clearable placeholder="门店名称/门店编码" style="width: 180px;"
-                                  v-model="model2.shopcode"></el-input>
-                    </el-form-item>
                     <el-form-item label="统计时间：">
                         <el-date-picker
                                 placeholder
@@ -93,6 +94,15 @@
                         </el-select>
                     </el-form-item>
                     <br/>
+                    <el-form-item label="门店：">
+
+                        <el-select clearable v-model.trim="model2.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item style="margin-bottom:0">
                         <el-button @click="getStatisEmployeeList" type="primary">查询</el-button>
                         <el-button @click="excel2" type="primary">导出</el-button>
@@ -147,39 +157,36 @@
                 model: {
                     createdTime1: '2020-06-01',
                     createdTime2: '2020-06-03',
-                    shopcode: 'MF0001',
-                    yccode: ''
+                    yccode: '',
+                    shopid:""
 
 
                 },
                 model2: {
                     createdTime1: '2020-06-01',
                     createdTime2: '2020-06-03',
-                    shopcode: 'MF0001',
-                    yccode: ''
+                    yccode: '',
+                    shopid:""
 
 
                 },
                 channel: [],
                 dataList: [],
-                dataList2: []
+                dataList2: [],
+                allShopList:[],
+                filterShopList:[],
             }
         },
         mounted() {
 
             this.initChannel();
+            this.getShopList({status:"0"});
 
         },
         methods: {
             excel() {
                 this.$refs['model'].validate((valid) => {
                         if (valid) {
-
-                            if (this.model.shopcode == '' && this.model.shopcode.length == 0) {
-                                yid.util.alert("门店编码不能为空");
-                                return false;
-                            }
-
 
                             if (this.model.createdTime1 == '' && this.model.createdTime1.length == 0) {
                                 yid.util.alert("开始时间不能为空");
@@ -199,10 +206,6 @@
                 this.$refs['model'].validate((valid) => {
                         if (valid) {
 
-                            if (this.model.shopcode == '' && this.model.shopcode.length == 0) {
-                                yid.util.alert("门店编码不能为空");
-                                return false;
-                            }
 
 
                             if (this.model.createdTime1 == '' && this.model.createdTime1.length == 0) {
@@ -236,12 +239,6 @@
                 this.$refs['model'].validate((valid) => {
                     if (valid) {
 
-                        if (this.model.shopcode == '' && this.model.shopcode.length == 0) {
-                            yid.util.alert("门店编码不能为空");
-                            return false;
-                        }
-
-
                         if (this.model.createdTime1 == '' && this.model.createdTime1.length == 0) {
                             yid.util.alert("开始时间不能为空");
                             return false;
@@ -272,11 +269,6 @@
             getStatisEmployeeList() {
                 this.$refs['model2'].validate((valid) => {
                     if (valid) {
-
-                        if (this.model2.shopcode == '' && this.model2.shopcode.length == 0) {
-                            yid.util.alert("门店编码不能为空");
-                            return false;
-                        }
 
 
                         if (this.model2.createdTime1 == '' && this.model2.createdTime1.length == 0) {
@@ -345,6 +337,22 @@
             },
             getStatisEeployeeList() {
 
+            },
+            getShopList(params){
+                service.chain.shop.shopList(params).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
             }
 
         }

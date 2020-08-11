@@ -7,7 +7,7 @@ export function queryChannels() {
 }
 
 export function queryYyBilllist(params) {
-    return yid.http.get(`${prefix}/billhead`, {params})
+    return yid.http.get(`${prefix}/billhead/chain/list`, {params})
 }
 
 export function getYybill(id) {

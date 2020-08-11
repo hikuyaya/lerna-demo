@@ -19,7 +19,7 @@ export function saveOrderids(params) {
 }
 
 export function listAll(params) {
-    return yid.http.get(`${prefix}/list/all`, {params})
+    return yid.http.get(`${prefix}/chain/list/all`, {params})
 }
 
 export function stuffTree(params) {

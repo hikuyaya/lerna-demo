@@ -2,11 +2,11 @@ import yid from '@src/library'
 
 
 export function statisShopList(params) {
-    return yid.http.get("api-yy/statisshop/list/all", {params})
+    return yid.http.get("api-yy/statisshop/chain/list/all", {params})
 }
 
 export function statisEeployeeList(params) {
-    return yid.http.get("api-yy/statisemployee/list/all", {params})
+    return yid.http.get("api-yy/statisemployee/chain/list/all", {params})
 }
 
 export function channelList(params) {

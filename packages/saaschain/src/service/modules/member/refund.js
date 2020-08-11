@@ -3,7 +3,7 @@ import yid from '@src/library'
 const prefix = 'api-member/tkhead';
 
 export function pageList(params) {
-    return yid.http.get(`${prefix}`, {params})
+    return yid.http.get(`${prefix}/chain/list`, {params})
 }
 
 export  function  getBill(id) {

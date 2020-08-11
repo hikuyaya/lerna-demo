@@ -1,6 +1,6 @@
 import yid from '@src/library'
 
-const prefix = 'api-cashier';
+const prefix = 'api-chain';
 
 export function queryPaysMolds() {
     return yid.http.get(`${prefix}/paymold/list/all`)

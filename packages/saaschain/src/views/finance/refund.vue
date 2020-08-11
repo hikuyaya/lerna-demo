@@ -26,9 +26,6 @@
             <el-form-item label="">
                 <el-button type="primary" @click="seach()">查询</el-button>
             </el-form-item>
-            <el-form-item >
-                <el-button type="primary" @click="refund()">退款</el-button>
-            </el-form-item>
         </el-form>
 
         <yid-table pagination ref="table">

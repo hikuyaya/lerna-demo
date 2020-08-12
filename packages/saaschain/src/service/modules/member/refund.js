@@ -7,7 +7,7 @@ export function pageList(params) {
 }
 
 export  function  getBill(id) {
-    return yid.http.get(`${prefix}/getBill/${id}`)
+    return yid.http.get(`${prefix}/chain/getBill/${id}`)
 }
 
 export  function cardzkLogs(params) {

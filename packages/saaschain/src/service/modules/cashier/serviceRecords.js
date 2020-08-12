@@ -3,7 +3,7 @@ import yid from '@src/library'
 const prefix = 'api-cashier/servicerecords';
 
 export function servicerecordList(params) {
-    return yid.http.get(`${prefix}/admin/servicerecordList`, {params})
+    return yid.http.get(`${prefix}/chain/admin/servicerecordList`, {params})
 }
 
 export function servicerecordListOver(params) {
@@ -11,7 +11,7 @@ export function servicerecordListOver(params) {
 }
 
 export function servicrecordyj(params) {
-    return yid.http.get(`${prefix}/servicrecordyj`, {params})
+    return yid.http.get(`${prefix}/chain/servicrecordyj`, {params})
 }
 
 export default {

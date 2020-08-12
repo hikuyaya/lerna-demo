@@ -3,11 +3,11 @@ import yid from '@src/library'
 const prefix = 'api-cashier/cardrecords';
 
 export function cardRecordList(params) {
-    return yid.http.get(`${prefix}/admin/cardRecordsList`, {params})
+    return yid.http.get(`${prefix}/chain/admin/cardRecordsList`, {params})
 }
 
 export function cardRecordsListSum(params) {
-    return yid.http.get(`${prefix}/admin/cardRecordsListSum`, {params})
+    return yid.http.get(`${prefix}/chain/admin/cardRecordsListSum`, {params})
 }
 
 export default {

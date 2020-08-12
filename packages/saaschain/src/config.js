@@ -551,6 +551,16 @@ export const MENU = {
       icon: null,
       canShow: true
     },
+    {
+      id: 103,
+      pid: 10,
+      name: '门店区域设置',
+      title: '门店区域设置',
+      path: '/shop/dictregion',
+      component: 'shop/dictregion',
+      icon: null,
+      canShow: true
+    },
       { id: 11, pid: null, name: '付款配置', title: null, path: null, icon: 'iconfont-channelmanagement' },
       {
           id: 111,

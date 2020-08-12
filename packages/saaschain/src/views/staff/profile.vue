@@ -139,6 +139,15 @@
                                 </el-date-picker>
                             </el-form-item>
 
+                            <el-form-item label="所属门店: " prop="shopObj" :rules="[{ required: true, message: '门店不能为空'}]">
+                                <el-select  value-key="id" filterable placeholder="请选择" v-model.trim="employeeForm.shopObj" @change="getEditFormBranchList">
+                                    <el-option :key="item.id" :label="item.shopname" :value="item" v-for="item in filterShopList2">
+                                        <span style="float: left">{{ item.shopcode }}</span>
+                                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                                    </el-option>
+                                </el-select>
+                            </el-form-item>
+
                             <el-form-item label="所属部门: " prop="branchObj" :rules="[{ required: true, message: '部门不能为空'}]">
                                 <el-select  value-key="id" filterable placeholder="请选择" v-model.trim="employeeForm.branchObj" @change="getEditFormPositionList">
                                     <el-option :key="item.id" :label="item.bname" :value="item" v-for="item in branchList"></el-option>
@@ -300,6 +309,7 @@
                 employeeForm:{
                     photo:"",
                     entryTime:"",
+                    shopObj:null,
                     branchObj:null,
                     positionObj:null,
                     positionLevelObj:null,
@@ -319,6 +329,8 @@
                     specPrice : "",
                     status : '1',
                     shopid: "",
+                    shopcode:"",
+                    shopname:"",
                 },
                 isUser : false,
                 showList:true,
@@ -337,15 +349,17 @@
                 },
                 allShopList:[],
                 filterShopList:[],
+                allShopList2:[],
+                filterShopList2:[],
             }
         },
         mounted(){
             this.getData("1");
             this.getSearchFormPositionList();
-            this.getPositionList();
-            this.getPositionLevelList();
-            this.getBranchList();
-            this.getSysRoleTypeList();
+            //this.getPositionList();
+            //this.getPositionLevelList();
+            //this.getBranchList();
+            //this.getSysRoleTypeList();
             this.getShopList();
         },
         methods:{
@@ -441,11 +455,21 @@
                     }
                 })
             },
+            getEditFormBranchList(obj){
+                this.employeeForm.branchObj = null;
+                this.employeeForm.positionObj = null;
+                this.employeeForm.positionLevelObj = null;
+                service.branch.listForChain({shopid:obj.id, isDel:'0',status:'1'}).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.branchList = res.data;
+                    }
+                })
 
+            },
             getEditFormPositionList(obj){
                 this.employeeForm.positionObj = null;
                 this.employeeForm.positionLevelObj = null;
-                service.position.list({status:"1",bbid:obj.id,isDel:"0"}).then(res=> {
+                service.position.listForChain({status:"1",bbid:obj.id,isDel:"0"}).then(res=> {
                     if(res.resp_code == 200) {
                         this.editFormPositionList = res.data;
                     }
@@ -454,7 +478,7 @@
 
             getEditFormPositionLevelList(obj){
                 this.employeeForm.positionLevelObj = null;
-                service.positionLevel.list({status:"1",psid:obj.id,isDel:"0"}).then(res=> {
+                service.positionLevel.listForChain({status:"1",psid:obj.id,isDel:"0"}).then(res=> {
                     if(res.resp_code == 200) {
                         this.editFormPositionLevelList = res.data;
                     }
@@ -462,16 +486,10 @@
 
             },
 
-
-
             selectPositionLevel(){
                 this.$forceUpdate();
             },
             addEmployee(){
-                if(this.searchForm.shopid==null || this.searchForm.shopid==""){
-                    yid.util.error("请先选择门店，再新增")
-                    return;
-                }
                 this.$refs['employeeForm'].resetFields()
                 this.employeeForm.id = '';
                 this.employeeForm.userId = '';
@@ -485,6 +503,7 @@
                 this.employeeForm.id = row.id;
                 this.employeeForm.photo = row.photo;
                 this.employeeForm.entryTime = row.entryTime;
+                this.employeeForm.shopid = row.shopid;
                 this.employeeForm.bbid = row.bbid;
                 this.employeeForm.psid = row.psid;
                 this.employeeForm.pslid = row.pslid;
@@ -505,6 +524,13 @@
                 this.employeeForm.username = '';
                 this.employeeForm.enabled = "0";
                 this.isUser = true;
+                //门店
+                this.filterShopList2.forEach(res=>{
+                    if(Number(res.id) === Number(row.shopid)){
+                        this.employeeForm.shopObj = res;
+                        this.getEditFormBranchList(res);
+                    }
+                });
                 //部门、职务、级别选中
                 this.branchList.forEach(res=>{
                     if(Number(res.id) === Number(row.bbid)){
@@ -628,7 +654,10 @@
                         if(this.employeeForm.status == null || this.employeeForm.status.length ==0){
                             this.employeeForm.status = "1";
                         }
-                        this.employeeForm.shopid = this.searchForm.shopid;
+                        //门店
+                        this.employeeForm.shopid = this.employeeForm.shopObj.id;
+                        this.employeeForm.shopcode = this.employeeForm.shopObj.shopcode;
+                        this.employeeForm.shopname = this.employeeForm.shopObj.shopname;
                         //部门
                         this.employeeForm.bname = this.employeeForm.branchObj.bname
                         this.employeeForm.bbid = this.employeeForm.branchObj.id
@@ -727,15 +756,26 @@
                 this.mutiImportDialog.visible = false;
             },
             getShopList() {
-                service.chain.shop.shopList({status:'0'}).then(res => {
+                service.chain.shop.shopList({status:'1'}).then(res => {
                     if(res.resp_code == 200) {
                         this.filterShopList = res.data;
                         this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                        this.filterShopList2 = res.data;
+                        this.allShopList2 = Object.assign(this.filterShopList2);//保留原数据
+                        console.log("filterShopList2="+ this.filterShopList2)
                     }
                 })
             },
             filterShop(v){
                 this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
+            },
+            filterShop2(v){
+                this.filterShopList2 = this.allShopList2.filter((item) => {
                     // 如果直接包含输入值直接返回true
                     if (item.shopname.indexOf(v) !== -1) return true
                     if (item.shopcode.indexOf(v) !== -1) return true

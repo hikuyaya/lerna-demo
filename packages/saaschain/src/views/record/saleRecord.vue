@@ -11,6 +11,14 @@
                         end-placeholder="结束日期">
                 </el-date-picker>
             </el-form-item>
+            <el-form-item label="门店：">
+                <el-select clearable v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                    <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                        <span style="float: left">{{ item.shopcode }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item style="margin-bottom:0">
                 <el-button @click="search" type="primary">查询</el-button>
                 <el-button @click="seniorSearch" type="primary">高级查询</el-button>
@@ -20,14 +28,42 @@
                   type="info">
         </el-alert>
         <yid-table pagination ref="table" style="margin-top: 15px;">
-            <yid-table-column label="单号" min-width="100" prop="billcode"></yid-table-column>
-            <yid-table-column label="销售时间" min-width="150" prop="saleTime"></yid-table-column>
-            <yid-table-column label="顾客信息" min-width="150" prop="cardInfo"></yid-table-column>
-            <yid-table-column label="金额" min-width="150" prop="payments"></yid-table-column>
-            <yid-table-column label="套餐内容" min-width="150" prop="snames"></yid-table-column>
-            <yid-table-column label="员工" min-width="150" prop="members"></yid-table-column>
-            <yid-table-column label="业绩" min-width="150" prop="eeyjs"></yid-table-column>
-            <yid-table-column label="提成" min-width="150" prop="royaltys"></yid-table-column>
+            <yid-table-column label="单号" min-width="150" prop="billcode"></yid-table-column>
+            <yid-table-column label="销售时间" min-width="180" prop="saleTime"></yid-table-column>
+            <yid-table-column label="顾客信息" min-width="200" prop="cardInfo">
+                <template slot-scope="scope">
+                    <span>{{scope.row.memName}}</span><br>
+                    <span>{{scope.row.mobile}}</span><br>
+                    <span>{{scope.row.cardInfo}}</span>
+                    <span>{{scope.row.cmcode}}</span>
+                </template>
+            </yid-table-column>
+            <yid-table-column label="金额" min-width="200" prop="payments">
+                <template slot-scope="scope">
+                    <span v-for="pays in scope.row.paysList">￥{{pays.money}}({{pays.payname}})<br></span>
+                </template>
+            </yid-table-column>
+            <yid-table-column label="套餐内容" min-width="200" prop="snames">
+                <template slot-scope="scope">
+                    <span v-for="servs in scope.row.servVOList">￥{{servs.sname}}*{{servs.num}}<br></span>
+                </template>
+            </yid-table-column>
+            <yid-table-column label="员工" min-width="200" prop="members">
+                <template slot-scope="scope">
+                    <span v-for="yjs in scope.row.royaltyList">{{yjs.eecode}} {{yjs.eename}}<br></span>
+                    <span><el-link type="primary" :underline="false" @click="editBill">编辑</el-link></span>
+                </template>
+            </yid-table-column>
+            <yid-table-column label="业绩" min-width="200" prop="eeyjs">
+                <template slot-scope="scope">
+                    <span v-for="yjs in scope.row.royaltyList">￥{{yjs.yjje== null ? 0 :yjs.yjje}}<br></span>
+                </template>
+            </yid-table-column>
+            <yid-table-column label="提成" min-width="200" prop="royaltys">
+                <template slot-scope="scope">
+                    <span v-for="yjs in scope.row.royaltyList">￥{{yjs.royalty== null ? 0 :yjs.royalty}}<br></span>
+                </template>
+            </yid-table-column>
             <yid-table-column label="操作人" min-width="150" prop="updatedBy"></yid-table-column>
             <yid-table-column label="操作" min-width="150" prop="content" fixed="right">
                 <template slot-scope="scope">
@@ -97,6 +133,7 @@
                     cmcode : '',
                     sid : '',
                     eeid : '',
+                    shopid:""
                 },
                 pageInfo:{page:1,limit:10},
                 searchDialog: {
@@ -111,6 +148,8 @@
                 packages : [],
                 employeeList : [],
                 cardpays : [],
+                allShopList:[],
+                filterShopList:[],
             }
         },
         mounted(){
@@ -131,6 +170,7 @@
             this.getCardpays();
             this.getPackages();
             this.search();
+            this.getShopList({status:"0"});
         },
         computed:{
             searchFormReq: function () {
@@ -150,6 +190,7 @@
                 reqObj.isDel = this.searchForm.isDel
                 reqObj.isHc = this.searchForm.isHc
                 reqObj.status = this.searchForm.status
+                reqObj.shopid = this.searchForm.shopid
                 return reqObj;
             }
         },
@@ -162,16 +203,12 @@
                     params,
                 });
                 //显示总条数和金额
-                service.cashier.packageRecords.packagerecordList(params).then(res=>{
+                service.cashier.packageRecords.packagerecordListSum(params).then(res=>{
                     if(res.resp_code == 200) {
-                        let totalNum = res.count;
-                        let totalMoney = 0;
                         let date = res.data;
-                        date.forEach(item=>{
-                            let money = Number(item.totalMoney);
-                            totalMoney = totalMoney + money;
-                        })
-                        this.viewTotal.title = '本次查询共  '+totalNum+' 条记录    合计总金额：￥'+totalMoney;
+                        if(date != null){
+                            this.viewTotal.title = '本次查询共  '+date.totalNum+' 条记录    合计总金额：￥'+date.totalMoney;
+                        }
                     }
                 });
             },
@@ -221,6 +258,22 @@
             },
             cancel(){
                 this.searchDialog.visible = false;
+            },
+            getShopList(params){
+                service.chain.shop.shopList(params).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
             }
         }
     }

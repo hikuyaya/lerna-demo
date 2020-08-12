@@ -97,6 +97,14 @@
                                 end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
+                    <el-form-item label="门店：">
+                        <el-select clearable v-model.trim="searchFormOver.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item style="margin-bottom:0">
                         <el-button @click="searchOver" type="primary">查询</el-button>
                         <el-button @click="get" type="primary">高级查询</el-button>
@@ -147,6 +155,14 @@
                                 start-placeholder="开始日期"
                                 end-placeholder="结束日期">
                         </el-date-picker>
+                    </el-form-item>
+                    <el-form-item label="门店：">
+                        <el-select clearable v-model.trim="searchFormZf.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item style="margin-bottom:0">
                         <el-button @click="searchZf" type="primary">查询</el-button>
@@ -275,12 +291,14 @@
                     isDel : '0',
                     isHc : '0',
                     status : '2',
+                    shopid:""
                 },
                 searchFormZf : {
                     saleTimeRange : [],
                     isDel : '0',
                     isHc : '0',
                     status : '3',
+                    shopid:""
                 },
                 pageInfo:{page:1,limit:10},
                 searchDialog: {
@@ -347,6 +365,7 @@
                 reqObj.isDel = this.searchFormOver.isDel
                 reqObj.isHc = this.searchFormOver.isHc
                 reqObj.status = this.searchFormOver.status
+                reqObj.shopid = this.searchFormOver.shopid
                 return reqObj;
             },
             searchFormReqZf : function () {
@@ -359,6 +378,7 @@
                 reqObj.isDel = this.searchFormZf.isDel
                 reqObj.isHc = this.searchFormZf.isHc
                 reqObj.status = this.searchFormZf.status
+                reqObj.shopid = this.searchFormZf.shopid
                 return reqObj;
             }
         },

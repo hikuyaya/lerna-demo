@@ -1,13 +1,15 @@
 import yid from '@src/library'
 
 const prefix = 'api-pers/awarddict';
+const prefixChain = 'api-chain/awarddict';
+
 export function perAwardDictList(params) {
-    return yid.http.get(`${prefix}`, {params})
+    return yid.http.get(`${prefixChain}`, {params})
 }
 
 
 export function saveAward(params) {
-    return yid.http.post(`${prefix}`, params)
+    return yid.http.post(`${prefixChain}`, params)
 }
 
 export function getAll(params) {

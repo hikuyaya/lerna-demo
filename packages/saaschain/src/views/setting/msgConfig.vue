@@ -53,7 +53,7 @@
             <el-tab-pane label="服务项目回访短信模板" name="temp">
                 <el-button @click="tempAlert" type="primary">新增</el-button>
 
-                <yid-table pagination ref="table" style="margin-top: 15px;" :data="modelAddForm.tempData">
+                <yid-table pagination ref="mbTable" style="margin-top: 15px;" :data="modelAddForm.tempData">
                     <yid-table-column label="模板编号" min-width="100" prop="id"></yid-table-column>
                     <yid-table-column label="短信内容" min-width="150" prop="scontent"></yid-table-column>
                     <yid-table-column label="部门" min-width="150" prop="branchname"></yid-table-column>
@@ -98,6 +98,14 @@
             </el-tab-pane>
             <el-tab-pane label="短信发送记录" name="logs">
                 <el-form inline ref="sendRecord">
+                    <el-form-item label="门店：">
+                        <el-select clearable v-model.trim="sendRecord.shopid" filterable :filter-method="filterShop" placeholder="请选择" style="width: 160px;">
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                                <span style="float: left">{{ item.shopcode }}</span>
+                                <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="短信类型:">
                         <el-select v-model="sendRecord.typeValue">
                             <el-option
@@ -117,6 +125,7 @@
                                 end-placeholder="结束日期">
                         </el-date-picker>
                     </el-form-item>
+                    <br/>
                     <el-form-item label="发送状态:">
                         <el-select v-model="sendRecord.statusValue">
                             <el-option
@@ -141,7 +150,7 @@
                         :closable="false">
                     本次查询已发送短信  <span style="color:red">321</span> 条
                 </el-alert>
-                <yid-table pagination ref="table" style="margin-top: 15px;" :data="sendRecord.recordData">
+                <yid-table pagination ref="sendTable" style="margin-top: 15px;" :data="sendRecord.recordData">
                     <yid-table-column label="发送对象（号码数）" min-width="150" prop="object">
 
                         <template slot-scope="scope">
@@ -440,7 +449,7 @@
                         label: '自定义号码'
                     }],
                     datasrc:"",
-
+                    shopid:"",
                    typeValue:"",
 
                     mobile:"",
@@ -564,7 +573,9 @@
 
                 worksNameArr:"",
 
-                pageInfo:{page:1,limit:10},
+                pageInfo:{page:1,limit:20},
+                allShopList:[],
+                filterShopList:[],
             }
         },
 
@@ -592,6 +603,8 @@
             }).catch((res)=> {
 
             });
+
+            this.getShopList()
         },
 
         methods: {
@@ -619,23 +632,22 @@
             },
             queryRecord()
             {
+                this.pageInfo.page=1
+                this.pageInfo.limit = this.$refs.sendTable.Pagination.internalPageSize;
+                const reqParams = {
+                    shopid: this.sendRecord.shopid,
+                    status: this.sendRecord.statusValue,
+                    mobile: this.sendRecord.mobile,
+                    ptype: this.sendRecord.typeValue,
+                }
+                const params = {...this.pageInfo,...reqParams}
+                const fetch = yid.service.sms.getSmsRecordList
 
-
-                const smsRecordParams = {
-                    status:this.sendRecord.statusValue,
-                    mobile:this.sendRecord.mobile,
-                    ptype:this.sendRecord.typeValue,
-                    page:1,limit:20}
-                    console.log("smsRecordParams",smsRecordParams)
-                    yid.service.sms.getSmsRecordList(smsRecordParams).then(res => {
-                    // 存储登录信息到本地缓存
-                    console.log("记录",res.data)
-                    this.sendRecord.recordData=res.data
-
-
-                }).catch((res)=> {
-
+                this.$refs.sendTable.reloadData({
+                    fetch,
+                    params
                 });
+
             },
             levelDelete()
             {
@@ -936,7 +948,10 @@ if(this.qfForm.sendtels=="")
                         // 存储登录信息到本地缓存
                         console.log("res",res)
                         this.$message({ type: 'success', message: '已成功执行'});
-                        const smsRecordParams = {page:1,limit:20}
+
+                        this.queryRecord();
+
+                        /*const smsRecordParams = {page:1,limit:20}
                         yid.service.sms.getSmsRecordList(smsRecordParams).then(res => {
                             // 存储登录信息到本地缓存
                             console.log("记录",res.data)
@@ -945,7 +960,7 @@ if(this.qfForm.sendtels=="")
 
                         }).catch((res)=> {
 
-                        });
+                        });*/
 
                     }).catch((res)=> {
 
@@ -959,7 +974,7 @@ if(this.qfForm.sendtels=="")
                 console.log("tab.name",tab.name);
                 if(tab.name == 'temp'){
 //第二个
-                    const returnParams = {page:1,limit:20}
+                    /*const returnParams = {page:1,limit:20}
                     yid.service.sms.getSmsreturnPage(returnParams).then(res => {
                         // 存储登录信息到本地缓存
                         console.log("模板的",res.data)
@@ -967,13 +982,15 @@ if(this.qfForm.sendtels=="")
 
                     }).catch((res)=> {
 
-                    });
-                    /*const fetch = yid.service.sms.getSmsreturnPage(returnParams);
-                    const params = {...this.pageInfo,...returnParams}
-                    this.$refs.table.reloadData({
-                        fetch,
-                        params,
                     });*/
+                    this.pageInfo.page=1
+                    this.pageInfo.limit = this.$refs.mbTable.Pagination.internalPageSize;
+                    const fetch = yid.service.sms.getSmsreturnPage
+                    const params = this.pageInfo
+                    this.$refs.mbTable.reloadData({
+                        fetch,
+                        params
+                    });
                 }
                 if(tab.name == 'remind'){
 //第三个
@@ -996,9 +1013,9 @@ if(this.qfForm.sendtels=="")
                 }
                 if(tab.name == 'logs'){
 //第四个
+                    this.queryRecord();
 
-
-                    const smsRecordParams = {page:1,limit:20}
+                    /*const smsRecordParams = {page:1,limit:20}
                     yid.service.sms.getSmsRecordList(smsRecordParams).then(res => {
                         // 存储登录信息到本地缓存
                         console.log("记录",res.data)
@@ -1008,7 +1025,7 @@ if(this.qfForm.sendtels=="")
 
                     }).catch((res)=> {
 
-                    });
+                    });*/
                 }
                 if(tab.name == 'charging'){
                     const chargingParams = {page:1,limit:20}
@@ -1028,7 +1045,22 @@ if(this.qfForm.sendtels=="")
                 }
 
             },
+            getShopList() {
+                service.chain.shop.shopList({status:'0'}).then(res => {
+                    if(res.resp_code == 200) {
+                        this.filterShopList = res.data;
+                        this.allShopList = Object.assign(this.filterShopList);//保留原数据
+                    }
+                })
+            },
+            filterShop(v){
+                this.filterShopList = this.allShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
 
+                })
+            },
         }
 
 

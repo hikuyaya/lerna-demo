@@ -2,7 +2,7 @@ import yid from '@src/library'
 
 const prefix = 'api-base/employee';
 export function list(params) {
-    return yid.http.get(`${prefix}`, {params})
+    return yid.http.get(`${prefix}/listAllForChain`, {params})
 }
 
 export function save(params) {

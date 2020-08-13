@@ -212,9 +212,6 @@
                 this.isEdit = false;
                 this.showRegion = false;
                 this.regionForm.id  = ''
-                this.$nextTick(()=> {
-                    this.$refs['regionForm'].resetFields();
-                })
                 this.regionForm.code = ''
                 this.regionForm.name = ''
                 this.regionForm.oname = ''
@@ -274,7 +271,7 @@
                 console.log(this.nodeData);
                 const shopParams = {};
                 shopParams.regionId = this.nodeData.id;
-                service.chain.shop.shopList(shopParams).then(res=>{
+                service.chain.shop.regionShopList(shopParams).then(res=>{
                     if(res.resp_code == 200) {
                         this.shopData = res.data;
                     }

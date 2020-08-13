@@ -31,6 +31,10 @@ export function lookYyBillLogs(params) {
     return yid.http.get(`${prefix}/billlog/list/all`, {params})
 }
 
+export function suretyList(params) {
+    return yid.http.get(`${prefix}/billhead/surety/list`, {params})
+}
+
 export default {
     queryYyBilllist,
     queryChannels,
@@ -38,5 +42,6 @@ export default {
     yycancel,
     getYybill,
     yysure,
-    lookYyBillLogs
+    lookYyBillLogs,
+    suretyList
 }

@@ -215,6 +215,16 @@ export const MENU = {
           icon: null,
           canShow: true
       },
+      {
+          id: 46,
+          pid: 4,
+          name: ' 预约保证金记录',
+          title: ' 预约保证金记录',
+          path: '/appoint/surety',
+          component: 'appoint/surety',
+          icon: null,
+          canShow: true
+      },
     { id: 5, pid: null, name: '财务管理', title: null, path: null, icon: 'iconfont-channelmanagement' },
     { id: 51,
       pid: 5,

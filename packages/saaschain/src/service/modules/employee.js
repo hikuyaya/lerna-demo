@@ -1,14 +1,19 @@
 import yid from '@src/library'
 
 const prefix = 'api-base/employee';
+const prefixChain = 'api-chain/employee';
+
 export function list(params) {
-    return yid.http.get(`${prefix}/listAllForChain`, {params})
+    return yid.http.get(`${prefixChain}`, {params})
 }
 
 export function save(params) {
-    return yid.http.post(`${prefix}`, params)
+    return yid.http.post(`${prefixChain}`, params)
 }
 
+export function saveTransfer(params) {
+    return yid.http.post(`${prefixChain}/saveTransfer`, params)
+}
 
 export function editYystatus(params) {
     return yid.http.post(`${prefix}/editYystatus`, params)
@@ -69,5 +74,6 @@ export default {
     checkEecode,
     excelTemplate,
     batchImport,
-    updateStatusEmployee
+    updateStatusEmployee,
+    saveTransfer
 }

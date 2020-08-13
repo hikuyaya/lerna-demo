@@ -40,12 +40,15 @@
                     <yid-table-column
                             prop="eecode"
                             label="员工编号"
-                            width="150">
+                            width="120">
                     </yid-table-column>
                     <yid-table-column
                             prop="eename"
                             label="姓名"
-                            width="120">
+                            width="150">
+                        <template slot-scope="scope">
+                            <el-link type="primary" @click="editAction(scope.row,true)">{{scope.row.eename}}</el-link>
+                        </template>
                     </yid-table-column>
                     <yid-table-column
                             label="性别"
@@ -56,28 +59,37 @@
                     </yid-table-column>
                     <yid-table-column
                             prop="mobile"
-                            label="手机号">
+                            label="手机号"
+                            width="120">
                     </yid-table-column>
                     <yid-table-column
                             prop="psname"
-                            label="职务">
+                            label="职务" width="120">
                     </yid-table-column>
                     <yid-table-column
                             prop="pslname"
-                            label="级别">
+                            label="级别" width="120">
+                    </yid-table-column>
+                    <yid-table-column
+                            prop="shopcode"
+                            label="所属门店" width="200">
+                        <template slot-scope="scope">
+                            {{"("+scope.row.shopcode+")"+scope.row.shopname}}
+                        </template>
+                    </yid-table-column>
+
+                    <yid-table-column prop="bname"
+                                      label="所属部门" width="120">
                     </yid-table-column>
                     <yid-table-column
                             prop = "entryTime"
-                            label="入职时间">
+                            label="入职时间" width="130">
                         <template slot-scope="scope">
                             {{$yid.util.formatDate(scope.row.entryTime)}}
                         </template>
                     </yid-table-column>
-                    <yid-table-column prop="bname"
-                                      label="所属部门">
-                    </yid-table-column>
                     <yid-table-column
-                            label="员工状态">
+                            label="员工状态" width="90">
                         <template slot-scope="scope">
                             {{scope.row.status == '1' ? "在职" : "离职"}}
                         </template>
@@ -98,8 +110,9 @@
                     <yid-table-column
                             label="操作" min-width="150" fixed="right">
                         <template slot-scope="scope">
-                            <el-link type="primary" @click="editAction(scope.row)">编辑</el-link>
-                            <el-link style="margin-left: 6px" type="primary" @click="dimissionAction(scope.row)">{{scope.row.status == '1' ? "离职" : "恢复"}}</el-link>
+                            <el-link type="primary" @click="editAction(scope.row,false)">编辑</el-link>
+                            <el-link type="primary" @click="transferAction(scope.row)" style="margin-left: 6px">调店</el-link>
+                            <el-link type="primary" @click="dimissionAction(scope.row)" style="margin-left: 6px">{{scope.row.status == '1' ? "离职" : "恢复"}}</el-link>
                         </template>
                     </yid-table-column>
                 </yid-table>
@@ -108,12 +121,13 @@
         <el-collapse-transition>
             <div v-show="!showList">
                 <el-button  @click="back" type="primary">返回</el-button>
-                <el-button  @click="save" type="primary">保存</el-button>
+                <el-button  @click="edit" type="primary" v-show="showEdit">编辑</el-button>
+                <el-button  @click="save" type="primary" v-show="showSave">保存</el-button>
                 <el-form ref="employeeForm" :model="employeeForm" style="margin-top: 16px" :rules="rules" label-width="100px" label-position="right">
                     <el-row :gutter="20">
                         <el-col :span="8">
                             <el-form-item label="员工头像：" prop="photo">
-                                <el-upload
+                                <el-upload :disabled="this.disabledvalue"
                                         class="avatar-uploader"
                                         action="https://sass.yidmall.com/api/api-file/files-anon"
                                         :headers="myheaders"
@@ -129,7 +143,7 @@
                                 </el-upload>
                             </el-form-item>
                             <el-form-item label="入职时间: " prop="entryTime" :rules="[{ required: true, message: '入职时间不能为空'}]">
-                                <el-date-picker
+                                <el-date-picker :disabled="this.disabledvalue"
                                         style="width: 195px;"
                                         v-model.trim="employeeForm.entryTime"
                                         type="date"
@@ -140,7 +154,8 @@
                             </el-form-item>
 
                             <el-form-item label="所属门店: " prop="shopObj" :rules="[{ required: true, message: '门店不能为空'}]">
-                                <el-select  value-key="id" filterable placeholder="请选择" v-model.trim="employeeForm.shopObj" @change="getEditFormBranchList">
+                                <el-select  value-key="id" filterable placeholder="请选择" v-model.trim="employeeForm.shopObj"
+                                            @change="getEditFormBranchList" :disabled="this.disabledvalue">
                                     <el-option :key="item.id" :label="item.shopname" :value="item" v-for="item in filterShopList2">
                                         <span style="float: left">{{ item.shopcode }}</span>
                                         <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
@@ -149,19 +164,22 @@
                             </el-form-item>
 
                             <el-form-item label="所属部门: " prop="branchObj" :rules="[{ required: true, message: '部门不能为空'}]">
-                                <el-select  value-key="id" filterable placeholder="请选择" v-model.trim="employeeForm.branchObj" @change="getEditFormPositionList">
-                                    <el-option :key="item.id" :label="item.bname" :value="item" v-for="item in branchList"></el-option>
+                                <el-select  value-key="id" filterable placeholder="请选择" v-model.trim="employeeForm.branchObj"
+                                            @change="getEditFormPositionList" :disabled="this.disabledvalue">
+                                    <el-option :key="item.id" :label="item.bname" :value="item" v-for="item in editFormBranchList"></el-option>
                                 </el-select>
                             </el-form-item>
 
                             <el-form-item label="职务：" prop="positionObj" :rules="[{ required: true, message: '职务不能为空'}]">
-                                <el-select   value-key="id"  filterable placeholder="请选择" v-model.trim="employeeForm.positionObj" @change="getEditFormPositionLevelList">
+                                <el-select   value-key="id"  filterable placeholder="请选择" v-model.trim="employeeForm.positionObj"
+                                             @change="getEditFormPositionLevelList" :disabled="this.disabledvalue">
                                     <el-option :key="item.id" :label="item.psname" :value="item" v-for="item in editFormPositionList"></el-option>
                                 </el-select>
                             </el-form-item>
 
                             <el-form-item label="级别：" prop="positionLevelObj" :rules="[{ required: true, message: '级别不能为空'}]">
-                                <el-select   value-key="id" filterable placeholder="请选择" v-model.trim="employeeForm.positionLevelObj" @change="selectPositionLevel">
+                                <el-select   value-key="id" filterable placeholder="请选择" v-model.trim="employeeForm.positionLevelObj"
+                                             @change="selectPositionLevel" :disabled="this.disabledvalue">
                                     <el-option :key="item.id" :label="item.pslname" :value="item" v-for="item in editFormPositionLevelList"></el-option>
                                 </el-select>
                             </el-form-item>
@@ -172,15 +190,15 @@
                             </el-form-item>
 
                             <el-form-item label="员工姓名：" prop="eename" :rules="[{ required: true, message: '员工姓名不能为空'}]">
-                                <el-input  v-model="employeeForm.eename" placeholder="姓名" style="width: 150px;"></el-input>
+                                <el-input  v-model="employeeForm.eename" placeholder="姓名" :disabled="this.disabledvalue" style="width: 150px;"></el-input>
                             </el-form-item>
 
                             <el-form-item label="员工昵称：" prop="nickname">
-                                <el-input  v-model="employeeForm.nickname" placeholder="昵称" style="width: 150px;"></el-input>
+                                <el-input  v-model="employeeForm.nickname" placeholder="昵称" :disabled="this.disabledvalue" style="width: 150px;"></el-input>
                             </el-form-item>
 
                             <el-form-item label="出生日期: " prop="birthday" :rules="[{ required: true, message: '出生日期不能为空'}]">
-                                <el-date-picker
+                                <el-date-picker :disabled="this.disabledvalue"
                                         style="width: 195px;"
                                         v-model.trim="employeeForm.birthday"
                                         type="date"
@@ -191,25 +209,25 @@
                             </el-form-item>
 
                             <el-form-item label="性别：" prop="sex" :rules="[{ required: true, message: '请选择性别'}]">
-                                <el-select   filterable placeholder="请选择" v-model.trim="employeeForm.sex" >
+                                <el-select   filterable placeholder="请选择" v-model.trim="employeeForm.sex" :disabled="this.disabledvalue" >
                                     <el-option :key="item.id" :label="item.name" :value="item.id" v-for="item in sexList"></el-option>
                                 </el-select>
                             </el-form-item>
 
                             <el-form-item label="手机号：" prop="mobile" >
-                                <el-input  v-model="employeeForm.mobile" placeholder="手机号" style="width: 170px;"></el-input>
+                                <el-input  v-model="employeeForm.mobile" placeholder="手机号" :disabled="this.disabledvalue" style="width: 170px;"></el-input>
                             </el-form-item>
 
                             <el-form-item label="身份证：" prop="idno" >
-                                <el-input v-model="employeeForm.idno" placeholder="身份证号码" style="width: 170px;"></el-input>
+                                <el-input v-model="employeeForm.idno" placeholder="身份证号码" :disabled="this.disabledvalue" style="width: 170px;"></el-input>
                             </el-form-item>
 
                             <el-form-item label="银行卡：" prop="bankNo">
-                                <el-input v-model="employeeForm.bankNo" placeholder="银行卡号" style="width: 170px;"></el-input>
+                                <el-input v-model="employeeForm.bankNo" placeholder="银行卡号" :disabled="this.disabledvalue" style="width: 170px;"></el-input>
                             </el-form-item>
 
                             <el-form-item label="备注：" prop="memo">
-                                <el-input type="textarea"  v-model="employeeForm.memo"  style="width: 100%;"></el-input>
+                                <el-input type="textarea"  v-model="employeeForm.memo" :disabled="this.disabledvalue"  style="width: 100%;"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
@@ -222,18 +240,13 @@
                                 {{employeeForm.username}}
                             </el-form-item>
                             <el-form-item label="基本工资：" prop="bsalary">
-                                <el-input type="number"  v-model="employeeForm.bsalary" min="0" placeholder="基本工资" style="width: 170px;"></el-input>
+                                <el-input type="number"  v-model="employeeForm.bsalary" min="0" placeholder="基本工资" :disabled="this.disabledvalue" style="width: 170px;"></el-input>
                             </el-form-item>
                             <el-form-item label="特殊价：" prop="specPrice">
-                                <el-input  v-model="employeeForm.specPrice" placeholder="特殊价" style="width: 170px;"></el-input>
+                                <el-input  v-model="employeeForm.specPrice" placeholder="特殊价" :disabled="this.disabledvalue" style="width: 170px;"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
-
-
-
-
-
                 </el-form>
 
             </div>
@@ -269,6 +282,43 @@
                 </el-form-item>
             </el-form>
         </yid-dialog>
+        <yid-dialog :title="transferDialog.title" :visible.sync="transferDialog.visible" width="450px">
+            <el-form ref="transferForm" :model="transferForm"  label-width="140px" >
+                <el-form-item label="调入门店：" prop="shopObj" :rules="[{ required: true, message: '门店不能为空'}]">
+                    <el-select  value-key="id" filterable placeholder="请选择" v-model.trim="transferForm.shopObj"
+                                @change="getEditFormBranchList">
+                        <el-option :key="item.id" :label="item.shopname" :value="item" v-for="item in filterShopList3">
+                            <span style="float: left">{{ item.shopcode }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                        </el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="修改部门：" prop="branchObj" :rules="[{ required: true, message: '部门不能为空'}]">
+                    <el-select  value-key="id" filterable placeholder="请选择" v-model.trim="transferForm.branchObj"
+                                @change="getEditFormPositionList">
+                        <el-option :key="item.id" :label="item.bname" :value="item" v-for="item in editFormBranchList"></el-option>
+                    </el-select>
+                </el-form-item>
+
+                <el-form-item label="修改职务：" prop="positionObj" :rules="[{ required: true, message: '职务不能为空'}]">
+                    <el-select   value-key="id"  filterable placeholder="请选择" v-model.trim="transferForm.positionObj"
+                                 @change="getEditFormPositionLevelList">
+                        <el-option :key="item.id" :label="item.psname" :value="item" v-for="item in editFormPositionList"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="修改级别：" prop="positionLevelObj" :rules="[{ required: true, message: '级别不能为空'}]">
+                    <el-select   value-key="id" filterable placeholder="请选择" v-model.trim="transferForm.positionLevelObj"
+                                 @change="selectPositionLevel">
+                        <el-option :key="item.id" :label="item.pslname" :value="item" v-for="item in editFormPositionLevelList"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item>
+                    <el-button @click="saveTransfer" type="primary">保存</el-button>
+                    <el-button @click="cancelTransfer">取消</el-button>
+                </el-form-item>
+            </el-form>
+        </yid-dialog>
     </div>
 </template>
 
@@ -293,7 +343,10 @@
                 branchList:[], //部门list
                 positionList : [],//职务list
                 positionLevelList : [],//级别list
-                editFormPositionLevelList:[], //级别List  新增or编辑员工表单用
+
+                //新增or编辑员工表单用
+                editFormBranchList:[], //部门List
+                editFormPositionLevelList:[], //级别List
                 editFormPositionList:[],//职务list
 
                 sexList:[{id:"1",name:"男"},{id:"2",name:"女"}],
@@ -351,16 +404,33 @@
                 filterShopList:[],
                 allShopList2:[],
                 filterShopList2:[],
+                allShopList3:[],
+                filterShopList3:[],
+                disabledvalue: false,
+                showEdit: false,
+                showSave: false,
+                transferDialog: {
+                    title: '',
+                    visible: false,
+                    employee:[]
+                },
+                transferForm:{
+                    shopObj:null,
+                    branchObj:null,
+                    positionObj:null,
+                    positionLevelObj:null
+                },
             }
         },
         mounted(){
-            this.getData("1");
+            this.getShopList();
             this.getSearchFormPositionList();
+            this.getData("1");
+
             //this.getPositionList();
             //this.getPositionLevelList();
             //this.getBranchList();
             //this.getSysRoleTypeList();
-            this.getShopList();
         },
         methods:{
             lookup(){
@@ -455,13 +525,17 @@
                     }
                 })
             },
+
             getEditFormBranchList(obj){
                 this.employeeForm.branchObj = null;
                 this.employeeForm.positionObj = null;
                 this.employeeForm.positionLevelObj = null;
+                this.transferForm.branchObj = null;
+                this.transferForm.positionObj = null;
+                this.transferForm.positionLevelObj = null;
                 service.branch.listForChain({shopid:obj.id, isDel:'0',status:'1'}).then(res=> {
                     if(res.resp_code == 200) {
-                        this.branchList = res.data;
+                        this.editFormBranchList = res.data;
                     }
                 })
 
@@ -499,7 +573,27 @@
                 };
                 this.showList = false;
             },
-            editAction(row){
+
+            async editAction(row,disabledvalue){
+                this.employeeForm.branchObj = null;
+                this.employeeForm.positionObj = null;
+                this.employeeForm.positionLevelObj = null;
+                await service.branch.listForChain({shopid:row.shopid, isDel:'0',status:'1'}).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.editFormBranchList = res.data;
+                    }
+                })
+                await service.position.listForChain({status:"1",bbid:row.bbid,isDel:"0"}).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.editFormPositionList = res.data;
+                    }
+                })
+                await service.positionLevel.listForChain({status:"1",psid:row.psid,isDel:"0"}).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.editFormPositionLevelList = res.data;
+                    }
+                })
+
                 this.employeeForm.id = row.id;
                 this.employeeForm.photo = row.photo;
                 this.employeeForm.entryTime = row.entryTime;
@@ -528,30 +622,33 @@
                 this.filterShopList2.forEach(res=>{
                     if(Number(res.id) === Number(row.shopid)){
                         this.employeeForm.shopObj = res;
-                        this.getEditFormBranchList(res);
+                        //this.getEditFormBranchList(res);
                     }
                 });
+
                 //部门、职务、级别选中
-                this.branchList.forEach(res=>{
+                this.editFormBranchList.forEach(res=>{
                     if(Number(res.id) === Number(row.bbid)){
                         this.employeeForm.branchObj = res;
-                        this.getEditFormPositionList(res);
+                        //this.getEditFormPositionList(res);
                     }
                 });
-                this.positionList.forEach(res=>{
+
+                this.editFormPositionList.forEach(res=>{
                     if(Number(res.id) === Number(row.psid)){
                         this.employeeForm.positionObj = res;
-                        this.getEditFormPositionLevelList(res);
+                        //this.getEditFormPositionLevelList(res);
                     }
                 });
-                this.positionLevelList.forEach(res=>{
+
+                this.editFormPositionLevelList.forEach(res=>{
                     if(Number(res.id) === Number(row.pslid)){
                         this.employeeForm.positionLevelObj = res;
                     }
                 });
 
                 //获取员工帐号资料
-                service.sysUser.findByEeid({eeid:row.id}).then(res=>{
+                await service.sysUser.findByEeid({eeid:row.id}).then(res=>{
                     if(res.resp_code == 200) {
                         if(res.data != null){
                             this.employeeForm.userId = res.data.id;
@@ -560,6 +657,14 @@
                         }
                     }
                 });
+                this.disabledvalue = disabledvalue;
+                if(disabledvalue){
+                    this.showEdit = true;
+                    this.showSave = false;
+                }else{
+                    this.showEdit = false;
+                    this.showSave = true;
+                }
                 console.log(this.employeeForm);
                 this.showList = false;
             },
@@ -696,6 +801,11 @@
             back(){
                 this.showList = true
             },
+            edit(){
+                this.showEdit = false;
+                this.showSave = true;
+                this.disabledvalue = false;
+            },
             checkEecode(){
                 let id = this.employeeForm.id
                 let eecode =  this.employeeForm.eecode;
@@ -719,7 +829,7 @@
                 this.$refs.uploadExcel.clearFiles()
             },
             downExcelTemplate(){
-                download(yid.config.API.BASE + '/api-base/employee/excelTemplate', {})
+                download(yid.config.API.BASE + 'api-chain/employee/excelTemplate', {})
             },
             beforeAvatarExcelUpload(file){
                 const isJPG = (file.type.indexOf("sheet") ||file.type.indexOf('excel'));
@@ -762,7 +872,8 @@
                         this.allShopList = Object.assign(this.filterShopList);//保留原数据
                         this.filterShopList2 = res.data;
                         this.allShopList2 = Object.assign(this.filterShopList2);//保留原数据
-                        console.log("filterShopList2="+ this.filterShopList2)
+                        this.filterShopList3 = res.data;
+                        this.allShopList3 = Object.assign(this.filterShopList3);//保留原数据
                     }
                 })
             },
@@ -781,6 +892,70 @@
                     if (item.shopcode.indexOf(v) !== -1) return true
 
                 })
+            },
+            filterShop3(v){
+                this.filterShopList3 = this.allShopList3.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+
+                })
+            },
+            transferAction(row){
+                this.transferDialog.title = '员工调店';
+                this.transferDialog.visible = true;
+                this.transferForm.employee = row;
+                this.transferForm.shopObj = null;
+                this.transferForm.branchObj = null;
+                this.transferForm.positionObj = null;
+                this.transferForm.positionLevelObj = null;
+            },
+            cancelTransfer() {
+                this.transferDialog.visible = false;
+            },
+            saveTransfer() {
+                this.$refs['transferForm'].validate((valid) => {
+                    if(valid){
+                        if(this.transferForm.shopObj.id == this.transferForm.employee.shopid){
+                            yid.util.error('调入门店和原门店相同');
+                            return;
+                        }
+                        this.transferForm.id = this.transferForm.employee.id;
+                        //门店
+                        this.transferForm.shopid = this.transferForm.shopObj.id;
+                        this.transferForm.shopcode = this.transferForm.shopObj.shopcode;
+                        this.transferForm.shopname = this.transferForm.shopObj.shopname;
+
+                        //部门
+                        this.transferForm.bname = this.transferForm.branchObj.bname
+                        this.transferForm.bbid = this.transferForm.branchObj.id
+                        //职位
+                        this.transferForm.psname = this.transferForm.positionObj.psname
+                        this.transferForm.psid = this.transferForm.positionObj.id
+                        this.transferForm.pscode = this.transferForm.positionObj.pscode
+                        //级别
+                        this.transferForm.pslname = this.transferForm.positionLevelObj.pslname
+                        this.transferForm.pslid = this.transferForm.positionLevelObj.id
+                        this.transferForm.pslcode = this.transferForm.positionLevelObj.pslcode
+                        console.log(this.transferForm);
+
+                        service.employee.saveTransfer(this.transferForm).then(res =>{
+                            if(res.resp_code == 200) {
+                                yid.util.success("保存成功");
+                                if(this.status == '2'){
+                                    this.status = "2";
+                                    this.getData("1",this.searchForm);
+                                }else{
+                                    this.status = "1";
+                                    this.getData("2",this.searchForm);
+                                }
+                                this.transferDialog.visible = false;
+                            }
+                        })
+
+                    }
+
+                });
             },
         }
     }

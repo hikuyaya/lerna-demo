@@ -4,6 +4,7 @@ import memberinfo from "./memberinfo";
 import refund from "./refund"
 import statistics from "./statistics"
 import statisticsYm from "./statisticsYm"
+import tenantstatistics from "./tenantstatistics"
 
 /**会员关系相关**/
 export default {
@@ -12,5 +13,6 @@ export default {
     memberinfo,
     statistics,
     statisticsYm,
-    refund
+    refund,
+    tenantstatistics
 }

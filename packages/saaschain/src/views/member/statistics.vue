@@ -96,6 +96,9 @@
                     <yid-table-column label="累计消费客单价" min-width="150" prop="univalent"></yid-table-column>
                 </yid-table>
             </el-tab-pane>
+            <el-tab-pane label="会员类型统计" name="memberType">
+               <MemberType/>
+            </el-tab-pane>
         </el-tabs>
     </div>
 </template>
@@ -104,6 +107,7 @@
     import service from '@src/service'
     import yid from '@src/library'
     import {exportExecl} from "../../library/helper/execl";
+    import MemberType from "./components/memberType";
     export default {
         name: "statistics",
         data() {
@@ -128,6 +132,9 @@
                 allShopList:[],
                 filterShopList:[],
             }
+        },
+        components: {
+            MemberType,
         },
         mounted(){
             this.getShopList();

@@ -154,7 +154,7 @@
             this.getDistChannelList();
             this.getCraftsmans();
             this.getData();
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         methods:{
             getData(reqParams){

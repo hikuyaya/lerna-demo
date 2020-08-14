@@ -652,7 +652,7 @@
             }
         },
         mounted() {
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
     }
 </script>

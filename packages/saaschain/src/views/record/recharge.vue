@@ -172,7 +172,7 @@
             this.getCraftsmans();
             this.getCardpays();
             this.search();
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         computed:{
             searchFormReq: function () {

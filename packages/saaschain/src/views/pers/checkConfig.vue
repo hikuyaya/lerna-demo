@@ -232,7 +232,7 @@
             //查询添加迟到/早退规则列表
             this.getCheckRuleList();
             this.getShopConfigList("");
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         methods: {
             getCheckRuleList(){

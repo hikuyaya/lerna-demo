@@ -163,7 +163,7 @@
             service.position.list({status: '1', isDel: '0'}).then(res => {
                 this.psList = res.data
             })
-            this.getShopList({status:"0"})
+            this.getShopList({status:"1"})
         },
         methods: {
             submitForm() {

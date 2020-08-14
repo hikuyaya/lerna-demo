@@ -76,7 +76,7 @@
             this.shopname=$yid.cache.get($yid.type.USER.INFO)
             this.rowDrop()
             this.queryBranch()
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         methods: {
             queryBranch(){

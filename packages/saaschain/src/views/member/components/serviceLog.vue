@@ -164,7 +164,7 @@
             this.searchForm.createTimeRange.push(date1)
             this.searchForm.createTimeRange.unshift(date1)
             this.getCraftsmans();
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         computed:{
             searchFormReq: function () {

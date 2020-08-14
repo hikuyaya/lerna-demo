@@ -97,7 +97,7 @@
             this.getData();
             this.getProductBrandList();
             this.getProductcategorylList();
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         methods:{
             getData(reqParams){

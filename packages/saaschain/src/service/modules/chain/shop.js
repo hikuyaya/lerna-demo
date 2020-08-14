@@ -13,13 +13,17 @@ export function batchRegion(params) {
 export function regionShopList(params) {
     return yid.http.get(`${prefix}/regionShopList`, {params})
 }
-
+export function shopListWithPage(params) {
+    return yid.http.get(`${prefix}`, {params})
+}
 
 export default {
-    /** 门店列表 */
+    /** 门店列表 不带分页的*/
     shopList,
     /**批量设置门店区域**/
     batchRegion,
     /**查询节点及子节点的门店列表*/
-    regionShopList
+    regionShopList,
+    shopListWithPage
+
 }

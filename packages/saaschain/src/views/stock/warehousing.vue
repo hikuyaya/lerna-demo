@@ -162,7 +162,7 @@
         mounted(){
                 this.getData();
                 this.getTypeDictList();
-                this.getShopList({status:"0"});
+                this.getShopList({status:"1"});
         },
         computed:{
             searchFormReq: function () {

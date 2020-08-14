@@ -1074,7 +1074,7 @@
         },
         mounted() {
             this.init();
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         methods: {
             init(){

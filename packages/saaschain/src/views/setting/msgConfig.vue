@@ -217,6 +217,10 @@
                     </el-col>
                 </el-row>
             </el-tab-pane>
+
+            <el-tab-pane label="短信分配" name="assign">
+                    <MsgAssign/>
+            </el-tab-pane>
         </el-tabs>
 
         <yid-dialog :title="tempDialog.title" :visible.sync="tempDialog.visible" @close="" width="600px">
@@ -383,8 +387,12 @@
 <script>
     import yid from '@src/library'
     import service from "../../service";
+    import MsgAssign from "./components/msgAssign"
     export default {
         name: "dept",
+        components: {
+            MsgAssign
+        },
         data() {
             return {
                 pickerOptions: {

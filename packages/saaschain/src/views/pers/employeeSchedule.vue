@@ -214,7 +214,7 @@
             this.getCheckClassAll();
             this.getDayWeeks();
             this.getScheduleList();
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         methods:{
             getScheduleList(){

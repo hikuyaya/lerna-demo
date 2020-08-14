@@ -136,7 +136,7 @@
                 this.awardDictList = res.data
             });
             this.getSearchFormPositionList();
-            this.getShopList({status:"0"})
+            this.getShopList({status:"1"})
         },
         methods:{
             getSearchFormPositionList(){

@@ -1,123 +1,131 @@
 <template>
     <div class="dept">
-        <el-form inline>
-            <el-form-item label="">
-                <el-button type="primary" @click="add()">新增</el-button>
-            </el-form-item>
-            <el-form-item label="">
-                <el-button type="primary" @click="mutiImportAlert()">批量导入服务项目</el-button>
-            </el-form-item>
-            <el-form-item label="">
-                <el-button type="primary" @click="exportServs()">导出服务项目</el-button>
-            </el-form-item>
-            <el-form-item label="">
-                <el-button type="primary" @click="mutiPriceChange()">批量修改会员卡折扣价</el-button>
-            </el-form-item> 
-            <br/>
-            <el-form-item label="筛选">
-                <el-select clearable filterable v-model="form.branch"  @change="changeBranch" placeholder="请选择部门" style="width: 160px;">
-                    <el-option
-                            v-for="item in branch"
-                            :key="item.id"
-                            :label="item.bname"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="">
-                <el-select clearable filterable v-model="form.scode" placeholder="请选择分类" style="width: 160px;">
-                    <el-option
-                            v-for="item in serviceType"
-                            :key="item.id"
-                            :label="item.sname"
-                            :value="item.scode">
-                    </el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item label="名称">
-                <el-input clearable v-model="form.servname" placeholder="请输入名称" style="width: 160px;"></el-input>
-            </el-form-item>
-            <el-form-item label="状态">
-                <el-select clearable v-model="form.status"  placeholder="请选择状态" style="width: 120px;">
-                    <el-option label="停用" value="2"></el-option>
-                    <el-option label="正常" value="1"></el-option>
-                </el-select>
-            </el-form-item>
-            <el-form-item>
-                <el-button type="primary" @click="queryServData()">查询</el-button>
-            </el-form-item>
-        </el-form>
+        <el-tabs v-model="activeName">
+            <el-tab-pane label="服务项目" name="project">
+                <el-form inline>
+                    <el-form-item label="">
+                        <el-button type="primary" @click="add()">新增</el-button>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <el-button type="primary" @click="mutiImportAlert()">批量导入服务项目</el-button>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <el-button type="primary" @click="exportServs()">导出服务项目</el-button>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <el-button type="primary" @click="mutiPriceChange()">批量修改会员卡折扣价</el-button>
+                    </el-form-item>
+                    <br/>
+                    <el-form-item label="筛选">
+                        <el-select clearable filterable v-model="form.branch"  @change="changeBranch" placeholder="请选择部门" style="width: 160px;">
+                            <el-option
+                                    v-for="item in branch"
+                                    :key="item.id"
+                                    :label="item.bname"
+                                    :value="item.id">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <el-select clearable filterable v-model="form.scode" placeholder="请选择分类" style="width: 160px;">
+                            <el-option
+                                    v-for="item in serviceType"
+                                    :key="item.id"
+                                    :label="item.sname"
+                                    :value="item.scode">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="名称">
+                        <el-input clearable v-model="form.servname" placeholder="请输入名称" style="width: 160px;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="状态">
+                        <el-select clearable v-model="form.status"  placeholder="请选择状态" style="width: 120px;">
+                            <el-option label="停用" value="2"></el-option>
+                            <el-option label="正常" value="1"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" @click="queryServData()">查询</el-button>
+                    </el-form-item>
+                </el-form>
+                <yid-table ref="table"  :data="serveData" @selection-change="handleServicesChange">
+                    <yid-table-column type="selection" prop="servid" width="55"></yid-table-column>
+                    <yid-table-column label="编号"  prop="servcode" width="60"></yid-table-column>
+                    <yid-table-column label="名称"  prop="servname" width="120">
+                        <template slot-scope="scope">
+                            <label style="color:blue" @click="editService(scope.row)">{{scope.row.servname}}</label>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="所属部门"  prop="dept" width="80"></yid-table-column>
+                    <yid-table-column label="分类"  prop="servtname" width="70"></yid-table-column>
+                    <yid-table-column label="类别"  prop="sertype" width="80">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.sertype=='1'?'大项目':'小项目'}}</label>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="套餐销售" prop="issale" width="80">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.issale=='1'?'允许':'不允许'}}</label>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="回访短信"  prop="isSms" width="80">
+                        <template slot-scope="scope">
+                            <label>{{scope.row.isSms=='1'?'发送':'不发送'}}</label>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="基础定价"  prop="price" width="140">
+                        <template slot-scope="scope">
+                            <el-row type="flex" justify="space-between">
+                                <el-col :span="2"><i class="el-icon-edit" @click="editPrice(scope.row)"></i></el-col>
+                                <el-col :span="22">
+                                    <div>{{scope.row.price?'￥'+scope.row.price:''}}</div>
+                                    <div>{{scope.row.minPrice?'最低价:'+scope.row.minPrice+'元':''}}</div>
+                                </el-col>
+                            </el-row>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="会员卡折扣价设定"  prop="discount" width="180">
+                        <template slot-scope="scope">
+                            <el-row type="flex" justify="space-between">
+                                <el-col :span="22">
+                                    <div :key="item.id" v-for="item in scope.row.servcards">{{item.cardname}}   {{item.dtype=='1'?item.value+'折':item.value+'元'}}</div>
+                                </el-col>
+                                <el-col :span="2"><i class="el-icon-plus" @click="editDiscount(scope.row)"></i></el-col>
+                            </el-row>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="员工特殊价格设置"  prop="special" width="180">
+                        <template slot-scope="scope">
+                            <el-row type="flex" justify="space-between">
+                                <el-col :span="22">
+                                    <div :key="item.id" v-for="item in scope.row.servspecs">
+                                        {{item.btype=='1'?item.pslname:item.eename}}  {{item.specialPrice+'元'}}
+                                    </div>
+                                </el-col>
+                                <el-col :span="2"><i class="el-icon-plus" @click="editSpeical(scope.row)"></i></el-col>
+                            </el-row>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="状态"  prop="status" width="120">
+                        <template slot-scope="scope">
+                            <el-link type="primary" @click="editService(scope.row)">编辑</el-link>
+                            <el-switch style="margin: 0 10px 0 10px;"
+                                       @change="stop(scope.row)"
+                                       v-model="scope.row.status=='1'?true:false"
+                                       active-color="#13ce66"
+                                       inactive-color="#ff4949">
+                            </el-switch>
+                        </template>
+                    </yid-table-column>
+                </yid-table>
+            </el-tab-pane>
 
-        <yid-table ref="table"  :data="serveData" @selection-change="handleServicesChange">
-            <yid-table-column type="selection" prop="servid" width="55"></yid-table-column>
-            <yid-table-column label="编号"  prop="servcode" width="60"></yid-table-column>
-            <yid-table-column label="名称"  prop="servname" width="120">
-                <template slot-scope="scope">
-                    <label style="color:blue" @click="editService(scope.row)">{{scope.row.servname}}</label>
-                </template>
-            </yid-table-column>
-            <yid-table-column label="所属部门"  prop="dept" width="80"></yid-table-column>
-            <yid-table-column label="分类"  prop="servtname" width="70"></yid-table-column>
-            <yid-table-column label="类别"  prop="sertype" width="80">
-                <template slot-scope="scope">
-                    <label>{{scope.row.sertype=='1'?'大项目':'小项目'}}</label>
-                </template>
-            </yid-table-column>
-            <yid-table-column label="套餐销售" prop="issale" width="80">
-                <template slot-scope="scope">
-                    <label>{{scope.row.issale=='1'?'允许':'不允许'}}</label>
-                </template>
-            </yid-table-column>
-            <yid-table-column label="回访短信"  prop="isSms" width="80">
-                <template slot-scope="scope">
-                    <label>{{scope.row.isSms=='1'?'发送':'不发送'}}</label>
-                </template>
-            </yid-table-column>
-            <yid-table-column label="基础定价"  prop="price" width="140">
-                <template slot-scope="scope">
-                    <el-row type="flex" justify="space-between">
-                        <el-col :span="2"><i class="el-icon-edit" @click="editPrice(scope.row)"></i></el-col>
-                        <el-col :span="22">
-                            <div>{{scope.row.price?'￥'+scope.row.price:''}}</div>
-                            <div>{{scope.row.minPrice?'最低价:'+scope.row.minPrice+'元':''}}</div>
-                        </el-col>
-                    </el-row>
-                </template>
-            </yid-table-column>
-            <yid-table-column label="会员卡折扣价设定"  prop="discount" width="180">
-                <template slot-scope="scope">
-                    <el-row type="flex" justify="space-between">
-                        <el-col :span="22">
-                            <div :key="item.id" v-for="item in scope.row.servcards">{{item.cardname}}   {{item.dtype=='1'?item.value+'折':item.value+'元'}}</div>
-                        </el-col>
-                        <el-col :span="2"><i class="el-icon-plus" @click="editDiscount(scope.row)"></i></el-col>
-                    </el-row>
-                </template>
-            </yid-table-column>
-            <yid-table-column label="员工特殊价格设置"  prop="special" width="180">
-                <template slot-scope="scope">
-                    <el-row type="flex" justify="space-between">
-                        <el-col :span="22">
-                            <div :key="item.id" v-for="item in scope.row.servspecs">
-                                {{item.btype=='1'?item.pslname:item.eename}}  {{item.specialPrice+'元'}}
-                            </div>
-                        </el-col>
-                        <el-col :span="2"><i class="el-icon-plus" @click="editSpeical(scope.row)"></i></el-col>
-                    </el-row>
-                </template>
-            </yid-table-column>
-            <yid-table-column label="状态"  prop="status" width="120">
-                <template slot-scope="scope">
-                    <el-link type="primary" @click="editService(scope.row)">编辑</el-link>
-                    <el-switch style="margin: 0 10px 0 10px;"
-                            @change="stop(scope.row)"
-                            v-model="scope.row.status=='1'?true:false"
-                            active-color="#13ce66"
-                            inactive-color="#ff4949">
-                    </el-switch>
-                </template>
-            </yid-table-column>
-        </yid-table>
+            <el-tab-pane label="门店项目价格查询"  name="priceSearch">
+                    <ProjectPriceSearch/>
+            </el-tab-pane>
+        </el-tabs>
+
 
         <yid-dialog :title="addDialog.title" :visible.sync="addDialog.visible" @close="levelCancel" width="600px">
             <el-form :model="addDialog"  label-width="150px" ref="copyForm">
@@ -429,9 +437,14 @@
     import service from '@src/service'
     import {exportExecl,imporExecl} from "../../library/helper/execl";
     import download from '@src/library/http/download'
+    import ProjectPriceSearch from "./components/projectPriceSearch"
     export default {
+        components: {
+            ProjectPriceSearch
+        },
         data() {
             return {
+                activeName:'project',
                 myheaders:{},
                 labelPosition: 'left',
                 mutiPrice: '1',

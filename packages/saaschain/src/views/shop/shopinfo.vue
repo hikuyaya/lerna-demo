@@ -112,7 +112,7 @@
             return {
                 myheaders:{},
                 shop:{
-                    shopname:'',shopcode:'',shopImages:[]
+                    shopname:'',shopcode:'',shopImages:[],id:""
                 },
                 editshop:{
                     title:'修改门店信息',
@@ -159,10 +159,13 @@
                     //$yid.util.error("定位失败，请重试");
                 }
             }, false);
-            this.init()
         },
         methods:{
-            init(){
+            init(obj){
+                if(obj != null){
+                    this.id = obj.id;
+                }
+
                 this.getProCityArea();
             },
             openQcode(){

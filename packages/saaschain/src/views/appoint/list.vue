@@ -224,7 +224,7 @@
             this.model.date=[moment().format("YYYY-MM-DD"),moment().format("YYYY-MM-DD")];
             this.queryChannel();
             this.queryYyBilllist();
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         filters:{
             formatStr(str,stsList){

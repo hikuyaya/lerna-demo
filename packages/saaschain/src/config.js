@@ -541,16 +541,6 @@ export const MENU = {
       canShow: true
     },
       { id: 10, pid: null, name: '门店信息管理', title: null, path: null, icon: 'iconfont-channelmanagement' },
-      {
-          id: 101,
-          pid: 10,
-          name: '门店信息',
-          title: '门店信息',
-          path: '/shop/shopinfo',
-          component: 'shop/shopinfo',
-          icon: null,
-          canShow: true
-      },
     {
       id: 102,
       pid: 10,
@@ -571,6 +561,16 @@ export const MENU = {
       icon: null,
       canShow: true
     },
+      {
+          id: 104,
+          pid: 10,
+          name: '门店信息管理',
+          title: '门店信息管理',
+          path: '/shop/manage',
+          component: 'shop/manage',
+          icon: null,
+          canShow: true
+      },
       { id: 11, pid: null, name: '付款配置', title: null, path: null, icon: 'iconfont-channelmanagement' },
       {
           id: 111,

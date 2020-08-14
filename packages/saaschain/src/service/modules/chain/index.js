@@ -2,6 +2,8 @@ import shop from './shop';
 import position from './position';
 import brand from "./brand";
 import region from "./region";
+import btype from "./btype"
+import serviceType from "./serviceType"
 
 /**服务单相关*/
 export default {
@@ -13,4 +15,7 @@ export default {
     brand,
     /**门店区域**/
     region,
+    btype,
+    /**项目分类**/
+    serviceType
 }

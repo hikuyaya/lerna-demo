@@ -197,7 +197,7 @@
         },
         mounted(){
             this.getcheckClassList();
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         methods : {
             getcheckClassList(){

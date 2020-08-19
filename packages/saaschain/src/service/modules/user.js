@@ -47,6 +47,30 @@ export function deleteUsers(ids) {
     const url = `${prefix}/users`
     return yid.http.delete(url, ids)
 }
+
+export function getSysRole(params) {
+    const url = `${prefix}/sysrole/list/all?appId=`+params
+    return yid.http.get(url)
+}
+
+export function saveOrUpdateForChain(params) {
+    const url = `${prefix}/users/saveOrUpdateForChain`
+    return yid.http.post(url, params)
+}
+
+export function batchDeleteForChain(params) {
+    return yid.http.post(`${prefix}/users/batchDeleteForChain`,params)
+}
+
+export function chainListAll(params) {
+    const url = `${prefix}/users/listForChain`
+    return yid.http.get(url, params)
+}
+
+export function batchCopyAuthForChain(params) {
+    return yid.http.post(`${prefix}/users/batchCopyAuthForChain`,params)
+}
+
 export default {
     /** 用户菜单 */
     menu,
@@ -69,5 +93,11 @@ export default {
     /** 所有端列表*/
     client,
     /** 批量删除用户 */
-    deleteUsers
+    deleteUsers,
+
+    getSysRole,
+    saveOrUpdateForChain,
+    batchDeleteForChain,
+    chainListAll,
+    batchCopyAuthForChain
 }

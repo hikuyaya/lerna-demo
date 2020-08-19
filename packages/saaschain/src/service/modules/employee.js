@@ -24,7 +24,11 @@ export function saveOrderids(params) {
 }
 
 export function listAll(params) {
-    return yid.http.get(`${prefix}/chain/list/all`, {params})
+    return yid.http.get(`${prefix}/list/all`, {params})
+}
+
+export function chainListAll(params) {
+    return yid.http.get(`${prefixChain}/listAll`, {params})
 }
 
 export function stuffTree(params) {
@@ -75,5 +79,6 @@ export default {
     excelTemplate,
     batchImport,
     updateStatusEmployee,
-    saveTransfer
+    saveTransfer,
+    chainListAll
 }

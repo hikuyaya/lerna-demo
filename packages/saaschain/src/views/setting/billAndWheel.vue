@@ -115,6 +115,7 @@
                     </yid-table-column>
                 </yid-table>
             </el-tab-pane>
+
             <el-tab-pane label="小票打印设置" name="printset">
                 <yid-table ref="printsetTable" :data="printsetData" style="margin-top: 15px; width: 780px;">
                     <yid-table-column label="小票模板编号"prop="code"  min-width="150"></yid-table-column>

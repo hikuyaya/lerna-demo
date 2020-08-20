@@ -67,6 +67,10 @@ export function updateInfos(params) {
     return yid.http.post(`${prefix}/serviceinfo/updateInfos`,params)
 }
 
+export function delServspercs(id) {
+    return yid.http.delete(`${prefix}/servicespecial/${id}`)
+}
+
 export default {
     /** 所有会员卡 */
     findCardinfos,
@@ -99,4 +103,6 @@ export default {
     updateInfos,
     /** 检察套餐里有没有项目 **/
     checkPackage,
+    /** 删除个人特价 **/
+    delServspercs
 }

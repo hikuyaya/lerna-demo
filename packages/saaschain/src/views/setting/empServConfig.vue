@@ -1,303 +1,115 @@
 <template>
     <div class="dept">
-            <el-form inline>
-                <el-form-item label="">
-                    <el-button type="primary" @click="add()">新增</el-button>
-                </el-form-item>
-                <el-form-item label="">
-                    <el-button type="primary" @click="mutiImportAlert()">批量导入服务项目</el-button>
-                </el-form-item>
-                <el-form-item label="">
-                    <el-button type="primary" @click="exportServs()">导出服务项目</el-button>
-                </el-form-item>
-                <el-form-item label="">
-                    <el-button type="primary" @click="mutiPriceChange()">批量修改会员卡折扣价</el-button>
-                </el-form-item>
-                <br/>
-                <el-form-item label="筛选">
-                    <el-select clearable filterable v-model="form.branch"  @change="changeBranch" placeholder="请选择部门" style="width: 160px;">
-                        <el-option
-                                v-for="item in branch"
-                                :key="item.id"
-                                :label="item.bname"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="">
-                    <el-select clearable filterable v-model="form.scode" placeholder="请选择分类" style="width: 160px;">
-                        <el-option
-                                v-for="item in serviceType"
-                                :key="item.id"
-                                :label="item.sname"
-                                :value="item.scode">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="名称">
-                    <el-input clearable v-model="form.servname" placeholder="请输入名称" style="width: 160px;"></el-input>
-                </el-form-item>
-                <el-form-item label="状态">
-                    <el-select clearable v-model="form.status"  placeholder="请选择状态" style="width: 120px;">
-                        <el-option label="停用" value="2"></el-option>
-                        <el-option label="正常" value="1"></el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="queryServData()">查询</el-button>
-                </el-form-item>
-            </el-form>
+    <el-form inline>
+        <el-form-item label="门店">
+            <el-select clearable v-model.trim="form.shopid" placeholder="请选择" style="width: 160px;">
+                <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in shopList">
+                    <span style="float: left">{{ item.shopcode }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="部门">
+            <el-select clearable filterable v-model="form.branch"  @change="changeBranch" placeholder="请选择部门" style="width: 140px;">
+                <el-option
+                        v-for="item in branch"
+                        :key="item.id"
+                        :label="item.bname"
+                        :value="item.id">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="">
+            <el-select clearable filterable v-model="form.scode" placeholder="请选择分类" style="width: 120px;">
+                <el-option
+                        v-for="item in serviceType"
+                        :key="item.id"
+                        :label="item.sname"
+                        :value="item.scode">
+                </el-option>
+            </el-select>
+        </el-form-item>
+        <el-form-item label="项目">
+            <el-input clearable v-model="form.servname" placeholder="项目名称/编码" style="width: 160px;"></el-input>
+        </el-form-item>
+        <el-form-item label="员工">
+            <el-input clearable v-model="form.eename" placeholder="员工名称/编码" style="width: 160px;"></el-input>
+        </el-form-item>
+        <el-form-item>
+            <el-button type="primary" @click="queryServData()">查询</el-button>
+        </el-form-item>
+    </el-form>
 
-        <yid-table ref="table"  :data="serveData" @selection-change="handleServicesChange">
-                <yid-table-column type="selection" prop="servid" width="55"></yid-table-column>
-                <yid-table-column label="编号"  prop="servcode" width="60"></yid-table-column>
-                <yid-table-column label="名称"  prop="servname" width="120">
-                    <template slot-scope="scope">
-                        <label style="color:blue" @click="editService(scope.row)">{{scope.row.servname}}</label>
-                    </template>
-                </yid-table-column>
-                <yid-table-column label="所属部门"  prop="dept" width="80"></yid-table-column>
-                <yid-table-column label="分类"  prop="servtname" width="70"></yid-table-column>
-                <yid-table-column label="类别"  prop="sertype" width="80">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.sertype=='1'?'大项目':'小项目'}}</label>
-                    </template>
-                </yid-table-column>
-                <yid-table-column label="套餐销售" prop="issale" width="80">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.issale=='1'?'允许':'不允许'}}</label>
-                    </template>
-                </yid-table-column>
-                <yid-table-column label="回访短信"  prop="isSms" width="80">
-                    <template slot-scope="scope">
-                        <label>{{scope.row.isSms=='1'?'发送':'不发送'}}</label>
-                    </template>
-                </yid-table-column>
-                <yid-table-column label="基础定价"  prop="price" width="140">
-                    <template slot-scope="scope">
-                        <el-row type="flex" justify="space-between">
-                            <el-col :span="2"><i class="el-icon-edit" @click="editPrice(scope.row)"></i></el-col>
-                            <el-col :span="22">
-                                <div>{{scope.row.price?'￥'+scope.row.price:''}}</div>
-                                <div>{{scope.row.minPrice?'最低价:'+scope.row.minPrice+'元':''}}</div>
-                            </el-col>
-                        </el-row>
-                    </template>
-                </yid-table-column>
-                <yid-table-column label="会员卡折扣价设定"  prop="discount" width="180">
-                    <template slot-scope="scope">
-                        <el-row type="flex" justify="space-between">
-                            <el-col :span="22">
-                                <div :key="item.id" v-for="item in scope.row.servcards">{{item.cardname}}   {{item.dtype=='1'?item.value+'折':item.value+'元'}}</div>
-                            </el-col>
-                            <el-col :span="2"><i class="el-icon-plus" @click="editDiscount(scope.row)"></i></el-col>
-                        </el-row>
-                    </template>
-                </yid-table-column>
-                <yid-table-column label="员工特殊价格设置"  prop="special" width="180">
-                    <template slot-scope="scope">
-                        <el-row type="flex" justify="space-between">
-                            <el-col :span="22">
-                                <div :key="item.id" v-for="item in scope.row.servspecs">
-                                    {{item.btype=='1'?item.pslname:item.eename}}  {{item.specialPrice+'元'}}
-                                </div>
-                            </el-col>
-                            <el-col :span="2"><i class="el-icon-plus" @click="editSpeical(scope.row)"></i></el-col>
-                        </el-row>
-                    </template>
-                </yid-table-column>
-                <yid-table-column label="状态"  prop="status" width="120">
-                    <template slot-scope="scope">
-                        <el-link type="primary" @click="editService(scope.row)">编辑</el-link>
-                        <el-switch style="margin: 0 10px 0 10px;"
-                                   @change="stop(scope.row)"
-                                   v-model="scope.row.status=='1'?true:false"
-                                   active-color="#13ce66"
-                                   inactive-color="#ff4949">
-                        </el-switch>
-                    </template>
-                </yid-table-column>
-            </yid-table>
+    <yid-table ref="table"  :data="serveData" @selection-change="handleServicesChange" style="width: 810px;">
+        <yid-table-column label="编号"  prop="servcode" width="80"></yid-table-column>
+        <yid-table-column label="名称"  prop="servname" width="140"></yid-table-column>
+        <yid-table-column label="所属部门"  prop="dept" width="100"></yid-table-column>
+        <yid-table-column label="分类"  prop="servtname" width="100"></yid-table-column>
+        <yid-table-column label="类别"  prop="sertype" width="80">
+            <template slot-scope="scope">
+                <label>{{scope.row.sertype=='1'?'大项目':'小项目'}}</label>
+            </template>
+        </yid-table-column>
+        <yid-table-column label="员工个人价格设置"  prop="special" width="180" align="left" :render-header="renderHeaderMethods">
+            <template slot-scope="scope">
+                <el-row type="flex" justify="space-between">
+                    <el-col :span="22">
+                        <div :key="item.id" v-for="item in scope.row.servspecs">
+                            {{item.eecode}}{{item.btype=='1'?item.pslname:item.eename}}
+                            [<el-link @click="delServspercs(item.id)" type="primary">删除</el-link>]
+                        </div>
+                    </el-col>
+                    <el-col :span="2"><i class="el-icon-plus" @click="editSpeical(scope.row)"></i></el-col>
+                </el-row>
+            </template>
+        </yid-table-column>
+        <yid-table-column label="状态"  prop="status" width="120">
+            <template slot-scope="scope">
+                <label>{{scope.row.status=='1'?'正常':'停用'}}</label>
+            </template>
+        </yid-table-column>
+    </yid-table>
 
-        <yid-dialog :title="addDialog.title" :visible.sync="addDialog.visible" @close="levelCancel" width="600px">
-            <el-form :model="addDialog"  label-width="150px" ref="copyForm">
-                <el-form-item label="项目编号：" prop="addDialog.servcode" :rules="[{required: true,message:'请填写项目编号'}]">
-                    <el-input :value="addDialog.servcode" disabled placeholder="编号从001开始递增，不可重复"/>
-                </el-form-item>
-                <el-form-item label="项目名称：" prop="addDialog.servname" :rules="[{required: true,message:'请填写项目名称'}]">
-                    <el-input v-model="addDialog.servname" placeholder="不超过10个汉字"/>
-                </el-form-item>
-                <el-form-item label="项目分类：" prop="addDialog.branch" :rules="[{required: true,message:'请选择项目分类'}]">
-                    <el-select v-model="addDialog.branch" @change="changeServBranch" placeholder="请选择部门"  style="width: 160px;">
-                        <el-option
-                                v-for="item in branch"
-                                :key="item.id"
-                                :label="item.bname"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                    <el-select v-model="addDialog.servtid" @change="changeServType" placeholder="请选择类别" style="width: 160px;margin-left: 20px;">
-                        <el-option
-                                v-for="item in addDialog.serviceType"
-                                :key="item.id"
-                                :label="item.sname"
-                                :value="item.id">
-                        </el-option>
-                    </el-select>
-                </el-form-item>
-                <el-form-item label="项目类别：">
-                    <el-radio-group v-model="addDialog.sertype">
-                        <el-radio :label="1">大项</el-radio>
-                        <el-radio :label="2">小项</el-radio>
-                    </el-radio-group>
-                </el-form-item>
-                <el-form-item label="是否允许套餐销售：">
-                    <el-radio-group v-model="addDialog.issale">
-                        <el-radio :label="1">允许</el-radio>
-                        <el-radio :label="0">不允许</el-radio>
-                    </el-radio-group>
-                    <el-popover style="padding-left: 10px;"
-                            placement="right"
-                            title="提示"
-                            width="380"
-                            trigger="hover">
-                        <el-button slot="reference"><i class="el-icon-question"></i></el-button>
-                        <ul class="tips-content">
-                            <li>设置允许套餐销售可以销售单个项目的套餐</li>
-                        </ul>
-                    </el-popover>
-                </el-form-item>
-                <el-form-item label="回访短信：">
-                    <el-radio-group v-model="addDialog.isSms">
-                        <el-radio :label="0">不发送</el-radio>
-                        <el-radio :label="1">发送</el-radio>
-                    </el-radio-group>
-                    <el-popover style="padding-left: 10px;"
-                            placement="right"
-                            title="提示"
-                            width="380"
-                            trigger="hover">
-                        <el-button slot="reference"><i class="el-icon-question"></i></el-button>
-                        <ul class="tips-content">
-                            <li>如果设置该项目发送回访短信，则顾客做完该项目后,</li>
-                            <li>系统将自动发送短信到顾客手机上回访，顾客收到短信后可直接回复,</li>
-                            <li>回访短信内容在“菜单> 基础配置>短信消息设置”中设定，</li>
-                            <li>顾客反馈的短信内容保留在短信回复记录中。</li>
-                        </ul>
-                    </el-popover>
-                </el-form-item>
-                <el-form-item label="项目图片：">
-                    <el-upload
-                            class="avatar-uploader"
-                            action="https://sass.yidmall.com/api/api-file/files-anon"
-                            :headers="myheaders"
-                            :show-file-list="false"
-                            :on-success="handleAvatarSuccess"
-                            :before-upload="beforeAvatarUpload">
-                        <img v-if="addDialog.photopath" :src="addDialog.photopath" class="avatar el-upload">
-                        <i v-else class="el-icon-plus avatar-uploader-icon el-upload"></i>
-                        <div class="el-upload__tip" slot="tip">仅支持jpg，png格式的图片上传 图片尺寸：120px*150px</div>
-                    </el-upload>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="saveService()">保存</el-button>
-                    <el-button @click="levelCancel">取消</el-button>
-                </el-form-item>
-            </el-form>
-        </yid-dialog>
-
-        <yid-dialog :title="priceDialog.title" :visible.sync="priceDialog.visible" @close="levelCancel" width="450px">
-            <el-form :model="priceDialog"  label-width="150px" ref="copyForm">
-                <el-form-item label="项目名称：">
-                    {{priceDialog.title}}
-                </el-form-item>
-                <el-form-item label="基础定价：" prop="priceDialog.price" :rules="[{required: true,message:'请填基础定价'}]">
-                    <el-input clearable type="number" min="1" v-model="priceDialog.price"/><br/>
-                    <!--<el-checkbox v-model="priceDialog.allowDiscount" @change="changAllowDiscount">允许手动改价</el-checkbox>-->
-                </el-form-item>
-                <el-form-item label="最低价：">
-                    <el-input clearable type="number" min=0 :max="priceDialog.price" v-model="priceDialog.minPrice"/>
-                </el-form-item>
-                <el-form-item>
-                    <el-button type="primary" @click="salePriceDialog">保存</el-button>
-                    <el-button @click="levelCancel">取消</el-button>
-                </el-form-item>
-            </el-form>
-        </yid-dialog>
-
-        <yid-dialog :title="discountDialog.title" :visible.sync="discountDialog.visible" @close="levelCancel" width="550px">
-            <el-form :model="discountDialog"  label-width="150px" ref="copyForm">
-                <el-form-item label="设置方式">
-                    <el-select style="width: 160px;" v-model="discountDialog.type">
-                        <el-option label="不设置" value="0"></el-option>
-                        <el-option label="单独设置" value="1"></el-option>
-                        <el-option label="全部会员卡" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <template v-if="discountDialog.type==1">
-                    <el-form-item :label="card.cardname" :key="card.cardid" v-for="card in discountDialog.cards">
-                        <el-select clearable style="width: 160px;" @change="checkDiscount(card)" v-model="card.dtype">
-                            <el-option label="折扣" value="1"></el-option>
-                            <el-option label="会员价" value="2"></el-option>
-                        </el-select>
-                        <el-input clearable type="number" min="1" @blur="checkDiscount(card)" v-model="card.value" style="width: 100px;margin-left:15px"/>
-                        <label-wrap v-show="card.dtype" v-text="card.dtype==1?'折':'元'"></label-wrap>
-                    </el-form-item>
-                </template>
-                <template v-if="discountDialog.type==2">
-                    <el-form-item :label="discountDialog.card.cardname" >
-                        <el-select clearable style="width: 160px;" @change="checkDiscount(card)" v-model="discountDialog.card.dtype">
-                            <el-option label="折扣" value="1"></el-option>
-                            <el-option label="会员价" value="2"></el-option>
-                        </el-select>
-                        <el-input clearable type="number" min="1" @blur="checkDiscount(discountDialog.card)" v-model="discountDialog.card.value" style="width: 100px;margin-left:15px"/>
-                        <label-wrap v-show="discountDialog.card.dtype" v-text="discountDialog.card.dtype==1?'折':'元'"></label-wrap>
-                    </el-form-item>
-                </template>
-                <el-form-item>
-                    <el-button type="primary" @click="saveDiscount()">保存</el-button>
-                    <el-button @click="levelCancel">取消</el-button>
-                </el-form-item>
-            </el-form>
-        </yid-dialog>
-
-        <yid-dialog :title="speicalDialog.title" :visible.sync="speicalDialog.visible" @close="levelCancel" width="auto">
+    <yid-dialog :title="speicalDialog.title" :visible.sync="speicalDialog.visible" @close="levelCancel" width="auto">
+            <el-form><el-form-item label="项目名称:">{{speicalDialog.servname}}</el-form-item></el-form>
             <el-row type="flex" justify="space-between">
                 <el-col :span="6">
-                    <el-select v-model="speicalDialog.type" @change="changSpeicalType">
-                        <el-option
-                                label="按职位级别"
-                                value="1">
-                        </el-option>
-                        <el-option
-                                label="按个人"
-                                value="2">
+                    <el-select v-model="speicalDialog.shopid" @change="changSpeicalType">
+                        <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in shopList">
+                            <span style="float: left">{{ item.shopcode }}</span>
+                            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
                         </el-option>
                     </el-select>
                 </el-col>
                 <el-col :span="6">
                     <el-select v-model="speicalDialog.id" @change="changSpeicalData" >
-                        <el-option :key="item.id" v-for="item in speicalDialog.speicalData" :label="item.name" :value="item.id"></el-option>
+                        <el-option :key="item.id"
+                                   v-for="item in speicalDialog.speicalData"
+                                   :label="item.name" :value="item.id"></el-option>
                     </el-select>
                 </el-col>
-                <el-col :span="12" style="text-align: right">
+                <el-col :span="12" style="text-align: left">
                     <el-button type="primary" @click="addSpeicalRow()">添加</el-button>
                 </el-col>
             </el-row>
             <yid-table ref="table" style="margin-top: 15px;" :data="speicalDialog.speicalRows">
-                <yid-table-column label="职位" min-width="150" prop="btype">
+                <yid-table-column label="员工名称" min-width="150" prop="btype">
                     <template slot-scope="scope">
-                        <div>[{{scope.row.btype=="1"?"职务级别":"个人"}}]{{scope.row.btype=="1"?scope.row.pslname:scope.row.eename}}</div>
+                        <div>[{{scope.row.eecode}}]{{scope.row.eename}}</div>
                     </template>
                 </yid-table-column>
-                <yid-table-column label="特殊价格" min-width="120" prop="specialPrice">
+                <yid-table-column label="员工价格" min-width="120" prop="specialPrice">
                     <template slot-scope="scope">
                         <el-input clearable type="number" min="1" placeholder="必填" v-model="scope.row.specialPrice"/>
                     </template>
                 </yid-table-column>
                 <yid-table-column label="最低价格" min-width="130" prop="minPrice">
                     <template slot-scope="scope">
-                        <el-input clearable type="number" min="1" :max="scope.row.specialPrice" @blur="checkSpecialPrice(scope.row)" placeholder="不必填" v-model="scope.row.minPrice"/>
+                        <el-input clearable type="number" min="1"
+                                  :max="scope.row.specialPrice"
+                                  @blur="checkSpecialPrice(scope.row)"
+                                  placeholder="不必填"
+                                  v-model="scope.row.minPrice"/>
                     </template>
                 </yid-table-column>
                 <yid-table-column label="会员卡折扣" min-width="380" align="left">
@@ -330,95 +142,29 @@
                                 </el-select>
                             </el-col>
                             <el-col :span="9">
-                                <el-input type="number" min="1" @blur="checkDiscount(scope.row)" v-model="scope.row.value" clearable/>
+                                <el-input type="number" min="1"
+                                          @blur="checkDiscount(scope.row)"
+                                          v-model="scope.row.value" clearable/>
                             </el-col>
-                            <el-col :span="6"><label-wrap v-show="scope.row.dtype" v-text="scope.row.dtype==1?'折':'元'"></label-wrap></el-col>
+                            <el-col :span="6"><label-wrap
+                                    v-show="scope.row.dtype"
+                                    v-text="scope.row.dtype==1?'折':'元'">
+                            </label-wrap></el-col>
                         </el-row>
                     </template>
                 </yid-table-column>
                 <yid-table-column label="操作" min-width="80">
                     <template slot-scope="scope">
-                        <el-link type="primary" style="margin: 0 10px 0 10px;" @click="deleteSpeicalRow(scope.row)">删除</el-link>
+                        <el-link type="primary" style="margin: 0 10px 0 10px;"
+                                 @click="deleteSpeicalRow(scope.row)">删除</el-link>
                     </template>
                 </yid-table-column>
             </yid-table>
-            <el-row  justify="space-between" class="margin5">
-                <el-col :span="2" :offset="10"><el-button type="primary" @click="saveSpeical()">保存</el-button></el-col>
-                <el-col :span="2" ><el-button @click="levelCancel">取消</el-button></el-col>
+            <el-row  justify="space-between" class="margin10">
+                <el-col :span="2" :offset="8"><el-button type="primary" @click="saveSpeical()">保存</el-button></el-col>
+                <el-col :span="2" :offset="4"><el-button @click="levelCancel">取消</el-button></el-col>
                 <el-col :span="10"></el-col>
             </el-row>
-        </yid-dialog>
-
-        <yid-dialog :title="mutiPriceDialog.title" :visible.sync="mutiPriceDialog.visible" @close="levelCancel" width="760px">
-            <div style="margin: 8px 10px;">折扣设置为0时,不打折。输入框为空时表示不设置（没有设置项目的会员卡折扣，项目会员卡价格应用基础折扣）</div>
-            <el-form :model="mutiPriceDialog"  label-width="150px" ref="copyForm">
-                <el-form-item label="所选项目">
-                    <!--<el-row :gutter="20" type="flex" class="mutirow">-->
-                        <!--<el-col :span="3" :key="item.id" v-for="item in servids"><el-tag type="info">{{item.servname}}</el-tag></el-col>-->
-                    <!--</el-row>-->
-                    <el-tag :key="item.id" v-for="item in servids" :disable-transitions="false">
-                        {{item.servname}}
-                    </el-tag>
-                </el-form-item>
-                <el-form-item label="设置方式">
-                    <el-select placeholder="请选择" style="width: 160px;" v-model="mutiPriceDialog.type">
-                        <el-option label="不设置" value="0"></el-option>
-                        <el-option label="单独设置" value="1"></el-option>
-                        <el-option label="全部会员卡" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
-                <template v-if="mutiPriceDialog.type==1">
-                    <el-form-item :label="card.cardname" :key="card.cardid" v-for="card in mutiPriceDialog.cards" >
-                        <el-select clearable v-model="card.dtype" @change="checkDiscount(card)" style="width: 160px;">
-                            <el-option label="折扣" value="1"></el-option>
-                            <el-option label="会员价" value="2"></el-option>
-                        </el-select>
-                        <el-input type="number" min="1" @blur="checkDiscount(card)" v-model="card.value" style="width: 100px;margin-left:15px"/>
-                        <label-wrap v-show="card.dtype" v-text="card.dtype==1?'折':'元'"></label-wrap>
-                    </el-form-item>
-                </template>
-                <template v-if="mutiPriceDialog.type==2">
-                    <el-form-item :label="mutiPriceDialog.card.cardname" >
-                        <el-select clearable  v-model="mutiPriceDialog.card.dtype" @change="checkDiscount(mutiPriceDialog.card)" style="width: 160px;">
-                            <el-option label="折扣" value="1"></el-option>
-                            <el-option label="会员价" value="2"></el-option>
-                        </el-select>
-                        <el-input type="number" min="1" @blur="checkDiscount(mutiPriceDialog.card)" v-model="mutiPriceDialog.card.value" style="width: 100px;margin-left:15px"/>
-                        <label-wrap v-show="mutiPriceDialog.card.dtype" v-text="mutiPriceDialog.card.dtype==1?'折':'元'"></label-wrap>
-                    </el-form-item>
-                </template>
-                <el-form-item>
-                    <el-button type="primary" @click="saveMutiPrice()">保存</el-button>
-                    <el-button @click="levelCancel">取消</el-button>
-                </el-form-item>
-            </el-form>
-        </yid-dialog>
-
-        <yid-dialog :title="mutiImportDialog.title" :visible.sync="mutiImportDialog.visible" @close="levelCancel" width="700px">
-            <el-form :model="mutiImportDialog.model"  label-width="120px" ref="copyForm" :label-position="labelPosition">
-                <p>批量导入服务项目方法</p>
-                <p>1、点击链接：下载服务项目模板；</p>
-                <p>2、下载完成并保存文件，然后打开文件并输入服务项目信息；</p>
-                <p>3、在下面导入修改完毕的模板文件。</p>
-                <el-form-item label="下载导入模板：" align="left">
-                    <el-link type="primary" @click="downExcelTemplate()">服务项目模板</el-link>
-                </el-form-item>
-
-                <el-form-item label="选择导入文件:">
-                    <el-upload ref="upload"
-                            class="upload-demo"
-                            action="https://jsonplaceholder.typicode.com/posts/"
-                            :before-upload="handleChange">
-                        <el-button size="small" type="primary">点击上传</el-button>
-                        <div slot="tip" class="el-upload__tip">支持上传 .xls .xlsx后缀文件，表格中一行为一条数据，一次最多可导入3000条数据。</div>
-                    </el-upload>
-                </el-form-item>
-
-                <el-form-item>
-                    <el-button @click="saveImportServs()" type="primary">保存</el-button>
-                    <el-button @click="levelCancel">取消</el-button>
-                </el-form-item>
-            </el-form>
         </yid-dialog>
 
     </div>
@@ -433,7 +179,6 @@
     export default {
         data() {
             return {
-                activeName:'project',
                 myheaders:{},
                 labelPosition: 'left',
                 mutiPrice: '1',
@@ -481,9 +226,10 @@
                 },
                 speicalDialog: {
                     servid:'',
+                    servname: '',
                     title: '',
                     visible: false,
-                    type: '1',
+                    type: '2',
                     speicalData: [],
                     id: '',
                     code: '',
@@ -509,14 +255,17 @@
                     servs: []
                 },
                 imageUrl: '',
+                shopList:[],
                 branch: [],
                 serviceType: [],
                 serviceAllType: [],
                 form: {
                     branch: '',
-                    scode:'',
-                    servname:'',
-                    status:'1',
+                    shopid: '',
+                    bran: '',
+                    scode: '',
+                    servname: '',
+                    eename: '',
                 },
                 employees: [],
                 positions: [],
@@ -733,24 +482,28 @@
                 }
             },
             editSpeical(row) {
-                this.speicalDialog.title = '员工特殊价格设置';
+                this.speicalDialog.title = '员工个人价格设置';
                 this.speicalDialog.visible = true;
                 this.speicalDialog.servid = row.id;
+                this.speicalDialog.servname = row.servname;
                 this.speicalDialog.speicalRows = [];
+                this.speicalDialog.speicalData=[]
+                this.speicalDialog.shopid=''
+                this.speicalDialog.id=''
                 if(row.servspecs && row.servspecs.length>0){
                     row.servspecs.filter(item =>{
                         this.speicalDialog.speicalRows.push({...item})
                     })
                 }
-                this.changSpeicalType(this.speicalDialog.type);
             },
             changSpeicalType(id){
                 this.speicalDialog.id='';
-                if(id=="1"){
-                    this.speicalDialog.speicalData=this.positions;
-                }else{
-                    this.speicalDialog.speicalData=this.employees;
-                }
+                this.speicalDialog.speicalData=[]
+                this.employees.map(m => {
+                    if(m.shopid==Number(id)){
+                        this.speicalDialog.speicalData.push(m)
+                    }
+                });
             },
             changSpeicalData(id){
                 this.speicalDialog.speicalData.forEach(item =>{
@@ -762,7 +515,7 @@
             },
             addSpeicalRow(){
                 if(!this.speicalDialog.id){
-                    yid.util.error("请选择职务或者员工");
+                    yid.util.error("请选择员工");
                     return;
                 }
                 let flag=false;
@@ -808,15 +561,18 @@
                 }
             },
             deleteSpeicalRow(row){
-                let num=-1;
-                this.speicalDialog.speicalRows.forEach((item,index) => {
-                    if(row.btype==item.btype && (row.pslid==item.pslid || row.eeid==item.eeid)){
-                        num=index;
+                const that=this
+                yid.util.confirm('您确定删除该设定吗？', '','', ()=> {
+                    let num=-1;
+                    that.speicalDialog.speicalRows.forEach((item,index) => {
+                        if(row.btype==item.btype && (row.pslid==item.pslid || row.eeid==item.eeid)){
+                            num=index;
+                        }
+                    })
+                    if(num>=0){
+                        that.speicalDialog.speicalRows.splice(num,1);
                     }
                 })
-                if(num>=0){
-                    this.speicalDialog.speicalRows.splice(num,1);
-                }
             },
             saveSpeical(){
                 let message="";
@@ -1113,6 +869,11 @@
                 })
             },
             init(){
+                service.chain.shop.shopList({status:'1'}).then(res => {
+                    if(res.resp_code == 200) {
+                        this.shopList = res.data;
+                    }
+                })
                 service.serviceInfo.findbranch().then(res => {
                     this.branch=res.data
                 });
@@ -1269,23 +1030,60 @@
             downExcelTemplate(){
                 download($yid.config.API.BASE + '/api-base/serviceinfo/excelTemplate', {})
             },
+            // 自定义表格展示提示信息
+            renderHeaderMethods(h, {column}) {
+                return h(
+                    'div', {
+                        style: 'display:flex;margin:auto;'
+                    },
+                    [
+                        h('span', column.label),
+                        h('promptMessages', {
+                            props: {
+                                messages: [
+                                    '项目中未单独设置员工个人价格的',
+                                    '取门店项目价格设置中的价格规则',
+                                ]
+                            }
+                        })
+                    ]
+                )
+            },
+            delServspercs(id){
+                const that=this
+                yid.util.confirm('您确定删除该设定吗？', '','', ()=> {
+                    service.serviceInfo.delServspercs(id).then(res =>{
+                        if(res.resp_code=="200"){
+                            yid.util.success(res.resp_msg);
+                            that.queryServData();
+                        }else{
+                            yid.util.error(res.resp_msg);
+                        }
+                    })
+                })
+            }
         },
         mounted(){
             this.init();
         }
     }
 </script>
-
-<style scoped lang="scss">
+<style scoped>
     .margin5 {
         margin: 3px 2px;
     }
+
+    .margin10 {
+        margin: 10px 2px;
+    }
     .mutirow {
         flex-wrap: wrap;
-        .el-tag {
-            width: 100%;
-        }
     }
+
+    .el-tag {
+        width: 100%;
+    }
+
     .avatar-uploader .el-upload {
         border: 1px dashed #d9d9d9;
         border-radius: 6px;

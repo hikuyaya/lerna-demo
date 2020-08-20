@@ -1,8 +1,12 @@
 import yid from '@src/library'
 
-const prefix = 'api-member/memberinfo';
+const prefix = 'api-member/chainmember';
 const cardfix = 'api-base/cardinfo';
-const servpackfix = 'api-base/servicePackage';
+const chainprefix = 'api-member/chainmember';
+
+export function querychainMembers(params) {
+    return yid.http.get(`${prefix}/pageChainMembers`, {params})
+}
 
 export function queryAllMember(params) {
     return yid.http.get(`${prefix}/chain/pageMembers`, {params})
@@ -18,6 +22,10 @@ export function exportMember(params) {
 
 export function queryMember(params) {
     return yid.http.get(`${prefix}/queryMember`, {params})
+}
+
+export function queryShopcardmoney(params) {
+    return yid.http.get(`${chainprefix}/queryShopcardmoney`, {params})
 }
 
 export function queryMemberStatis(params) {
@@ -100,6 +108,7 @@ export function queryMemberStorelogs(params) {
     return yid.http.get(`api-stock/memdbatch/queryMemberStorelogs`, {params})
 }
 
+
 export default {
     //全部会员查询
     queryAllMember,
@@ -125,5 +134,7 @@ export default {
     selectPackages,
     selectServices,
     selectProducts,
-    queryMemberStorelogs
+    queryMemberStorelogs,
+    querychainMembers,
+    queryShopcardmoney
 }

@@ -1,17 +1,19 @@
 <template>
     <div class="auth-config">
-        <el-form :inline="true" :model="authForm" class="demo-form-inline">
-            <el-form-item label="">
-                <el-select v-model="authForm.role" placeholder="请选择系统角色">
+        <el-form :inline="true" :model="authForm" ref="authForm" class="demo-form-inline">
+            <el-form-item label="选择账户：">
+                <el-select multiple clearable placeholder="请选择账号：" style="width: 400px;" v-model.trim="authForm.userIds" disabled>
+                    <el-option :key="item.id" :label="item.username+'（'+item.mobile+'）'" :value="item.id" v-for="item in allUserList"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item>
                 <el-button @click="cancelConfig">取消</el-button>
                 <el-button type="primary" @click="saveConfig">保存</el-button>
+                <el-button type="primary" @click="cancelConfig" style="margin-left: 60px;">返回</el-button>
             </el-form-item>
         </el-form>
         <el-alert
-                title='勾选的功能表示允许该管理员操作，不想对某个操作员开放的功能，只需把小勾去掉，然后点击"保存设置"按钮即可。'
+                title='勾选的功能表示允许该管理员操作，不想对某个操作员开放的功能，只需把小勾去掉，然后点击"保存"按钮即可。'
                 type="info"
                 show-icon>
         </el-alert>
@@ -54,13 +56,14 @@
 </template>
 
 <script>
+    import yid from '@src/library'
     import service from '@src/service'
     import {clientMenus} from "../../service/modules/user";
     export default {
         name: "auth-config",
         props: {
             treeArr: Array,
-            userId: Number
+            userIds: Array
         },
         data() {
             return {
@@ -74,29 +77,46 @@
                 },
                 editableTabsValue: '2',
                 treeData: [],
+                UserIds: [],
                 tabIndex: 1,
                 authForm : {
-                    role: ''
-                }
+                    userIds: null
+                },
+                allUserList:[],
             }
         },
         watch: {
+
             treeArr(newValue, oldvalue) {
-                //console.log('tree', newValue)
-                this.treeData = $yid.util.deepClone(newValue);
+                this.treeData = yid.util.deepClone(newValue);
                 this.activeTab = this.treeData[0].name;
                 this.resetExistMenu();
                 this.selectIndex = 0;
-                console.log('enter')
-            }
+                console.log('enter+treeArr')
+            },
+
+            userIds(newValue, oldvalue) {
+                this.authForm.userIds = yid.util.deepClone(newValue);
+                console.log('enter+userIds')
+            },
         },
 
         mounted() {
+            this.getAllUser();
             service.user.client().then(res=> {
                 this.authMenu = res.data;
             });
+
         },
         methods: {
+            getAllUser(){
+                service.user.chainListAll({}).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.allUserList = res.data;
+                    }
+                })
+            },
+
             clickTab(tab) {
                 this.selectIndex = tab.index;
             },
@@ -118,7 +138,7 @@
                 //console.log(this.existMenu);
                 console.log('addAuthMenu',this.existMenu)
                 if(this.existMenu.includes(item.name)) {
-                    $yid.util.error("此菜单已存在，请前往配置")
+                    yid.util.error("此菜单已存在，请前往配置")
                 } else {
                     service.user.clientMenus(item.appId).then(res=> {
                         // console.log(res.data[0]);
@@ -161,12 +181,14 @@
                 this.resetExistMenu();
                // console.log(this.treeData)
             },
+            cancelConfig() {
+                this.$emit('afterCancel')
+            },
             saveConfig() {
                 let checkedArr = [],
                     halfCheckedArr = [],
                     menuArr = [];
                 // console.log(this.userId);
-                // console.log(this.treeArr)
                 this.treeData.map((item, index)=> {
                    let appId = this.treeData[index].appID;
                    checkedArr = this.$refs['tree' + index][0].getCheckedKeys();
@@ -177,28 +199,27 @@
                        menuArr.push({
                            menuId : itemCheck,
                            appId,
-                           userId: this.userId
+                           //userId: this.userId
                        });
                    });
                     halfCheckedArr.map((itemCheck, itemIndex)=> {
                         menuArr.push({
                             menuId : itemCheck,
                             appId,
-                            userId: this.userId
+                            //userId: this.userId
                         });
                     });
                 })
                 //console.log(menuArr)
-                service.user.saveMenus(this.userId, menuArr).then(res=> {
+                service.user.saveMenus(this.authForm.userIds, menuArr).then(res=> {
                     if(res.resp_code == 200) {
-                        $yid.util.success("权限设置成功！")
+                        yid.util.success("权限设置成功！")
+                        this.$emit('afterCancel')
                     }
                 });
                 //this.$emit('afterSave')
             },
-            cancelConfig() {
-                this.$emit('afterCancel')
-            }
+
         }
     }
 </script>

@@ -30,9 +30,16 @@ export function usermenus(id) {
     const url = `${prefix}/menus/usermenus/${id}`
     return yid.http.get(url)
 }
-export function saveMenus(id, params) {
-    const url = `${prefix}/users/${id}/menus`
-    return yid.http.post(url, params )
+export function usermenusList(userIds) {
+    const url = `${prefix}/menus/usermenusList`
+    return yid.http.post(url, {userIds})
+}
+
+export function saveMenus(ids, params) {
+ //   const url = `${prefix}/users/${ids}/menus`
+ //   return yid.http.post(url, params )
+    const url = `${prefix}/users/${ids}/batchSaveMenus`
+    return yid.http.post(url, params)
 }
 
 export function clientMenus(appId) {
@@ -71,6 +78,11 @@ export function batchCopyAuthForChain(params) {
     return yid.http.post(`${prefix}/users/batchCopyAuthForChain`,params)
 }
 
+export function userlistForChain(params) {
+    const url = `${prefix}/userlistForChain`
+    return yid.http.get(url, { params })
+}
+
 export default {
     /** 用户菜单 */
     menu,
@@ -86,6 +98,7 @@ export default {
     roles,
     /** 获取用户权限树 */
     usermenus,
+    usermenusList,
     /** 保存菜单 */
     saveMenus,
     /** 获取模板菜单*/
@@ -99,5 +112,6 @@ export default {
     saveOrUpdateForChain,
     batchDeleteForChain,
     chainListAll,
-    batchCopyAuthForChain
+    batchCopyAuthForChain,
+    userlistForChain
 }

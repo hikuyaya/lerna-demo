@@ -33,9 +33,9 @@
       </el-form>
          <div>
         <el-button type="primary"  @click="showAdd">新建</el-button>
-<!--        <el-button @click="">批量设置权限</el-button>-->
+        <el-button @click="batchConfigAuth">批量设置权限</el-button>
         <el-button @click="showCopyDialog">复制权限</el-button>
-        <el-button @click="deleteUsers">删除</el-button>
+        <!--<el-button @click="deleteUsers">删除</el-button>-->
       </div>
       <yid-table pagination ref="userTable" style="margin-top: 15px;" @selection-change="handleSelectionChange">
         <el-table-column  type="selection"  width="55">
@@ -45,12 +45,16 @@
             <el-link type="primary" @click="showEdit(scope.row)">{{scope.row.username}}</el-link>
           </template>
         </yid-table-column>
-        <yid-table-column label="昵称" min-width="80" prop="eeid"></yid-table-column>
+        <yid-table-column label="昵称" min-width="80" prop="nickname"></yid-table-column>
         <yid-table-column label="手机号" min-width="120" prop="mobile"></yid-table-column>
         <yid-table-column label="关联微信id" min-width="130" prop="openId"></yid-table-column>
-        <yid-table-column label="门店账号类型" width="110" prop="roleName">
+        <yid-table-column label="门店账号类型" width="110" prop="roleTypeName">
         </yid-table-column>
-        <yid-table-column label="可登陆门店" width="110" prop="roleName">
+        <yid-table-column label="登陆门店" width="110" prop="loginShopList">
+        </yid-table-column>
+        <yid-table-column label="连锁系统角色" width="110" prop="roleName">
+        </yid-table-column>
+        <yid-table-column label="管理门店" width="110" prop="manageShopList">
         </yid-table-column>
         <yid-table-column label="状态" min-width="100" prop="enabled">
             <template slot-scope="scope">
@@ -67,7 +71,7 @@
         <yid-table-column label="操作" min-width="200" fixed="right">
           <template slot-scope="scope">
             <el-button @click="resetPassword(scope.row.id)" type="text"><i class="edit"></i>重置密码</el-button>
-            <el-button @click="configAuth(scope.row.id)" type="text"><i class="view"></i>设置权限</el-button>
+            <el-button @click="configAuth(scope.row)" type="text"><i class="view"></i>设置门店权限</el-button>
           </template>
         </yid-table-column>
       </yid-table>
@@ -133,11 +137,12 @@
              </el-form-item>
            </el-form>
          </yid-dialog>
+
     </div>
     </el-collapse-transition>
     <el-collapse-transition>
       <div v-show="!listShow">
-        <authConfig :treeArr="treeArr" :userId="userId" @afterSave="save()" @afterCancel="cancelConfig()"/>
+        <authConfig :treeArr="treeArr" :userIds="userIds" @afterSave="save()" @afterCancel="cancelConfig()"/>
       </div>
     </el-collapse-transition>
   </div>
@@ -147,7 +152,7 @@
 import yid from '@src/library'
 import service from '@src/service'
 import authConfig from "./authConfig";
-
+import {isEmpty} from "../../library/helper/validate";
 /*import Vue from 'vue'
 import VueClipboard from 'vue-clipboard2'
 Vue.use(VueClipboard)
@@ -160,53 +165,54 @@ import 'echarts/lib/chart/line';*/
 
 export default {
     name: "manage",
-  /*components: {
-    authConfig
-  },*/
-  data() {
-    return {
-        multipleSelection: [],
-        treeArr: [],
-        userId: 0,
-        listShow: true,
-        closable: false,
-        copyDialog: {
-          visible: false,
-          title: '复制权限',
-        },
-        dialog: {
-          visible: false,
-          title: '新增渠道',
-        },
-        userForm: {
-            username:'',
-            mobile:'',
-            password : '',
-            eeInfo:{},
-            role: '',
-        },
-        copyForm:{
-            userId : '',
-        },
-        searchForm:{
-            username : '',
-            typeId : '',
-            roleId:"",
-        },
-        roles: [],
-        clients:[],
-        sysroles:[],
-        pageInfo:{
-            page:0,
-            limit:10
-        },
-        allEmployeeList:[],
-        filterEmployeeList:[],
-        allUserList:[],
-        filterUserList:[],
-        disabledvalue: false,
-    }
-  },
+    components: {
+      authConfig
+    },
+    data() {
+      return {
+          multipleSelection: [],
+          treeArr: [],
+          userId: "",
+          userIds: [],
+          listShow: true,
+          closable: false,
+          copyDialog: {
+            visible: false,
+            title: '复制权限',
+          },
+          dialog: {
+            visible: false,
+            title: '新增渠道',
+          },
+          userForm: {
+              username:'',
+              mobile:'',
+              password : '',
+              eeInfo:{},
+              role: '',
+          },
+          copyForm:{
+              userId : '',
+          },
+          searchForm:{
+              username : '',
+              typeId : '',
+              roleId:"",
+          },
+          roles: [],
+          clients:[],
+          sysroles:[],
+          pageInfo:{
+              page:0,
+              limit:10
+          },
+          allEmployeeList:[],
+          filterEmployeeList:[],
+          allUserList:[],
+          filterUserList:[],
+          disabledvalue: false,
+      }
+    },
 
   mounted() {
       //获取角色
@@ -264,17 +270,47 @@ export default {
       //console.log('aftercancel')
       this.listShow = true;
     },
-    configAuth(id) {
-      this.listShow = false;
-      service.user.usermenus(id).then(res=> {
-         this.treeArr = res.data;
-         this.userId = id;
+    configAuth(row) {
+
+      service.user.usermenus(row.id).then(res=> {
+          if(res.resp_code == 200) {
+              this.userIds = [];
+              this.userIds.push(row.id);
+              this.treeArr = res.data;
+              this.listShow = false;
+          }
       });
     },
+      batchConfigAuth(){
+          if(this.multipleSelection.length > 0) {
+              let userIds = [];
+              this.multipleSelection.map((item,index) => {
+                  if(isEmpty(item.typeId)){
+                      yid.util.error("第"+(index+1)+"行账户没有分配账号类型")
+                      return
+                  }else{
+                      userIds.push(item.id);
+                  }
+              });
+              if(userIds.length>0){
+                  service.user.usermenusList(userIds).then(res=> {
+                      if(res.resp_code == 200) {
+                          this.userIds = userIds;
+                          this.treeArr = res.data;
+                          this.listShow = false;
+                      }
+                  });
+              }
+
+          } else {
+              yid.util.error("请至少勾选一项")
+          }
+      },
+
     get() {
         this.pageInfo.page=1
         this.pageInfo.limit = this.$refs.userTable.Pagination.internalPageSize;
-        const fetch = service.user.userList
+        const fetch = service.user.userlistForChain
         const params = {...this.pageInfo,...this.searchForm}
         this.$refs.userTable.reloadData({
             fetch,
@@ -320,7 +356,7 @@ export default {
           })
       },
       getAllUser(){
-          service.user.chainListAll({isDel:'0'}).then(res=> {
+          service.user.chainListAll({id:null}).then(res=> {
               if(res.resp_code == 200) {
                   this.filterUserList = res.data;
                   this.allUserList = Object.assign(this.filterUserList);//保留原数据
@@ -437,12 +473,19 @@ export default {
               yid.util.error("请选择账户")
               return
           }else{
+              let userIds = [];
+              this.multipleSelection.map(item => {
+                  userIds.push(item.id);
+              });
               let params = {
-                  sysUsers: this.multipleSelection,
+                  userIds: userIds,
                   copyUserId: this.copyForm.userId
               };
               service.user.batchCopyAuthForChain(params).then(res => {
-                  yid.util.alert(res.resp_msg);
+                  if(res.resp_code == 200) {
+                      yid.util.alert(res.resp_msg);
+                      this.copyDialog.visible = false;
+                  }
               })
           }
 

@@ -419,6 +419,16 @@ export const MENU = {
       icon: null,
       canShow: true
     },
+      {
+          id: 840,
+          pid: 8,
+          name: '套餐项目查看',
+          title: '套餐项目查看',
+          path: '/setting/packLookup',
+          component: 'setting/packLookup',
+          icon: null,
+          canShow: true
+      },
     {
       id: 85,
       pid: 8,

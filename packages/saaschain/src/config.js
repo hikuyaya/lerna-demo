@@ -280,6 +280,15 @@ export const MENU = {
           icon: null,
           canShow: true
       },
+      { id: 56,
+          pid: 5,
+          name: '退款纪录(店)',
+          title: '退款纪录(店)',
+          path: '/finance/shoprefund',
+          component: 'finance/shoprefund',
+          icon: null,
+          canShow: true
+      },
     { id: 6, pid: null, name: '会员管理', title: null, path: null, icon: 'iconfont-channelmanagement' },
       { id: 60,
           pid: 6,

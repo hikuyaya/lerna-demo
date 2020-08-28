@@ -872,7 +872,9 @@
                             {{scope.row.btype | formatValue(cardbtype)}}
                         </template>
                     </yid-table-column>
-                    <yid-table-column label="变动金额" min-width="80" prop="money"></yid-table-column>
+                    <yid-table-column label="变动金额" min-width="80" prop="money">
+                        <template slot-scope="scope">{{scope.row.money*scope.row.direction}}</template>
+                    </yid-table-column>
                     <yid-table-column label="结存余额" min-width="80" prop="balance"></yid-table-column>
                     <yid-table-column label="卡金类型" min-width="80" prop="mtype">
                         <template slot-scope="scope">
@@ -926,7 +928,9 @@
                             {{ scope.row.sername | jsonSernameFormate }}
                         </template>
                     </yid-table-column>
-                    <yid-table-column label="扣减数量" min-width="80" prop="saleNum"></yid-table-column>
+                    <yid-table-column label="扣减数量" min-width="80" prop="saleNum">
+                        <template slot-scope="scope">{{scope.row.saleNum*scope.row.direction}}</template>
+                    </yid-table-column>
                     <yid-table-column label="剩余数量" min-width="80" prop="surplusNum"></yid-table-column>
                     <yid-table-column label="消费时间" min-width="180" prop="saleTime"></yid-table-column>
                     <yid-table-column label="门店" min-width="80" prop="shopname"></yid-table-column>

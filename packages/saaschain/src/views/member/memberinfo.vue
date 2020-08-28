@@ -714,7 +714,7 @@
                             {{ scope.row.sername | jsonSernameFormate }}
                         </template>
                     </yid-table-column>
-                    <yid-table-column label="扣减数量" min-width="80" prop="saleNum"></yid-table-column>
+                    <yid-table-column label="变动数量" min-width="80" prop="saleNum"></yid-table-column>
                     <yid-table-column label="剩余数量" min-width="80" prop="surplusNum"></yid-table-column>
                     <yid-table-column label="消费时间" min-width="180" prop="saleTime"></yid-table-column>
                     <yid-table-column label="门店" min-width="80" prop="shopname"></yid-table-column>
@@ -847,7 +847,8 @@
                     {id: '5', code: '0', name: '新客'}
                 ],
                 distChannelList: [],
-                inchanels: [{value:"1",name:'门店业务端'},{value:"2",name:'门店管理端'},{value:"3",name:'顾客手机端'},{value:"4",name:'设计师端'}],
+                inchanels: [{value:"1",name:'门店业务端'},{value:"2",name:'门店管理端'},
+                            {value:"3",name:'顾客手机端'},{value:"4",name:'设计师端'}],
                 cardbtype: [{value:"1",name:"充值"},{value:"2",name:"消费"},{value:"3",name:"买套餐"},{value:"4",name:"买产品"},
                             {value:"5",name:"退卡"},{value:"6",name:"退项目"},{value:"7",name:"退产品"},
                             {value:"8",name:"卡帐户调整"},{value:"9",name:"退款"}],
@@ -921,7 +922,8 @@
                 },
                 memberStatic: {yearmonth:"", cmMoney:'', cmNum:'', cyMoney:'', cyNum:'', servNum:'', serviceRate:'', serviceJe:''},
                 cardinfo: {id:"",cardno:"",money:"",gmoney:"",smoney:"",serDis:"",proDis:"",shopname:"",exprite:"",makedate:""},
-                membercard: { memid:"",memname:"",  mobile:"", sex:"", birthday:"", cardid:"", chid:"", nchid:"", exprite:"", cardmemo:"" ,address: ""},
+                membercard: { memid:"",memname:"",  mobile:"", sex:"", birthday:"",
+                    cardid:"", chid:"", nchid:"", exprite:"", cardmemo:"" ,address: ""},
                 cardmoney: { id:"",cardtype:"",money:"",gmoney:"",nmoney:"",ngmoney:"",bmoney:"",bgmoney:"" },
                 cardlist:[],
                 cardrecordform:{ memid:'', cardid:'', btype:'', mtype:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0},

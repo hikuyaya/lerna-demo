@@ -9,8 +9,8 @@
     "build:test": "vue-cli-service build --mode test",
     "build:prod": "vue-cli-service build --mode prod",
     "build": "vue-cli-service build --mode prod",
-    "docker": "docker build -t sass.yidmall.com:5000/sass/admin:latest . && docker push sass.yidmall.com:5000/sass/admin:latest",
-    "dockertest": "docker build -t sass.yidmall.com:5000/sass/admintest:latest . && docker push sass.yidmall.com:5000/sass/admintest:latest",
+    "docker": "docker build -t sass.yidmall.com:5000/sass/chain:latest . && docker push sass.yidmall.com:5000/sass/chain:latest",
+    "dockertest": "docker build -t sass.yidmall.com:5000/sass/chaintest:latest . && docker push sass.yidmall.com:5000/sass/chaintest:latest",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

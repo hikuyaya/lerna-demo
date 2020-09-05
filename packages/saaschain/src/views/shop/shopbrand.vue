@@ -14,8 +14,8 @@
         </yid-table>
         <yid-dialog :title="brandDialog.title" :visible.sync="brandDialog.visible" width="450px">
             <el-form ref="brandForm" :model="brandForm"  label-width="100px" >
-                <el-form-item label="品牌编号：" prop="code" :rules="[{ required: true, message: '品牌编号为空'}]">
-                    {{brandForm.code}}
+                <el-form-item label="品牌编号：">
+                    <el-input disabled="disabled" value="自动生成"></el-input>
                 </el-form-item>
                 <el-form-item label="品牌名称：" prop="name" :rules="[{ required: true, message: '品牌名称为空'}]">
                     <el-input placeholder="请填写" v-model="brandForm.name"></el-input>
@@ -73,18 +73,13 @@
                    }
                })
             },
-            getBrandMaxId(){
-                service.chain.brand.getBrandCode({}).then(res=> {
-                    this.brandForm.code = res.data;
-                })
-            },
             alertBrand() {
                 this.brandDialog.visible = true;
                 this.brandDialog.title = '添加品牌';
                 this.brandForm.id = ''
                 this.$refs['brandForm'].resetFields();
                 /**获取最大部门id+1**/
-                this.getBrandMaxId();
+                this.brandForm.code='';
                 this.brandForm.name='';
                 this.brandForm.memo='';
                 this.brandForm.isDel='0';

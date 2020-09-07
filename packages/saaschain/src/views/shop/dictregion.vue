@@ -23,7 +23,7 @@
                         <el-input style="width: 150px" v-model="regionForm.name"></el-input>
                     </el-form-item>
                     <el-form-item label="上级区域：" prop="parentObj">
-                        <el-select :disabled="isEdit" v-model="regionForm.parentObj" placeholder="请选择上级区域" multiple collapse-tags  @change="selectChange">
+                        <el-select @clear="clearSelectRegion" clearable :disabled="isEdit" v-model="regionForm.parentObj" placeholder="请选择上级区域">
                             <el-option :value="regionForm.parentObjValue" style="height: auto">
                                 <el-tree
                                         size="small"
@@ -34,7 +34,6 @@
                                         node-key="id"
                                         :check-strictly="true"
                                         @check-change="templateCheckChange"
-                                        @node-click="templateClick"
                                         ref="templateTree">
                                 </el-tree>
                             </el-option>
@@ -107,7 +106,7 @@
                     {{shopForm.shopnames}}
                 </el-form-item>
                 <el-form-item label="门店区域：" prop="parentObj" :rules="[{ required: true, message: '请选择区域'}]">
-                    <el-select v-model="shopForm.parentObj" placeholder="请选择门店区域" multiple collapse-tags  @change="selectChange1">
+                    <el-select @clear="clearSelectRegion1" clearable v-model="shopForm.parentObj" placeholder="请选择门店区域">
                         <el-option :value="shopForm.parentObjValue" style="height: auto">
                             <el-tree
                                     size="small"
@@ -118,7 +117,6 @@
                                     node-key="id"
                                     :check-strictly="true"
                                     @check-change="templateCheckChange1"
-                                    @node-click="templateClick1"
                                     ref="templateTree1">
                             </el-tree>
                         </el-option>
@@ -297,6 +295,20 @@
                this.regionForm.parentObjValue = arr;
                this.regionForm.parentObj = arrLabel;
                console.log('arr:'+JSON.stringify(arr))
+            },
+            clearSelectRegion(){
+                this.regionForm.parentObj = ''
+                this.regionForm.parentObjValue = []
+                this.regionForm.parentId = ''
+                this.regionForm.parentCode = ''
+                this.checkedId = ''
+                this.$refs.templateTree.setCheckedKeys([]);
+            },
+            clearSelectRegion1(){
+                this.shopForm.parentObj = ''
+                this.shopForm.parentObjValue = []
+                this.checkedId1 = ''
+                this.$refs.templateTree1.setCheckedKeys([]);
             },
             templateCheckChange1(data,checked,child){
                 if(checked === true){

@@ -93,7 +93,7 @@
                 this.brandForm.code=row.code;
                 this.brandForm.name= row.name;
                 this.brandForm.memo= row.memo;
-                this.brandForm.isDel=row.isDel;
+                this.brandForm.isDel= "0";
                 this.brandForm.revision = row.revision
                 console.log(this.brandForm);
             },
@@ -121,7 +121,7 @@
                     row.isDel = '1';
                     service.chain.brand.saveBrand(row).then(res=> {
                         if(res.resp_code == 200) {
-                            yid.util.success(res.resp_msg)
+                            yid.util.success("删除成功")
                         }else{
                             yid.util.error(res.resp_msg)
                         }

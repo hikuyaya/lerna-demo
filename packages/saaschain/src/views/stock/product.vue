@@ -46,8 +46,6 @@
                     <yid-table-column prop="cname" label="类别" width="100"></yid-table-column>
                     <yid-table-column prop="cost" label="进价" width="80"></yid-table-column>
                     <yid-table-column prop="price" label="售价" width="80"></yid-table-column>
-                    <yid-table-column prop="safeStock" label="安全库存" width="80"></yid-table-column>
-                    <yid-table-column prop="ckc" label="超额库存" width="80"></yid-table-column>
                     <yid-table-column prop="status" label="状态" width="70">
                         <template slot-scope="scope">
                             <el-switch v-model="scope.row.status" active-value="1" inactive-value="2" active-color="#339933" inactive-color="#DCDFE6" @change="updateStatus(scope.row)">
@@ -120,14 +118,6 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="10">
-                            <el-form-item label="安全库存：" prop="safeStock">
-                                <el-input type='number' v-model="productForm.safeStock" placeholder="安全库存" style="width: 200px;"></el-input>
-                            </el-form-item>
-
-                            <el-form-item label="超额库存：" prop="ckc">
-                                <el-input type='number' v-model="productForm.ckc" placeholder="超额库存" style="width: 200px;"></el-input>
-                            </el-form-item>
-
                             <el-form-item label="产品图片：" prop="photo">
                                 <el-upload
                                         ref="upload"

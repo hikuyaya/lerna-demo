@@ -204,12 +204,14 @@
                         this.$refs['outForm'].resetFields();
                         this.outForm.id = ''
                         this.outForm.sdiname = ''
+                        this.outForm.sdicode = ''
                         this.outForm.isDel = '0'
                         this.outForm.type = '2'
                         //this.outForm.revision = '1'
                     }else{
                         this.outForm.id = row.id
                         this.outForm.sdiname = row.sdiname
+                        this.outForm.sdicode = row.sdicode
                         this.outForm.isDel =row.isDel
                         this.outForm.type = row.type
                         //this.outForm.revision = row.revision
@@ -240,12 +242,14 @@
                         this.$refs['inForm'].resetFields();
                         this.inForm.id = ''
                         this.inForm.sdiname = ''
+                        this.inForm.sdicode = ''
                         this.inForm.isDel = '0'
                         this.inForm.type = '1'
                         //this.inForm.revision = '1'
                     }else{
                         this.inForm.id = row.id
                         this.inForm.sdiname = row.sdiname
+                        this.inForm.sdicode = row.sdicode
                         this.inForm.isDel =row.isDel
                         this.inForm.type = row.type
                         //this.inForm.revision = row.revision
@@ -279,14 +283,14 @@
                     })
                 },
                 getIsEditRk(row){
-                    if(row.id < 0){
+                    if(Number(row.sdicode) < 0){
                         return true;
                     }else{
                         return false;
                     }
                 },
                 getIsEditCk(row){
-                    if(row.id < 0){
+                    if(Number(row.sdicode) < 0){
                         return true;
                     }else{
                         return false;

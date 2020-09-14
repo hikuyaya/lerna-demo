@@ -257,7 +257,7 @@
                         <el-input clearable type="number" min="1" v-model="scope.row.price"/>
                     </template>
                 </yid-table-column>
-                <yid-table-column label="基础定价"  prop="minPrice" width="140">
+                <yid-table-column label="最低价"  prop="minPrice" width="140">
                     <template slot-scope="scope">
                         <el-input clearable type="number" min=0 :max="scope.row.minPrice" v-model="scope.row.minPrice"/>
                     </template>

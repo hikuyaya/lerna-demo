@@ -45,8 +45,8 @@
                     <yid-table-column label="来源名称" min-width="150" prop="dcname"></yid-table-column>
                     <yid-table-column label="操作" min-width="250" prop="content">
                         <template slot-scope="scope">
-                            <el-link type="primary" @click="originAlert(true,scope.row)">编辑</el-link>
-                            <el-link type="primary" style="margin: 0 10px 0 10px;" @click="originDelete(scope.row)">{{scope.row.status=='1'?'禁用':'恢复'}}</el-link>
+                            <el-link type="primary"  :disabled="getIsEdit(scope.row)" @click="originAlert(true,scope.row)">编辑</el-link>
+                            <el-link type="primary" :disabled="getIsEdit(scope.row)" style="margin: 0 10px 0 10px;" @click="originDelete(scope.row)">{{scope.row.status=='1'?'禁用':'恢复'}}</el-link>
                         </template>
                     </yid-table-column>
                 </yid-table>
@@ -1049,6 +1049,13 @@
                     this.levelForm.status = row.status;
                     this.levelForm.type = '0'
                     console.log(this.chosenIndex);
+                }
+            },
+            getIsEdit(row){
+                if(row.dcname=='小程序'|| row.dccode=='-1'){
+                    return true;
+                }else{
+                    return false;
                 }
             },
             savememLevel(){

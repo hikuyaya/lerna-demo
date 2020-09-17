@@ -2,16 +2,16 @@
     <div class="member-statistics">
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="会员数据汇总表" name="total">
-                <el-form ref="searchForm" inline :model="searchForm">
-                    <el-form-item label="门店：">
-                        <el-select clearable v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                <el-form ref="searchForm" inline :model="searchForm" >
+                    <el-form-item label="门店：" prop="shopid" :rules="[{ required: true, message: '必须选择一个门店'}]">
+                        <el-select v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
                             <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
                                 <span style="float: left">{{ item.shopcode }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
                             </el-option>
                         </el-select>
                     </el-form-item>
-                    <el-form-item label="会员查询：">
+                    <el-form-item label="会员查询：" prop="memcodename">
                         <el-input clearable v-model="searchForm.memcodename" placeholder="姓名/手机号"  style="width: 180px;"></el-input>
                     </el-form-item>
                     <el-form-item label="总卡金余额：">
@@ -40,7 +40,7 @@
             </el-tab-pane>
             <el-tab-pane label="会员消费分析" name="consume">
                 <el-form ref="searchservForm" inline :model="searchservForm">
-                    <el-form-item label="门店：">
+                    <el-form-item label="门店：" prop="shopid" :rules="[{ required: true, message: '必须选择一个门店'}]">
                         <el-select clearable v-model.trim="searchservForm.shopid"  filterable :filter-method="filterShop2" placeholder="请选择门店" style="width: 160px;">
                             <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList2">
                                 <span style="float: left">{{ item.shopcode }}</span>
@@ -108,6 +108,7 @@
     import yid from '@src/library'
     import {exportExecl} from "../../library/helper/execl";
     import MemberType from "./components/memberType";
+    import {isEmpty} from "../../library/helper/validate";
     export default {
         name: "statistics",
         data() {
@@ -138,7 +139,7 @@
         },
         mounted(){
             this.getShopList();
-            this.getData();
+            //this.getData();
         },
         methods:{
             getData(reqParams){
@@ -158,12 +159,22 @@
                 });
             },
             getMemCard(){
-                this.pageInfo.page=1
-                this.getData(this.searchForm);
+                this.$refs['searchForm'].validate((valid) => {
+                    if(!valid){
+                        return
+                    }
+                    this.pageInfo.page=1
+                    this.getData(this.searchForm);
+                })
             },
             getMemServ(){
-                this.pageInfo.page=1
-                this.getServData(this.searchservForm);
+                this.$refs['searchservForm'].validate((valid) => {
+                    if(!valid){
+                        return
+                    }
+                    this.pageInfo.page=1
+                    this.getServData(this.searchservForm);
+                })
             },
             exportMemServ(){
                 const head = {

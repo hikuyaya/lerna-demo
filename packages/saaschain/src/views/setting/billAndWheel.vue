@@ -42,8 +42,8 @@
                 </el-form>
             </el-tab-pane>
 
-            <el-tab-pane label="员工轮牌配置" name="wheel">
-                <!--<el-button @click="addWheel()" type="primary">新增</el-button>-->
+            <!--<el-tab-pane label="员工轮牌配置" name="wheel">
+                <el-button @click="addWheel()" type="primary">新增</el-button>
                 <el-form ref="wheelform" :model="wheelform" inline label-width="60px" color="#000" style="color: #000; font-weight: bold; margin-top: 20px;">
                     <el-form-item label="门店：">
                         <el-select clearable v-model.trim="wheelform.shopid" filterable :filter-method="filterShop" placeholder="请选择" style="width: 160px;">
@@ -69,10 +69,10 @@
                         </template>
                     </yid-table-column>
                 </yid-table>
-            </el-tab-pane>
+            </el-tab-pane>-->
 
-            <el-tab-pane label="轮牌临休配置" name="rest">
-                <!--<el-button @click="addWheelRest()" type="primary">新增</el-button>-->
+            <!--<el-tab-pane label="轮牌临休配置" name="rest">
+                <el-button @click="addWheelRest()" type="primary">新增</el-button>
                 <el-form ref="resetform" :model="resetform" inline label-width="60px" color="#000" style="color: #000; font-weight: bold; margin-top: 20px;">
                     <el-form-item label="门店：">
                         <el-select clearable v-model.trim="resetform.shopid" filterable :filter-method="filterShop2" placeholder="请选择" style="width: 160px;">
@@ -114,7 +114,7 @@
                         </template>
                     </yid-table-column>
                 </yid-table>
-            </el-tab-pane>
+            </el-tab-pane>-->
 
             <el-tab-pane label="小票打印设置" name="printset">
                 <yid-table ref="printsetTable" :data="printsetData" style="margin-top: 15px; width: 780px;">

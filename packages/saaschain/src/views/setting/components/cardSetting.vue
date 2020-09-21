@@ -145,12 +145,12 @@
                         <el-radio label="0">不支持</el-radio>
                     </el-radio-group>
                 </el-form-item>
-                <!--<el-form-item label="卡金赠送金合并使用：">
-                    <el-radio-group v-model="addDialog.withGmoney">
-                        <el-radio label="0">不允许</el-radio>
+                <el-form-item label="是否允许转赠：" v-if="addDialog.cardType==1">
+                    <el-radio-group v-model="addDialog.isTransfer">
                         <el-radio label="1">允许</el-radio>
+                        <el-radio label="0">不允许</el-radio>
                     </el-radio-group>
-                </el-form-item>-->
+                </el-form-item>
                 <el-form-item v-if="addDialog.cardType==1" label="赠送金是否打折：">
                     <el-radio-group v-model="addDialog.giftDis">
                         <el-radio label="1">支持</el-radio>
@@ -325,7 +325,8 @@
                     withGmoney: '',
                     giftDis: '',
                     pays: [],
-                    cardRules: []
+                    cardRules: [],
+                    isTransfer: '',
                 },
                 ruleDialog: {
                     title: '',

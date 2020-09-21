@@ -21,6 +21,10 @@ export function save(param) {
     return yid.http.post(`${prefix}`,param)
 }
 
+export function saveNo(param) {
+    return yid.http.post(`${prefix}/saveNo`,param)
+}
+
 export default {
     /** 获取门店收银单设置数据 */
     orderConfig,
@@ -28,5 +32,6 @@ export default {
     updateIsAutoNo,
     /** 更新:是否输卡号查卡 */
     updateIsAllowMobile,
-    save
+    save,
+    saveNo
 }

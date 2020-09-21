@@ -9,8 +9,19 @@
                             <el-radio label="1">自动手牌号</el-radio>
                         </el-radio-group>
                     </el-form-item>
+                    <el-form-item label="手牌号段：">
+                        <el-input v-model="marketOrderConfig.noMin" label="开始号" style="width: 150px" @change="saveBillNo" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>~
+                        <el-input v-model="marketOrderConfig.noMax" label="结束号" style="width: 150px" @change="saveBillNo" onKeypress="return (/[\d]/.test(String.fromCharCode(event.keyCode)))"></el-input>&nbsp;
+                        <span style="color:#646464">手牌号段最多只支持100个；服务单结账完成、过期、作废后自动释放手牌号</span>
+                    </el-form-item>
                     <el-form-item label="输入手机号查卡：">
                         <el-radio-group v-model="marketOrderConfig.isAllowMobile">
+                            <el-radio label="0">不允许</el-radio>
+                            <el-radio label="1">允许</el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                    <el-form-item label="输入卡号查询：">
+                        <el-radio-group v-model="marketOrderConfig.isAllowCardno">
                             <el-radio label="0">不允许</el-radio>
                             <el-radio label="1">允许</el-radio>
                         </el-radio-group>
@@ -234,6 +245,7 @@
 <script>
 
     import service from '@src/service'
+    import {isEmpty} from "../../library/helper/validate";
 
     function isRepeat(arr) {
         var hash = {};
@@ -259,6 +271,7 @@
                     isAutoPrint:false,
                     isPushWxmsg:false,
                     isRate:false,
+                    isAllowCardno:false,
                 },
                 dtPostion: ['', '第一工位', '第二工位', '第三工位'],
                 dtYN: ['否', '是'],
@@ -365,6 +378,26 @@
             }
         },
         methods: {
+            saveBillNo(){
+                let noMin = this.marketOrderConfig.noMin
+                let noMax = this.marketOrderConfig.noMax
+                if(isEmpty(noMin) || isEmpty(noMax)){
+                    $yid.util.info("开始号和结束号不能为空")
+                    return;
+                }
+                if(Number(noMin) > Number(noMax)){
+                    $yid.util.info("开始号不能大于结束号")
+                    return;
+                }
+                if(Number(noMax)-Number(noMin)>=100){
+                    $yid.util.info("手牌号段最多只支持100个！");
+                    return;
+                }
+                let param = {noMin: noMin,noMax:noMax, revision: this.marketOrderConfig.revision, id: this.marketOrderConfig.id}
+                service.marketOrderConfig.saveNo(param).then(res => {
+                    this.marketOrderConfig.revision = res.data.revision
+                });
+            },
             getMarketOrderConfig() {
                 service.marketOrderConfig.orderConfig().then(res => {
                     this.marketOrderConfig = res.data
@@ -621,6 +654,16 @@
             this.getShopList()
         },
         watch: {
+            'marketOrderConfig.isAllowCardno'(v) {
+                if (this.radioInitGroup.isAllowCardno) {
+                    let param = {isAllowCardno: v, revision: this.marketOrderConfig.revision, id: this.marketOrderConfig.id}
+                    service.marketOrderConfig.save(param).then(res => {
+                        this.marketOrderConfig.revision = res.data.revision
+                    });
+                } else {
+                    this.radioInitGroup.isAllowCardno = true
+                }
+            },
             activeName(v) {
                 if (v === "bill") {
                     this.getMarketOrderConfig()

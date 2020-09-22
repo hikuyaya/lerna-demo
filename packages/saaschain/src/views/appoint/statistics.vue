@@ -2,9 +2,6 @@
 
 
     <div class="statistics">
-
-        <DyTable  ></DyTable>
-
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="门店" name="store">
                 <el-form inline ref="model" :model="model">

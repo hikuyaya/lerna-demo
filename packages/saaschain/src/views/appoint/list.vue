@@ -19,7 +19,7 @@
             </el-form-item> <br/>
             <el-form-item label="预约状态：">
                 <el-select multiple clearable filterable placeholder="请选择" style="width: 240px;" v-model.trim="model.statuslist">
-                    <el-option v-for="item in statusList" :value="item.value" :label="item.label"></el-option>
+                    <el-option v-for="item in selectStatusList" :value="item.value" :label="item.label"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="预约渠道：">
@@ -78,7 +78,7 @@
                 <el-form-item label="预约状态：" prop="billstatus" label-width="100px">
                     <div style="width: 160px;">
                         <el-select disabled   v-model="yybillhead.billstatus">
-                            <el-option v-for="item in statusList" :value="item.value" :label="item.label"></el-option>
+                            <el-option v-for="item in selectStatusList" :value="item.value" :label="item.label"></el-option>
                         </el-select>
                     </div>
                 </el-form-item><br/>
@@ -166,6 +166,13 @@
         data() {
             return {
                 editflag:true,
+                selectStatusList:[
+                    {value:"-1", label:"顾客取消"},
+                    {value:"-2", label:"商家取消预约"},
+                    {value:"-3", label:"未到店"},
+                    {value:"4", label:"已到店"},
+                    {value:"3", label:"预约中"},
+                ],
                 statusList:[
                     {value:"-1", label:"顾客取消"},
                     {value:"-2", label:"商家取消预约"},
@@ -174,7 +181,7 @@
                     {value:"1", label:"待支付"},
                     {value:"2", label:"待确认"},
                     {value:"3", label:"预约中"},
-                    {value:"4", label:"已核销"},
+                    {value:"4", label:"已到店"},
                     {value:"5", label:"已评价"}
                 ],
                 ctypeList:[

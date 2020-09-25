@@ -215,7 +215,7 @@
             formatValue(str,stsList){
                 let label=""
                 stsList.map(m =>{
-                    if(m.id == str){
+                    if(m.value == str){
                         label=m.name
                     }
                 })

@@ -216,7 +216,7 @@
                 let label=""
                 stsList.map(m =>{
                     if(m.id == str){
-                        label=m.bname
+                        label=m.name
                     }
                 })
                 if(label){

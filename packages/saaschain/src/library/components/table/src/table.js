@@ -64,7 +64,8 @@ export default {
     // 可接收 Pagination Props
     ...Pagination.props,
     // 扩展 Pagination Props ( 相当于修改 Pagination Props )
-    ...ExtendPaginationProps
+    ...ExtendPaginationProps,
+
   },
 
   data() {
@@ -109,6 +110,7 @@ export default {
 
   methods: {
     // 生成分页组件
+    // ...Table.methods,
     _generatePagination() {
       const pagination = Vue.extend(Pagination)
 
@@ -190,6 +192,26 @@ export default {
     loadData(config = {}) {
       this._generateConfig(config)
       return this.fetch()
+    },
+
+    clearData(config = {}) {
+        if (this.pagination) {
+          this.internalData = []
+          //console.log('DATAAAAA',this.internalData);
+          this.Pagination.internalTotal = 0
+          //console.log(this.Pagination.internalTotal)
+        } else {
+          this.internalData = []
+        }
+    },
+
+    clearSelection() {
+      if (this.pagination) {
+        this.$children[1].clearSelection();
+      } else {
+        this.$children[0].clearSelection();
+      }
+      // this.$refs.tableShop.clearSelection();
     },
 
     fetch() {

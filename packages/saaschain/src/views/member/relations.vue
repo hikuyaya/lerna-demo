@@ -3,7 +3,7 @@
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="会员分析查询" name="analyze">
                 <el-form ref="searchForm" inline :model="searchForm">
-                    <el-form-item label="门店：">
+                    <el-form-item label="门店："  prop="shopid" :rules="[{ required: true, message: '请选择一个门店'}]">
 
                         <el-select clearable v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
                             <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
@@ -216,10 +216,15 @@
                 return result;
             },
             search(){
-                console.log(this.searchForm);
-                this.pageInfo.page=1
-                this.getData(this.searchForm);
-                this.cleanSearch();
+                this.$refs['searchForm'].validate((valid) => {
+                    if (valid) {
+                        console.log(this.searchForm);
+                        this.pageInfo.page=1
+                        this.getData(this.searchForm);
+                        this.cleanSearch();
+                    }
+                })
+
             },
             cleanSearch(){
                 this.searchForm.sex = '';

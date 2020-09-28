@@ -664,18 +664,15 @@
                         <td><label class="marg5">{{memberDesc.sex=="1"?"男":"女"}}</label></td></tr>
                     <tr><td align="right">顾客来源:</td>
                         <td><label class="marg5">{{memberDesc.channelName}}</label></td>
-                        <td align="right">上次消费时间:</td>
-                        <td><label class="marg5">{{memberDesc.latelyTime}}</label></td></tr>
-                    <tr><td align="right">录入渠道:</td>
-                        <td><label class="marg5">{{memberDesc.inchanel | formatValue(inchanels)}}</label></td>
-                        <td align="right">上次消费金额:</td>
-                        <td><label class="marg5">{{memberDesc.latelyJe}}</label></td></tr>
-                    <tr><td align="right">积分:</td>
-                        <td><label class="marg5">0</label></td>
-                        <td align="right">上次服务员工:</td>
-                        <td><label class="marg5">{{memberDesc.lastEename}}</label></td></tr>
+                        <td align="right">录入渠道:</td>
+                        <td><label class="marg5">{{memberDesc.inchanel | formatValue(inchanels)}}</label></td></tr>
+                    <!--<tr><td align="right">积分:</td>-->
+                        <!--<td><label class="marg5">0</label></td>-->
+                        <!--<td align="right">上次服务员工:</td>-->
+                        <!--<td><label class="marg5">{{memberDesc.lastEename}}</label></td></tr>-->
                     <tr><td align="right">住址:</td><td colspan="3"><label class="marg5">{{memberDesc.address}}</label></td></tr>
-                    <tr><td align="right">预约权限:</td><td colspan="3"><el-link type="primary" class="marg5">[关闭预约权限]</el-link></td></tr>
+                    <tr><td align="right">预约权限:</td><td><el-link type="primary" class="marg5">[关闭预约权限]</el-link></td>
+                        <td align="right">积分:</td><td><label class="marg5">0</label></td></tr>
                 </table>
                 <div>卡信息:
                     <el-select v-model="cardinfo.id" @change="changeCardinfo()" style="width: 260px;">

@@ -672,7 +672,7 @@
                         <!--<td><label class="marg5">{{memberDesc.lastEename}}</label></td></tr>-->
                     <tr><td align="right">住址:</td><td colspan="3"><label class="marg5">{{memberDesc.address}}</label></td></tr>
                     <tr><td align="right">预约权限:</td><td><el-link type="primary" class="marg5">[关闭预约权限]</el-link></td>
-                        <td align="right">积分:</td><td><label class="marg5">0</label></td></tr>
+                        <td align="right" colspan="2"></td></tr>
                 </table>
                 <div>卡信息:
                     <el-select v-model="cardinfo.id" @change="changeCardinfo()" style="width: 260px;">

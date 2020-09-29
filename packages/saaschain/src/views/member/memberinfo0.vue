@@ -63,7 +63,7 @@
                     <el-form-item style="margin-bottom:0; margin-left: 35px;">
                         <el-button @click="shopSerniorForm.visible=true" type="primary">高级查询</el-button>
                     </el-form-item>
-                    <el-form-item style="margin-bottom:0; margin-left: 335px;">
+                    <el-form-item style="margin-bottom:0; margin-left: 115px;">
                         <el-button @click="exportMember" type="primary">会员导出</el-button>
                     </el-form-item>
                 </el-form>

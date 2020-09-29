@@ -57,7 +57,7 @@
                             {{getTypeName(scope.row.type)}}
                         </template>
                     </yid-table-column>
-                    <yid-table-column label="门店电话" min-width="140" prop="contacts"></yid-table-column>
+                    <yid-table-column label="门店电话" min-width="140" prop="moblie"></yid-table-column>
                     <yid-table-column label="门店地址" min-width="140" prop="address"></yid-table-column>
                     <yid-table-column label="付款模板" min-width="140" prop="paytName"></yid-table-column>
                     <yid-table-column label="创建时间" min-width="140" prop="createdTime"></yid-table-column>

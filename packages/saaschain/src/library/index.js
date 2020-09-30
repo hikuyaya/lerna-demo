@@ -15,6 +15,9 @@ import Table from './components/table'
 import Dialog from './components/dialog'
 import Tabs from './components/tabs'
 import Ask from './components/ask'
+import Button from './components/button'
+import Switch from './components/switch'
+import Pane from './components/tab-pane'
 // directive
 import drag from './directive/drag'
 import focus from './directive/focus'
@@ -46,7 +49,7 @@ const install = function(Vue) {
   Vue.prototype.$yid = yid
 
   // 注册 component
-  const components = [Table, Dialog, Tabs, Ask]
+  const components = [Table, Dialog, Tabs, Ask, Button, Switch, Pane]
   components.map(component => {
     Vue.use(component)
   })

@@ -45,22 +45,24 @@ export default {
   },
 
   methods: {
-    getMenu() {
-      if(process.env.VUE_APP_ISCUSTOMMENU) {
-          const menuList = yid.util.deepClone(yid.config.MENU.LIST)
-          const menuListForShow = menuList.filter(menu => menu.canShow !== false)
-          const menuTree = yid.util.toTree(menuListForShow, 'id', 'pid', 'subMenus')
-          this.menuTree = menuTree
-        //  console.log(this.menuTree);
-      } else  {
-          service.user.menu().then(res => {
-              let menu = res.data;
-              this.menuTree = menu;
-              // console.log('menu1', menu)
-              // console.log('menu2', this.menuTree)
-          });
+      getMenu() {
+          console.log('menu', process.env.VUE_APP_ISCUSTOMMENU)
+          if(process.env.VUE_APP_ISCUSTOMMENU == 0) {
+              const menuList = yid.util.deepClone(yid.config.MENU.LIST)
+              const menuListForShow = menuList.filter(menu => menu.canShow !== false)
+              const menuTree = yid.util.toTree(menuListForShow, 'id', 'pid', 'subMenus')
+              this.menuTree = menuTree
+              //  console.log(this.menuTree);
+          } else  {
+              debugger
+              service.user.menu().then(res => {
+                  let menu = res.data;
+                  this.menuTree = menu;
+                  // console.log('menu1', menu)
+                  // console.log('menu2', this.menuTree)
+              });
+          }
       }
-    }
   }
 }
 </script>

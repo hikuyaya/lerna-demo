@@ -59,13 +59,21 @@ export default {
         });
     },
     signOut() {
-        // 清空 localstoreage
-        yid.cache.remove(yid.type.USER.TOKEN, yid.type.SYSTEM.CACHE.LOCAL_STORAGE)
-        yid.cache.remove(yid.type.USER.APPID, yid.type.SYSTEM.CACHE.LOCAL_STORAGE)
-       // yid.cache.remove(yid.type.USER.INFO, yid.type.SYSTEM.CACHE.LOCAL_STORAGE)
+        this.$confirm('确定要退出登录吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+        }).then(() => {
+            service.auth.logout().then(res=> {
+                // 清空 localstoreage
+                yid.cache.remove(yid.type.USER.TOKEN, yid.type.SYSTEM.CACHE.LOCAL_STORAGE)
+                yid.cache.remove(yid.type.USER.INFO, yid.type.SYSTEM.CACHE.LOCAL_STORAGE)
 
-        // 跳转登录
-        this.$router.push(yid.config.SYSTEM.ROUTER_LOGIN)
+                // 跳转登录
+                this.$router.push(yid.config.SYSTEM.ROUTER_LOGIN)
+            });
+        }).catch(() => {
+        });
     },
     sendMsg() {
         yid.service.IM.sentMsg().then(res => {

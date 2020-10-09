@@ -15,7 +15,12 @@ export function login(params) {
   })
 }
 
+export function logout() {
+  return yid.http.post(`api-uaa/oauth/remove/token`)
+}
+
 export default {
   /** 登录 */
-  login
+  login,
+  logout
 }

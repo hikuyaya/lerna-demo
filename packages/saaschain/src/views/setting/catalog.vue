@@ -811,7 +811,6 @@
                 this.parentData.bbid = row.bbid;
                 this.parentData.parentId = row.id;
                 this.parentId = row.id;
-                this.getCategoryfs();
                 //查询子类列表
                 this.statusz = '2';
                 this.$nextTick(()=> {
@@ -822,6 +821,7 @@
             subAdd(tag,row) {
                 this.subAddDialog.visible = true;
                 this.subAddDialog.title = tag? '编辑商品子类' : '添加商品子类';
+                this.getCategoryfs();
                 if(tag == false){
                     this.subForm.id = ''
                     /**获取最大code+1**/

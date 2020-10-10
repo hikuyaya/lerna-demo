@@ -1062,7 +1062,7 @@
                 inchanels: [{value:"1",name:'门店业务端'},{value:"2",name:'门店管理端'},{value:"3",name:'顾客手机端'},{value:"4",name:'设计师端'}],
                 cardbtype: [{value:"1",name:"充值"},{value:"2",name:"消费"},{value:"3",name:"买套餐"},{value:"4",name:"买产品"},
                             {value:"5",name:"退卡"},{value:"6",name:"退项目"},{value:"7",name:"退产品"},
-                            {value:"8",name:"卡帐户调整"},{value:"9",name:"退款"}],
+                            {value:"8",name:"卡帐户调整"},{value:"9",name:"退款"},{value:"10",name:"代付"}],
                 employeeList: [],
                 chainMemberForm: {
                     name: '',page: 1, limit: 10, total: 0

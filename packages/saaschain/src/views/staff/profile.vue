@@ -578,17 +578,17 @@
                 this.employeeForm.branchObj = null;
                 this.employeeForm.positionObj = null;
                 this.employeeForm.positionLevelObj = null;
-                await service.branch.listForChain({shopid:row.shopid, isDel:'0',status:'1'}).then(res=> {
+                await service.branch.list({shopid:row.shopid, isDel:'0',status:'1'}).then(res=> {
                     if(res.resp_code == 200) {
                         this.editFormBranchList = res.data;
                     }
                 })
-                await service.position.listForChain({status:"1",bbid:row.bbid,isDel:"0"}).then(res=> {
+                await service.position.list({status:"1",bbid:row.bbid,isDel:"0"}).then(res=> {
                     if(res.resp_code == 200) {
                         this.editFormPositionList = res.data;
                     }
                 })
-                await service.positionLevel.listForChain({status:"1",psid:row.psid,isDel:"0"}).then(res=> {
+                await service.positionLevel.list({status:"1",psid:row.psid,isDel:"0"}).then(res=> {
                     if(res.resp_code == 200) {
                         this.editFormPositionLevelList = res.data;
                     }

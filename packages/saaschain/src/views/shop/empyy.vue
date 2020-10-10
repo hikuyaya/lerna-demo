@@ -1,7 +1,14 @@
 <template>
     <div class="dept">
-        <el-form :inline="true"   label-position="left">
-            <!--<el-form-item label="所属门店：">{{shopname}}</el-form-item>-->
+        <el-form :inline="true"   label-position="left" ref="searchForm" :model="searchForm">
+            <el-form-item label="门店："  prop="shopid"  :rules="[{ required: true, message: '必须选择一个门店'}]">
+                <el-select  @change="changeSelectShop"  clearable v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
+                    <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
+                        <span style="float: left">{{ item.shopcode }}</span>
+                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
+                    </el-option>
+                </el-select>
+            </el-form-item>
             <el-form-item label="选择业务部门：">
                 <el-select  clearable placeholder="请选择部门" v-model="searchForm.bbid" style="width: 140px">
                     <el-option v-for="item in branch" :key="item.id" :label="item.bname" :value="item.id"></el-option>
@@ -15,14 +22,6 @@
             </el-form-item>
             <el-form-item label="手机号：">
                 <el-input clearable v-model="searchForm.mobile" placeholder="手机号"  style="width: 160px;"></el-input>
-            </el-form-item>
-            <el-form-item label="门店：">
-                <el-select clearable v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
-                    <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
-                        <span style="float: left">{{ item.shopcode }}</span>
-                        <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
-                    </el-option>
-                </el-select>
             </el-form-item>
             <el-form-item label=""><el-button type="primary" @click="queryEmpData()">查询</el-button></el-form-item><br/>
         </el-form>
@@ -75,29 +74,41 @@
         mounted() {
             this.shopname=$yid.cache.get($yid.type.USER.INFO)
             this.rowDrop()
-            this.queryBranch()
             this.getShopList({status:"1"});
         },
         methods: {
-            queryBranch(){
-                service.branch.list({status:'1'}).then(res =>{
-                    this.branch=res.data
+            changeSelectShop(){
+                let selectShopObj
+                this.filterShopList.map(i=>{
+                    if(i.id == this.searchForm.shopid){
+                        selectShopObj = i;
+                    }
+                })
+                service.branch.getListByShopType({shopid:selectShopObj.shopid, type:selectShopObj.type, isDel:'0',status:'1'}).then(res=> {
+                    if(res.resp_code == 200) {
+                        this.branch = res.data;
+                    }
                 })
             },
             queryEmpData(){
-                service.employee.listAll(this.searchForm).then(res =>{
-                    if(res.resp_code=="200"){
-                        this.tableData=res.data;
-                        this.tableData.map(m =>{
-                            if(m.isyy == '1'){
-                                m.yystatus=true
-                            }else{
-                                m.yys=false
-                            }
-                        })
-                    }else{
-                        $yid.util.error(res.resp_msg);
+                this.$refs['searchForm'].validate((valid) => {
+                    if(!valid){
+                        return
                     }
+                    service.employee.listAll(this.searchForm).then(res =>{
+                        if(res.resp_code=="200"){
+                            this.tableData=res.data;
+                            this.tableData.map(m =>{
+                                if(m.isyy == '1'){
+                                    m.yystatus=true
+                                }else{
+                                    m.yys=false
+                                }
+                            })
+                        }else{
+                            $yid.util.error(res.resp_msg);
+                        }
+                    })
                 })
             },
             stop(row){

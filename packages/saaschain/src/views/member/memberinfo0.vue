@@ -920,6 +920,11 @@
                 <yid-table pagination ref="packageRecords">
                     <yid-table-column label="单号" min-width="160" prop="billcode"></yid-table-column>
                     <yid-table-column label="套餐名称" min-width="120" prop="mpname"></yid-table-column>
+                    <yid-table-column label="类型" min-width="60" prop="isShareOper">
+                        <template slot-scope="scope">
+                            {{ scope.row.isShareOper == '1' ? '代付' : '划扣' }}
+                        </template>
+                    </yid-table-column>
                     <yid-table-column label="项目名称/产品名称" min-width="140" prop="sername">
                         <template slot-scope="scope">
                             {{ scope.row.sername | jsonSernameFormate }}

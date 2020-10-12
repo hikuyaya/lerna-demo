@@ -10,7 +10,7 @@
             </template>
 
             <el-menu-item-group>
-              <el-menu-item :index="subMenu.path" :key="subMenu.id" v-for="subMenu in menu.subMenus">
+              <el-menu-item :index="subMenu.url" :key="subMenu.id" v-for="subMenu in menu.subMenus">
 <!--                <i :class="subMenu.icon" class="submenu nav-icon"></i>-->
                 <span>{{ subMenu.name }}</span>
               </el-menu-item>
@@ -19,7 +19,7 @@
         </template>
 
         <template v-else>
-          <el-menu-item :index="menu.path">
+          <el-menu-item :index="menu.url">
 <!--            <i :class="menu.icon" class="nav-icon"></i>-->
             <span style="font-weight:bold;">{{ menu.name }}</span>
           </el-menu-item>

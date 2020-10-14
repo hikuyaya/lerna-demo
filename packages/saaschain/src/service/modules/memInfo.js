@@ -1,5 +1,5 @@
 import yid from '@src/library'
-const prefix = 'api-member';
+const prefix = 'api-chain';
 
 export function distchannelList(params) {
     const url = `${prefix}/distchannel`

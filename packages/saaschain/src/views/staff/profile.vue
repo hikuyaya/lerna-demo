@@ -572,6 +572,8 @@
                     authorization:'Bearer ' + yid.cache.get(yid.type.USER.TOKEN)
                 };
                 this.showList = false;
+                this.showEdit = false;
+                this.showSave = true;
             },
 
             async editAction(row,disabledvalue){

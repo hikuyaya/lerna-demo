@@ -10,7 +10,7 @@
         </el-badge>
 
         <el-dropdown>
-            <img class="avatar" :src="headImgUrl" style="display: inline-block; margin-right: 15px;vertical-align: middle;width: 40px;height:40px;border-radius: 50%">
+            <img class="avatar" :src="headImgUrl? headImgUrl : require('../../assets/images/avatar.png')" style="display: inline-block; margin-right: 15px;vertical-align: middle;width: 40px;height:40px;border-radius: 50%">
             <span class="userName" style="display: inline-block;">{{userName}}</span>
             <el-dropdown-menu class="header-right-title-dropdown" slot="dropdown">
                 <div class="header-right-title-dropdown-content">

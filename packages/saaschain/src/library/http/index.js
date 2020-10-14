@@ -94,10 +94,10 @@ axios.interceptors.response.use(
 
       // 请求正常，鉴权失败
       else if (response.data && parseInt(response.data.resp_code) === 401) {
-        $yid.util.alert(response.data.resp_msg, null, $yid.type.SYSTEM.MESSAGE.ERROR)
-
+          $yid.cache.clear();
+          router.replace($yid.config.SYSTEM.ROUTER_LOGIN)
+          //$yid.util.alert('授权失败', '提示', 'error')
         // 清空所有缓存
-        $yid.cache.clear()
 
         // 跳转提示页
        // router.replace($yid.config.SYSTEM.ROUTER_LOGIN)

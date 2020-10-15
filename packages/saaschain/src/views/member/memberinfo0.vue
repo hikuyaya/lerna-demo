@@ -922,7 +922,7 @@
                     <yid-table-column label="套餐名称" min-width="120" prop="mpname"></yid-table-column>
                     <yid-table-column label="类型" min-width="60" prop="isShareOper">
                         <template slot-scope="scope">
-                            {{ scope.row.isShareOper == '1' ? '代付' : '划扣' }}
+                            {{scope.row.direction == 1 ? '购买': (scope.row.isShareOper == '1' ? '代付' : '划扣') }}
                         </template>
                     </yid-table-column>
                     <yid-table-column label="项目名称/产品名称" min-width="140" prop="sername">
@@ -930,11 +930,11 @@
                             {{ scope.row.sername | jsonSernameFormate }}
                         </template>
                     </yid-table-column>
-                    <yid-table-column label="扣减数量" min-width="80" prop="saleNum">
+                    <yid-table-column label="变动数量" min-width="80" prop="saleNum">
                         <template slot-scope="scope">{{scope.row.saleNum*scope.row.direction}}</template>
                     </yid-table-column>
                     <yid-table-column label="剩余数量" min-width="80" prop="surplusNum"></yid-table-column>
-                    <yid-table-column label="消费时间" min-width="180" prop="saleTime"></yid-table-column>
+                    <yid-table-column label="发生时间" min-width="180" prop="saleTime"></yid-table-column>
                     <yid-table-column label="门店" min-width="80" prop="shopname"></yid-table-column>
                     <yid-table-column label="操作人" min-width="100" prop="oper"></yid-table-column>
                 </yid-table>

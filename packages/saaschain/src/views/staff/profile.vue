@@ -154,7 +154,7 @@
                             </el-form-item>
 
                             <el-form-item label="所属门店: " prop="shopObj" :rules="[{ required: true, message: '门店不能为空'}]">
-                                <el-select  value-key="id" filterable placeholder="请选择" v-model.trim="employeeForm.shopObj"
+                                <el-select  value-key="id"  filterable :filter-method="filterShop2" placeholder="请选择" v-model.trim="employeeForm.shopObj"
                                             @change="getEditFormBranchList" :disabled="this.disabledvalue">
                                     <el-option :key="item.id" :label="item.shopname" :value="item" v-for="item in filterShopList2">
                                         <span style="float: left">{{ item.shopcode }}</span>
@@ -420,6 +420,7 @@
                     positionObj:null,
                     positionLevelObj:null
                 },
+                labelPosition: 'left',
             }
         },
         mounted(){
@@ -888,6 +889,7 @@
                 })
             },
             filterShop2(v){
+                v = v.toLocaleUpperCase();
                 this.filterShopList2 = this.allShopList2.filter((item) => {
                     // 如果直接包含输入值直接返回true
                     if (item.shopname.indexOf(v) !== -1) return true

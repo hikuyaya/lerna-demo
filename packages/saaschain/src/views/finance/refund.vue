@@ -395,8 +395,14 @@
                         pack.descList.map(desc => {
                             if(desc.tkNum > desc.snum)
                                 desc.tkNum =desc.snum
+                            if(desc.tkNum == desc.snum)
+                                desc.tkje = desc.pprice
                             if(desc.tkNum){
-                                desc.tkje =  desc.tkNum * desc.singlePrice;
+                                if(desc.isGift == '1'){
+                                    desc.tkje = 0
+                                }else{
+                                    desc.tkje = Number((desc.tkNum * desc.singlePrice).toFixed(1))
+                                }
                                 tje+=desc.tkje;
                             }else{
                                 desc.tkje = ''

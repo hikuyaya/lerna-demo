@@ -64,6 +64,7 @@
                 searchForm:{
                     orderid:'0',
                     status:'1',
+                    shopid:null
                 },
                 branch:[],
                 tableData: [],

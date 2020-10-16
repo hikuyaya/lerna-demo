@@ -387,6 +387,16 @@ export const MENU = {
       icon: null,
       canShow: true
     },
+    {
+      id: 77,
+      pid: 7,
+      name: '骁骁网核销记录',
+      title: '骁骁网核销记录',
+      path: '/record/xxwOrderList',
+      component: 'record/xxwOrderList',
+      icon: null,
+      canShow: true
+    },
     { id: 8, pid: null, name: '基础设置', title: null, path: null, icon: 'iconfont-channelmanagement' },
     {
       id: 81,

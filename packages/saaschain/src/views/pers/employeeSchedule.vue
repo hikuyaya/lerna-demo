@@ -171,6 +171,8 @@
                 checkClassAll : [],
                 employeeVOs : [],
                 yearmonList :[],
+                allShopList:[],
+                filterShopList:[]
             }
         },
         props: {
@@ -213,7 +215,7 @@
             this.getSearchFormPositionList();
             this.getCheckClassAll();
             this.getDayWeeks();
-            this.getScheduleList();
+         //   this.getScheduleList();
             this.getShopList({status:"1"});
         },
         methods:{
@@ -510,6 +512,7 @@
                 })
             },
             filterShop(v){
+
                 this.filterShopList = this.allShopList.filter((item) => {
                     // 如果直接包含输入值直接返回true
                     if (item.shopname.indexOf(v) !== -1) return true
@@ -517,6 +520,8 @@
 
                 })
             }
+
+
         }
     }
 </script>

@@ -11,7 +11,7 @@ export function findServicePrices(params) {
 }
 
 export function findbrands(params) {
-    return yid.http.get(`${prefix}/brand/list/all`,{params})
+    return yid.http.get(`${prefix}/brand/list/all?isDel=0`,{params})
 }
 
 export function findbranchs(params) {

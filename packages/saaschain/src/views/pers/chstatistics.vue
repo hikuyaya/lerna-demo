@@ -1,7 +1,7 @@
 <template>
     <div class="check_chstatistics">
         <el-form ref="searchForm" inline :model="searchForm">
-            <el-form-item label="门店：">
+            <el-form-item label="门店：" prop="shopid"  :rules="[{ required: true, message: '请选择一个门店'}]">
                 <el-select clearable v-model.trim="searchForm.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
                     <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
                         <span style="float: left">{{ item.shopcode }}</span>
@@ -47,6 +47,7 @@
         data() {
             return {
                 searchForm : {
+
                     cmonth : '',
                 },
                 pageInfo:{page:1,limit:50},
@@ -64,7 +65,7 @@
             let date1 = year + "-" + month
             this.searchForm.cmonth = date1
             this.getData(this.searchForm);
-            this.getShopList({status:"0"});
+            this.getShopList({status:"1"});
         },
         methods:{
             getData(reqParams){
@@ -77,7 +78,12 @@
                 });
             },
             seachTc(){
-                this.getData(this.searchForm);
+                this.$refs['searchForm'].validate((valid) => {
+                    if (valid) {
+                        this.getData(this.searchForm);
+                    }
+                })
+
             },
             exportTc(){
                 let params = this.searchForm;

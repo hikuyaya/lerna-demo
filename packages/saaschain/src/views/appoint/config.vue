@@ -685,9 +685,9 @@
                     })
                     pslevels = pslevels.substr(0,pslevels.length - 1);
                     this.tempRow.pslevel = pslevels;
-                }else{
+                }/*else{
                     yid.util.alert("请选择员工级别!")
-                }
+                }*/
                 this.pslevelDialog.visible = false;
             },
             canclePslevel(){

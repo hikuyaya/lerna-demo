@@ -38,12 +38,13 @@ export default (url, param, method = 'get') => {
   // GET 请求，参数处理
   if (method.toLocaleLowerCase() === 'get') {
     const qs = require('qs')
+
     axios({
       url: `${url}?${qs.stringify(param, { arrayFormat: 'repeat' })}`,
       method: 'GET',
       responseType: 'blob',
       isDownload: true
-    }).catch(downloadFile)
+    }).then(downloadFile).catch(downloadFile)
   }
 
   // POST 请求，参数处理
@@ -53,6 +54,6 @@ export default (url, param, method = 'get') => {
       method: 'POST',
       data: param,
       responseType: 'blob'
-    }).catch(downloadFile)
+    }).then(downloadFile).catch(downloadFile)
   }
 }

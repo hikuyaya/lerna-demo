@@ -214,6 +214,15 @@ export default {
       // this.$refs.tableShop.clearSelection();
     },
 
+    toggleSelection(index) {
+      if (this.pagination) {
+        this.$children[1].toggleRowSelection(this.internalData[index]);
+      } else {
+        this.$children[0].toggleRowSelection(this.internalData[index]);
+      }
+      // this.$refs.tableShop.clearSelection();
+    },
+
     fetch() {
       // 当远端数据请求成功时
 

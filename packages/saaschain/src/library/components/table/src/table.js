@@ -224,11 +224,12 @@ export default {
       // this.$refs.tableShop.clearSelection();
     },
 
-    toggleSelection(index) {
+    toggleRowSelection(row) {
+
       if (this.pagination) {
-        this.$children[1].toggleRowSelection(this.internalData[index]);
+        this.$children[1].toggleRowSelection(row);
       } else {
-        this.$children[0].toggleRowSelection(this.internalData[index]);
+        this.$children[0].toggleRowSelection(row);
       }
       // this.$refs.tableShop.clearSelection();
     },

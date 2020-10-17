@@ -254,7 +254,7 @@
                 })
             },
             getCategorylList(){
-                service.productCategory.allfz({level:'1'}).then(res=>{
+                service.chain.productCategory.allfz({level:'1'}).then(res=>{
                     if(res.resp_code == 200) {
                         this.categroryList = res.data;
                     }

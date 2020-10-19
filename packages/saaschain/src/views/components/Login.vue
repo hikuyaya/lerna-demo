@@ -41,7 +41,7 @@
               </el-input>
             </el-form-item>
 
-            <img class="login-captcha" :src="'https://sass.yidmall.com/api/api-uaa/validata/code/'+ this.deviceId" style="" @click="changeCode()">
+            <img class="login-captcha" :src="config.API.BASE + + 'api/api-uaa/validata/code/'+ this.deviceId" style="" @click="changeCode()">
             <el-form-item label=" ">
               <el-button @click="signIn" size="large" type="primary">登录</el-button>
             </el-form-item>
@@ -56,10 +56,11 @@
 import yid from '@src/library'
 import {error} from "../../library/helper/util";
 import service from "../../service";
-
+import config from '@src/config'
 export default {
   data() {
     return {
+      config: config,
       model: {
         username: '',
         password: '',

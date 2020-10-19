@@ -267,7 +267,7 @@
                             ref="uploadExcel"
                             class="avatar-uploader"
                             :headers="myheaders"
-                            action="https://sass.yidmall.com/api/api-base/employee/importExcel"
+                            action="https://sass.yidmall.com/api/api-chain/employee/importExcel"
                             :show-file-list="true"
                             :on-success="handleAvatarExcelSuccess"
                             :before-upload="beforeAvatarExcelUpload">

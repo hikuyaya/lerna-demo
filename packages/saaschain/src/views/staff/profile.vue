@@ -26,7 +26,7 @@
                         <el-input  v-model="searchForm.eename" placeholder="姓名" style="width: 150px;"></el-input>
                     </el-form-item>
                     <el-form-item label="手机号：" prop="mobile">
-                        <el-input type='number' v-model="searchForm.mobile" placeholder="手机号" style="width: 150px;"></el-input>
+                        <el-input v-model="searchForm.mobile" placeholder="手机号" style="width: 150px;"></el-input>
                     </el-form-item>
                     <el-form-item label="">
                         <el-button @click="search" type="primary">查询</el-button>

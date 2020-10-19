@@ -1274,7 +1274,7 @@
                     try{
                         const list=JSON.parse(str);
                         list.forEach(l =>{
-                            info=info+l.payname+":"+l.payyjzke+" "
+                            info=info+l.payname+":"+l.money+" "
                         })
                         return info;
                     }catch (e){
@@ -1635,13 +1635,13 @@
                                 const id=this.memberDesc.cards[0].id
                                 this.membercard.cardid=id;
                                 this.cardinfo.id=id
-                                this.changeCardinfo();
                             }else{
                                 this.memberDesc.cardindex=undefined;
                                 this.membercard.cardid='';
                                 this.cardinfo.id='';
                                 this.cardmoney.id='';
                             }
+                            this.changeCardinfo();
                             this.changeMemberCard();
                             this.queryMemberStatic("",0);
                             this.meminfoDialog.visible=true;
@@ -1666,32 +1666,50 @@
                 })
             },
             changeCardinfo(){
-                const that =this;
-                this.memberDesc.cards.forEach(card =>{
-                    if(that.cardinfo.id == card.id){
-                        that.cardinfo.cardtype=card.cardtype
-                        that.cardinfo.cardno=card.cardno
-                        that.cardinfo.money=card.money
-                        that.cardinfo.gmoney=card.gmoney
-                        that.cardinfo.smoney=card.smoney
-                        that.cardinfo.serDis=card.serDis
-                        that.cardinfo.proDis=card.proDis
-                        that.cardinfo.shopname=card.shopname
-                        that.cardinfo.exprite=card.exprite
-                        that.cardinfo.makedate=card.makedate
-                    }
-                })
+                this.cardinfo.cardtype=''
+                this.cardinfo.cardno=''
+                this.cardinfo.money=''
+                this.cardinfo.gmoney=''
+                this.cardinfo.smoney=''
+                this.cardinfo.serDis=''
+                this.cardinfo.proDis=''
+                this.cardinfo.shopname=''
+                this.cardinfo.exprite=''
+                this.cardinfo.makedate=''
+                if(this.cardinfo.id){
+                    this.memberDesc.cards.forEach(card =>{
+                        if(this.cardinfo.id == card.id){
+                            this.cardinfo.cardtype=card.cardtype
+                            this.cardinfo.cardno=card.cardno
+                            this.cardinfo.money=card.money
+                            this.cardinfo.gmoney=card.gmoney
+                            this.cardinfo.smoney=card.smoney
+                            this.cardinfo.serDis=card.serDis
+                            this.cardinfo.proDis=card.proDis
+                            this.cardinfo.shopname=card.shopname
+                            this.cardinfo.exprite=card.exprite
+                            this.cardinfo.makedate=card.makedate
+                        }
+                    })
+                }
             },
             changeCardmoney(){
-                this.cardmoney.cards.forEach(card =>{
-                    if(this.cardmoney.id==card.id){
-                        this.cardmoney.cardtype=card.cardtype;
-                        this.cardmoney.money=card.money;
-                        this.cardmoney.gmoney=card.gmoney;
-                        this.cardmoney.nmoney=card.money;
-                        this.cardmoney.ngmoney=card.gmoney;
-                    }
-                })
+                this.cardmoney.cardtype=''
+                this.cardmoney.money=''
+                this.cardmoney.gmoney=''
+                this.cardmoney.nmoney=''
+                this.cardmoney.ngmoney=''
+                if(this.cardmoney.id){
+                    this.cardmoney.cards.forEach(card =>{
+                        if(this.cardmoney.id==card.id){
+                            this.cardmoney.cardtype=card.cardtype;
+                            this.cardmoney.money=card.money;
+                            this.cardmoney.gmoney=card.gmoney;
+                            this.cardmoney.nmoney=card.money;
+                            this.cardmoney.ngmoney=card.gmoney;
+                        }
+                    })
+                }
             },
             queryMemberStatic(yearmonth,offset){
                 service.member.memberinfo.queryMemberStatis({memid:this.memberDesc.memid,yearmonth:yearmonth,offset:offset}).then(res => {
@@ -1710,6 +1728,12 @@
                 this.membercard.sex=this.memberDesc.sex;
                 this.membercard.birthday=this.memberDesc.birthday;
                 this.membercard.address=this.memberDesc.address;
+                this.membercard.chid='';
+                this.membercard.cardno='';
+                this.membercard.exprite='';
+                this.membercard.cardmemo='';
+                this.membercard.cardname='';
+                this.membercard.cardtype='';
                 if(this.membercard.cardid){
                     this.memberDesc.cards.forEach(card =>{
                         if(this.membercard.cardid == card.id){
@@ -1765,12 +1789,12 @@
                 if(Number(this.cardmoney.nmoney) != Number(this.cardmoney.money)){
                     this.cardmoney.bmoney=Number(this.cardmoney.nmoney)-Number(this.cardmoney.money)
                 }else{
-                    this.cardmoney.bmoney=null
+                    this.cardmoney.bmoney=0
                 }
                 if(Number(this.cardmoney.ngmoney) != Number(this.cardmoney.gmoney)){
                     this.cardmoney.bgmoney=Number(this.cardmoney.ngmoney)-Number(this.cardmoney.gmoney)
                 }else{
-                    this.cardmoney.bgmoney=null
+                    this.cardmoney.bgmoney=0
                 }
                 const cardmoney={
                     memid:this.memberDesc.memid,

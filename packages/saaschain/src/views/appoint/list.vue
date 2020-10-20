@@ -112,10 +112,10 @@
                 <el-form-item label="性别：" prop="custsex" label-width="120px">
                     <div style="width: 160px;">{{yybillhead.custsex=="1"?"男":"女"}}</div>
                 </el-form-item>
-                <el-form-item v-if="yybillhead.hjtimes?false:true" label="预约项目：" prop="sersnames" label-width="100px">
+                <el-form-item v-if="yybillhead.sersnames?true:false" label="预约项目：" prop="sersnames" label-width="100px">
                     <div>{{yybillhead.sersnames}}</div>
-                </el-form-item><br/>
-                <el-form-item v-if="yybillhead.hjtimes?true:false" label="预约时长：" prop="hjtimes" label-width="100px">
+                </el-form-item>
+                <el-form-item v-if="yybillhead.sersnames?false:true" label="预约时长：" prop="hjtimes" label-width="100px">
                     <div>{{yybillhead.hjtimes}}min</div>
                 </el-form-item><br/>
                 <el-form-item label="人数：" prop="exprite" label-width="120px">

@@ -905,9 +905,8 @@
             </div>
             <div class="meminfo" v-show="meminfoDialog.showNum==5">
                 <div>
-                    套餐名称:<el-select v-model="packrecordform.mpname" style="width:280px;">
-                    <el-option v-for="pack in selectPackages" :value="pack.spname" :label="pack.spname"></el-option>
-                </el-select>
+                    套餐名称:<el-input v-model="packrecordform.mpname" style="width:160px;" placeholder="套餐名称"/>
+                    项目/产品名称:<el-input v-model="packrecordform.name" style="width:160px;" placeholder="项目/产品名称"/>
                     发生日期:<el-date-picker class="margl5"
                         v-model="packrecordform.date" value-format="yyyy-MM-dd"
                         type="daterange"
@@ -953,16 +952,20 @@
             </div>
             <yid-table pagination ref="memberRedcords">
                 <yid-table-column label="单号" min-width="180" prop="billcode"></yid-table-column>
-                <yid-table-column label="消费内容" min-width="160" prop="sers"></yid-table-column>
+                <yid-table-column label="消费内容" min-width="160" prop="content"></yid-table-column>
                 <yid-table-column label="消费金额" min-width="80" prop="payje"></yid-table-column>
                 <yid-table-column label="付款方式" min-width="160" prop="payinfo">
                     <template slot-scope="scope">
                         {{ scope.row.payinfo | jsonStringFormate }}
                     </template>
                 </yid-table-column>
-                <yid-table-column label="消费时间" min-width="160" prop="saleTime"></yid-table-column>
+                <yid-table-column label="消费时间" min-width="160" prop="servdate"></yid-table-column>
                 <yid-table-column label="消费门店" min-width="80" prop="shopname"></yid-table-column>
-                <yid-table-column label="服务人员" min-width="80" prop="craftsman"></yid-table-column>
+                <yid-table-column label="服务人员" min-width="80" prop="eeinfo">
+                    <template slot-scope="scope">
+                        {{ scope.row.eeinfo | jsonEenameFormate }}
+                    </template>
+                </yid-table-column>
                 <yid-table-column label="操作人" min-width="80" prop="oper"></yid-table-column>
             </yid-table>
         </div>
@@ -1002,8 +1005,15 @@
                     <yid-table-column label="商品编号" min-width="80" prop="pcode"></yid-table-column>
                     <yid-table-column label="商品名称" min-width="140" prop="pname"></yid-table-column>
                     <yid-table-column label="寄存数量" min-width="80" prop="total"></yid-table-column>
+                    <yid-table-column label="寄存门店" min-width="120" prop="shopname"></yid-table-column>
                     <yid-table-column label="购买时间" min-width="160" prop="createdTime"></yid-table-column>
+                    <yid-table-column label="寄存来源" min-width="100" prop="source">
+                        <template slot-scope="scope">
+                            {{  scope.row.source == '1' ? '购买商品' : '套餐划扣'}}
+                        </template>
+                    </yid-table-column>
                     <yid-table-column label="订单编号" min-width="130" prop="billcode"></yid-table-column>
+                    <yid-table-column label="购买单价" min-width="100" prop="price"></yid-table-column>
                     <yid-table-column label="已领取/剩余" min-width="100">
                         <template slot-scope="scope">
                             {{  scope.row.outnum}} / {{scope.row.checknum }}
@@ -1014,6 +1024,9 @@
                             <yid-table ref="memberStorelogs" style="margin-top: 5px;" :data="scope.row.logs">
                                 <yid-table-column prop="billcode" label="出库单号" min-width="130" ></yid-table-column>
                                 <yid-table-column prop="createdTime" label="操作时间" min-width="160" ></yid-table-column>
+                                <yid-table-column prop="btype" label="操作方式" min-width="80" >
+                                    <template slot-scope="scope">提货</template>
+                                </yid-table-column>
                                 <yid-table-column prop="btype" label="类型" min-width="80" >
                                     <template slot-scope="scope">{{scope.row.btype=='1'?'寄存入库':'寄存出库'}}</template>
                                 </yid-table-column>
@@ -1176,7 +1189,7 @@
                 cardmoney: { cards:[], id:"",cardtype:"",money:"",gmoney:"",nmoney:"",ngmoney:"",bmoney:"",bgmoney:"" },
                 cardlist:[],
                 cardrecordform:{ memid:'', cardid:'', cardtype:'1', btype:'', mtype:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0},
-                packrecordform:{ memid:'',mpname:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0},
+                packrecordform:{ memid:'',mpname:'', name:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0},
                 packagelist:[],
                 memberfrom: { memid:'', date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 },
                 memberlogfrom: { memid:'', date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 },
@@ -1284,7 +1297,7 @@
                     return "";
                 }
             },
-            jsoneeinfoFormate(str){
+            jsonEenameFormate(str){
                 if(str){
                     let info=""
                     try{
@@ -1649,7 +1662,7 @@
                             //清空查询条件
                             this.cardrecordform={memid:res.data.memid,cardid:'',cardtype:'1',btype:'',mtype:'',
                                 date:[],sdate:'',edate:'',page: 1,limit: 10,total: 0};
-                            this.packrecordform={memid:res.data.memid,mpname:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0};
+                            this.packrecordform={memid:res.data.memid ,mpname:'', name:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0};
                             this.memberfrom={memid:res.data.memid, date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 };
                             this.memberlogfrom={memid:res.data.memid, date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 };
                             this.storefrom={memid:res.data.memid, date:[], billcode:'', pcode:'', pname:'',page: 1, limit: 10, total: 0 };

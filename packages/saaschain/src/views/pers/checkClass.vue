@@ -185,6 +185,7 @@
                     pstime : '',
                     petime : '',
                     color : '',
+                    shopid:'',
 
                 },
                 searchForm : {
@@ -280,6 +281,7 @@
                             return false;
                         }
                         //判断颜色是否已经存在，如果存在给出提示
+                        this.checkClassForm.shopid=this.searchForm.shopid;
                         service.pers.checkClass.getColorList({id:this.checkClassForm.id,color:String(this.checkClassForm.color)}).then(res=> {
                             if(res.resp_code == 200) {
                                 if(res.data.length > 0){

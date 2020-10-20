@@ -464,7 +464,7 @@
                 })
             },
             downExcelTemplate(){
-                download(yid.config.API.BASE + '/api-base/product/excelTemplate', {})
+                download(yid.config.API.BASE + '/api-chain/product/excelTemplate', {})
             },
             beforeAvatarExcelUpload(file){
                 const isJPG = (file.type.indexOf("sheet") ||file.type.indexOf('excel'));

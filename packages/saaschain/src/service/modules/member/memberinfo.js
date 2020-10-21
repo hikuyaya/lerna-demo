@@ -104,7 +104,7 @@ export function selectProducts(params) {
 }
 
 export function queryMemberStorelogs(params) {
-    return yid.http.get(`api-stock/memdbatch/queryMemberStorelogs`, {params})
+    return yid.http.get(`api-stock/memdbatch/queryAllMemberStorelogs`, {params})
 }
 
 

@@ -186,7 +186,7 @@
                 ],
                 ctypeList:[
                     {value:"1", label:"顾客"},
-                    {value:"2", label:"设计师"},
+                    {value:"2", label:"员工APP"},
                     {value:"3", label:"门店"},
                     {value:"4", label:"后端"}
                 ],

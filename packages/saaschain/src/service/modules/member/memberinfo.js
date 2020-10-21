@@ -8,20 +8,15 @@ export function querychainMembers(params) {
 }
 
 export function queryAllMember(params) {
-    return yid.http.get(`${prefix}/chain/pageMembers`, {params},{
-        headers:{
-            "x-shopid-header":params.shopid
-        }
-    })
+    return yid.http.get(`${prefix}/pageMembers`, {params})
 }
 
 export function queryAllMemberHj(params) {
-    return yid.http.get(`${prefix}/chain/queryAllMemberHj`, {params})
+    return yid.http.get(`${prefix}/queryAllMemberHj`, {params})
 }
 
 export function exportMember(params) {
-    return yid.http.get(`${prefix}/queryAllMembers`, {params},
-        )
+    return yid.http.get(`${prefix}/queryAllMembers`, {params})
 }
 
 export function queryMember(params) {
@@ -65,11 +60,11 @@ export function queryMemberEditlogs(params) {
 }
 
 export function queryMemberpagePackages(params) {
-    return yid.http.post(`${prefix}/chain/pagePackages`, params)
+    return yid.http.post(`${prefix}/pagePackages`, params)
 }
 
 export function queryPackageHj(params) {
-    return yid.http.post(`${prefix}/chain/queryPackageHj`, params)
+    return yid.http.post(`${prefix}/queryPackageHj`, params)
 }
 
 export function queryDelMembers(params) {

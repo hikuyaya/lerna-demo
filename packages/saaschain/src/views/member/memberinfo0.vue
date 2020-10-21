@@ -58,7 +58,7 @@
                         <el-input clearable v-model.trim="shopMemberForm.name" placeholder="姓名/手机号/卡号" style="width: 180px;"></el-input>
                     </el-form-item>
                     <el-form-item style="margin-bottom:0; margin-left: 35px;">
-                        <el-button @click="shopMemberSearch" type="primary">查询</el-button>
+                        <el-button @click="shopMemberSearch()" type="primary">查询</el-button>
                     </el-form-item>
                     <el-form-item style="margin-bottom:0; margin-left: 35px;">
                         <el-button @click="shopSerniorForm.visible=true" type="primary">高级查询</el-button>
@@ -129,26 +129,13 @@
                         </el-select>
                     </el-form-item>
                     <el-form-item label="会员查询：">
-                        <el-input clearable v-model="memberpackfrom.name" placeholder="姓名/手机号"
-                                  style="width: 180px;"></el-input>
+                        <el-input clearable v-model="memberpackfrom.name" placeholder="姓名/手机号" style="width: 180px;"></el-input>
                     </el-form-item>
                     <el-form-item label="套餐名称：">
-                        <el-select clearable v-model.trim="memberpackfrom.piid" filterable placeholder="请选择"
-                                   style="width: 140px;">
-                            <el-option :key="item.id" :label="item.spname" :value="item.id" v-for="item in selectPackages"></el-option>
-                        </el-select>
+                        <el-input clearable v-model="memberpackfrom.mpname" placeholder="套餐名称" style="width: 180px;"></el-input>
                     </el-form-item>
-                    <el-form-item label="项目名称：">
-                        <el-select clearable v-model.trim="memberpackfrom.servid" filterable placeholder="请选择"
-                                   style="width: 140px;">
-                            <el-option :key="item.id" :label="item.servname" :value="item.id" v-for="item in selectServices"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="产品名称：">
-                        <el-select clearable v-model.trim="memberpackfrom.pid" filterable placeholder="请选择"
-                                   style="width: 140px;">
-                            <el-option :key="item.id" :label="item.pname" :value="item.id" v-for="item in selectProducts"></el-option>
-                        </el-select>
+                    <el-form-item label="项目/产品名称：">
+                        <el-input clearable v-model="memberpackfrom.servname" placeholder="项目/产品名称" style="width: 180px;"></el-input>
                     </el-form-item>
                     <el-form-item label="到期日期：">
                         <el-date-picker style="width: 240px;"
@@ -334,7 +321,7 @@
                             action="https://jsonplaceholder.typicode.com/posts/"
                             :file-list="fileList"
                             :on-remove="handleRemove"
-                            :before-upload="importMembers">
+                            :before-upload="importMembers()">
                         <el-button size="small" type="primary">点击上传</el-button> <label style="margin-left: 10px">{{memberImport.filename}}</label>
                         <div slot="tip" class="el-upload__tip">*支持上传 .xls .xlsx后缀文件，表格中一行为一条数据，一次最多可导入1000条数据。</div>
                         </el-upload>
@@ -382,8 +369,10 @@
                 </el-form-item>
                 <el-form-item label="注册日期：" prop="regdate" label-width="90px">
                     <div style="width: 300px;">
-                     <el-date-picker clearable style="width: 140px;" v-model="chainSeniorForm.sregdate" value-format="yyyy-MM-dd" type="date"  placeholder="选择日期"></el-date-picker>
-                    -<el-date-picker clearable style="width: 140px;" v-model="chainSeniorForm.eregdate" value-format="yyyy-MM-dd" type="date"  placeholder="选择日期"></el-date-picker>
+                     <el-date-picker clearable style="width: 140px;" v-model="chainSeniorForm.sregdate"
+                                     value-format="yyyy-MM-dd" type="date"  placeholder="选择日期"></el-date-picker>
+                    -<el-date-picker clearable style="width: 140px;" v-model="chainSeniorForm.eregdate"
+                                     value-format="yyyy-MM-dd" type="date"  placeholder="选择日期"></el-date-picker>
                     </div>
                 </el-form-item>
                 <el-form-item label="储值总额：" prop="smoney" label-width="90px">
@@ -634,7 +623,7 @@
                     </div>
                 </el-form-item>
                 <el-row >
-                    <el-col :span="6" :offset="8"><el-button @click="shopSeniorSearch" type="primary">提交</el-button></el-col>
+                    <el-col :span="6" :offset="8"><el-button @click="shopSeniorSearch()" type="primary">提交</el-button></el-col>
                     <el-col :span="6" :offset="2"><el-button @click="shopSerniorForm.visible=false">取消</el-button></el-col>
                 </el-row>
             </el-form>
@@ -1193,7 +1182,7 @@
                 packagelist:[],
                 memberfrom: { memid:'', date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 },
                 memberlogfrom: { memid:'', date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 },
-                memberpackfrom: { name:'', piid:'',servid:'',pid:'',date:[], page: 1, limit: 10, total: 0 },
+                memberpackfrom: { name:'', mpname:'',servname:'',date:[], page: 1, limit: 10, total: 0 },
                 memberpackData: [],
                 memberpackhj: {servsum:0,packsum:0,servje:0,packje:0 },
                 memberDelfrom: { name:'' , date:[], page: 1, limit: 10, total: 0},
@@ -1404,14 +1393,12 @@
                 }else{
                     this.shopSeniorSearch();
                 }
-
             },
             handleCurrentChange(val) {
-                this.pageInfo.page=val;
                 if(this.pageInfo.type=='1'){
-                    this.shopMemberSearch();
+                    this.shopMemberSearch(val);
                 }else{
-                    this.shopSeniorSearch();
+                    this.shopSeniorSearch(val);
                 }
             },
             handleSizeChange2(val) {
@@ -1419,8 +1406,7 @@
                 this.queryMemberPackages();
             },
             handleCurrentChange2(val) {
-                this.memberpackfrom.page=val;
-                this.queryMemberPackages();
+                this.queryMemberPackages(val);
             },
             objectSpanMethod({ row, column, rowIndex, columnIndex }) {
                 if (columnIndex<5 || columnIndex>12) {
@@ -1549,18 +1535,21 @@
                     return false
                 }
             },
-            shopMemberSearch(){
+            shopMemberSearch(page=1){
                 if(this.checkShopid()){
                     return
                 }
+                debugger
+                this.pageInfo.page=page;
                 const params = {...this.shopMemberForm,...this.pageInfo,shopid:this.shopid}
                 this.shopMemberQuery(params)
                 this.pageInfo.type='1'
             },
-            shopSeniorSearch(){
+            shopSeniorSearch(page=1){
                 if(this.checkShopid()){
                     return
                 }
+                this.pageInfo.page=page;
                 const params = {...this.shopSerniorForm,...this.pageInfo,shopid:this.shopid}
                 this.shopMemberQuery(params)
                 this.pageInfo.type='2'
@@ -1922,7 +1911,12 @@
                     params,
                 });
             },
-            queryMemberPackages(){
+            queryMemberPackages(page=1){
+                if(this.checkShopid()){
+                    return
+                }
+                this.memberpackfrom.shopid=this.shopid
+                this.memberpackfrom.page=page;
                 if(this.memberpackfrom.date && this.memberpackfrom.date.length>1){
                     this.memberpackfrom.sdate=this.memberpackfrom.date[0];
                     this.memberpackfrom.edate=this.memberpackfrom.date[1]+' 23:59:59';
@@ -1943,6 +1937,9 @@
                 })
             },
             queryDelMembers(){
+                if(this.checkShopid()){
+                    return
+                }
                 if(this.memberDelfrom.date && this.memberDelfrom.date.length>1){
                     this.memberDelfrom.sdate=this.memberDelfrom.date[0];
                     this.memberDelfrom.edate=this.memberDelfrom.date[1]+' 23:59:59';
@@ -1958,6 +1955,9 @@
                 });
             },
             queryExpritMembers(){
+                if(this.checkShopid()){
+                    return
+                }
                 if(this.memberExporfrom.date && this.memberExporfrom.date.length>1){
                     this.memberExporfrom.sdate=this.memberExporfrom.date[0];
                     this.memberExporfrom.edate=this.memberExporfrom.date[1]+' 23:59:59';
@@ -1975,6 +1975,9 @@
                 });
             },
             queryDirthdayMembers(){
+                if(this.checkShopid()){
+                    return
+                }
                 if(this.memberBirthfrom.type=="day" && !this.memberBirthfrom.day){
                    yid.util.error("请选择日期");
                    return;
@@ -2003,14 +2006,24 @@
                 imporExecl(file,this.memberImport.members,this.memberImpdata[this.memberImport.type]);
             },
             sureImportMembers(){
+                if(!this.memberImport.shopid){
+                    yid.util.error("没有选择导入门店");
+                    return;
+                }
                 if(!this.memberImport.type){
-                    yid.util.error("没有导入类型");
+                    yid.util.error("没有选择导入类型");
                     return;
                 }
                 if(!this.memberImport.members){
                     yid.util.error("没有导入数据");
                     return;
                 }
+                this.impShopList.forEach(each => {
+                    if(each.id == this.memberImport.shopid){
+                        this.memberImport.shopcode=each.shopcode
+                        this.memberImport.shopname=each.shopname
+                    }
+                })
                 service.member.memberinfo.memberImport(this.memberImport).then(res =>{
                     if(res.resp_code=="200"){
                         yid.util.success(res.resp_msg);

@@ -27,7 +27,6 @@
                     <el-option v-for="item in channel" :value="item.yccode" :label="item.ycname"></el-option>
                 </el-select>
             </el-form-item>
-
             <el-form-item label="门店：">
 
                 <el-select clearable v-model.trim="model.shopid"  filterable :filter-method="filterShop" placeholder="请选择门店" style="width: 160px;">
@@ -77,9 +76,7 @@
                 </el-form-item>
                 <el-form-item label="预约状态：" prop="billstatus" label-width="100px">
                     <div style="width: 160px;">
-                        <el-select disabled   v-model="yybillhead.billstatus">
-                            <el-option v-for="item in selectStatusList" :value="item.value" :label="item.label"></el-option>
-                        </el-select>
+                        {{yybillhead.billstatus | formatStr(statusList)}}
                     </div>
                 </el-form-item><br/>
                 <el-form-item label="姓名：" prop="custsex" label-width="120px">
@@ -310,7 +307,7 @@
                 this.pageInfo.page=params.page;
             },
             getYybill(row){
-                service.yy.yylist.getYybill(row.id).then(res =>{
+                service.yy.yylist.getYybill({id:row.id,shopid:row.shopid}).then(res =>{
                     this.searchDialog.visible=true;
                     this.editflag=true;
                     res.data.yyday=moment(res.data.yydate).format("YYYY-MM-DD");

@@ -2,14 +2,17 @@ import yid from '@src/library'
 
 const prefix = 'api-member/chainmember';
 const cardfix = 'api-base/cardinfo';
-const chainprefix = 'api-member/chainmember';
 
 export function querychainMembers(params) {
     return yid.http.get(`${prefix}/pageChainMembers`, {params})
 }
 
 export function queryAllMember(params) {
-    return yid.http.get(`${prefix}/chain/pageMembers`, {params})
+    return yid.http.get(`${prefix}/chain/pageMembers`, {params},{
+        headers:{
+            "x-shopid-header":params.shopid
+        }
+    })
 }
 
 export function queryAllMemberHj(params) {
@@ -17,7 +20,8 @@ export function queryAllMemberHj(params) {
 }
 
 export function exportMember(params) {
-    return yid.http.get(`${prefix}/queryAllMembers`, {params})
+    return yid.http.get(`${prefix}/queryAllMembers`, {params},
+        )
 }
 
 export function queryMember(params) {
@@ -25,7 +29,7 @@ export function queryMember(params) {
 }
 
 export function queryShopcardmoney(params) {
-    return yid.http.get(`${chainprefix}/queryShopcardmoney`, {params})
+    return yid.http.get(`${prefix}/queryShopcardmoney`, {params})
 }
 
 export function queryMemberStatis(params) {

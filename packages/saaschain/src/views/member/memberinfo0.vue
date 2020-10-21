@@ -1024,7 +1024,7 @@
                             <yid-table ref="memberStorelogs" style="margin-top: 5px;" :data="scope.row.logs">
                                 <yid-table-column prop="billcode" label="出库单号" min-width="130" ></yid-table-column>
                                 <yid-table-column prop="createdTime" label="操作时间" min-width="160" ></yid-table-column>
-                                <yid-table-column prop="btype" label="操作方式" min-width="80" >
+                                <yid-table-column label="操作方式" min-width="80" >
                                     <template slot-scope="scope">提货</template>
                                 </yid-table-column>
                                 <yid-table-column prop="btype" label="类型" min-width="80" >

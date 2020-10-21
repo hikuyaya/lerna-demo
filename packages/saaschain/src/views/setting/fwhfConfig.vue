@@ -708,12 +708,12 @@
                 this.$router.push("./messMbConfig");
             },
             getBrandList() {
-                service.fwbackConfig.brandList().then(res => {
+                service.chain.brand.brandList({isDel:'0'}).then(res=>{
                     if(res.resp_code == 200) {
                         this.filterBrandList = res.data;
                         this.allBrandList = Object.assign(this.filterBrandList);//保留原数据
                     }
-                })
+                });
             },
             filterBrand(v){
                 this.filterBrandList = this.allBrandList.filter((item) => {

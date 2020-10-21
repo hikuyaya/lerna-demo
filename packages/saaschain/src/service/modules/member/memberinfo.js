@@ -68,15 +68,15 @@ export function queryPackageHj(params) {
 }
 
 export function queryDelMembers(params) {
-    return yid.http.post(`${prefix}/chain/queryDelMembers`, params)
+    return yid.http.post(`${prefix}/queryDelMembers`, params)
 }
 
 export function queryExpritMembers(params) {
-    return yid.http.post(`${prefix}/chain/queryExpritMembers`, params)
+    return yid.http.post(`${prefix}/queryExpritMembers`, params)
 }
 
 export function queryDirthdayMembers(params) {
-    return yid.http.post(`${prefix}/chain/queryDirthdayMembers`, params)
+    return yid.http.post(`${prefix}/queryDirthdayMembers`, params)
 }
 
 export function memberImport(params) {

@@ -1548,11 +1548,16 @@
             importMembers(file){
                 if(!this.memberImport.type){
                     yid.util.error("没有导入类型");
-                    return;
+                    return false;
                 }
-                this.memberImport.filename=file.name
-                this.memberImport.members=[];
-                imporExecl(file,this.memberImport.members,this.memberImpdata[this.memberImport.type]);
+                if (file.name && (file.name.indexOf("xls")>0 || file.name.indexOf("xlsx")>0)) {
+                    this.memberImport.filename=file.name
+                    this.memberImport.members=[];
+                    imporExecl(file,this.memberImport.members,this.memberImpdata[this.memberImport.type]);
+                }else{
+                    yid.util.error('上传excel只能是 xls/xlsx 格式!');
+                    return false;
+                }
             },
             sureImportMembers(){
                 if(!this.memberImport.type){

@@ -321,7 +321,7 @@
                             action="https://jsonplaceholder.typicode.com/posts/"
                             :file-list="fileList"
                             :on-remove="handleRemove"
-                            :before-upload="importMembers()">
+                            :before-upload="importMembers">
                         <el-button size="small" type="primary">点击上传</el-button> <label style="margin-left: 10px">{{memberImport.filename}}</label>
                         <div slot="tip" class="el-upload__tip">*支持上传 .xls .xlsx后缀文件，表格中一行为一条数据，一次最多可导入1000条数据。</div>
                         </el-upload>
@@ -1440,7 +1440,7 @@
             },
             handleClick(tab) {
                 if (tab.name == 'shopMember') {
-                    this.search();
+                    //this.search();
                 } else if (tab.name == 'assignment') {
                     //this.getjobList();
                 } else if (tab.name == 'logs') {
@@ -1539,7 +1539,6 @@
                 if(this.checkShopid()){
                     return
                 }
-                debugger
                 this.pageInfo.page=page;
                 const params = {...this.shopMemberForm,...this.pageInfo,shopid:this.shopid}
                 this.shopMemberQuery(params)
@@ -2000,10 +1999,15 @@
             importMembers(file){
                 if(!this.memberImport.type){
                     yid.util.error("没有导入类型");
-                    return;
+                    return false;
                 }
-                this.memberImport.members=[];
-                imporExecl(file,this.memberImport.members,this.memberImpdata[this.memberImport.type]);
+                if (file.name && (file.name.indexOf("xls")>0 || file.name.indexOf("xlsx")>0)) {
+                    this.memberImport.members=[];
+                    imporExecl(file,this.memberImport.members,this.memberImpdata[this.memberImport.type]);
+                }else{
+                    yid.util.error('上传excel只能是 xls/xlsx 格式!');
+                    return false;
+                }
             },
             sureImportMembers(){
                 if(!this.memberImport.shopid){

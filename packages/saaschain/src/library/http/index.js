@@ -41,10 +41,11 @@ axios.interceptors.request.use(
          request.headers['x-tenant-header'] =  $yid.cache.get($yid.type.USER.TENANTID);
          // request.headers['saas-version'] = 'barry2020'
      }
-     if($yid.cache.get($yid.type.USER.APPID)) {
-        request.headers['x-appId-header'] =  $yid.cache.get($yid.type.USER.APPID)
-
-     }
+    if($yid.cache.get($yid.type.USER.APPID)) {
+        if(!request.headers['x-appId-header']) {
+            request.headers['x-appId-header'] =  $yid.cache.get($yid.type.USER.APPID);
+        }
+    }
 
       // 配置 base url
       const isUrl = /^((https|http|ftp|rtsp|mms)?:\/\/)[^\s]+/

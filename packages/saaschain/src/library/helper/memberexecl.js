@@ -94,18 +94,18 @@ export function readWorkbook(workbook,tableData,heads) {
 export function csv2table(csv,tableData,heads) {
     const rows = csv.split('\n')
     rows.pop() // 最后一行没用的
-    let i=1;
-    rows.forEach(function(row, index) {
+    let i=false;
+    rows.forEach(function(row) {
         const columns = row.split(',')
-        if (columns.length >2 && columns[3]) { //正确数据
-            if(i>2){ //去掉一行标题
-                const head={};
-                heads.forEach((item,index)=>{
-                    head[item]=columns[index]
-                })
-                tableData.push(head)
-            }
-            i++;
+        if(i){
+            const head={};
+            heads.forEach((item,index)=>{
+                head[item]=columns[index]
+            })
+            tableData.push(head)
+        }
+        if (columns[1] && columns[1]=='姓名') { //正确数据
+            i=true
         }
     })
     console.log(tableData)

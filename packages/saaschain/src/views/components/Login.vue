@@ -105,6 +105,7 @@ export default {
         }).catch((res)=> {
            // yid.util.error("用户名或密码错误");
             this.deviceId = Math.uuid();
+            yid.util.error(res.data.resp_msg);
         });
       }
     },

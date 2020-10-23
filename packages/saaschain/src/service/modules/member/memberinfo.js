@@ -47,6 +47,10 @@ export function queryCardRecords(params) {
     return yid.http.post(`${prefix}/queryCardRecords`, params)
 }
 
+export function queryCardzklogs(params) {
+    return yid.http.post(`${prefix}/queryCardzklogs`,params)
+}
+
 export function queryPackageRecords(params) {
     return yid.http.post(`${prefix}/queryPackageRecords`, params)
 }
@@ -135,5 +139,6 @@ export default {
     selectProducts,
     queryMemberStorelogs,
     querychainMembers,
-    queryShopcardmoney
+    queryShopcardmoney,
+    queryCardzklogs
 }

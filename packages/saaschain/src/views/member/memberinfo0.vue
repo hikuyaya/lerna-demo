@@ -823,14 +823,16 @@
                 <div>
                     <label style="color: red">*</label>卡信息:
                     <el-select v-model="cardrecordform.cardno" @change="changCardRecord" style="width:360px;">
-                    <el-option v-for="card in memberDesc.cards" :value="card.cardno" :label="card.cardno+'('+card.cardname+')'"></el-option>
+                    <el-option v-for="card in memberDesc.cards"
+                               :value="card.cardno"
+                               :label="card.cardno+'('+card.cardname+')'"></el-option>
                    </el-select><!--1充值2消费3买套餐4买产品5退卡6退项目7退产品-->
                     <label v-if="cardrecordform.cardtype=='1'">单据类型:</label>
                     <el-select clearable v-model="cardrecordform.btype" style="width:220px;" v-if="cardrecordform.cardtype=='1'">
                     <el-option value="1" label="充值"></el-option>
                     <el-option value="2" label="消费"></el-option>
                     <el-option value="3" label="买套餐"></el-option>
-                    <el-option value="4" label="买产品"></el-option>
+                    <!--<el-option value="4" label="买产品"></el-option>-->
                     <el-option value="5" label="退卡"></el-option>
                     <el-option value="6" label="退项目"></el-option>
                     <el-option value="7" label="退产品"></el-option>

@@ -1628,7 +1628,7 @@
                 this.$router.push({path: '/setting/msgConfig'})
             },
             getMember(row){
-                service.member.memberinfo.queryMember({memid:row.id}).then(res => {
+                service.member.memberinfo.queryMember({memid:row.memid}).then(res => {
                     if(res.resp_code=="200"){
                         if(res.data){
                             this.memberDesc=res.data;

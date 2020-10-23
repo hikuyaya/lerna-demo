@@ -97,7 +97,7 @@ export function csv2table(csv,tableData,heads) {
     let i=false;
     rows.forEach(function(row) {
         const columns = row.split(',')
-        if(i){
+        if(i && columns[0]){
             const head={};
             heads.forEach((item,index)=>{
                 head[item]=columns[index]

@@ -131,7 +131,7 @@
             </div>
         </div>
         <!--添加服务回访设置弹出层-->
-        <yid-dialog :title="dialogType.title" :visible.sync="dialogType.visible" @close="cancel" width="840px">
+        <yid-dialog :title="dialogType.title" :visible.sync="dialogType.visible" @close="chanel" width="840px">
            <div style="padding: 20px">
             <!--   <div style="display: flex; color: #000">
                    服务类别：
@@ -384,8 +384,8 @@
                         console.log("sssss",res.data)
 
                         this.tabs=res.data
-                        this.editableTabsValue=res.data[0].id,
-                            this.editableTabsName=res.data[0].sname
+                        //this.editableTabsValue=res.data[0].id
+                        //this.editableTabsName=res.data[0].sname
 
                         let parm={servtid:this.editableTabsValue,isDel:'0',page:1,limit:1000}
                         yid.service.fwbackConfig.getServiceWxReturn(parm).then(res => {
@@ -421,8 +421,8 @@
                         console.log("sssss",res.data)
 
                         this.tabs=res.data
-                        this.editableTabsValue=res.data[0].id,
-                            this.editableTabsName=res.data[0].sname
+                        //this.editableTabsValue=res.data[0].id;
+                        //this.editableTabsName=res.data[0].sname
 
                         let parm={servtid:this.editableTabsValue,isDel:'0',page:1,limit:1000}
                         yid.service.fwbackConfig.getServiceWxReturn(parm).then(res => {
@@ -564,7 +564,7 @@
                 this.ctext="新增"
                 this.chosenIndex=[]
                 this.exitsIndex=[]
-                let typeParm={servtid:this.editableTabsValue}
+                let typeParm={servtid:this.editableTabsValue,status:'1'}
                 yid.service.fwbackConfig.getServiceInfoByTypeId(typeParm).then(res => {
 
                     let parm={servtid:this.editableTabsValue,isDel:'0',page:1,limit:1000}
@@ -728,7 +728,7 @@
                     return
                 }
                 let param = {
-                    brandId: brandId,
+                    //brandId: this.searchForm.brandId,
                     status: "1"
                 }
                 yid.service.fwbackConfig.getServiceType(param).then(res => {

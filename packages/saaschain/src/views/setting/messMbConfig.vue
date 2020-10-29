@@ -2,7 +2,7 @@
     <div class="messMbConfig">
         <el-row>
             <el-button type="primary" @click="create">新增消息模板</el-button>
-            <el-button>返回</el-button>
+            <el-button @click="getfwhfConfig">返回</el-button>
         </el-row>
         <yid-table pagination ref="table" :data="messData" style="margin-top: 15px">
             <yid-table-column label="编号" width="80" prop="id"></yid-table-column>
@@ -24,7 +24,7 @@
             </yid-table-column>
         </yid-table>
         <!--添加/编辑消息模板弹出层-->
-        <yid-dialog :title="dialogType.title" :visible.sync="dialogType.visible" @close="cancel" width="750px">
+        <yid-dialog :title="dialogType.title" :visible.sync="dialogType.visible" @close="closeDialogType" width="750px">
            <div style="
            padding: 10px">
                <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
@@ -40,14 +40,6 @@
                    </el-form-item>
                <!--编辑顾客消息设置-->
                <div>
-                  <!-- <el-row style="margin: 15px 0">
-                       模板名称：<el-input
-                           placeholder=""
-                           v-model="sname"
-                           clearable style="width: 400px">
-                   </el-input>
-
-                   </el-row>-->
                    <el-form-item label="模板名称" prop="sname">
                        <el-input v-model="ruleForm.sname" style="width:70%"></el-input>
                    </el-form-item>
@@ -96,36 +88,7 @@
                        <el-input v-model="ruleForm.tempid" style="width:70%"></el-input>
                    </el-form-item>
                </div>
-               <!--编辑服务人员消息设置-->
-               <div style="display: none">
-                   <el-form-item label="编辑微信消息模板" prop="name">
-                       模板名称：<el-input
-                           placeholder=""
-                           v-model="input"
-                           clearable style="width: 400px">
-                   </el-input>
-                   </el-form-item>
-                   <el-row>编辑待办事项提醒：</el-row>
-                   <div style="margin:15px 0 15px 70px;">
-                       <el-input
-                               type="textarea"
-                               :autosize="{ minRows: 4, maxRows: 6}"
-                               placeholder="请输入内容"
-                               v-model="textarea" style="width: 400px; font-size: 12px">
-                       </el-input>
-                       <el-row>可选通配符：</el-row>
-                       <div class="tongpf">
-                           <ul>【顾客昵称】</ul>
-                           <ul>【顾客手机号】</ul>
-                           <ul>【顾客称谓】</ul>
-                           <ul>【顾客昵称】</ul>
-                           <ul>【门店名称】</ul>
-                           <ul>【提醒期】</ul>
-                           <ul>【项目名称】</ul>
-                       </div>
-                   </div>
 
-               </div>
                </el-form>
            </div>
 
@@ -159,26 +122,18 @@
                     visible: false,
                     title:'添加/编辑消息模板',
                 },
-                messData:[
-                  /*  {
-                        id:"01",
-                        type:"顾客提醒",
-                        name:"顾客剪发提醒模版",
-                        infer:"亲爱的顾客［顾客名称］您好：据您上次来店做［项目名称］",
-                    }*/
-                ],
+                messData:[],
                 options: [{
-                    value: '2',
-                    label: '顾客提醒'
-                }, {
                     value: '1',
                     label: '服务人员提醒'
-                }],
+                },{
+                    value: '2',
+                    label: '顾客提醒'
+                } ],
                 stype: "1",
 
                 id:-1,
                 rules: {
-
                     sname: [{
                         required: true,
                         message: '请输入模板名称',
@@ -204,8 +159,7 @@
             }
         },
         mounted() {
-
-this.loadData()
+            this.loadData()
         },
         methods: {
             submitForm(formName) {
@@ -335,6 +289,9 @@ this.loadData()
 
 
             },
+            getfwhfConfig(){
+                this.$router.push("./fwhfConfig");
+            }
         }
     }
 </script>

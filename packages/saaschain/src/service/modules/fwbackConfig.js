@@ -1,13 +1,14 @@
 import yid from '@src/library'
 
 const prefix = 'api-base';
+const prefixChain = 'api-chain';
 const prefixPush = 'api-push';
 export function getServiceType(params) {
-    return yid.http.get(`api-chain/servicetype/list/all`, {params})
+    return yid.http.get(`${prefixChain}/servicetype/list/all`, {params})
 }
 
 export function getServiceInfoByTypeId(params) {
-    return yid.http.get(`${prefix}/serviceinfo/list/all`, {params})
+    return yid.http.get(`${prefixChain}/serviceinfo/list/all`, {params})
 }
 
 export function saveServiceWxReturn(params) {

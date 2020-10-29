@@ -19,10 +19,15 @@ export function deleteTemplateByID(id) {
 
 }
 
+export function getTemplateListForChain(params) {
+    return yid.http.get(`${prefix}/smstemplate/getTemplateListForChain`, {params})
+}
+
 export default {
     /** 类别 */
     saveTemplate,
     getTemplateList,
     getTemplateByid,
-    deleteTemplateByID
+    deleteTemplateByID,
+    getTemplateListForChain,
 }

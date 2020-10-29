@@ -1037,7 +1037,7 @@
                 <yid-table-column prop="shopcode" label="门店编码" min-width="100"></yid-table-column>
                 <yid-table-column prop="shopname" label="门店名称" min-width="100"></yid-table-column>
                 <yid-table-column prop="money" label="卡金金额" min-width="100"></yid-table-column>
-                <yid-table-column prop="gmoney" label="卡金金额" min-width="100"></yid-table-column>
+                <yid-table-column prop="gmoney" label="赠送金额" min-width="100"></yid-table-column>
             </yid-table>
         </yid-dialog>
 

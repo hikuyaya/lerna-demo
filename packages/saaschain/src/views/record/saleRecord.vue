@@ -92,7 +92,7 @@
                     <el-input  v-model="searchForm.cmcode" style="width: 120px;"></el-input>
                 </el-form-item>
                 <el-form-item label="项目/套餐名称：" prop="isOpen">
-                    <el-select value-key="id" filterable placeholder="请选择" v-model.trim="searchForm.sid">
+                    <el-select value-key="id" filterable placeholder="请选择" v-model.trim="searchForm.spid">
                         <el-option :key="item.id" :label="item.spname" :value="item.id" v-for="item in packages"></el-option>
                     </el-select>
                 </el-form-item>
@@ -131,7 +131,7 @@
                     paycode : '',
                     memName : '',
                     cmcode : '',
-                    sid : '',
+                    spid : '',
                     eeid : '',
                     shopid:""
                 },
@@ -185,7 +185,7 @@
                 reqObj.paycode = this.searchForm.paycode
                 reqObj.memName = this.searchForm.memName
                 reqObj.cmcode = this.searchForm.cmcode
-                reqObj.sid = this.searchForm.sid
+                reqObj.spid = this.searchForm.spid
                 reqObj.eeid = this.searchForm.eeid
                 reqObj.isDel = this.searchForm.isDel
                 reqObj.isHc = this.searchForm.isHc

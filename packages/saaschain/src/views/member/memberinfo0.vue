@@ -284,7 +284,8 @@
                     <tr>
                         <td class="tableTd">1.可从管理平台批量导入会员，并下载对应模板填写相关信息后保存提交上传。</td></tr>
                     <tr>
-                        <td class="tableTd">2.储值卡会员和资格卡会员导入时，手机号已存在且会员卡号已存在的则不导入；套餐会员导入时，手机号已存在且套餐已存在，则导入的套餐将覆盖原有套餐，请谨慎操作！</td></tr>
+                        <td class="tableTd">2.储值卡会员和资格卡会员导入时，手机号已存在且会员卡号已存在的则不导入；
+                            套餐会员导入时，手机号已存在且套餐已存在，则导入的套餐将覆盖原有套餐，请谨慎操作！</td></tr>
                     <tr><td class="tableTd">3.标识“*”的选项为必填项。</td></tr>
                     <tr><td class="tableTd">4.导入会员后可从全部会员列表中找到该条会员数据。</td></tr>
                 </table>
@@ -813,10 +814,29 @@
                                :label="card.cardno+'('+card.cardname+')'">
                     </el-option></el-select></div>
                 <table border="1" cellspacing="0" >
-                    <tr><td align="right">会员卡内可用金额:</td><td><el-input type="number" v-model="cardmoney.nmoney"/></td>
-                        <td align="right">赠送可用金额:</td><td><el-input type="number" v-model="cardmoney.ngmoney"/></td></tr>
-                    <tr><td align="left" colspan="4">提示：卡内余额是指充值卡内原本剩下的金额。此功能用于恢复使用本平台以前的会员卡里的卡金，此处填入的数字不进入当日的店内现金报表，但此操作将被记录在"会员资料修改日志”和“卡金流水”中。</td></tr>
+                    <tr><td align="right" width="25%">会员卡内可用金额:</td><td><label>{{cardmoney.nmoney}} </label>
+                        <el-link  @click="editShopCardMoney(cardmoney.id)" type="primary" class="marg5">修改</el-link></td>
+                        <td align="right" width="25%">赠送可用金额:</td><td><label>{{cardmoney.ngmoney}}</label>
+                        <el-link  @click="editShopCardMoney(cardmoney.id)" type="primary" class="marg5">修改</el-link></td></tr>
+                    <tr>
+                        <td align="left" colspan="4">提示：卡内余额是指充值卡内原本剩下的金额。此功能用于恢复使用本平台以前的会员卡里的卡金，
+                            此处填入的数字不进入当日的店内现金报表，但此操作将被记录在"会员资料修改日志”和“卡金流水”中。</td>
+                    </tr>
                 </table>
+                <yid-table  ref="shopcardmoneyTable" :data="cardmoney.shopcards" v-show="cardmoney.shopcards.length>0">
+                    <yid-table-column prop="shopcode" label="门店编码" min-width="100"></yid-table-column>
+                    <yid-table-column prop="shopname" label="门店名称" min-width="100"></yid-table-column>
+                    <yid-table-column prop="money" label="卡金金额" min-width="100">
+                        <template slot-scope="scope">
+                            <el-input type="number" v-model="scope.row.money"/>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column prop="gmoney" label="赠送金额" min-width="100">
+                        <template slot-scope="scope">
+                            <el-input type="number" v-model="scope.row.gmoney"/>
+                        </template>
+                    </yid-table-column>
+                </yid-table>
                 <el-row><el-col :offset="22" :span="1"><el-button type="primary" @click="updateCardmoney()">确认修改</el-button></el-col></el-row>
             </div>
             <div class="meminfo" v-show="meminfoDialog.showNum==4">
@@ -1177,7 +1197,7 @@
                 cardinfo: {id:"",cardno:"",cardtype:"",money:"",gmoney:"",smoney:"",serDis:"",proDis:"",shopname:"",exprite:"",makedate:""},
                 membercard: { memid:"",memname:"",  mobile:"", sex:"", birthday:"", cardid:"", cardtype:'',
                               cardname:"", chid:"", cardname1:"", exprite:"", cardmemo:"" ,address: "" },
-                cardmoney: { cards:[], id:"",cardtype:"",money:"",gmoney:"",nmoney:"",ngmoney:"",bmoney:"",bgmoney:"" },
+                cardmoney: { cards:[], id:"",cardtype:"",money:"",gmoney:"",nmoney:"",ngmoney:"",bmoney:"",bgmoney:"" ,shopcards:[]},
                 cardlist:[],
                 cardrecordform:{ memid:'', cardid:'', cardtype:'1', btype:'', mtype:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0},
                 packrecordform:{ memid:'',mpname:'', name:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0},
@@ -1656,7 +1676,7 @@
                             this.memberfrom={memid:res.data.memid, date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 };
                             this.memberlogfrom={memid:res.data.memid, date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 };
                             this.storefrom={memid:res.data.memid, date:[], billcode:'', pcode:'', pname:'',page: 1, limit: 10, total: 0 };
-                            this.cardmoney={cards:[],id:"",cardtype:"",money:"",gmoney:"",nmoney:"",ngmoney:"",bmoney:"",bgmoney:"" };
+                            this.cardmoney={cards:[],id:"",cardtype:"",money:"",gmoney:"",nmoney:"",ngmoney:"",bmoney:"",bgmoney:"",shopcards:[] };
                             this.memberDesc.cards.forEach(card =>{
                                 if(card.cardtype == '1'){
                                     this.cardmoney.cards.push(card)
@@ -1702,6 +1722,7 @@
                 this.cardmoney.gmoney=''
                 this.cardmoney.nmoney=''
                 this.cardmoney.ngmoney=''
+                this.cardmoney.shopcards=[]
                 if(this.cardmoney.id){
                     this.cardmoney.cards.forEach(card =>{
                         if(this.cardmoney.id==card.id){
@@ -1713,6 +1734,17 @@
                         }
                     })
                 }
+            },
+            editShopCardMoney(id){
+                if(!id){
+                    return
+                }
+                service.member.memberinfo.queryShopcardmoney({cardid:id}).then(res =>{
+                    this.cardmoney.shopcards=
+                        res.data.forEach(each =>{
+                            this.cardmoney.add({...each,nmoney:each.money,ngmoney:each.gmoney})
+                        })
+                })
             },
             queryMemberStatic(yearmonth,offset){
                 service.member.memberinfo.queryMemberStatis({memid:this.memberDesc.memid,yearmonth:yearmonth,offset:offset}).then(res => {
@@ -1784,49 +1816,61 @@
                 })
             },
             updateCardmoney(){
-                if(Number(this.cardmoney.nmoney) == Number(this.cardmoney.money)
-                    && Number(this.cardmoney.ngmoney) == Number(this.cardmoney.gmoney)){
-                    $yid.util.error("金额没有变动");
+                if(!this.cardmoney.shopcards || this.cardmoney.shopcards.length==0){
                     return
                 }
-                if(Number(this.cardmoney.nmoney) != Number(this.cardmoney.money)){
-                    this.cardmoney.bmoney=Number(this.cardmoney.nmoney)-Number(this.cardmoney.money)
-                }else{
-                    this.cardmoney.bmoney=0
-                }
-                if(Number(this.cardmoney.ngmoney) != Number(this.cardmoney.gmoney)){
-                    this.cardmoney.bgmoney=Number(this.cardmoney.ngmoney)-Number(this.cardmoney.gmoney)
-                }else{
-                    this.cardmoney.bgmoney=0
-                }
-                const cardmoney={
-                    memid:this.memberDesc.memid,
-                    cardid:this.cardmoney.id,
-                    cardtype:this.cardmoney.cardtype,
-                    money:this.cardmoney.money,
-                    gmoney:this.cardmoney.gmoney,
-                    nmoney:Number(this.cardmoney.nmoney),
-                    ngmoney:Number(this.cardmoney.ngmoney),
-                    bmoney:this.cardmoney.bmoney,
-                    bgmoney:this.cardmoney.bgmoney
-                }
-                service.member.memberinfo.updateCardmoney(cardmoney).then(res =>{
-                    if(res.resp_code=="200"){
-                        this.cardmoney.cards.forEach(card =>{
-                            if(cardmoney.cardid==card.id){
-                                card.money=cardmoney.nmoney;
-                                card.gmoney=cardmoney.ngmoney;
+                let flag=true;
+                this.cardmoney.shopcards.forEach(each =>{
+                    if(Number(each.nmoney) == Number(each.money) && Number(each.ngmoney) == Number(each.gmoney)){
+                        flag=false
+                    }else{
+                        if(Number(each.nmoney) != Number(each.money)){
+                            each.bmoney=Number(each.nmoney)-Number(each.money)
+                        }else{
+                            each.bmoney=0
+                        }
+                        if(Number(each.ngmoney) != Number(each.gmoney)){
+                            each.bgmoney=Number(each.ngmoney)-Number(each.gmoney)
+                        }else{
+                            each.bgmoney=0
+                        }
+                        const cardmoney = {
+                            memid:this.memberDesc.memid,
+                            cardid:each.id,
+                            cardtype:each.cardtype,
+                            money:each.money,
+                            gmoney:each.gmoney,
+                            nmoney:Number(each.nmoney),
+                            ngmoney:Number(each.ngmoney),
+                            bmoney:each.bmoney,
+                            bgmoney:each.bgmoney,
+                            shopid:each.shopid,
+                            shopcode:each.shopcode,
+                            shopname:each.shopname
+                        }
+                        service.member.memberinfo.updateCardmoney(cardmoney).then(res =>{
+                            if(res.resp_code=="200"){
+                                this.cardmoney.cards.forEach(card =>{
+                                    if(cardmoney.cardid==card.id){
+                                        card.money=cardmoney.nmoney;
+                                        card.gmoney=cardmoney.ngmoney;
+                                    }
+                                })
+                                yid.util.success(res.resp_msg);
+                            }else{
+                                this.cardmoney.money=res.data.money;
+                                this.cardmoney.gmoney=res.data.gmoney;
+                                this.cardmoney.nmoney=this.cardmoney.money;
+                                this.cardmoney.ngmoney=this.cardmoney.gmoney;
+                                yid.util.error(res.resp_msg);
                             }
                         })
-                        yid.util.success(res.resp_msg);
-                    }else{
-                        this.cardmoney.money=res.data.money;
-                        this.cardmoney.gmoney=res.data.gmoney;
-                        this.cardmoney.nmoney=this.cardmoney.money;
-                        this.cardmoney.ngmoney=this.cardmoney.gmoney;
-                        yid.util.error(res.resp_msg);
                     }
                 })
+                if(flag){
+                    $yid.util.error("金额没有变动");
+                    return;
+                }
             },
             changCardRecord(){
                 this.memberDesc.cards.forEach(card =>{
@@ -2138,7 +2182,7 @@
 
     .meminfo table {
         width: 980px;
-        height: 180px;
+        height: 120px;
         cellspacing: 0;
         cellpadding: 0;
     }

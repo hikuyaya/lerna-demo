@@ -1367,6 +1367,7 @@
                 })
             },
             updateCardmoney(){
+                debugger
                 if(Number(this.cardmoney.nmoney) == Number(this.cardmoney.money)
                     && Number(this.cardmoney.ngmoney) == Number(this.cardmoney.gmoney)){
                     $yid.util.error("金额没有变动");

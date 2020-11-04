@@ -1747,6 +1747,7 @@
                 if(!id){
                     return
                 }
+                this.cardmoney.shopcards=[]
                 service.member.memberinfo.queryShopcardmoney({cardid:id}).then(res =>{
                     res.data.forEach(each =>{
                         this.cardmoney.shopcards.push({...each,nmoney:each.money,ngmoney:each.gmoney})

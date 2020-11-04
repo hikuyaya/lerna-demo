@@ -814,9 +814,9 @@
                                :label="card.cardno+'('+card.cardname+')'">
                     </el-option></el-select></div>
                 <table border="1" cellspacing="0" >
-                    <tr><td align="right" width="25%">会员卡内可用金额:</td><td><label>{{cardmoney.nmoney}} </label>
+                    <tr><td align="right" width="25%">会员卡内可用金额:</td><td><label>{{cardmoney.money}} </label>
                         <el-link  @click="editShopCardMoney(cardmoney.id)" type="primary" class="marg5">修改</el-link></td>
-                        <td align="right" width="25%">赠送可用金额:</td><td><label>{{cardmoney.ngmoney}}</label>
+                        <td align="right" width="25%">赠送可用金额:</td><td><label>{{cardmoney.gmoney}}</label>
                         <el-link  @click="editShopCardMoney(cardmoney.id)" type="primary" class="marg5">修改</el-link></td></tr>
                     <tr>
                         <td align="left" colspan="4">提示：卡内余额是指充值卡内原本剩下的金额。此功能用于恢复使用本平台以前的会员卡里的卡金，
@@ -826,18 +826,23 @@
                 <yid-table  ref="shopcardmoneyTable" :data="cardmoney.shopcards" v-show="cardmoney.shopcards.length>0">
                     <yid-table-column prop="shopcode" label="门店编码" min-width="100"></yid-table-column>
                     <yid-table-column prop="shopname" label="门店名称" min-width="100"></yid-table-column>
-                    <yid-table-column prop="money" label="卡金金额" min-width="100">
+                    <yid-table-column prop="nmoney" label="卡金金额" min-width="100">
                         <template slot-scope="scope">
-                            <el-input type="number" v-model="scope.row.money"/>
+                            <el-input type="number" v-model="scope.row.nmoney"/>
                         </template>
                     </yid-table-column>
-                    <yid-table-column prop="gmoney" label="赠送金额" min-width="100">
+                    <yid-table-column prop="ngmoney" label="赠送金额" min-width="100">
                         <template slot-scope="scope">
-                            <el-input type="number" v-model="scope.row.gmoney"/>
+                            <el-input type="number" v-model="scope.row.ngmoney"/>
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="操作">
+                        <template slot-scope="scope">
+                            <el-button type="primary" @click="updateCardmoney(scope.row)">确认修改</el-button>
                         </template>
                     </yid-table-column>
                 </yid-table>
-                <el-row><el-col :offset="22" :span="1"><el-button type="primary" @click="updateCardmoney()">确认修改</el-button></el-col></el-row>
+                <el-row><el-col :offset="22" :span="1"></el-col></el-row>
             </div>
             <div class="meminfo" v-show="meminfoDialog.showNum==4">
                 <div>
@@ -1071,10 +1076,13 @@
     import moment from 'moment';
     import download from '@src/library/http/download'
     import YidDialog from "../../library/components/dialog/src/dialog";
+    import YidTableColumn from "../../library/components/table/src/table-column";
     moment.locale();
 
     export default {
-        components: {YidDialog},
+        components: {
+            YidTableColumn,
+            YidDialog},
         name: "member-relation",
         data() {
             return {
@@ -1740,10 +1748,9 @@
                     return
                 }
                 service.member.memberinfo.queryShopcardmoney({cardid:id}).then(res =>{
-                    this.cardmoney.shopcards=
-                        res.data.forEach(each =>{
-                            this.cardmoney.add({...each,nmoney:each.money,ngmoney:each.gmoney})
-                        })
+                    res.data.forEach(each =>{
+                        this.cardmoney.shopcards.push({...each,nmoney:each.money,ngmoney:each.gmoney})
+                    })
                 })
             },
             queryMemberStatic(yearmonth,offset){
@@ -1815,61 +1822,51 @@
                     }
                 })
             },
-            updateCardmoney(){
-                if(!this.cardmoney.shopcards || this.cardmoney.shopcards.length==0){
-                    return
-                }
-                let flag=true;
-                this.cardmoney.shopcards.forEach(each =>{
-                    if(Number(each.nmoney) == Number(each.money) && Number(each.ngmoney) == Number(each.gmoney)){
-                        flag=false
-                    }else{
-                        if(Number(each.nmoney) != Number(each.money)){
-                            each.bmoney=Number(each.nmoney)-Number(each.money)
-                        }else{
-                            each.bmoney=0
-                        }
-                        if(Number(each.ngmoney) != Number(each.gmoney)){
-                            each.bgmoney=Number(each.ngmoney)-Number(each.gmoney)
-                        }else{
-                            each.bgmoney=0
-                        }
-                        const cardmoney = {
-                            memid:this.memberDesc.memid,
-                            cardid:each.id,
-                            cardtype:each.cardtype,
-                            money:each.money,
-                            gmoney:each.gmoney,
-                            nmoney:Number(each.nmoney),
-                            ngmoney:Number(each.ngmoney),
-                            bmoney:each.bmoney,
-                            bgmoney:each.bgmoney,
-                            shopid:each.shopid,
-                            shopcode:each.shopcode,
-                            shopname:each.shopname
-                        }
-                        service.member.memberinfo.updateCardmoney(cardmoney).then(res =>{
-                            if(res.resp_code=="200"){
-                                this.cardmoney.cards.forEach(card =>{
-                                    if(cardmoney.cardid==card.id){
-                                        card.money=cardmoney.nmoney;
-                                        card.gmoney=cardmoney.ngmoney;
-                                    }
-                                })
-                                yid.util.success(res.resp_msg);
-                            }else{
-                                this.cardmoney.money=res.data.money;
-                                this.cardmoney.gmoney=res.data.gmoney;
-                                this.cardmoney.nmoney=this.cardmoney.money;
-                                this.cardmoney.ngmoney=this.cardmoney.gmoney;
-                                yid.util.error(res.resp_msg);
-                            }
-                        })
-                    }
-                })
-                if(flag){
+            updateCardmoney(row){
+                if(Number(row.nmoney) == Number(row.money) && Number(row.ngmoney) == Number(row.gmoney)){
                     $yid.util.error("金额没有变动");
-                    return;
+                }else{
+                    if(Number(row.nmoney) != Number(row.money)){
+                        row.bmoney=Number(row.nmoney)-Number(row.money)
+                    }else{
+                        row.bmoney=0
+                    }
+                    if(Number(row.ngmoney) != Number(row.gmoney)){
+                        row.bgmoney=Number(row.ngmoney)-Number(row.gmoney)
+                    }else{
+                        row.bgmoney=0
+                    }
+                    const cardmoney = {
+                        memid:row.memid,
+                        cardid:row.cardid,
+                        cardtype:row.cardtype,
+                        money:Number(row.money),
+                        gmoney:Number(row.gmoney),
+                        nmoney:Number(row.nmoney),
+                        ngmoney:Number(row.ngmoney),
+                        bmoney:row.bmoney,
+                        bgmoney:row.bgmoney,
+                        shopid:row.shopid,
+                        shopcode:row.shopcode,
+                        shopname:row.shopname
+                    }
+                    service.member.memberinfo.updateCardmoney(cardmoney).then(res =>{
+                        if(res.resp_code=="200"){
+                            this.cardmoney.cards.forEach(card =>{
+                                if(cardmoney.cardid==card.id){
+                                    card.money=cardmoney.nmoney;
+                                    card.gmoney=cardmoney.ngmoney;
+                                }
+                            })
+                            yid.util.success(res.resp_msg);
+                        }else{
+                            this.cardmoney.money=res.data.money;
+                            this.cardmoney.gmoney=res.data.gmoney;
+                            this.cardmoney.nmoney=this.cardmoney.money;
+                            this.cardmoney.ngmoney=this.cardmoney.gmoney;
+                            yid.util.error(res.resp_msg);
+                        }
+                    })
                 }
             },
             changCardRecord(){

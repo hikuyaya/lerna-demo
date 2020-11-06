@@ -182,6 +182,36 @@ export function getAllf(params) {
     return yid.http.get(url, { params })
 }
 
+export function packageTypeList(params) {
+    const url = `${prefix}/packagetype/list`
+    return yid.http.get(url, { params })
+}
+
+export function packageTypeAll(params) {
+    const url = `${prefix}/packagetype/list/all`
+    return yid.http.get(url, { params })
+}
+
+export function getPackageTypeMaxId(){
+    const url = `${prefix}/packagetype/getMaxId`
+    return yid.http.get(url)
+}
+
+export function savePackageType(params) {
+    const url = `${prefix}/packagetype`
+    return yid.http.post(url, params )
+}
+
+export function deletePackageType(id) {
+    const url = `${prefix}/packagetype/${id}`
+    return yid.http.delete(url)
+}
+
+export function updatePackageType(params) {
+    const url = `${prefix}/packagetype/deleteType`
+    return yid.http.post(url, params )
+}
+
 export default {
     /**获取部门及职务**/
     branchAndPosition,
@@ -247,5 +277,11 @@ export default {
     updateStatusCategory,
     updateStatusCategoryz,
     getAllf,
+    packageTypeList,
+    packageTypeAll,
+    getPackageTypeMaxId,
+    savePackageType,
+    deletePackageType,
+    updatePackageType,
 }
 

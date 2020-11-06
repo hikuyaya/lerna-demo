@@ -518,6 +518,16 @@ export const MENU = {
       icon: null,
       canShow: false
     },
+    {
+      id: 118,
+      pid: 8,
+      name: '套餐类别设置',
+      title: '套餐类别设置',
+      path: '/setting/packageTypeConfig',
+      component: 'setting/packageTypeConfig',
+      icon: null,
+      canShow: true
+    },
     { id: 9, pid: null, name: '考勤', title: null, path: null, icon: 'iconfont-channelmanagement' },
     {
       id: 92,

@@ -77,7 +77,7 @@
                             </el-form-item>
 
                             <el-form-item label="产品名称：" prop="pname" :rules="[{ required: true, message: '产品名称不能为空'}]">
-                                <el-input  v-model="productForm.pname" placeholder="产品名称" style="width: 200px;"></el-input>
+                                <el-input  v-model="productForm.pname" placeholder="请填写16汉字以内名称" style="width: 200px;"></el-input>
                             </el-form-item>
 
                             <el-form-item label="产品规格：" prop="norms">
@@ -339,6 +339,10 @@
             save(){
                 this.$refs['productForm'].validate((valid) => {
                     if(valid){
+                        if(this.productForm.pname.length > 16){
+                            yid.util.info("请填写16个汉字以内的名称!");
+                            return false;
+                        }
                         if(Number(this.productForm.iskz) == 1){
                             if(this.productForm.price == null || this.productForm.price.length == 0){
                                 yid.util.info("如果允许客装销售，则售价必填!");

@@ -632,14 +632,16 @@
 
         <yid-dialog :title="meminfoDialog.title" :visible.sync="meminfoDialog.visible" width="1150px">
             <el-row style="padding-left: 45px;margin: 0;" width="980px" justify="center">
-            <el-col :span="3"><el-button @click="meminfoDialog.showNum=1" type="primary" :plain="meminfoDialog.showNum!=1">基础资料</el-button></el-col>
-            <el-col :span="3"><el-button @click="meminfoDialog.showNum=2" type="primary" :plain="meminfoDialog.showNum!=2">资料修改</el-button></el-col>
-            <el-col :span="3"><el-button @click="meminfoDialog.showNum=3" type="primary" :plain="meminfoDialog.showNum!=3">账户调整</el-button></el-col>
-            <el-col :span="3"><el-button @click="meminfoDialog.showNum=4" type="primary" :plain="meminfoDialog.showNum!=4">卡金流水</el-button></el-col>
-            <el-col :span="3"><el-button @click="meminfoDialog.showNum=5" type="primary" :plain="meminfoDialog.showNum!=5">套餐记录</el-button></el-col>
-            <el-col :span="3"><el-button @click="meminfoDialog.showNum=6" type="primary" :plain="meminfoDialog.showNum!=6">消费记录</el-button></el-col>
-            <el-col :span="3"><el-button @click="meminfoDialog.showNum=7" type="primary" :plain="meminfoDialog.showNum!=7">资料修改日志</el-button></el-col>
-            <el-col :span="3"><el-button @click="meminfoDialog.showNum=8" type="primary" :plain="meminfoDialog.showNum!=8">寄存记录</el-button></el-col>
+            <el-button @click="meminfoDialog.showNum=1" type="primary" :plain="meminfoDialog.showNum!=1">基础资料</el-button>
+            <el-button @click="meminfoDialog.showNum=2" type="primary" :plain="meminfoDialog.showNum!=2">资料修改</el-button>
+            <el-button @click="meminfoDialog.showNum=3" type="primary" :plain="meminfoDialog.showNum!=3">账户调整</el-button>
+            <el-button @click="meminfoDialog.showNum=4" type="primary" :plain="meminfoDialog.showNum!=4">卡金流水</el-button>
+            <el-button @click="meminfoDialog.showNum=5" type="primary" :plain="meminfoDialog.showNum!=5">套餐记录</el-button>
+            <el-button @click="meminfoDialog.showNum=6" type="primary" :plain="meminfoDialog.showNum!=6">消费记录</el-button>
+            <el-button @click="meminfoDialog.showNum=7" type="primary" :plain="meminfoDialog.showNum!=7">资料修改记录</el-button>
+            <el-button @click="meminfoDialog.showNum=8" type="primary" :plain="meminfoDialog.showNum!=8">寄存记录</el-button>
+            <el-button @click="meminfoDialog.showNum=9" type="primary" :plain="meminfoDialog.showNum!=9">优惠券</el-button>
+            <el-button @click="meminfoDialog.showNum=10" type="primary" :plain="meminfoDialog.showNum!=10">红包</el-button>
             </el-row>
             <div class="meminfo" v-show="meminfoDialog.showNum==1">
                 <div>会员基础信息</div>
@@ -661,8 +663,10 @@
                         <!--<td align="right">上次服务员工:</td>-->
                         <!--<td><label class="marg5">{{memberDesc.lastEename}}</label></td></tr>-->
                     <tr><td align="right">住址:</td><td colspan="3"><label class="marg5">{{memberDesc.address}}</label></td></tr>
-                    <tr><td align="right">预约权限:</td><td><el-link type="primary" class="marg5">[关闭预约权限]</el-link></td>
-                        <td align="right" colspan="2"></td></tr>
+                    <tr><td align="right">预约权限:</td><td colspan="3" ><el-link type="primary" class="marg5">[关闭预约权限]</el-link></td>  </tr>
+                    <tr v-for="member in memberDesc.shopmembers">
+                        <td align="right">{{member.shopcode}} {{member.shopname}} 备注:</td><td colspan="3" ><label class="marg5">{{member.memo}}</label></td>
+                    </tr>
                 </table>
                 <div>卡信息:
                     <el-select v-model="cardinfo.id" @change="changeCardinfo()" style="width: 260px;">
@@ -679,7 +683,8 @@
                         </td>
                     </tr>
                     <tr><td align="right">储值总额:</td>
-                        <td><label class="marg5">{{cardinfo.smoney}}</label></td>
+                        <td><label class="marg5">{{cardinfo.smoney}}<el-link v-if="cardinfo.cardtype=='1'"
+                              @click="queryShopCardMoney(cardinfo.id)" type="primary" class="marg5">明细</el-link></label></td>
                         <td align="right">赠送金余额:</td>
                         <td><label class="marg5">{{cardinfo.gmoney}}
                             <el-link v-if="cardinfo.cardtype=='1'"
@@ -1055,12 +1060,96 @@
                     </yid-table-column>
                 </yid-table>
             </div>
+            <div class="meminfo" v-show="meminfoDialog.showNum==9">
+                <div>
+                    活动名称:<el-input clearable v-model="coupon.maname" placeholder="活动名称" style="width: 130px;"></el-input>
+                    状态:<el-select clearable v-model="coupon.status" style="width:140px;">
+                            <el-option value="1" label="未使用"></el-option><el-option value="2" label="已使用"></el-option>
+                    <el-option value="3" label="已过期"></el-option></el-select>
+                    领用时间:<el-date-picker class="margl5" style="width: 200px;"
+                                         v-model="coupon.date" value-format="yyyy-MM-dd"
+                                         type="daterange"
+                                         range-separator="至"
+                                         start-placeholder="开始日期"
+                                         end-placeholder="结束日期"></el-date-picker>
+                    使用时间:<el-date-picker class="margl5" style="width: 200px;"
+                                         v-model="coupon.udate" value-format="yyyy-MM-dd"
+                                         type="daterange"
+                                         range-separator="至"
+                                         start-placeholder="开始日期"
+                                         end-placeholder="结束日期"></el-date-picker>
+                    <el-button type="primary" @click="queryCouponlogs()" style="margin-left: 10px;">查询</el-button>
+                </div>
+                <yid-table pagination ref="couponlogs">
+                    <yid-table-column label="活动名称" min-width="140" prop="maname" ></yid-table-column>
+                    <yid-table-column label="优惠券名称" min-width="140" prop="cpname"></yid-table-column>
+                    <yid-table-column label="优惠券码" min-width="140" prop="cpcode"></yid-table-column>
+                    <yid-table-column label="形式" min-width="100" prop="couponType">
+                        <template slot-scope="scope">
+                            {{scope.row.couponType=='1'?'定额':'折扣' + scope.row.discount + scope.row.couponType=='1'?'元':'折'}}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="领用时间" min-width="220" prop="createdTime"></yid-table-column>
+                    <yid-table-column label="有效期" min-width="220" prop="date"></yid-table-column>
+                    <yid-table-column label="状态" min-width="100" prop="status">
+                        <template slot-scope="scope">
+                            {{scope.row.status=='1'?'未使用':''}}
+                            {{scope.row.status=='2'?'已使用':''}}
+                            {{scope.row.status=='3'?'已过期':''}}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="消费单号" min-width="120" prop="billcode"></yid-table-column>
+                    <yid-table-column label="使用时间" min-width="120" prop="usedDate"></yid-table-column>
+                    <yid-table-column label="使用门店" min-width="120" prop="shopname"></yid-table-column>
+                </yid-table>
+            </div>
+            <div class="meminfo" v-show="meminfoDialog.showNum==10">
+                <div>
+                    活动名称:<el-input clearable v-model="redenvelope.maname" placeholder="活动名称" style="width: 130px;"></el-input>
+                    状态:<el-select clearable v-model="redenvelope.status" style="width:140px;">
+                    <el-option value="1" label="未使用"></el-option><el-option value="2" label="已使用"></el-option>
+                    <el-option value="3" label="已过期"></el-option></el-select>
+                    领用时间:<el-date-picker class="margl5" style="width: 200px;"
+                                         v-model="redenvelope.date" value-format="yyyy-MM-dd"
+                                         type="daterange"
+                                         range-separator="至"
+                                         start-placeholder="开始日期"
+                                         end-placeholder="结束日期"></el-date-picker>
+                    <el-button type="primary" @click="queryRedenvelopes()" class="margl5">查询</el-button>
+                </div>
+                <yid-table pagination ref="redenvelopes" :data="this.redenvelopeData">
+                    <yid-table-column label="活动名称" min-width="140" prop="maname" ></yid-table-column>
+                    <yid-table-column label="红包名称" min-width="140" prop="rname"></yid-table-column>
+                    <yid-table-column label="红包码" min-width="140" prop="bcode"></yid-table-column>
+                    <yid-table-column label="价值" min-width="100" prop="money"></yid-table-column>
+                    <yid-table-column label="领用时间" min-width="220" prop="createdTime"></yid-table-column>
+                    <yid-table-column label="有效期" min-width="220" prop="date"></yid-table-column>
+                    <yid-table-column label="状态" min-width="100" prop="status">
+                        <template slot-scope="scope">
+                            {{scope.row.status=='1'?'未使用':''}}
+                            {{scope.row.status=='2'?'已使用':''}}
+                            {{scope.row.status=='3'?'已过期':''}}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column  label="使用次数" width="60" type="expand" prop="rnum">
+                        <template slot-scope="scope">
+                            <yid-table ref="redenvelopelogs" style="margin-top: 5px;" :data="scope.row.logs">
+                                <yid-table-column prop="billcode" label="消费单号" min-width="160" ></yid-table-column>
+                                <yid-table-column prop="money" label="使用金额" min-width="100" ></yid-table-column>
+                                <yid-table-column prop="lessMoney" label="剩余金额" min-width="100" ></yid-table-column>
+                                <yid-table-column prop="shopname" label="使用门店" min-width="120"></yid-table-column>
+                            </yid-table>
+                        </template>
+                    </yid-table-column>
+                </yid-table>
+            </div>
         </yid-dialog>
 
-        <yid-dialog :title="shopcardmoneyDialog.title" :visible.sync="shopcardmoneyDialog.visible" width="450px">
+        <yid-dialog :title="shopcardmoneyDialog.title" :visible.sync="shopcardmoneyDialog.visible" width="650px">
             <yid-table ref="shopcardmoneyTable" :data="shopcardmoneyDialog.data">
                 <yid-table-column prop="shopcode" label="门店编码" min-width="100"></yid-table-column>
                 <yid-table-column prop="shopname" label="门店名称" min-width="100"></yid-table-column>
+                <yid-table-column prop="smoney" label="储值总额" min-width="100"></yid-table-column>
                 <yid-table-column prop="money" label="卡金金额" min-width="100"></yid-table-column>
                 <yid-table-column prop="gmoney" label="赠送金额" min-width="100"></yid-table-column>
             </yid-table>
@@ -1202,6 +1291,7 @@
                     cards:[],
                     cardindex:'',
                     packages:[],
+                    memo:''
                 },
                 memberStatic: {yearmonth:"", cmMoney:'', cmNum:'', cyMoney:'', cyNum:'', servNum:'', serviceRate:'', serviceJe:''},
                 cardinfo: {id:"",cardno:"",cardtype:"",money:"",gmoney:"",smoney:"",serDis:"",proDis:"",shopname:"",exprite:"",makedate:""},
@@ -1286,19 +1376,16 @@
                 selectPackages:[],
                 selectServices:[],
                 selectProducts:[],
-                storefrom: {
-                   mimid:'', date:[], billcode:'', pcode:'', pname:'',page: 1, limit: 10, total: 0
-                },
+                storefrom: { mimid:'', date:[], billcode:'', pcode:'', pname:'',page: 1, limit: 10, total: 0 },
                 storeData:[],
                 ShopList:[],
                 shopid:'',
                 impShopList:[],
                 rules: {shopid:{required: true, message: '请选择门店', trigger: 'red'}},
-                shopcardmoneyDialog:{
-                    title: '',
-                    visible: false,
-                    data: []
-                }
+                shopcardmoneyDialog: { title: '', visible: false, data: [] },
+                coupon: { maname:'',status:'',date:[],udate:[] },
+                redenvelope: { maname:'',status:'',date:[] , page: 1, limit: 10, total: 0 },
+                redenvelopeData: []
             }
         },
         filters: {
@@ -1663,16 +1750,15 @@
                         if(res.data){
                             this.memberDesc=res.data;
                             //默认赋值
+                            this.memberDesc.cardindex=undefined;
+                            this.membercard.cardid='';
+                            this.cardinfo.id='';
+                            this.cardmoney.id='';
                             if(this.memberDesc.cards &&　this.memberDesc.cards.length>0){
                                 this.memberDesc.cardindex=0;
                                 const id=this.memberDesc.cards[0].id
-                                this.membercard.cardid=id;
+                                this.membercard.cardid=id
                                 this.cardinfo.id=id
-                            }else{
-                                this.memberDesc.cardindex=undefined;
-                                this.membercard.cardid='';
-                                this.cardinfo.id='';
-                                this.cardmoney.id='';
                             }
                             this.changeCardinfo();
                             this.changeMemberCard();
@@ -2136,6 +2222,49 @@
             },
             handleRemove(file, fileList) {
                 this.memberImport.members=[]
+            },
+            queryCouponlogs(){
+                this.coupon.memid=this.memberDesc.memid;
+                if(this.coupon.date && this.coupon.date.length>1){
+                    this.coupon.sdate=this.coupon.date[0];
+                    this.coupon.edate=this.coupon.date[1]+' 23:59:59';
+                }else{
+                    this.coupon.sdate=null;
+                    this.coupon.edate=null;
+                }
+                if(this.coupon.udate && this.coupon.udate.length>1){
+                    this.coupon.sudate=this.coupon.udate[0];
+                    this.coupon.eudate=this.coupon.udate[1]+' 23:59:59';
+                }else{
+                    this.coupon.sudate=null;
+                    this.coupon.eudate=null;
+                }
+                const params = {...this.coupon}
+                delete params.date
+                delete params.udate
+                const fetch = service.member.memberinfo.queryCouponLogs
+                this.$refs.couponlogs.reloadData({
+                    fetch,
+                    params,
+                });
+            },
+            queryRedenvelopes(){
+                this.redenvelope.memid=this.memberDesc.memid;
+                if(this.redenvelope.date && this.redenvelope.date.length>1){
+                    this.redenvelope.sdate=this.redenvelope.date[0];
+                    this.redenvelope.edate=this.redenvelope.date[1];
+                }else{
+                    this.redenvelope.sdate=null;
+                    this.redenvelope.edate=null;
+                }
+                const params = {...this.redenvelope}
+                delete params.date
+                service.member.memberinfo.queryRedenvelopeLogs(params).then(res =>{
+                    if(res.resp_code=="200"){
+                        this.redenvelopeData = res.data;
+                        this.redenvelope.total = res.count;
+                    }
+                })
             }
         }
     }

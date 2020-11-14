@@ -111,6 +111,13 @@ export function queryMemberStorelogs(params) {
     return yid.http.get(`api-stock/memdbatch/queryAllMemberStorelogs`, {params})
 }
 
+export function queryCouponLogs(params) {
+    return yid.http.get(`${prefix}/queryCouponLogs`,{params})
+}
+
+export function queryRedenvelopeLogs(params) {
+    return yid.http.get(`${prefix}/queryRedenvelopeLogs`, {params})
+}
 
 export default {
     //全部会员查询
@@ -140,5 +147,7 @@ export default {
     queryMemberStorelogs,
     querychainMembers,
     queryShopcardmoney,
-    queryCardzklogs
+    queryCardzklogs,
+    queryCouponLogs,
+    queryRedenvelopeLogs
 }

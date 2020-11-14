@@ -1063,7 +1063,7 @@
             <div class="meminfo" v-show="meminfoDialog.showNum==9">
                 <div>
                     活动名称:<el-input clearable v-model="coupon.maname" placeholder="活动名称" style="width: 130px;"></el-input>
-                    状态:<el-select clearable v-model="coupon.status" style="width:140px;">
+                    状态:<el-select clearable v-model="coupon.status" style="width:110px;">
                             <el-option value="1" label="未使用"></el-option><el-option value="2" label="已使用"></el-option>
                     <el-option value="3" label="已过期"></el-option></el-select>
                     领用时间:<el-date-picker class="margl5" style="width: 200px;"
@@ -1939,20 +1939,18 @@
                         shopcode:row.shopcode,
                         shopname:row.shopname
                     }
+                    const that=this;
                     service.member.memberinfo.updateCardmoney(cardmoney).then(res =>{
                         if(res.resp_code=="200"){
-                            this.cardmoney.cards.forEach(card =>{
+                            that.cardmoney.cards.forEach(card =>{
                                 if(cardmoney.cardid==card.id){
-                                    card.money=cardmoney.nmoney;
-                                    card.gmoney=cardmoney.ngmoney;
+                                    card.money+=cardmoney.bmoney;
+                                    card.gmoney+=cardmoney.bgmoney;
                                 }
                             })
+                            that.changeCardmoney();
                             yid.util.success(res.resp_msg);
                         }else{
-                            this.cardmoney.money=res.data.money;
-                            this.cardmoney.gmoney=res.data.gmoney;
-                            this.cardmoney.nmoney=this.cardmoney.money;
-                            this.cardmoney.ngmoney=this.cardmoney.gmoney;
                             yid.util.error(res.resp_msg);
                         }
                     })

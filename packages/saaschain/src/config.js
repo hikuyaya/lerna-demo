@@ -637,7 +637,8 @@ export const MENU = {
 
 export const API = {
   /** 基础 API 配置项 */
- BASE: process.env.VUE_APP_BASE_API
+ BASE: process.env.VUE_APP_BASE_API,
+ SOCKET: process.env.VUE_APP_SOCKET_API,
 }
 
 export default {

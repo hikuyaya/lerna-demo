@@ -42,11 +42,11 @@
                     <yid-table-column label="消费频次" min-width="150" prop="serviceRate"></yid-table-column>
                     <yid-table-column label="上次消费时间" min-width="150" prop="latelyTime"></yid-table-column>
                     <yid-table-column label="上次服务员工" min-width="150" prop="lastEename"></yid-table-column>
-                    <yid-table-column label="会员状态" min-width="150" prop="tags">
+                    <!--<yid-table-column label="会员状态" min-width="150" prop="tags">
                         <template slot-scope="scope">
                             {{getStatusName(scope.row)}}
                         </template>
-                    </yid-table-column>
+                    </yid-table-column>-->
                     <yid-table-column label="操作" min-width="100" prop="content" fixed="right">
                         <template slot-scope="scope">
                             <el-link type="primary" style="margin: 0 10px 0 10px;" @click="removeMem(scope.row)">移除</el-link>

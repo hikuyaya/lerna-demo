@@ -639,6 +639,7 @@ export const API = {
   /** 基础 API 配置项 */
  BASE: process.env.VUE_APP_BASE_API,
  SOCKET: process.env.VUE_APP_SOCKET_API,
+ UPLOAD: process.env.VUE_APP_UPLOAD_API,
 }
 
 export default {

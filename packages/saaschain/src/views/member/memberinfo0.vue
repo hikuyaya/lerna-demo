@@ -1093,14 +1093,18 @@
                 <yid-table pagination ref="couponlogs">
                     <yid-table-column label="活动名称" min-width="140" prop="maname" ></yid-table-column>
                     <yid-table-column label="优惠券名称" min-width="140" prop="cpname"></yid-table-column>
-                    <yid-table-column label="优惠券码" min-width="140" prop="cpcode"></yid-table-column>
+                    <yid-table-column label="优惠券码" min-width="140" prop="bcode"></yid-table-column>
                     <yid-table-column label="形式" min-width="100" prop="couponType">
                         <template slot-scope="scope">
                             {{scope.row.couponType=='1'?'定额':'折扣' + scope.row.discount + scope.row.couponType=='1'?'元':'折'}}
                         </template>
                     </yid-table-column>
                     <yid-table-column label="领用时间" min-width="220" prop="createdTime"></yid-table-column>
-                    <yid-table-column label="有效期" min-width="220" prop="date"></yid-table-column>
+                    <yid-table-column label="有效期" min-width="220" prop="date">
+                        <template slot-scope="scope">
+                            {{scope.row.sdate + "~" + scope.row.edate }}
+                        </template>
+                    </yid-table-column>
                     <yid-table-column label="状态" min-width="100" prop="status">
                         <template slot-scope="scope">
                             {{scope.row.status=='1'?'未使用':''}}
@@ -1133,7 +1137,11 @@
                     <yid-table-column label="红包码" min-width="140" prop="bcode"></yid-table-column>
                     <yid-table-column label="价值" min-width="100" prop="money"></yid-table-column>
                     <yid-table-column label="领用时间" min-width="220" prop="createdTime"></yid-table-column>
-                    <yid-table-column label="有效期" min-width="220" prop="date"></yid-table-column>
+                    <yid-table-column label="有效期" min-width="220" prop="date">
+                        <template slot-scope="scope">
+                            {{scope.row.sdate + "~" + scope.row.edate }}
+                        </template>
+                    </yid-table-column>
                     <yid-table-column label="状态" min-width="100" prop="status">
                         <template slot-scope="scope">
                             {{scope.row.status=='1'?'未使用':''}}

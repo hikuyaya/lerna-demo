@@ -942,7 +942,7 @@
                     <yid-table-column label="套餐名称" min-width="120" prop="mpname"></yid-table-column>
                     <yid-table-column label="类型" min-width="60" prop="isShareOper">
                         <template slot-scope="scope">
-                            {{scope.row.direction == 1 ? '购买': (scope.row.isShareOper == '1' ? '代付' : '划扣') }}
+                            {{getPackageRecordTypeName(scope.row)}}
                         </template>
                     </yid-table-column>
                     <yid-table-column label="项目名称/产品名称" min-width="140" prop="sername">
@@ -973,9 +973,19 @@
             </div>
             <yid-table pagination ref="memberRedcords">
                 <yid-table-column label="单号" min-width="180" prop="billcode"></yid-table-column>
-                <yid-table-column label="消费内容" min-width="160" prop="content"></yid-table-column>
+                <yid-table-column label="消费内容" min-width="140" prop="content"></yid-table-column>
+                <yid-table-column label="单据金额" min-width="80" prop="hjje">
+                    <template slot-scope="scope">
+                        {{ scope.row.hjje | jsonStringFormate }}
+                    </template>
+                </yid-table-column>
+                <yid-table-column label="合计折扣" min-width="80" prop="zkeTotal">
+                    <template slot-scope="scope">
+                        {{ scope.row.zkeTotal | jsonStringFormate }}
+                    </template>
+                </yid-table-column>
                 <yid-table-column label="消费金额" min-width="80" prop="payje"></yid-table-column>
-                <yid-table-column label="付款方式" min-width="160" prop="payinfo">
+                <yid-table-column label="付款方式" min-width="140" prop="payinfo">
                     <template slot-scope="scope">
                         {{ scope.row.payinfo | jsonStringFormate }}
                     </template>
@@ -2220,6 +2230,24 @@
             },
             handleRemove(file, fileList) {
                 this.memberImport.members=[]
+            },
+            getPackageRecordTypeName(row){
+                if(!row.btype){
+                    //btype 是后面加的字段  兼容之前的数据  上线之后慢慢可以去掉
+                    return row.direction == 1 ? '购买': (row.isShareOper == '1' ? '代付' : '划扣')
+                }
+
+                let type = row.btype
+                //0:购买 1:代付 2:划扣 3:套餐支付 4:套餐赠送支付
+                switch (type) {
+                    case "0": return "购买";
+                    case "1": return "代付";
+                    case "2": return "划扣";
+                    case "3": return "套餐支付";
+                    case "4": return "套餐赠送支付";
+                    case "5": return "活动赠送";
+                    default: return "未知";
+                }
             },
             queryCouponlogs(){
                 this.coupon.memid=this.memberDesc.memid;

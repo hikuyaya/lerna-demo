@@ -1102,7 +1102,7 @@
                     <yid-table-column label="领用时间" min-width="220" prop="createdTime"></yid-table-column>
                     <yid-table-column label="有效期" min-width="220" prop="date">
                         <template slot-scope="scope">
-                            <a v-if="scope.row.sdate && scope.row.edate">{{scope.row.sdate.substring(0,10) + "~" + scope.row.edate.substring(0,10) }}</a>
+                            {{ (scope.row.sdate && scope.row.edate)?(scope.row.sdate.substring(0,10)+ "~" + scope.row.edate.substring(0,10)):'' }}
                         </template>
                     </yid-table-column>
                     <yid-table-column label="状态" min-width="100" prop="status">
@@ -1139,7 +1139,7 @@
                     <yid-table-column label="领用时间" min-width="220" prop="createdTime"></yid-table-column>
                     <yid-table-column label="有效期" min-width="220" prop="date">
                         <template slot-scope="scope">
-                           <a v-if="scope.row.sdate && scope.row.edate">{{scope.row.sdate.substring(0,10) + "~" + scope.row.edate.substring(0,10) }}</a>
+                            {{ (scope.row.sdate && scope.row.edate)?(scope.row.sdate.substring(0,10)+ "~" + scope.row.edate.substring(0,10)):'' }}
                         </template>
                     </yid-table-column>
                     <yid-table-column label="状态" min-width="100" prop="status">

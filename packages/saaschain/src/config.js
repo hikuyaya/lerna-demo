@@ -12,7 +12,7 @@ export const SYSTEM = {
   UNIQUE_VALUE: '2370c881-0acc-4993-b996-1fbcfb4a9961',
 
   /** 系统标题配置项 */
-  TITLE: '椰岛SASS平台后台管理系统',
+  TITLE: '丽颜管家婆连锁管理端系统',
 
   /** 系统主题配置 */
   THEME: 'default',

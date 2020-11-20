@@ -1096,13 +1096,13 @@
                     <yid-table-column label="优惠券码" min-width="140" prop="bcode"></yid-table-column>
                     <yid-table-column label="形式" min-width="100" prop="couponType">
                         <template slot-scope="scope">
-                            {{scope.row.couponType=='1'?'定额':'折扣' + scope.row.discount + scope.row.couponType=='1'?'元':'折'}}
+                            {{(scope.row.couponType=='1'?'定额':'折扣') + scope.row.discount + (scope.row.couponType=='1'?'元':'折')}}
                         </template>
                     </yid-table-column>
                     <yid-table-column label="领用时间" min-width="220" prop="createdTime"></yid-table-column>
                     <yid-table-column label="有效期" min-width="220" prop="date">
                         <template slot-scope="scope">
-                            {{ (scope.row.sdate && scope.row.edate)?(scope.row.sdate.substring(0,10)+ "~" + scope.row.edate.substring(0,10)):'' }}
+                            {{ (scope.row.sdate && scope.row.edate)?(scope.row.sdate.substring(0,10)+ "~" + scope.row.edate.substring(0,10)):'不限期' }}
                         </template>
                     </yid-table-column>
                     <yid-table-column label="状态" min-width="100" prop="status">
@@ -1114,7 +1114,7 @@
                     </yid-table-column>
                     <yid-table-column label="消费单号" min-width="120" prop="billcode"></yid-table-column>
                     <yid-table-column label="使用时间" min-width="120" prop="usedDate"></yid-table-column>
-                    <yid-table-column label="使用门店" min-width="120" prop="shopname"></yid-table-column>
+                    <yid-table-column label="使用门店" min-width="120" prop="useShop"></yid-table-column>
                 </yid-table>
             </div>
             <div class="meminfo" v-show="meminfoDialog.showNum==10">
@@ -1139,7 +1139,7 @@
                     <yid-table-column label="领用时间" min-width="220" prop="createdTime"></yid-table-column>
                     <yid-table-column label="有效期" min-width="220" prop="date">
                         <template slot-scope="scope">
-                            {{ (scope.row.sdate && scope.row.edate)?(scope.row.sdate.substring(0,10)+ "~" + scope.row.edate.substring(0,10)):'' }}
+                            {{ (scope.row.sdate && scope.row.edate)?(scope.row.sdate.substring(0,10)+ "~" + scope.row.edate.substring(0,10)):'不限期' }}
                         </template>
                     </yid-table-column>
                     <yid-table-column label="状态" min-width="100" prop="status">

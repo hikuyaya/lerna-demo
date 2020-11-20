@@ -976,12 +976,12 @@
                 <yid-table-column label="消费内容" min-width="140" prop="content"></yid-table-column>
                 <yid-table-column label="单据金额" min-width="80" prop="hjje">
                     <template slot-scope="scope">
-                        {{ scope.row.hjje | jsonStringFormate }}
+                        {{ scope.row.hjje}}
                     </template>
                 </yid-table-column>
                 <yid-table-column label="合计折扣" min-width="80" prop="zkeTotal">
                     <template slot-scope="scope">
-                        {{ scope.row.zkeTotal | jsonStringFormate }}
+                        {{ scope.row.zkeTotal}}
                     </template>
                 </yid-table-column>
                 <yid-table-column label="消费金额" min-width="80" prop="payje"></yid-table-column>

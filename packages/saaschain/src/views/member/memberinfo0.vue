@@ -793,9 +793,9 @@
                 <table border="1" cellspacing="0" >
                     <tr><td align="right" width="20%">卡号:</td><td width="30%"><label class="margl0">{{membercard.cardno}}</label></td>
                         <td align="right" width="20%">会员卡级别:</td><td width="30%">
-                            <el-select v-model="membercard.chid" width="300px">
+                            <el-select v-model="membercard.cpcode" width="300px">
                                 <el-option v-for="card in cardlist"
-                                           :value="card.id"
+                                           :value="card.cpcode"
                                            :label="card.cpname"
                                            :disabled="card.status=='2'"
                                            v-if="membercard.cardtype==card.cardType"></el-option>
@@ -1314,7 +1314,7 @@
                 memberStatic: {yearmonth:"", cmMoney:'', cmNum:'', cyMoney:'', cyNum:'', servNum:'', serviceRate:'', serviceJe:''},
                 cardinfo: {id:"",cardno:"",cardtype:"",money:"",gmoney:"",smoney:"",serDis:"",proDis:"",shopname:"",exprite:"",makedate:""},
                 membercard: { memid:"",memname:"",  mobile:"", sex:"", birthday:"", cardid:"", cardtype:'',
-                              cardname:"", chid:"", cardname1:"", exprite:"", cardmemo:"" ,address: "" },
+                              cardname:"", cpcode:"", cardname1:"", exprite:"", cardmemo:"" ,address: "" },
                 cardmoney: { cards:[], id:"",cardtype:"",money:"",gmoney:"",nmoney:"",ngmoney:"",bmoney:"",bgmoney:"" ,shopcards:[]},
                 cardlist:[],
                 cardrecordform:{ memid:'', cardid:'', cardtype:'1', btype:'', mtype:'', date:[], sdate:'', edate:'',page: 1, limit: 10, total: 0},
@@ -1877,7 +1877,7 @@
                 this.membercard.sex=this.memberDesc.sex;
                 this.membercard.birthday=this.memberDesc.birthday;
                 this.membercard.address=this.memberDesc.address;
-                this.membercard.chid='';
+                this.membercard.cpcode='';
                 this.membercard.cardno='';
                 this.membercard.exprite='';
                 this.membercard.cardmemo='';
@@ -1886,7 +1886,7 @@
                 if(this.membercard.cardid){
                     this.memberDesc.cards.forEach(card =>{
                         if(this.membercard.cardid == card.id){
-                            this.membercard.chid=String(card.chid);
+                            this.membercard.cpcode=String(card.cpcode);
                             this.membercard.cardno=card.cardno;
                             this.membercard.exprite=card.exprite;
                             this.membercard.cardmemo=card.cardmemo;

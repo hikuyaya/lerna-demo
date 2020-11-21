@@ -2253,7 +2253,8 @@
                     case "2": return "划扣";
                     case "3": return "套餐支付";
                     case "4": return "套餐赠送支付";
-                    case "5": return "活动赠送";
+                    case "5": return "撤单";
+                    case "6": return "活动赠送";
                     default: return "未知";
                 }
             },

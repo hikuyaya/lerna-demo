@@ -38,14 +38,14 @@
                 </yid-table>
             </el-tab-pane>
             <el-tab-pane label="套餐类别" name="packageType">
-                <el-button @click="serveAlert(false,'')" type="primary">添加</el-button>
+                <el-button @click="packageAlert(false,'')" type="primary">添加</el-button>
                 <yid-table pagination ref="packagetable" style="margin-top: 15px;" :data="packageTypeData" :row-class-name="$yid.util.getTableClass">
                     <yid-table-column label="类型编号" min-width="100" prop="pcode"></yid-table-column>
                     <yid-table-column label="类型名称" min-width="150" prop="pname"></yid-table-column>
                     <yid-table-column label="所属部门" min-width="150" prop="bname"></yid-table-column>
                     <yid-table-column label="操作" min-width="250" prop="content">
                         <template slot-scope="scope">
-                            <el-link type="primary" @click="serveAlert(true,scope.row)">编辑</el-link>
+                            <el-link type="primary" @click="packageAlert(true,scope.row)">编辑</el-link>
                             <el-link type="primary" style="margin: 0 10px 0 10px;" @click="packageDelete(scope.row)">删除</el-link>
                         </template>
                     </yid-table-column>
@@ -1230,7 +1230,7 @@
                     this.packageForm.pcode = res.data;
                 })
             },
-            serveAlert(tag = false,row) {
+            packageAlert(tag = false,row) {
                 this.packageDialog.visible = true;
                 this.packageDialog.title = tag? '编辑套餐分类' : '添加套餐分类';
                 this.getdeptListAll();

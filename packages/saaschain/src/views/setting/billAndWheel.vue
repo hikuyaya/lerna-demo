@@ -221,17 +221,32 @@
                 <el-col :span="4">可添加人数</el-col>
                 <el-col :span="1"></el-col>
             </el-row>
-            <el-row style="margin-top: 15px;" v-for="(station,index) in stationList" >
-                <el-col :span="3">NO.{{index+1}}</el-col>
-                <el-col :span="6"><el-input v-model="station.name" style="width: 140px" clearable/></el-col>
-                <el-col :span="8"><el-select v-model="station.ps" multiple placeholder="请选择" clearable>
+            <el-row style="margin-top: 15px;">
+                <el-col :span="3">第一工位</el-col>
+                <el-col :span="6"><el-input v-model="stationDialog.ps1.name" style="width: 140px" clearable/></el-col>
+                <el-col :span="8"><el-select v-model="stationDialog.ps1.ps" multiple placeholder="请选择" clearable>
                     <el-option v-for="item in psList" :key="item.id" :value="item.id" :label="item.psname"></el-option>
                 </el-select></el-col>
-                <el-col :span="4"><el-input type="number" min="0" max="5" v-model="station.pepnum" clearable/></el-col>
-                <el-col :span="1"><i @click="delStation(index)" class="el-icon-delete" style="padding-left: 10px;"></i></el-col>
+                <el-col :span="4"><el-input type="number" min="0" max="5" v-model="stationDialog.ps1.pepnum" clearable/></el-col>
+                <el-col :span="1"><i @click="delStation(1)" class="el-icon-delete" style="padding-left: 10px;"></i></el-col>
             </el-row>
-            <el-row v-if="stationList.length<3" style="margin-top: 20px;">
-                <el-col :span="2" :offset="3"><el-button type="primary" @click="addStation()">添加</el-button></el-col>
+            <el-row style="margin-top: 15px;">
+                <el-col :span="3">第二工位</el-col>
+                <el-col :span="6"><el-input v-model="stationDialog.ps2.name" style="width: 140px" clearable/></el-col>
+                <el-col :span="8"><el-select v-model="stationDialog.ps2.ps" multiple placeholder="请选择" clearable>
+                    <el-option v-for="item in psList" :key="item.id" :value="item.id" :label="item.psname"></el-option>
+                </el-select></el-col>
+                <el-col :span="4"><el-input type="number" min="0" max="5" v-model="stationDialog.ps2.pepnum" clearable/></el-col>
+                <el-col :span="1"><i @click="delStation(2)" class="el-icon-delete" style="padding-left: 10px;"></i></el-col>
+            </el-row>
+            <el-row style="margin-top: 15px;">
+                <el-col :span="3">第三工位</el-col>
+                <el-col :span="6"><el-input v-model="stationDialog.ps3.name" style="width: 140px" clearable/></el-col>
+                <el-col :span="8"><el-select v-model="stationDialog.ps3.ps" multiple placeholder="请选择" clearable>
+                    <el-option v-for="item in psList" :key="item.id" :value="item.id" :label="item.psname"></el-option>
+                </el-select></el-col>
+                <el-col :span="4"><el-input type="number" min="0" max="5" v-model="stationDialog.ps3.pepnum" clearable/></el-col>
+                <el-col :span="1"><i @click="delStation(3)" class="el-icon-delete" style="padding-left: 10px;"></i></el-col>
             </el-row>
             <el-row style="margin-top: 20px;">
                 <el-col :span="2" :offset="8"><el-button type="primary" @click="saveStation()">保存</el-button></el-col>
@@ -507,20 +522,47 @@
                     if(res.resp_code=="200"){
                         this.stationDialog.visible=true;
                         this.stationDialog.id=row.id;
+                        this.stationDialog.code=row.code;
                         this.stationDialog.name=row.name;
                         this.stationDialog.num=row.num;
                         this.stationDialog.revision=row.revision;
-                        res.data.forEach(each =>{
-                            each.ps=[];
-                            each.pslist.map(m =>{
-                                this.psList.forEach(ps =>{
-                                    if(m.psid == Number(ps.id)){
-                                        each.ps.push(ps.id)
+                        this.stationDialog.ps1= {postion:1, name:'', ps:[], pepnum:'', pslist:[]};
+                        this.stationDialog.ps2= {postion:2, name:'', ps:[], pepnum:'', pslist:[]};
+                        this.stationDialog.ps3= {postion:3, name:'', ps:[], pepnum:'', pslist:[]};
+                        if(res.data && res.data.length>0){
+                            for(let j=0;j<res.data.length; j++){
+                                if(res.data[j].postion == 1){
+                                    this.stationDialog.ps1.name=res.data[j].name;
+                                    this.stationDialog.ps1.pepnum=res.data[j].pepnum;
+                                    this.stationDialog.ps1.pslist=[];
+                                    if(null!=res.data[j].pslist){
+                                        res.data[j].pslist.forEach(item =>{
+                                            this.stationDialog.ps1.ps.push(String(item.psid))
+                                        })
                                     }
-                                })
-                            })
-                        })
-                        this.stationList=res.data;
+                                }
+                                if(res.data[j].postion == 2){
+                                    this.stationDialog.ps2.name=res.data[j].name;
+                                    this.stationDialog.ps2.pepnum=res.data[j].pepnum;
+                                    this.stationDialog.ps2.pslist=[];
+                                    if(null!=res.data[j].pslist){
+                                        res.data[j].pslist.forEach(item =>{
+                                            this.stationDialog.ps2.ps.push(String(item.psid))
+                                        })
+                                    }
+                                }
+                                if(res.data[j].postion == 3){
+                                    this.stationDialog.ps3.name=res.data[j].name;
+                                    this.stationDialog.ps3.pepnum=res.data[j].pepnum;
+                                    this.stationDialog.ps3.pslist=[];
+                                    if(null!=res.data[j].pslist){
+                                        res.data[j].pslist.forEach(item =>{
+                                            this.stationDialog.ps3.ps.push(String(item.psid))
+                                        })
+                                    }
+                                }
+                            }
+                        }
                     }else{
                         $yid.uitl.error(res.resp_msg)
                     }
@@ -528,16 +570,26 @@
             },
             saveStation(){
                 let flag=false; let psArry=[];
-                this.stationList.map((m,i) =>{
-                    m.postion=i+1
+                this.stationList=[];
+                if(this.stationDialog.ps1.name || this.stationDialog.ps1.pepnum){
+                    this.stationList.push(this.stationDialog.ps1);
+                }
+                if(this.stationDialog.ps2.name || this.stationDialog.ps2.pepnum){
+                    this.stationList.push(this.stationDialog.ps2);
+                }
+                if(this.stationDialog.ps3.name || this.stationDialog.ps3.pepnum){
+                    this.stationList.push(this.stationDialog.ps3);
+                }
+                if(this.stationList.length == 0){
+                    $yid.util.error("至少配制一个工位!")
+                    return
+                }
+                this.stationList.map(m=>{
                     if(!m.name){
                         flag=true;
-                        $yid.util.error("第"+(i+1)+"工位，请输入工位名称!");
+                        $yid.util.error(m.name+" 请输入工位名称!")
                     }
-                    if(m.ps.length==0){
-                        flag=true;
-                        $yid.util.error("第"+(i+1)+"工位，请选择职务!")
-                    }else{
+                    if(m.ps.length>0){
                         m.ps.map(p =>{
                             psArry.push(p)
                         })
@@ -553,9 +605,11 @@
                             })
                         })
                     }
-                    if(m.pepnum>5 || m.pepnum<1){
+                    if(Number(m.pepnum)>5 || Number(m.pepnum)<1){
                         flag=true;
-                        $yid.util.error("每个工位，可添加人数，最多5人，最少一人!")
+                        $yid.util.error(m.name+" 可添加人数，最多5人，最少一人!")
+                    }else{
+                        m.pepnum=Number(m.pepnum)
                     }
                 })
                 if(flag){

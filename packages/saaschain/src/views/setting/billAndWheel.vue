@@ -526,12 +526,13 @@
                         this.stationDialog.name=row.name;
                         this.stationDialog.num=row.num;
                         this.stationDialog.revision=row.revision;
-                        this.stationDialog.ps1= {postion:1, name:'', ps:[], pepnum:'', pslist:[]};
-                        this.stationDialog.ps2= {postion:2, name:'', ps:[], pepnum:'', pslist:[]};
-                        this.stationDialog.ps3= {postion:3, name:'', ps:[], pepnum:'', pslist:[]};
+                        this.stationDialog.ps1= {id:'', postion:1, name:'', ps:[], pepnum:'', pslist:[]};
+                        this.stationDialog.ps2= {id:'', postion:2, name:'', ps:[], pepnum:'', pslist:[]};
+                        this.stationDialog.ps3= {id:'', postion:3, name:'', ps:[], pepnum:'', pslist:[]};
                         if(res.data && res.data.length>0){
                             for(let j=0;j<res.data.length; j++){
                                 if(res.data[j].postion == 1){
+                                    this.stationDialog.ps1.id=res.data[j].id;
                                     this.stationDialog.ps1.name=res.data[j].name;
                                     this.stationDialog.ps1.pepnum=res.data[j].pepnum;
                                     this.stationDialog.ps1.pslist=[];
@@ -542,6 +543,7 @@
                                     }
                                 }
                                 if(res.data[j].postion == 2){
+                                    this.stationDialog.ps2.id=res.data[j].id;
                                     this.stationDialog.ps2.name=res.data[j].name;
                                     this.stationDialog.ps2.pepnum=res.data[j].pepnum;
                                     this.stationDialog.ps2.pslist=[];
@@ -552,6 +554,7 @@
                                     }
                                 }
                                 if(res.data[j].postion == 3){
+                                    this.stationDialog.ps3.id=res.data[j].id;
                                     this.stationDialog.ps3.name=res.data[j].name;
                                     this.stationDialog.ps3.pepnum=res.data[j].pepnum;
                                     this.stationDialog.ps3.pslist=[];

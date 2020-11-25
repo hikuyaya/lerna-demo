@@ -274,7 +274,7 @@
                     <yid-table-column label="储值总额" min-width="80" prop="smoney"></yid-table-column>
                     <yid-table-column label="卡金余额" min-width="80" prop="money"></yid-table-column>
                     <yid-table-column label="赠送金余额" min-width="90" prop="gmoney"></yid-table-column>
-                    <yid-table-column label="上次消费日" min-width="140" prop="latelyTime"></yid-table-column>
+                    <!--<yid-table-column label="上次消费日" min-width="140" prop="latelyTime"></yid-table-column>-->
                     <yid-table-column label="到期日" min-width="140" prop="exprite"></yid-table-column>
                 </yid-table>
             </el-tab-pane>
@@ -1099,22 +1099,26 @@
                             {{(scope.row.couponType=='1'?'定额':'折扣') + scope.row.discount + (scope.row.couponType=='1'?'元':'折')}}
                         </template>
                     </yid-table-column>
-                    <yid-table-column label="领用时间" min-width="220" prop="createdTime"></yid-table-column>
-                    <yid-table-column label="有效期" min-width="220" prop="date">
+                    <yid-table-column label="领用时间" min-width="160" prop="createdTime"></yid-table-column>
+                    <yid-table-column label="有效期" min-width="200" prop="date">
                         <template slot-scope="scope">
                             {{ (scope.row.sdate && scope.row.edate)?(scope.row.sdate.substring(0,10)+ "~" + scope.row.edate.substring(0,10)):'不限期' }}
                         </template>
                     </yid-table-column>
-                    <yid-table-column label="状态" min-width="100" prop="status">
+                    <yid-table-column label="状态" min-width="80" prop="status">
                         <template slot-scope="scope">
                             {{scope.row.status=='1'?'未使用':''}}
                             {{scope.row.status=='2'?'已使用':''}}
                             {{scope.row.status=='3'?'已过期':''}}
                         </template>
                     </yid-table-column>
-                    <yid-table-column label="消费单号" min-width="120" prop="billcode"></yid-table-column>
-                    <yid-table-column label="使用时间" min-width="120" prop="usedDate"></yid-table-column>
-                    <yid-table-column label="使用门店" min-width="120" prop="useShop"></yid-table-column>
+                    <yid-table-column label="消费单号" min-width="160" prop="billcode"></yid-table-column>
+                    <yid-table-column label="使用时间" min-width="120" prop="usedDate">
+                        <template slot-scope="scope">
+                            {{ scope.row.usedDate?scope.row.usedDate.substring(0,10):'' }}
+                        </template>
+                    </yid-table-column>
+                    <yid-table-column label="使用门店" min-width="100" prop="useShop"></yid-table-column>
                 </yid-table>
             </div>
             <div class="meminfo" v-show="meminfoDialog.showNum==10">
@@ -1133,25 +1137,25 @@
                 </div>
                 <yid-table pagination ref="redenvelopes" :data="this.redenvelopeData">
                     <yid-table-column label="活动名称" min-width="140" prop="maname" ></yid-table-column>
-                    <yid-table-column label="红包名称" min-width="140" prop="rname"></yid-table-column>
-                    <yid-table-column label="红包码" min-width="140" prop="bcode"></yid-table-column>
-                    <yid-table-column label="价值" min-width="100" prop="money"></yid-table-column>
-                    <yid-table-column label="领用时间" min-width="220" prop="createdTime"></yid-table-column>
-                    <yid-table-column label="有效期" min-width="220" prop="date">
+                    <yid-table-column label="红包名称" min-width="120" prop="rname"></yid-table-column>
+                    <yid-table-column label="红包码" min-width="190" prop="bcode"></yid-table-column>
+                    <yid-table-column label="价值" min-width="80" prop="money"></yid-table-column>
+                    <yid-table-column label="领用时间" min-width="140" prop="createdTime"></yid-table-column>
+                    <yid-table-column label="有效期" min-width="200" prop="date">
                         <template slot-scope="scope">
                             {{ (scope.row.sdate && scope.row.edate)?(scope.row.sdate.substring(0,10)+ "~" + scope.row.edate.substring(0,10)):'不限期' }}
                         </template>
                     </yid-table-column>
-                    <yid-table-column label="状态" min-width="100" prop="status">
+                    <yid-table-column label="状态" min-width="70" prop="status">
                         <template slot-scope="scope">
                             {{scope.row.status=='1'?'未使用':''}}
                             {{scope.row.status=='2'?'已使用':''}}
                             {{scope.row.status=='3'?'已过期':''}}
                         </template>
                     </yid-table-column>
-                    <yid-table-column  label="使用次数" width="60" type="expand" prop="rnum">
+                    <yid-table-column  label="使用记录" width="60" type="expand" prop="rnum">
                         <template slot-scope="scope">
-                            <yid-table ref="redenvelopelogs" style="margin-top: 5px;" :data="scope.row.logs">
+                            <yid-table ref="redenvelopelogs" style="margin-top: 5px;" :data="scope.row.recordsList">
                                 <yid-table-column prop="billcode" label="消费单号" min-width="160" ></yid-table-column>
                                 <yid-table-column prop="money" label="使用金额" min-width="100" ></yid-table-column>
                                 <yid-table-column prop="lessMoney" label="剩余金额" min-width="100" ></yid-table-column>
@@ -2220,12 +2224,17 @@
                 }
                 const params = {...this.storefrom}
                 delete params.date
-                service.member.memberinfo.queryMemberStorelogs(params).then(res =>{
-                    if(res.resp_code=="200"){
-                        this.storeData = res.data;
-                        this.storefrom.total = res.count;
-                    }
-                })
+//                service.member.memberinfo.queryMemberStorelogs(params).then(res =>{
+//                    if(res.resp_code=="200"){
+//                        this.storeData = res.data;
+//                        this.storefrom.total = res.count;
+//                    }
+//                })
+                const fetch = service.member.memberinfo.queryMemberStorelogs
+                this.$refs.memberStores.reloadData({
+                    fetch,
+                    params,
+                });
             },
             downExcelTemplate1(){
                 download($yid.config.API.BASE + '/api-member/memberinfo/excelTemplate1', {})
@@ -2294,12 +2303,17 @@
                 }
                 const params = {...this.redenvelope}
                 delete params.date
-                service.member.memberinfo.queryRedenvelopeLogs(params).then(res =>{
-                    if(res.resp_code=="200"){
-                        this.redenvelopeData = res.data;
-                        this.redenvelope.total = res.count;
-                    }
-                })
+//                service.member.memberinfo.queryRedenvelopeLogs(params).then(res =>{
+//                    if(res.resp_code=="200"){
+//                        this.redenvelopeData = res.data;
+//                        this.redenvelope.total = res.count;
+//                    }
+//                })
+                const fetch = service.member.memberinfo.queryRedenvelopeLogs
+                this.$refs.redenvelopes.reloadData({
+                    fetch,
+                    params,
+                });
             }
         }
     }

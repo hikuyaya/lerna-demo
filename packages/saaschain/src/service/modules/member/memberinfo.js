@@ -119,6 +119,7 @@ export function queryRedenvelopeLogs(params) {
     return yid.http.get(`${prefix}/queryRedenvelopeLogs`, {params})
 }
 
+
 export default {
     //全部会员查询
     queryAllMember,

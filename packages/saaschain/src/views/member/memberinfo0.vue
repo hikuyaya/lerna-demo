@@ -1159,6 +1159,7 @@
                                 <yid-table-column prop="billcode" label="消费单号" min-width="160" ></yid-table-column>
                                 <yid-table-column prop="money" label="使用金额" min-width="100" ></yid-table-column>
                                 <yid-table-column prop="lessMoney" label="剩余金额" min-width="100" ></yid-table-column>
+                                <yid-table-column prop="createdTime" label="使用时间" min-width="140" ></yid-table-column>
                                 <yid-table-column prop="shopname" label="使用门店" min-width="120"></yid-table-column>
                             </yid-table>
                         </template>

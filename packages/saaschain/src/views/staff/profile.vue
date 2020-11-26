@@ -23,7 +23,7 @@
                     </el-form-item>
                     <br/>
                     <el-form-item label="员工：" prop="eename">
-                        <el-input  v-model="searchForm.eename" placeholder="姓名" style="width: 150px;"></el-input>
+                        <el-input  v-model="searchForm.eename" placeholder="姓名/编码" style="width: 150px;"></el-input>
                     </el-form-item>
                     <el-form-item label="手机号：" prop="mobile">
                         <el-input v-model="searchForm.mobile" placeholder="手机号" style="width: 150px;"></el-input>

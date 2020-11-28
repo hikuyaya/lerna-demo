@@ -974,7 +974,7 @@
                 </yid-table-column>
                 <yid-table-column label="合计折扣" min-width="80" prop="zkeTotal">
                     <template slot-scope="scope">
-                        {{ scope.row.zkeTotal}}
+                        {{ "-"+scope.row.zkeTotal}}
                     </template>
                 </yid-table-column>
                 <yid-table-column label="消费金额" min-width="80" prop="payje"></yid-table-column>

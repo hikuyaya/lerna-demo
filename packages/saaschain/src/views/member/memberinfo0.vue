@@ -1322,14 +1322,12 @@
                 memberlogfrom: { memid:'', date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 },
                 memberpackfrom: { name:'', mpname:'',servname:'',date:[], page: 1, limit: 10, total: 0 },
                 memberpackData: [],
-                memberpackhj: {servsum:0,packsum:0,servje:0,packje:0 },
+                memberpackhj: { servsum:0,packsum:0,servje:0,packje:0 },
                 memberDelfrom: { name:'' , date:[], page: 1, limit: 10, total: 0},
                 memberExporfrom: { name:'', date:[], page: 1, limit: 10, total: 0},
                 memberBirthfrom: { type:'', day:'', month:'', page: 1, limit: 10, total: 0},
-                memberImport:{ shopid: '', type: '', members:[] },
-                memberImpform:{
-                    page: 1, limit: 10, total: 0
-                },
+                memberImport: { shopid: '', type: '', members:[] },
+                memberImpform: { page: 1, limit: 10, total: 0 },
                 memberImpdata:[
                     [""],
                     ["mobile","memname","sex","cardno","cpcode","cpname","impmoney","impgmoney","impexprite","impbirthday","cardmemo","jf","impregdate"],
@@ -1789,6 +1787,15 @@
                             this.memberlogfrom={memid:res.data.memid, date:'', sdate:'', edate:'',page: 1, limit: 10, total: 0 };
                             this.storefrom={memid:res.data.memid, date:[], billcode:'', pcode:'', pname:'',page: 1, limit: 10, total: 0 };
                             this.cardmoney={cards:[],id:"",cardtype:"",money:"",gmoney:"",nmoney:"",ngmoney:"",bmoney:"",bgmoney:"",shopcards:[] };
+
+                            this.$refs.cardrecords.clearData();
+                            this.$refs.packageRecords.clearData();
+                            this.$refs.memberRedcords.clearData();
+                            this.$refs.memberlog.clearData();
+                            this.$refs.memberStores.clearData();
+                            this.$refs.couponlogs.clearData();
+                            this.$refs.redenvelopes.clearData();
+
                             this.memberDesc.cards.forEach(card =>{
                                 if(card.cardtype == '1'){
                                     this.cardmoney.cards.push(card)

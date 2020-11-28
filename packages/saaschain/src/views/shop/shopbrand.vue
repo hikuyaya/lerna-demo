@@ -8,7 +8,7 @@
             <yid-table-column label="操作" min-width="250" prop="content">
                 <template slot-scope="scope">
                     <el-link type="primary" @click="editBrand(scope.row)">编辑</el-link>
-                    <el-link type="primary" style="margin: 0 10px 0 10px;" @click="deleteBrand(scope.row)">删除</el-link>
+                    <el-link v-if="false" type="primary" style="margin: 0 10px 0 10px;" @click="deleteBrand(scope.row)">删除</el-link>
                 </template>
             </yid-table-column>
         </yid-table>

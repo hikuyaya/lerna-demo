@@ -94,7 +94,11 @@
                         <el-table-column prop="money" label="卡余额" width="70"></el-table-column>
                         <el-table-column prop="gmoney" label="赠送余额" width="80"></el-table-column>
                         <el-table-column prop="status" label="状态" width="80"></el-table-column>
-                        <el-table-column prop="exprite" label="到期日期" width="100"></el-table-column>
+                        <el-table-column prop="exprite" label="到期日期" width="100">
+                            <template slot-scope="scope">
+                                {{scope.row.exprite | dateFormat }}
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="shopname" label="开卡门店" width="100"></el-table-column>
                     </el-table-column>
                     <el-table-column prop="servTotal" label="本店消费总额" width="70"></el-table-column>
@@ -880,7 +884,7 @@
                     <yid-table-column label="单号" min-width="160" prop="billcode"></yid-table-column>
                     <yid-table-column label="单据类型" min-width="80" prop="btype">
                         <template slot-scope="scope">
-                            {{scope.row.btype | formatValue(cardbtype)}}
+                            {{scope.row.btype | formatValue(cardbtype) + ('Y'==scope.row.ishc ?'(撤)':'') }}
                         </template>
                     </yid-table-column>
                     <yid-table-column label="变动金额" min-width="80" prop="money">

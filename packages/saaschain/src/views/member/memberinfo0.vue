@@ -77,7 +77,7 @@
                     </template></el-table-column>
                     <el-table-column prop="birthday" label="生日" min-width="60"  >
                         <template slot-scope="scope">
-                            {{scope.row.birthday | dateFormat }}
+                            {{scope.row.birthday | birthFormat }}
                         </template>
                     </el-table-column>
                     <el-table-column prop="regdate" label="注册日期" width="100"></el-table-column>
@@ -884,7 +884,7 @@
                     <yid-table-column label="单号" min-width="160" prop="billcode"></yid-table-column>
                     <yid-table-column label="单据类型" min-width="80" prop="btype">
                         <template slot-scope="scope">
-                            {{scope.row.btype | formatValue(cardbtype) + ('Y'==scope.row.ishc ?'(撤)':'') }}
+                            {{scope.row.btype | formatValue(cardbtype)}} {{ ('Y'==scope.row.isHc?'(撤)':'') }}
                         </template>
                     </yid-table-column>
                     <yid-table-column label="变动金额" min-width="80" prop="money">
@@ -1460,9 +1460,16 @@
                     return "";
                 }
             },
-            dateFormat(str){
+            birthFormat(str){
                 if(str){
                     return str.substring(5,10)
+                }else{
+                    return ""
+                }
+            },
+            dateFormat(str){
+                if(str){
+                    return str.substring(0,10)
                 }else{
                     return ""
                 }

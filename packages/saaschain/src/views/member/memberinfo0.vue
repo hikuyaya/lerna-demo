@@ -1137,6 +1137,7 @@
                     <yid-table-column label="红包名称" min-width="120" prop="rname"></yid-table-column>
                     <yid-table-column label="红包码" min-width="190" prop="bcode"></yid-table-column>
                     <yid-table-column label="价值" min-width="80" prop="money"></yid-table-column>
+                    <yid-table-column label="剩余金额"  prop="ye" min-width="100" ></yid-table-column>
                     <yid-table-column label="领用时间" min-width="140" prop="createdTime"></yid-table-column>
                     <yid-table-column label="有效期" min-width="200" prop="date">
                         <template slot-scope="scope">
@@ -1154,8 +1155,11 @@
                         <template slot-scope="scope">
                             <yid-table ref="redenvelopelogs" style="margin-top: 5px;" :data="scope.row.recordsList">
                                 <yid-table-column prop="billcode" label="消费单号" min-width="160" ></yid-table-column>
-                                <yid-table-column prop="money" label="使用金额" min-width="100" ></yid-table-column>
-                                <yid-table-column prop="lessMoney" label="剩余金额" min-width="100" ></yid-table-column>
+                                <yid-table-column prop="money" label="使用金额" min-width="100" >
+                                    <template slot-scope="scope">
+                                        {{ scope.row.money * scope.row.direction }}
+                                    </template>
+                                </yid-table-column>
                                 <yid-table-column prop="createdTime" label="使用时间" min-width="140" ></yid-table-column>
                                 <yid-table-column prop="shopname" label="使用门店" min-width="120"></yid-table-column>
                             </yid-table>

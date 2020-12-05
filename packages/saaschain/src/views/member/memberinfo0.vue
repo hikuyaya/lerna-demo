@@ -2,18 +2,18 @@
     <div class="member-relation">
         <el-tabs v-model="activeName" @tab-click="handleClick">
             <el-tab-pane label="全部会员(总部)" name="chainMember">
-                <el-form ref="chainMemberForm" inline :model="chainMemberForm">
-                    <el-form-item label="会员查询：">
+                <el-form ref="chainMemberForm" inline :model="chainMemberForm" :rules="memrules">
+                    <el-form-item label="会员查询：" prop="name">
                         <el-input clearable v-model.trim="chainMemberForm.name" placeholder="姓名/手机号/卡号" style="width: 220px;"></el-input>
                     </el-form-item>
                     <el-form-item style="margin-bottom:0; margin-left: 35px;">
                         <el-button @click="chainMemberSearch" type="primary">查询</el-button>
                     </el-form-item>
-                    <el-form-item style="margin-bottom:0; margin-left: 35px;" v-if="false">
-                        <el-button @click="chainSeniorForm.visible=true" type="primary">高级查询</el-button>
-                    </el-form-item>
+                    <!--<el-form-item style="margin-bottom:0; margin-left: 35px;" v-if="false">-->
+                        <!--<el-button @click="chainSeniorForm.visible=true" type="primary">高级查询</el-button>-->
+                    <!--</el-form-item>-->
                     <el-form-item style="margin-bottom:0; margin-left: 535px;" v-if="false">
-                        <el-button @click="exportChainMember" type="primary">会员导出</el-button>
+                        <!--<el-button @click="exportChainMember" type="primary">会员导出</el-button>-->
                     </el-form-item>
                 </el-form>
                 <yid-table pagination ref="chainMemberTable">
@@ -1404,6 +1404,7 @@
                 shopid:'',
                 impShopList:[],
                 rules: {shopid:{required: true, message: '请选择门店', trigger: 'red'}},
+                memrules: {name:{required: true, message: '请输入姓名/手机号/卡号', trigger: 'red'}},
                 shopcardmoneyDialog: { title: '', visible: false, data: [] },
                 coupon: { maname:'',status:'',date:[],udate:[] },
                 redenvelope: { maname:'',status:'',date:[] , page: 1, limit: 10, total: 0 },
@@ -1616,6 +1617,10 @@
                 });
             },
             chainMemberSearch(){
+                if(!this.chainMemberForm.name){
+                    yid.util.error("请输入姓名|手机号|卡号");
+                    return;
+                }
                 const params = this.chainMemberForm
                 const fetch = service.member.memberinfo.querychainMembers;
                 this.$refs.chainMemberTable.reloadData({

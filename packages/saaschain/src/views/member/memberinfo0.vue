@@ -47,8 +47,9 @@
             <el-tab-pane label="全部会员(门店)" name="shopMember">
                 <el-form ref="shopMembertable" inline :model="shopMemberForm" :rules="rules">
                     <el-form-item label="门店：" prop="shopid">
-                        <el-select clearable v-model.trim="shopid" placeholder="请选择" style="width: 160px;">
-                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in ShopList">
+                        <el-select clearable v-model.trim="shopid" placeholder="请选择" style="width: 160px;"
+                                   @clear="clearFormShopList" filterable :filter-method="filterShop" >
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
                                 <span style="float: left">{{ item.shopcode }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
                             </el-option>
@@ -125,8 +126,9 @@
             <el-tab-pane label="套餐会员" name="assignment">
                 <el-form ref="memberpackfrom" inline :model="memberpackfrom" :rules="rules">
                     <el-form-item label="门店：" prop="shopid">
-                        <el-select clearable v-model.trim="shopid" placeholder="请选择" style="width: 160px;">
-                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in ShopList">
+                        <el-select clearable v-model.trim="shopid" placeholder="请选择" style="width: 160px;"
+                                   @clear="clearFormShopList" filterable :filter-method="filterShop" >
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
                                 <span style="float: left">{{ item.shopcode }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
                             </el-option>
@@ -192,8 +194,9 @@
             <el-tab-pane label="已移除会员" name="removeMember">
                 <el-form ref="memberDelfrom" inline :model="memberDelfrom" :rules="rules">
                     <el-form-item label="门店：" prop="shopid">
-                        <el-select clearable v-model.trim="shopid" placeholder="请选择" style="width: 160px;">
-                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in ShopList">
+                        <el-select clearable v-model.trim="shopid" placeholder="请选择" style="width: 160px;"
+                                   @clear="clearFormShopList" filterable :filter-method="filterShop" >
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
                                 <span style="float: left">{{ item.shopcode }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
                             </el-option>
@@ -241,8 +244,9 @@
             <el-tab-pane label="已过期卡会员" name="expiredCard">
                 <el-form ref="memberExporfrom" inline :model="memberExporfrom" :rules="rules">
                     <el-form-item label="门店：" prop="shopid">
-                        <el-select clearable v-model.trim="shopid" placeholder="请选择" style="width: 160px;">
-                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in ShopList">
+                        <el-select clearable v-model.trim="shopid" placeholder="请选择" style="width: 160px;"
+                                   @clear="clearFormShopList" filterable :filter-method="filterShop" >
+                            <el-option :key="item.id" :label="item.shopname" :value="item.id" v-for="item in filterShopList">
                                 <span style="float: left">{{ item.shopcode }}</span>
                                 <span style="float: right; color: #8492a6; font-size: 13px">{{ item.shopname }}</span>
                             </el-option>
@@ -1402,6 +1406,7 @@
                 storefrom: { mimid:'', date:[], billcode:'', pcode:'', pname:'',page: 1, limit: 10, total: 0 },
                 storeData:[],
                 ShopList:[],
+                filterShopList: [],
                 shopid:'',
                 impShopList:[],
                 rules: {shopid:{required: true, message: '请选择门店', trigger: 'red'}},
@@ -1532,6 +1537,7 @@
                 service.chain.shop.shopList({status:'1'}).then(res => {
                     if(res.resp_code == 200) {
                         this.ShopList = res.data;
+                        this.filterShopList = res.data;
                         this.impShopList = res.data;
                     }
                 })
@@ -2336,7 +2342,19 @@
                     fetch,
                     params,
                 });
-            }
+            },
+            filterShop(v){
+                debugger
+                this.filterShopList = this.ShopList.filter((item) => {
+                    // 如果直接包含输入值直接返回true
+                    if (item.shopname.indexOf(v) !== -1) return true
+                    if (item.shopcode.indexOf(v) !== -1) return true
+                })
+            },
+            clearFormShopList(){
+                this.shopid = null
+                this.filterShopList =  this.ShopList
+            },
         }
     }
 </script>

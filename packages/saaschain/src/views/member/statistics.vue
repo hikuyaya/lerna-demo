@@ -32,7 +32,7 @@
                         </template>
                     </yid-table-column>
                     <yid-table-column label="总卡金余额" min-width="150" prop="money"></yid-table-column>
-                    <yid-table-column label="总赠送金余额" min-width="150" prop="moneyGift"></yid-table-column>
+                    <yid-table-column label="总赠送金余额" min-width="150" prop="gmoney"></yid-table-column>
                     <yid-table-column label="总储值总额" min-width="150" prop="moneyAll"></yid-table-column>
                     <yid-table-column label="总消费总额" min-width="150" prop="servTotal"></yid-table-column>
                     <yid-table-column label="门店" min-width="150" prop="shopname"></yid-table-column>

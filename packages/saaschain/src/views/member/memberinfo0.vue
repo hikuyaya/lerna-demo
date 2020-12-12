@@ -32,7 +32,7 @@
                     <yid-table-column prop="regdate" label="注册日期" width="180"></yid-table-column>
                     <yid-table-column prop="moneyAll" label="总储值总额" width="90"></yid-table-column>
                     <yid-table-column prop="money" label="总卡金余额" width="90"></yid-table-column>
-                    <yid-table-column prop="moneyGift" label="总赠送金余额" width="80"></yid-table-column>
+                    <yid-table-column prop="gmoney" label="总赠送金余额" width="80"></yid-table-column>
                     <yid-table-column prop="moneyPackage" label="总套餐剩余金额" width="80"></yid-table-column>
                     <yid-table-column prop="servTotal" label="消费总额" width="80"></yid-table-column>
                     <yid-table-column prop="servNum" label="消费次数" width="80"></yid-table-column>

@@ -2277,10 +2277,10 @@
                 this.memberImport.members=[]
             },
             getPackageRecordTypeName(row){
-                if(!row.btype){
-                    //btype 是后面加的字段  兼容之前的数据  上线之后慢慢可以去掉
-                    return row.direction == 1 ? '购买': (row.isShareOper == '1' ? '代付' : '划扣')
-                }
+//                if(!row.btype){
+//                    //btype 是后面加的字段  兼容之前的数据  上线之后慢慢可以去掉
+//                    return row.direction == 1 ? '购买': (row.isShareOper == '1' ? '代付' : '划扣')
+//                }
 
                 let type = row.btype
                 //0:购买 1:代付 2:划扣 3:套餐支付 4:套餐赠送支付

@@ -115,7 +115,8 @@
             stop(row){
                 const params={
                     id:row.id,
-                    revision:row.revision
+                    shopid:row.shopid,
+                    // revision:row.revision
                 }
                 if(row.yystatus){
                     params.isyy='0'

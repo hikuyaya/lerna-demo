@@ -11,7 +11,7 @@
     "build": "vue-cli-service build --mode prod",
     "docker": "docker build -t sass.yidmall.com:5000/saas/chain:latest . && docker push sass.yidmall.com:5000/saas/chain:latest",
     "dockertest": "docker build -t sass.yidmall.com:5000/saas/chaintest:latest . && docker push sass.yidmall.com:5000/saas/chaintest:latest",
-    "dockerprod": "docker build -t sass.yidmall.com:5000/yesido/chain:latest . && docker push sass.yidmall.com:5000/yesido/chain:latest",
+    "dockerprod": "docker build -t sass.yidmall.com:5000/saas/chainprod:latest . && docker push sass.yidmall.com:5000/saas/chainprod:latest",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {

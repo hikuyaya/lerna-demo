@@ -1057,10 +1057,12 @@
                                 <yid-table-column prop="billcode" label="出库单号" min-width="130" ></yid-table-column>
                                 <yid-table-column prop="createdTime" label="操作时间" min-width="160" ></yid-table-column>
                                 <yid-table-column label="操作方式" min-width="80" >
-                                    <template slot-scope="scope">提货</template>
+                                    <template slot-scope="scope">{{scope.row.btype=='3'?'支付':'提货'}} </template>
                                 </yid-table-column>
                                 <yid-table-column prop="btype" label="类型" min-width="80" >
-                                    <template slot-scope="scope">{{scope.row.btype=='1'?'寄存入库':'寄存出库'}}</template>
+                                    <template slot-scope="scope">{{scope.row.btype=='1'?'寄存入库':''}}</template>
+                                    <template slot-scope="scope">{{scope.row.btype=='2'?'寄存出库':''}}</template>
+                                    <template slot-scope="scope">{{scope.row.btype=='3'?'寄存换购':''}}</template>
                                 </yid-table-column>
                                 <yid-table-column prop="num" label="出库数量" min-width="80" ></yid-table-column>
                                 <yid-table-column prop="stock" label="剩余库存" min-width="80" ></yid-table-column>

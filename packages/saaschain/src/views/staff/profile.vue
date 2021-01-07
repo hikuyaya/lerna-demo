@@ -43,6 +43,11 @@
                             width="120">
                     </yid-table-column>
                     <yid-table-column
+                            prop="nickname"
+                            label="昵称"
+                            width="120">
+                    </yid-table-column>
+                    <yid-table-column
                             prop="eename"
                             label="姓名"
                             width="150">

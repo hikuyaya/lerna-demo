@@ -43,17 +43,17 @@
                             width="120">
                     </yid-table-column>
                     <yid-table-column
-                            prop="nickname"
-                            label="昵称"
-                            width="120">
-                    </yid-table-column>
-                    <yid-table-column
                             prop="eename"
                             label="姓名"
                             width="150">
                         <template slot-scope="scope">
                             <el-link type="primary" @click="editAction(scope.row,true)">{{scope.row.eename}}</el-link>
                         </template>
+                    </yid-table-column>
+                    <yid-table-column
+                            prop="nickname"
+                            label="昵称"
+                            width="120">
                     </yid-table-column>
                     <yid-table-column
                             label="性别"

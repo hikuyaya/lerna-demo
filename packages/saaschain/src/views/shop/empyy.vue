@@ -44,7 +44,7 @@
                 <template slot-scope="scope">
                     <el-switch
                             @change="stop(scope.row)"
-                            v-model="scope.row.yystatus=='1'?true:false"
+                            v-model="scope.row.yystatus"
                             active-color="#13ce66"
                             inactive-color="#ff4949">
                     </el-switch>
@@ -103,7 +103,7 @@
                                 if(m.isyy == '1'){
                                     m.yystatus=true
                                 }else{
-                                    m.yys=false
+                                    m.yystatus=false
                                 }
                             })
                         }else{
@@ -115,13 +115,13 @@
             stop(row){
                 const params={
                     id:row.id,
-                    shopid:row.shopid,
+                    //shopid:row.shopid,
                     // revision:row.revision
                 }
                 if(row.yystatus){
-                    params.isyy='0'
-                }else{
                     params.isyy='1'
+                }else{
+                    params.isyy='0'
                 }
                 service.employee.editYystatus(params).then(res =>{
                     if(res.resp_code=="200"){

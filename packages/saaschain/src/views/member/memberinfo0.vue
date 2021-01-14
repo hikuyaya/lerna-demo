@@ -1951,10 +1951,10 @@
                     yid.util.error("会员姓名不能大于10位");
                     return
                 }
-                if(!this.membercard.birthday){
-                    yid.util.error("会员生日不能为空");
-                    return
-                }
+//                if(!this.membercard.birthday){
+//                    yid.util.error("会员生日不能为空");
+//                    return
+//                }
                 service.member.memberinfo.saveMemberCard(this.membercard).then(res =>{
                     if(res.resp_code=="200"){
                         yid.util.success(res.resp_msg);

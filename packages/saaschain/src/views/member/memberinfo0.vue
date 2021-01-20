@@ -17,19 +17,20 @@
                     </el-form-item>
                 </el-form>
                 <yid-table pagination ref="chainMemberTable">
-                    <yid-table-column prop="memname" label="姓名" min-width="100" ></yid-table-column>
+                    <yid-table-column prop="memname" label="姓名" min-width="80" ></yid-table-column>
+                    <yid-table-column prop="nickname" label="昵称" min-width="80" ></yid-table-column>
                     <yid-table-column prop="mobile" label="手机号" min-width="100" ></yid-table-column>
-                    <yid-table-column prop="sex" label="性别" min-width="50" >
+                    <yid-table-column prop="sex" label="性别" min-width="40" >
                         <template slot-scope="scope">
                             {{scope.row.sex == '1' ? "男" : "女"}}
                         </template>
                     </yid-table-column>
                     <yid-table-column prop="birthday" label="生日" min-width="60"  >
                         <template slot-scope="scope">
-                            {{scope.row.birthday | dateFormat }}
+                            {{scope.row.birthday | birthFormat }}
                         </template>
                     </yid-table-column>
-                    <yid-table-column prop="regdate" label="注册日期" width="180"></yid-table-column>
+                    <yid-table-column prop="regdate" label="注册日期" width="160"></yid-table-column>
                     <yid-table-column prop="moneyAll" label="总储值总额" width="90"></yid-table-column>
                     <yid-table-column prop="money" label="总卡金余额" width="90"></yid-table-column>
                     <yid-table-column prop="gmoney" label="总赠送金余额" width="80"></yid-table-column>
@@ -71,12 +72,13 @@
                 <div style="padding-bottom: 5px">本次查询出{{memberHj.count}}位会员，卡金总余额:{{memberHj.zkj}}元, 赠送金总余额:{{memberHj.zzs}}元</div>
                 <el-table :data="memberTables" :span-method="objectSpanMethod" style="width: 100%">
                     <el-table-column prop="memname" label="姓名" width="80"></el-table-column>
+                    <el-table-column prop="nickname" label="昵称" min-width="80" ></el-table-column>
                     <el-table-column prop="mobile" label="手机号" width="110"></el-table-column>
                     <el-table-column prop="sex" label="性别" width="40">
                         <template slot-scope="scope">
                         {{scope.row.sex == '1' ? "男" : "女"}}
                     </template></el-table-column>
-                    <el-table-column prop="birthday" label="生日" min-width="60"  >
+                    <el-table-column prop="birthday" label="生日" min-width="60">
                         <template slot-scope="scope">
                             {{scope.row.birthday | birthFormat }}
                         </template>
@@ -670,10 +672,11 @@
                         <!--<td><label class="marg5">0</label></td>-->
                         <!--<td align="right">上次服务员工:</td>-->
                         <!--<td><label class="marg5">{{memberDesc.lastEename}}</label></td></tr>-->
+                    <tr><td align="right">昵称:</td><td colspan="3"><label class="marg5">{{memberDesc.nickname}}</label></td></tr>
                     <tr><td align="right">住址:</td><td colspan="3"><label class="marg5">{{memberDesc.address}}</label></td></tr>
-                    <tr><td align="right">预约权限:</td><td colspan="3" ><el-link type="primary" class="marg5">[关闭预约权限]</el-link></td>  </tr>
+                    <!--<tr><td align="right">预约权限:</td><td colspan="3" ><el-link type="primary" class="marg5">[关闭预约权限]</el-link></td></tr>-->
                     <tr v-for="member in memberDesc.shopmembers">
-                        <td align="right">{{member.shopcode}} {{member.shopname}} 备注:</td><td colspan="3" ><label class="marg5">{{member.memo}}</label></td>
+                        <td align="right">{{member.shopname}} 备注:</td><td colspan="3" ><label class="marg5">{{member.memo}}</label></td>
                     </tr>
                 </table>
                 <div>卡信息:
@@ -748,12 +751,12 @@
                     </tr>
                     <tr><td align="right">其他:</td><td colspan="3"><label class="marg5">{{memberDesc.others}}</label></td></tr>
                 </table>
-                <div>智能分析
+                <div v-if="activeName!='chainMember'">智能分析
                      <el-button size="small" icon="el-icon-arrow-left" @click="downMemberStatic"></el-button>
                      <el-button size="small">{{memberStatic.yearmonth}}</el-button>
                      <el-button size="small" @click="upMemberStatic"><i class="el-icon-arrow-right" ></i></el-button>
                 </div>
-                <table border="1" cellspacing="0" >
+                <table border="1" cellspacing="0" v-if="activeName!='chainMember'">
                     <tr><td align="right" width="22%">当月消费金额:</td>
                         <td width="28%"><label class="marg5">{{memberStatic.cmMoney}}</label></td>
                         <td align="right"  width="22%">当月消费次数:</td>
@@ -1322,7 +1325,8 @@
                     cards:[],
                     cardindex:'',
                     packages:[],
-                    memo:''
+                    memo:'',
+                    nickname:''
                 },
                 memberStatic: {yearmonth:"", cmMoney:'', cmNum:'', cyMoney:'', cyNum:'', servNum:'', serviceRate:'', serviceJe:''},
                 cardinfo: {id:"",cardno:"",cardtype:"",money:"",gmoney:"",smoney:"",serDis:"",proDis:"",shopname:"",exprite:"",makedate:""},
@@ -1895,7 +1899,10 @@
                 })
             },
             queryMemberStatic(yearmonth,offset){
-                service.member.memberinfo.queryMemberStatis({memid:this.memberDesc.memid,yearmonth:yearmonth,offset:offset}).then(res => {
+                if(!this.shopid){
+                    return
+                }
+                service.member.memberinfo.queryMemberStatis({shopid:this.shopid,memid:this.memberDesc.memid,yearmonth:yearmonth,offset:offset}).then(res => {
                     if(res.resp_code=="200"){
                         this.memberStatic=res.data;
                     }else{

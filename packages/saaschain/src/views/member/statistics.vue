@@ -25,6 +25,7 @@
                 </el-form>
                 <yid-table pagination ref="table">
                     <yid-table-column label="姓名" min-width="100" prop="memname"></yid-table-column>
+                    <yid-table-column label="昵称" min-width="100" prop="nickname"></yid-table-column>
                     <yid-table-column label="手机号" min-width="150" prop="mobile"></yid-table-column>
                     <yid-table-column label="性别" min-width="70" prop="sex">
                         <template slot-scope="scope">
@@ -82,6 +83,7 @@
                 </el-form>
                 <yid-table pagination ref="servtable">
                     <yid-table-column label="姓名" min-width="100" prop="memname"></yid-table-column>
+                    <yid-table-column label="昵称" min-width="100" prop="nickname"></yid-table-column>
                     <yid-table-column label="手机号" min-width="150" prop="mobile"></yid-table-column>
                     <yid-table-column label="性别" min-width="70" prop="sex">
                         <template slot-scope="scope">

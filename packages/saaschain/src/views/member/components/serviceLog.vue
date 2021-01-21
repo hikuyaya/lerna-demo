@@ -76,7 +76,7 @@
             </el-form-item>
         </el-form>
         <yid-table pagination ref="table" style="margin-top: -5px; width: 100%;">
-            <yid-table-column label="姓名" min-width="100" prop="memname"></yid-table-column>
+            <yid-table-column label="姓名/昵称" min-width="100" prop="memname"></yid-table-column>
             <yid-table-column label="手机号" min-width="150" prop="mobile"></yid-table-column>
             <yid-table-column label="性别" min-width="70" prop="sex">
                 <template slot-scope="scope">

@@ -41,7 +41,7 @@
         <yid-table pagination ref="table">
             <yid-table-column label="单号" min-width="100" prop="billcode"></yid-table-column>
             <yid-table-column label="消费时间" min-width="150" prop="saleTime"></yid-table-column>
-            <yid-table-column label="姓名" min-width="70" prop="memname"></yid-table-column>
+            <yid-table-column label="姓名/昵称" min-width="70" prop="memname"></yid-table-column>
             <yid-table-column label="手机号" min-width="150" prop="mobile"></yid-table-column>
             <yid-table-column label="门店" min-width="150" prop="shopname"></yid-table-column>
             <yid-table-column label="消费项目" min-width="150" prop="sers"></yid-table-column>

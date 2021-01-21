@@ -162,6 +162,7 @@
                 <div style="padding-bottom: 5px">本次查询出的所有会员套餐项目总剩次数:{{memberpackhj.servsum}}次， 总剩余金额:{{memberpackhj.servje}}元；产品总剩余数量{{memberpackhj.packsum}}个</div>
                 <el-table ref="memberpacktable" :data="memberpackData" :span-method="objectSpanMethod2" style="width: 100%">
                     <el-table-column prop="memname" label="姓名" width="100"></el-table-column>
+                    <el-table-column prop="nickname" label="昵称" min-width="80" ></el-table-column>
                     <el-table-column prop="mobile" label="手机号" width="120"></el-table-column>
                     <el-table-column prop="sex" label="性别" width="60">
                         <template slot-scope="scope">
@@ -223,6 +224,7 @@
                 </el-form>
                 <yid-table pagination ref="memberDelTable">
                     <yid-table-column label="姓名" min-width="80" prop="memname"></yid-table-column>
+                    <yid-table-column label="昵称" min-width="80"  prop="nickname"></yid-table-column>
                     <yid-table-column label="性别" min-width="50" prop="sex">
                         <template slot-scope="scope">
                             {{scope.row.sex == '1' ? "男" : "女"}}
@@ -273,6 +275,7 @@
                 </el-form>
                 <yid-table pagination ref="memberExproTable">
                     <yid-table-column label="姓名" min-width="100" prop="memname"></yid-table-column>
+                    <yid-table-column label="昵称" min-width="80"  prop="nickname"></yid-table-column>
                     <yid-table-column label="性别" min-width="50" prop="sex">
                         <template slot-scope="scope">
                             {{scope.row.sex == '1' ? "男" : "女"}}

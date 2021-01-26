@@ -1812,7 +1812,9 @@
                             }
                             this.changeCardinfo();
                             this.changeMemberCard();
-                            this.queryMemberStatic("",0);
+                            if(this.activeName!='chainMember'){
+                                this.queryMemberStatic("",0);
+                            }
                             this.meminfoDialog.visible=true;
                             this.meminfoDialog.showNum=1;
                             //清空查询条件

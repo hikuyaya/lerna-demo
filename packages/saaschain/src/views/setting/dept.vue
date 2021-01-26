@@ -1,7 +1,7 @@
 <template>
     <div class="dept">
         <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="部门设置" name="dept">
+            <!--<el-tab-pane label="部门设置" name="dept">
                     <el-button @click="alertDept(false,'')" type="primary">添加</el-button>
                     <el-button @click="lookup()">查看{{status=='2'?'禁用':'正常'}}的部门</el-button>
                 <yid-table pagination ref="depttable" :data="deptData" style="margin-top: 15px;" :row-class-name="$yid.util.getTableClass">
@@ -14,14 +14,14 @@
                         </template>
                     </yid-table-column>
                 </yid-table>
-            </el-tab-pane>
+            </el-tab-pane>-->
             <el-tab-pane label="员工职位类型" name="position">
                 <el-button @click="jobAlert(false,'')" type="primary">添加</el-button>
                 <el-button @click="lookup1()">查看{{status1=='2'?'禁用':'正常'}}的职位</el-button>
                 <yid-table pagination ref="jobtable" :data="jobData" style="margin-top: 15px;" :row-class-name="$yid.util.getTableClass">
                     <yid-table-column label="类型编号" min-width="100" prop="pscode"></yid-table-column>
-                    <yid-table-column label="所属部门" min-width="150" prop="bname"></yid-table-column>
                     <yid-table-column label="职位类型" min-width="150" prop="psname"></yid-table-column>
+                    <yid-table-column label="同步业务组" min-width="150" prop="bbnames"></yid-table-column>
                     <yid-table-column label="操作" min-width="250" prop="content">
                         <template slot-scope="scope">
                             <el-link type="primary" @click="jobAlert(true,scope.row)">编辑</el-link>
@@ -46,7 +46,7 @@
                 </yid-table>
             </el-tab-pane>
         </el-tabs>
-        <yid-dialog :title="deptDialog.title" :visible.sync="deptDialog.visible" width="450px">
+        <!--<yid-dialog :title="deptDialog.title" :visible.sync="deptDialog.visible" width="450px">
             <el-form ref="branchForm" :model="branchForm"  label-width="140px" >
                 <el-form-item label="部门编号：" prop="bcode" :rules="[{ required: true, message: '部门编号为空'}]">
                     {{branchForm.bcode}}
@@ -59,7 +59,7 @@
                     <el-button @click="cancleDept">取消</el-button>
                 </el-form-item>
             </el-form>
-        </yid-dialog>
+        </yid-dialog>-->
         <yid-dialog :title="jobDialog.title" :visible.sync="jobDialog.visible" width="450px">
             <el-form ref="positionForm" :model="positionForm"  label-width="140px">
                 <el-form-item label="职位类型编号：" prop="pscode" :rules="[{ required: true, message: '职位类型编号为空'}]">
@@ -68,9 +68,9 @@
                 <el-form-item label="职位名称：" prop="psname"  :rules="[{ required: true, message: '职位名称为空'}]">
                     <el-input v-model="positionForm.psname"></el-input>
                 </el-form-item>
-                <el-form-item label="所属部门：" prop="deptObj" :rules="[{ required: true, message: '请选择所属部门'}]">
-                    <el-select value-key="id" placeholder="请选择所属部门" v-model.trim="positionForm.deptObj">
-                        <el-option :key="item.id" :value="item.id" :label="item.bname" v-for="item in deptDataAll"/>
+                <el-form-item label="同步业务组：" prop="deptObj" :rules="[{ required: true, message: '请选择所属部门'}]">
+                    <el-select value-key="id" placeholder="请选择同步业务组" v-model.trim="positionForm.deptObj" multiple>
+                        <el-option :key="item.id" :value="item" :label="item.bname" v-for="item in deptDataAll"/>
                     </el-select>
                 </el-form-item>
                 <el-form-item>
@@ -109,7 +109,7 @@
         name: "dept",
         data() {
             return {
-                activeName: 'dept',
+                activeName: 'position',
                 status: '2',
                 status1: '2',
                 status2: '2',
@@ -122,9 +122,11 @@
                 positionForm:{
                     pscode : '',
                     psname :'',
-                    deptObj : '',
+                    deptObj : [],
                     isDel : '0',
                     status : '1',
+                    bbids : '',
+                    bbnames : '',
                 },
                 levelForm:{
                     pslcode:'',
@@ -170,17 +172,19 @@
 
         mounted() {
             /**获取部门列表**/
-            this.getdeptList("1");
+            //this.getdeptList("1");
+            /**获取职务列表**/
+            this.getjobList("1");
         },
         methods: {
-            lookup(){
+            /*lookup(){
                 this.getdeptList(this.status);
                 if(this.status=='1'){
                     this.status='2'
                 }else{
                     this.status='1'
                 }
-            },
+            },*/
             lookup1(){
                 this.getjobList(this.status1);
                 if(this.status1=='1'){
@@ -197,7 +201,7 @@
                     this.status2='1'
                 }
             },
-            getdeptList(status){
+            /*getdeptList(status){
                 this.pageInfo.page=1
                 this.pageInfo.limit = this.$refs.depttable.Pagination.internalPageSize;
                 const fetch = service.dept.deptList
@@ -208,7 +212,7 @@
                     fetch,
                     params
                 });
-            },
+            },*/
             getdeptListAll(){
                 service.dept.deptAll({isDel:'0',status:'1'}).then(res=> {
                     if(res.resp_code == 200) {
@@ -247,11 +251,11 @@
                     params
                 });
             },
-            getDeptMaxId(){
+           /* getDeptMaxId(){
                 service.dept.getDeptMaxId().then(res=> {
                     this.branchForm.bcode = res.data;
                 })
-            },
+            },*/
             getJobMaxId(){
                 service.dept.getJobMaxId().then(res=> {
                     this.positionForm.pscode = res.data;
@@ -264,11 +268,12 @@
             },
             handleClick(tab, event) {
                 console.log(tab, event);
-                if(tab.name == 'dept'){
+                /*if(tab.name == 'dept'){
                     // 触发‘部门设置’事件
                     this.status = "2";
                     this.getdeptList("1");
-                }else if(tab.name == 'position'){
+                }else */
+                if(tab.name == 'position'){
                     // 触发‘职务设置’事件
                     this.status1 = "2";
                     this.getjobList("1");
@@ -277,12 +282,12 @@
                     this.getlevelList("1");
                 }
             },
-            alertDept(tag = false,row) {
+            /*alertDept(tag = false,row) {
                 this.deptDialog.visible = true;
                 this.deptDialog.title = tag? '编辑部门职位' : '添加部门职位';
                 if(tag == false){
                     this.branchForm.id = ''
-                    /**获取最大部门id+1**/
+                    //获取最大部门id+1
                     this.getDeptMaxId();
                     this.$refs['branchForm'].resetFields();
                     this.branchForm.bcode='';
@@ -360,7 +365,7 @@
                         this.getdeptList("1");
                     });
                 })
-            },
+            },*/
             jobAlert(tag = false,row) {
                 this.jobDialog.visible = true;
                 this.jobDialog.title = tag? '编辑员工职位类型' : '添加员工职位类型';
@@ -370,19 +375,33 @@
                     this.positionForm.id = ''
                     /**获取最大职务id+1**/
                     this.getJobMaxId();
-                    this.$refs['positionForm'].resetFields();
+                    //this.$refs['positionForm'].resetFields();
                     this.positionForm.pscode = ''
                     this.positionForm.psname = ''
                     this.positionForm.status = '1'
-                    this.positionForm.deptObj = ''
+                    this.positionForm.deptObj = []
                     this.positionForm.isDel = '0'
-                    this.positionForm.status='1';
+                    this.positionForm.status='1'
+                    this.positionForm.bbids = ''
+                    this.positionForm.bbnames = ''
                 }else{
                     this.positionForm.id = row.id;
                     this.positionForm.pscode = row.pscode;
                     this.positionForm.psname= row.psname;
                     this.positionForm.status = row.status;
-                    this.positionForm.deptObj = String(row.bbid);
+                    this.positionForm.bbids = row.bbids;
+                    this.positionForm.bbnames = row.bbnames;
+                    let bbids = row.bbids;
+                    this.positionForm.deptObj = [];
+                    this.deptDataAll.forEach(res=>{
+                        if(bbids.length > 0){
+                            bbids.split(",").forEach(bb=>{
+                                if(String(bb) == String(res.id)){
+                                    this.positionForm.deptObj.push(res);
+                                }
+                            })
+                        }
+                    })
                     this.positionForm.isDel = row.isDel
                     this.positionForm.status = row.status
                 }
@@ -390,8 +409,21 @@
             saveJob(){
                 this.$refs['positionForm'].validate((valid) => {
                     if(valid){
-                        //获取部门id
-                        this.positionForm.bbid = this.positionForm.deptObj;
+                        //获取同步业务组信息
+                        let bbids = "";
+                        let bbnames = "";
+                        if(this.positionForm.deptObj.length > 0){
+                            this.positionForm.deptObj.forEach(res=>{
+                                bbids = bbids + res.id + ",";
+                                bbnames = bbnames + res.bname + ",";
+                            })
+                        }
+                        if(bbids != ""){
+                            this.positionForm.bbids = bbids.substring(0,bbids.length-1);
+                        }
+                        if(bbnames != ""){
+                            this.positionForm.bbnames = bbnames.substring(0,bbnames.length-1);
+                        }
                         service.dept.saveJob(this.positionForm).then(res=> {
                             if(res.resp_code == 200) {
                                 yid.util.success(res.resp_msg)
@@ -430,7 +462,7 @@
                     const job = {};
                     job.id = row.id;
                     job.psname = row.psname;
-                    job.bbid = row.bbid;
+                    job.bbids = row.bbids;
                     if(row.status == '1'){//如果是正常-禁用
                         job.status = '2';
                     }else if(row.status == '2'){//如果是禁用-恢复
@@ -459,12 +491,13 @@
                     this.levelForm.id = ''
                     /**获取最大职务id+1**/
                     this.getLevelMaxId();
-                    this.$refs['levelForm'].resetFields();
+                    //this.$refs['levelForm'].resetFields();
                     this.levelForm.pslcode = ''
                     this.levelForm.pslname = ''
                     this.levelForm.status = '1'
                     this.levelForm.jobObj = ''
-                    this.levelForm.bbid = ''
+                    this.levelForm.bbids = ''
+                    this.levelForm.bbnames = ''
                     this.levelForm.psid = ''
                     this.levelForm.isDel = '0'
                     this.levelForm.status='1';
@@ -483,11 +516,12 @@
                         //获取部门id
                         this.levelForm.psid = this.levelForm.jobObj;
                         this.levelForm.clevel = this.levelForm.pslcode;
-                        //通过psid 查询bbid
+                        //通过psid 查询bbids
                         service.dept.getJobByid(this.levelForm.psid).then(res=> {
                             if(res.resp_code == 200) {
                                 //部门id
-                                this.levelForm.bbid = res.data.bbid
+                                this.levelForm.bbids = res.data.bbids
+                                this.levelForm.bbnames = res.data.bbnames
                                 service.dept.saveLevel(this.levelForm).then(res=> {
                                     if(res.resp_code == 200) {
                                         yid.util.success(res.resp_msg)

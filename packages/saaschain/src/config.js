@@ -401,8 +401,8 @@ export const MENU = {
     {
       id: 81,
       pid: 8,
-      name: '部门和职位配置',
-      title: '部门和职位配置',
+      name: '职位配置',
+      title: '职位配置',
       path: '/setting/dept',
       component: 'setting/dept',
       icon: null,
@@ -607,6 +607,16 @@ export const MENU = {
           title: '门店信息管理',
           path: '/shop/manage',
           component: 'shop/manage',
+          icon: null,
+          canShow: true
+      },
+      {
+          id: 106,
+          pid: 10,
+          name: '门店业务组设置',
+          title: '门店业务组设置',
+          path: '/shop/branch',
+          component: 'shop/branch',
           icon: null,
           canShow: true
       },

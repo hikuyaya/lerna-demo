@@ -16,6 +16,8 @@
                 </yid-table>
             </el-tab-pane>-->
             <el-tab-pane label="员工职位类型" name="position">
+                <el-input clearable filterable  v-model="searchPositionName" placeholder="编码/名称" style="width: 150px;"></el-input>&nbsp;
+                <el-button @click="getjobList(status1=='1'?'2':'1')" type="primary">查询</el-button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <el-button @click="jobAlert(false,'')" type="primary">添加</el-button>
                 <el-button @click="lookup1()">查看{{status1=='2'?'禁用':'正常'}}的职位</el-button>
                 <yid-table pagination ref="jobtable" :data="jobData" style="margin-top: 15px;" :row-class-name="$yid.util.getTableClass">
@@ -31,6 +33,8 @@
                 </yid-table>
             </el-tab-pane>
             <el-tab-pane label="员工级别" name="level">
+                <el-input clearable filterable  v-model="searchLevelName" placeholder="编码/名称" style="width: 150px;"></el-input>&nbsp;
+                <el-button @click="getlevelList(status2=='1'?'2':'1')" type="primary">查询</el-button>&nbsp;&nbsp;&nbsp;&nbsp;
                 <el-button @click="levelAlert(false,'')" type="primary">添加</el-button>
                 <el-button @click="lookup2()">查看{{status2=='2'?'禁用':'正常'}}的职位级别</el-button>
                 <yid-table pagination ref="leveltable" style="margin-top: 15px;" :data="levelData" :row-class-name="$yid.util.getTableClass">
@@ -113,6 +117,8 @@
                 status: '2',
                 status1: '2',
                 status2: '2',
+                searchPositionName : '',
+                searchLevelName : '',
                 branchForm:{
                     bcode : '',
                     bname :'',
@@ -227,6 +233,7 @@
                 const params = this.pageInfo
                 params.status = status1
                 params.isDel = '0'
+                params.codeName = this.searchPositionName
                 this.$refs.jobtable.reloadData({
                     fetch,
                     params
@@ -246,6 +253,7 @@
                 const params = this.pageInfo
                 params.status = status2
                 params.isDel = '0'
+                params.codeName = this.searchLevelName
                 this.$refs.leveltable.reloadData({
                     fetch,
                     params

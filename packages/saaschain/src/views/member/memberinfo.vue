@@ -1138,7 +1138,7 @@
                 }
             },
             objectSpanMethod2({ row, column, rowIndex, columnIndex }) {
-                if (columnIndex<4 || columnIndex>8) {
+                if (columnIndex<4 || columnIndex>9) {
                     if (row.rownum > 0) {
                         return {
                             rowspan: row.rownum,

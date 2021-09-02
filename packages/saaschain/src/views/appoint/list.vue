@@ -19,12 +19,12 @@
             </el-form-item> <br/>
             <el-form-item label="预约状态：">
                 <el-select multiple clearable filterable placeholder="请选择" style="width: 240px;" v-model.trim="model.statuslist">
-                    <el-option v-for="item in selectStatusList" :value="item.value" :label="item.label"></el-option>
+                    <el-option :key="'s_'+item.value" v-for="item in selectStatusList" :value="item.value" :label="item.label"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="预约渠道：">
                 <el-select clearable filterable placeholder="请选择" style="width: 160px;" v-model.trim="model.yccode">
-                    <el-option v-for="item in channel" :value="item.yccode" :label="item.ycname"></el-option>
+                    <el-option :key="'c_'+item.yccode" v-for="item in channel" :value="item.yccode" :label="item.ycname"></el-option>
                 </el-select>
             </el-form-item>
             <el-form-item label="门店：">
@@ -172,6 +172,7 @@
                     {value:"-3", label:"未到店"},
                     {value:"4", label:"已到店"},
                     {value:"3", label:"预约中"},
+                    {value:"5", label:"已评价"}
                 ],
                 statusList:[
                     {value:"-1", label:"顾客取消"},

@@ -170,8 +170,8 @@
                     {value:"-1", label:"顾客取消"},
                     {value:"-2", label:"商家取消预约"},
                     {value:"-3", label:"未到店"},
-                    {value:"4", label:"已到店"},
                     {value:"3", label:"预约中"},
+                    {value:"4", label:"已到店"},
                     {value:"5", label:"已评价"}
                 ],
                 statusList:[
@@ -263,7 +263,7 @@
             queryYyBilllist(){
                 let params = {...this.pageInfo, ...this.model}
                 if(this.model.member){
-                    if($yid.validate.mobile(this.model.member)){
+                    if(yid.validate.mobile(this.model.member)){
                         params.custmobile=this.model.member;
                         params.custname = null;
                     }else{
@@ -275,7 +275,7 @@
                     params.custname = null;
                 }
                 if(this.model.ee){
-                    if($yid.validate.eecode(this.model.ee)){
+                    if(yid.validate.eecode(this.model.ee)){
                         params.eecode=this.model.ee;
                         params.eename=null;
                     }else{
@@ -324,7 +324,7 @@
                 }
                 service.yy.yylist.editYYdate(params).then(res =>{
                     this.editflag=true;
-                    $yid.util.alert(res.resp_msg);
+                    yid.util.alert(res.resp_msg);
                 })
             },
             yycancel(){
@@ -333,7 +333,7 @@
                         this.searchDialog.visible=false;
                         this.queryYyBilllist();
                     }
-                    $yid.util.alert(res.resp_msg);
+                    yid.util.alert(res.resp_msg);
                 })
             },
             yysure(){
@@ -342,7 +342,7 @@
                         this.searchDialog.visible=false;
                         this.queryYyBilllist();
                     }
-                    $yid.util.alert(res.resp_msg);
+                    yid.util.alert(res.resp_msg);
                 })
             },
             lookupLog(){

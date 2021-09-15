@@ -45,7 +45,7 @@
             <yid-table-column label="级别" min-width="120" prop="pslname"></yid-table-column>
             <yid-table-column label="班次" min-width="150" prop="pcInfo">
                 <template slot-scope="scope">
-                    {{scope.row.pcInfo}}
+                    {{getPcInfo(scope.row)}}
                     <i class="el-icon-edit" @click="alertBcDialog(scope.row)"></i>
                 </template>
             </yid-table-column>
@@ -436,6 +436,19 @@
                     if (item.shopcode.indexOf(v) !== -1) return true
 
                 })
+            },
+            getPcInfo(row){
+                let info = '';
+                if(!yid.util.isEmpty(row.pccode)){
+                    if(row.pccode === '-1' || row.pccode === '-2'){
+                        info = row.classname
+                    }else{
+                        info = row.classname + ' '+row.stime+'-'+row.etime
+                    }
+                }else{
+                    info = '未排班'
+                }
+                return info;
             }
         }
     }

@@ -2,10 +2,10 @@
     <div class="appoint-list">
         <el-form inline>
             <el-form-item label="会员：">
-                <el-input clearable v-model.trim="model.member" placeholder="会员名称/手机号"  style="width: 180px;"></el-input>
+                <el-input clearable v-model.trim="model.member" placeholder="会员名称/手机号"  style="width: 150px;"></el-input>
             </el-form-item>
             <el-form-item label="预约员工：">
-                <el-input clearable v-model.trim="model.ee" placeholder="员工姓名/员工编码"  style="width: 180px;"></el-input>
+                <el-input clearable v-model.trim="model.ee" placeholder="员工姓名/编码"  style="width: 160px;"></el-input>
             </el-form-item>
             <el-form-item label="预约时间：">
                 <el-date-picker style="width: 240px;"
@@ -16,9 +16,12 @@
                         start-placeholder="开始日期"
                         end-placeholder="结束日期">
                 </el-date-picker>
-            </el-form-item> <br/>
+            </el-form-item>
+            <el-form-item label="预约单号：">
+                <el-input clearable v-model.trim="model.billcode" placeholder=""  style="width: 180px;"></el-input>
+            </el-form-item>
             <el-form-item label="预约状态：">
-                <el-select multiple clearable filterable placeholder="请选择" style="width: 240px;" v-model.trim="model.statuslist">
+                <el-select multiple clearable filterable placeholder="请选择" style="width: 180px;" v-model.trim="model.statuslist">
                     <el-option :key="'s_'+item.value" v-for="item in selectStatusList" :value="item.value" :label="item.label"></el-option>
                 </el-select>
             </el-form-item>
@@ -42,7 +45,7 @@
         </el-form>
 
         <yid-table pagination ref="table"  :data="tableData">
-            <yid-table-column label="单号" min-width="140" prop="billcode"></yid-table-column>
+            <yid-table-column label="单号" min-width="150" prop="billcode"></yid-table-column>
             <yid-table-column label="姓名" min-width="80" prop="custname"></yid-table-column>
             <yid-table-column label="手机号" min-width="120" prop="custmobile"></yid-table-column>
             <yid-table-column label="性别" min-width="60" prop="custsex">
@@ -199,7 +202,8 @@
                     date: [],
                     statuslist: [],
                     yccode:'',
-                    shopid:""
+                    shopid:"",
+                    billcode:"",
                 },
                 channel: [],
                 tableData: [],

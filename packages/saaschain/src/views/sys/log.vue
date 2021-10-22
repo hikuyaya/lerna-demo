@@ -11,11 +11,12 @@
                 <el-date-picker  placeholder v-model="model.endTime" value-format="yyyy-MM-dd"></el-date-picker>
             </el-form-item>
             <el-form-item label="操作类型：">
-                <el-select clearable filterable placeholder="请选择" style="width: 160px;" v-model.trim="model.operType">
-                    <template v-if="typeMap.length>0">
-                        <el-option :key="'type' + item.value" :label="item.text" :value="item.text" v-for="item in typeMap"></el-option>
-                    </template>
-                </el-select>
+              <el-input clearable placeholder="请输入操作类型" v-model.trim="model.operType" style="width: 180px;"></el-input>
+<!--                <el-select clearable filterable placeholder="请选择" style="width: 160px;" v-model.trim="model.operType">-->
+<!--                    <template v-if="typeMap.length>0">-->
+<!--                        <el-option :key="'type' + item.value" :label="item.text" :value="item.text" v-for="item in typeMap"></el-option>-->
+<!--                    </template>-->
+<!--                </el-select>-->
             </el-form-item>
             <el-form-item label="用户名：">
                 <el-input clearable placeholder="请输入用户名" v-model.trim="model.userName" style="width: 180px;"></el-input>
@@ -25,14 +26,16 @@
             </el-form-item>
         </el-form>
         <yid-table pagination ref="table">
-            <el-table-column
-                    type="selection"
-                    width="55">
-            </el-table-column>
+<!--            <el-table-column-->
+<!--                    type="selection"-->
+<!--                    width="55">-->
+<!--            </el-table-column>-->
             <yid-table-column label="操作员" min-width="50" prop="userName"></yid-table-column>
+          <yid-table-column label="终端" min-width="50" prop="clientId"></yid-table-column>
+          <yid-table-column label="应用" min-width="50" prop="applicationName"></yid-table-column>
             <yid-table-column label="时间" min-width="50" prop="time">
                 <template slot-scope="scope">
-                    {{$yid.util.formatDate(scope.row.updatedTime)}}
+                    {{$yid.util.formatDate(scope.row.createdTime)}}
                 </template>
             </yid-table-column>
             <yid-table-column label="操作类型" min-width="70" prop="operType"></yid-table-column>

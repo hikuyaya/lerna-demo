@@ -12,7 +12,7 @@
     "build": "vue-cli-service build --mode prod",
     "docker": "docker build -t sass.yidmall.com:5000/saas/chain:latest . && docker push sass.yidmall.com:5000/saas/chain:latest",
     "dockertest": "docker build -t sass.yidmall.com:5000/saas/chaintest:latest . && docker push sass.yidmall.com:5000/saas/chaintest:latest",
-    "dockerprod": "docker build -t sass.yidmall.com:5000/yesido/chain:latest . && docker push sass.yidmall.com:5000/yesido/chain:latest",
+    "dockerprod": "docker build -t sass.yidmall.com:5000/yesido/chain:latest . && docker push sass.yidmall.com:5000/yesido/chain:latest   && docker tag sass.yidmall.com:5000/yesido/chain:latest sass.yidmall.com:5000/yesido/chain:`date +%m%d` && docker push  sass.yidmall.com:5000/yesido/chain:`date +%m%d`",
     "dockerbata": "docker build -t sass.yidmall.com:5000/bata/chain:latest . && docker push sass.yidmall.com:5000/bata/chain:latest",
     "lint": "vue-cli-service lint"
   },

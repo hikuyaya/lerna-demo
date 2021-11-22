@@ -16,7 +16,7 @@
 <!--            <el-option :key="'type' + item.value" :label="item.text" :value="item.text" v-for="item in typeMap"></el-option>-->
 <!--          </template>-->
 <!--        </el-select>-->
-        <el-input clearable placeholder="请输入用户名" v-model.trim="model.operType" style="width: 180px;"></el-input>
+        <el-input clearable placeholder="请输入操作类型" v-model.trim="model.operType" style="width: 180px;"></el-input>
       </el-form-item>
       <el-form-item label="用户名：">
         <el-input clearable placeholder="请输入用户名" v-model.trim="model.userName" style="width: 180px;"></el-input>

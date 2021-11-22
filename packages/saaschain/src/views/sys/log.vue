@@ -33,7 +33,7 @@
             <yid-table-column label="操作员" min-width="50" prop="userName"></yid-table-column>
           <yid-table-column label="终端" min-width="50" prop="clientId"></yid-table-column>
           <yid-table-column label="应用" min-width="50" prop="applicationName"></yid-table-column>
-            <yid-table-column label="时间" min-width="50" prop="time">
+            <yid-table-column label="时间" min-width="50" prop="createdTime">
                 <template slot-scope="scope">
                     {{$yid.util.formatDate(scope.row.createdTime)}}
                 </template>

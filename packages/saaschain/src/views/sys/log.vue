@@ -31,10 +31,10 @@
           width="55">
       </el-table-column>
       <yid-table-column label="操作员" min-width="50" prop="userName"></yid-table-column>
-      <yid-table-column label="时间" min-width="50" prop="time">
-        <template slot-scope="scope">
-          {{$yid.util.formatDate(scope.row.updatedTime)}}
-        </template>
+      <yid-table-column label="时间" min-width="50" prop="createdTime">
+<!--        <template slot-scope="scope">-->
+<!--          {{$yid.util.formatDate(scope.row.updatedTime)}}-->
+<!--        </template>-->
       </yid-table-column>
       <yid-table-column label="操作类型" min-width="70" prop="operType"></yid-table-column>
       <yid-table-column label="内容" min-width="150" prop="operation"></yid-table-column>

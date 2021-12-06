@@ -137,9 +137,10 @@ export default {
 
       if (this.form2.msg.length == 0) {
         yid.util.error("内容不能为空");
+        return;
       }
 
-      let newVar = await yid.http.post(process.env.VUE_APP_SOCKET_API + "/notify?msg={\"content\":\""+this.form2.msg+"\",\"type\":\"14\",\"title\":\""+this.form2.title+"\"}");
+      let newVar = await yid.http.post(process.env.VUE_APP_SOCKET_API + "/notify?msg={\"content\":\"" + this.form2.msg + "\",\"type\":\"14\",\"title\":\"" + this.form2.title + "\"}");
 
       if (newVar.resp_code == 200) {
         yid.util.alert("成功");
@@ -150,6 +151,7 @@ export default {
 
       if (this.form3.msg.length == 0 || this.form3.key.length == 0) {
         yid.util.error("内容不能为空");
+        return;
       }
 
       let newVar = await yid.http.post(process.env.VUE_APP_SOCKET_API + "?key=" + this.form3.key + "&msg=" + this.form3.msg);

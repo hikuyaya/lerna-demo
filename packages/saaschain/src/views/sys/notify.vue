@@ -3,8 +3,6 @@
     <el-tabs v-model="activeName">
 
 
-
-
       <el-tab-pane label="配置刷新" name="second">
 
         <el-form ref="form" :model="form" label-width="80px">
@@ -33,7 +31,7 @@
 
 
       </el-tab-pane>
-      <el-tab-pane label="点对点" name="fourth">
+      <el-tab-pane label="点对点消息" name="fourth">
 
         <el-form ref="form" :model="form3" label-width="80px">
 
@@ -44,6 +42,20 @@
             <el-input v-model="form3.msg" type="textarea"></el-input>
           </el-form-item>
           <el-button type="primary" @click="onSubmitPoint">提交</el-button>
+        </el-form>
+
+      </el-tab-pane>
+      <el-tab-pane label="通知消息" name="firth">
+
+        <el-form ref="form" :model="form4" label-width="80px">
+
+          <el-form-item label="接收key">
+            <el-input v-model="form4.key"></el-input>
+          </el-form-item>
+          <el-form-item label="内容">
+            <el-input v-model="form4.msg" type="textarea"></el-input>
+          </el-form-item>
+          <el-button type="primary" @click="onSubmitNotify2">提交</el-button>
         </el-form>
 
       </el-tab-pane>
@@ -88,6 +100,10 @@ export default {
         msg: ""
       },
       form3: {
+        key: "",
+        msg: ""
+      },
+      form4: {
         key: "",
         msg: ""
       }
@@ -157,6 +173,19 @@ export default {
       }
 
       let newVar = await yid.http.post(process.env.VUE_APP_SOCKET_API + "?key=" + this.form3.key + "&msg=" + this.form3.msg);
+
+      if (newVar.resp_code == 200) {
+        yid.util.alert("成功");
+      }
+
+    },
+    async onSubmitNotify2() {
+      if (this.form4.msg.length == 0) {
+        yid.util.error("内容不能为空");
+        return;
+      }
+
+      let newVar = await yid.http.post(process.env.VUE_APP_SOCKET_API + "/notify?key=" + this.form4.key + "&msg=" + this.form4.msg);
 
       if (newVar.resp_code == 200) {
         yid.util.alert("成功");

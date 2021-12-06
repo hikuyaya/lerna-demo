@@ -13,9 +13,9 @@ export default {
   },
   created() {
     document.title = yid.config.SYSTEM.TITLE
-    setTimeout(() => {
-      yid.service.IM.initIM()
-    }, 1000)
+    // setTimeout(() => {
+    //   yid.service.IM.initIM()
+    // }, 1000)
     //debugger
     if (yid.cache.get(yid.type.USER.TOKEN)) {
       // 跳转登录后首页

@@ -3,20 +3,7 @@
     <el-tabs v-model="activeName">
 
 
-      <el-tab-pane label="在线客户端" name="first">
 
-
-        <el-radio-group v-model="type" @change="typeChange">
-          <el-radio label="2">门店</el-radio>
-          <el-radio label="1">点对点</el-radio>
-        </el-radio-group>
-
-
-        <div class="infinite-list mlist" style="overflow:auto">
-          <span v-for="i in data" class="infinite-list-item">{{ i }}</span>
-        </div>
-
-      </el-tab-pane>
 
       <el-tab-pane label="配置刷新" name="second">
 
@@ -60,6 +47,21 @@
         </el-form>
 
       </el-tab-pane>
+
+      <el-tab-pane label="在线客户端" name="first">
+
+
+        <el-radio-group v-model="type" @change="typeChange">
+          <el-radio label="2">门店</el-radio>
+          <el-radio label="1">点对点</el-radio>
+        </el-radio-group>
+
+
+        <div class="infinite-list mlist" style="overflow:auto">
+          <span v-for="i in data" class="infinite-list-item">{{ i }}</span>
+        </div>
+
+      </el-tab-pane>
     </el-tabs>
   </div>
 </template>
@@ -72,7 +74,7 @@ export default {
   components: {},
   data() {
     return {
-      activeName: 'first',
+      activeName: 'second',
 
       type: "2",
 

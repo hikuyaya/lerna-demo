@@ -38,7 +38,7 @@
                     </el-form-item>
 
                 </el-form>
-                <yid-table pagination ref="jobtable" :data="jobData" style="margin-top: 15px;" :row-class-name="$yid.util.getTableClass">
+                <yid-table pagination ref="table" :data="jobData" style="margin-top: 15px;" :row-class-name="$yid.util.getTableClass">
                     <yid-table-column label="年月" min-width="100" prop="yearmonth"></yid-table-column>
                     <yid-table-column label="类型" min-width="150" prop="type">
                         <template slot-scope="scope">
@@ -62,7 +62,6 @@
                 </yid-table>
             </div>
         </el-collapse-transition>
-       <!-- <yid-dialog :title="jobDialog.title" :visible.sync="jobDialog.visible" width="450px">-->
         <el-collapse-transition>
             <div v-show="!showList">
                 <el-button @click="back" type="primary">返回</el-button>
@@ -70,10 +69,14 @@
                 <div style="margin-top: -5px;">
                     <el-divider/>
                 </div>
-            <el-form ref="monthLockForm" :model="monthLockForm"  label-width="140px">
+
+                <el-form ref="monthlockForm" :model="monthlockForm" style="margin-top: 16px"
+                         label-width="130px" label-position="right">
+                    <el-row :gutter="20">
+                        <el-col :span="8">
                 <el-form-item label="年月：" prop="yearmonth" :rules="[{ required: true, message: '年月为空'}]">
                     <el-date-picker
-                            v-model="monthLockForm.yearmonth"
+                            v-model="monthlockForm.yearmonth"
                             type="month"
                             value-format="yyyyMM"
                             placeholder="选择日期"
@@ -82,23 +85,24 @@
                 </el-form-item>
 
                 <el-form-item label="类型：" prop="type"  :rules="[{ required: true, message: '请选择类型'}]">
-                    <el-select value-key="id" placeholder="请选择" v-model.trim="monthLockForm.type">
+                    <el-select value-key="id" placeholder="请选择" v-model="monthlockForm.type">
                         <el-option label="资金锁" value="1"></el-option>
                         <el-option label="预留申报锁" value="2"></el-option>
                     </el-select>
                 </el-form-item>
 
                 <el-form-item label="状态：" prop="status" :rules="[{ required: true, message: '请选择状态'}]">
-                    <el-select value-key="id" placeholder="请选择" v-model.trim="monthLockForm.status">
+                    <el-select value-key="id" placeholder="请选择" v-model="monthlockForm.status">
                         <el-option label="未锁定" value="0"></el-option>
                         <el-option label="已锁定" value="1"></el-option>
                     </el-select>
                 </el-form-item>
-
+                        </el-col>
+                    </el-row>
             </el-form>
             </div>
         </el-collapse-transition>
-       <!-- </yid-dialog>-->
+
 
     </div>
 </template>
@@ -117,7 +121,7 @@
                     status: "",
                     yearmonth: "",
                 },
-                monthLockForm:{
+                monthlockForm:{
                     id:'',
                     yearmonth :'',
                     type :'',
@@ -132,18 +136,14 @@
                 monthlockData:[],
 
 
-                jobDialog: {
-                    title: '',
-                    visible: false,
-                },
-
             }
         },
         created() {
-            this.getjobList();
+           // this.getjobList();
         },
 
         mounted() {
+
 
             this.getjobList();
 
@@ -151,7 +151,7 @@
         methods: {
             search() {
                 this.pageInfo.page = 1
-                this.pageInfo.limit = this.$refs.jobtable.Pagination.internalPageSize;
+                this.pageInfo.limit = this.$refs.table.Pagination.internalPageSize;
                 this.getData(this.searchForm);
 
             },
@@ -165,25 +165,26 @@
 
             getData(reqParams) {
                 this.pageInfo.page = 1
-                this.pageInfo.limit = this.$refs.jobtable.Pagination.internalPageSize;
+                this.pageInfo.limit = this.$refs.table.Pagination.internalPageSize;
                 const fetch =  service.finance.monthLock.jobList
                 const params = {...this.pageInfo, ...reqParams}
-                this.$refs.jobtable.reloadData({
+                this.$refs.table.reloadData({
                     fetch,
                     params,
                 });
             },
             getMonthlock(){
-                service.finance.monthLock.monthLockAll({yearmonth: this.monthLockForm.yearmonth}).then(res => {
+
+                service.finance.monthLock.monthLockAll({yearmonth: this.monthlockForm.yearmonth}).then(res => {
                     if (res.resp_code == 200) {
 
                         if(res.data.length==0){
                            return false
                         }
                         this.monthlockData = res.data[0];
-                        this.monthLockForm.id=  this.monthlockData.id;
-                        this.monthLockForm.type=  this.monthlockData.type;
-                        this.monthLockForm.status=  this.monthlockData.status;
+                        this.monthlockForm.id=  this.monthlockData.id;
+                        this.monthlockForm.type=  this.monthlockData.type;
+                        this.monthlockForm.status=  this.monthlockData.status;
 
 
                     }
@@ -193,12 +194,12 @@
             getjobList(type){
 
                 this.pageInfo.page=1
-                this.pageInfo.limit = this.$refs.jobtable.Pagination.internalPageSize;
-                const fetch = service.finance.monthLock.jobList
-                const params = this.pageInfo
+                this.pageInfo.limit = this.$refs.table.Pagination.internalPageSize;
+                const fetch = service.finance.monthLock.jobList;
+                const params = this.pageInfo;
                 params.type = type
 
-                this.$refs.jobtable.reloadData({
+                this.$refs.table.reloadData({
                     fetch,
                     params
                 });
@@ -207,24 +208,30 @@
 
             jobAlert(tag,row) {
                 this.showList = false;
-                debugger;
                 if(tag == false){
-                    this.monthLockForm.id = ''
-                    this.monthLockForm.yearmonth= '';
-                    this.monthLockForm.type= '';
-                    this.monthLockForm.status = '';
+                    this.monthlockForm.id = ''
+                    this.monthlockForm.yearmonth= '';
+                    this.monthlockForm.type= '';
+                    this.monthlockForm.status = '';
 
                 }else{
-                    this.monthLockForm.id = row.id;
-                    this.monthLockForm.yearmonth= row.yearmonth;
-                    this.monthLockForm.type = row.type;
-                    this.monthLockForm.status = row.status;
+                    this.monthlockForm.id = row.id;
+                    this.monthlockForm.yearmonth= row.yearmonth;
+                    this.monthlockForm.type = row.type;
+                    this.monthlockForm.status = row.status;
                 }
             },
             saveJob(){
-                this.$refs['monthLockForm'].validate((valid) => {
+
+               /* let yearmonth =this.monthlockForm.yearmonth;
+                let type =this.monthlockForm.type;
+                let status =this.monthlockForm.status;*/
+console.log("saveJob1",this.monthlockForm);
+                console.log("yearmonth",this.monthlockForm.yearmonth)
+                    this.$refs['monthlockForm'].validate((valid) => {
                     if(valid){
-                        service.finance.monthLock.saveJob(this.monthLockForm).then(res=> {
+                        console.log("saveJob2",this.monthlockForm);
+                        service.finance.monthLock.saveJob(this.monthlockForm).then(res=> {
                             if(res.resp_code == 200) {
                                 yid.util.success(res.resp_msg)
                             }else{
@@ -238,8 +245,8 @@
 
             },
             back() {
-                this.$refs['monthLockForm'].resetFields()
-                this.showList = true
+                this.$refs['monthlockForm'].resetFields();
+                this.showList = true;
             },
 
         }

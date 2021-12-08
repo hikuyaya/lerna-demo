@@ -12,6 +12,7 @@ export function jobList(params) {
 
 
 export function saveJob(params) {
+    console.log("saveJob",params);
     const url = `${prefix}/monthlock`
     return yid.http.post(url, params )
 }

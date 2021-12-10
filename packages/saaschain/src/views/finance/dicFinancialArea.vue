@@ -1,11 +1,32 @@
 <template>
-    <div class="dept">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
+    <div class="salaryRewardDetail">
+        <el-collapse-transition>
+            <div v-show="showList">
+                <el-row>
+                    <el-button @click="jobAlert(false,'')" type="primary">添加</el-button>
+                </el-row>
+                <div style="margin-top: -5px;">
+                    <el-divider/>
+                </div>
+                <el-form ref="searchForm" inline :model="searchForm">
 
-            <el-tab-pane label="财务片区字典维护" name="position">
-                <el-button @click="jobAlert(false,'')" type="primary">添加</el-button>
+                    <el-form-item label="财务片区名称：" prop="name">
+                        <el-input clearable v-model="searchForm.name" placeholder="财务片区名称" ></el-input>
+                    </el-form-item>
+                    <el-form-item label="状态：" prop="status">
+                        <el-select v-model="searchForm.status" clearable placeholder="请选择">
+                            <el-option label="正常" value="1"></el-option>
+                            <el-option label="停用" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <el-button @click="search" type="primary">查询</el-button>
+                        <el-button @click="rest" type="primary">重置</el-button>
+                    </el-form-item>
 
-                <yid-table pagination ref="jobtable" :data="jobData" style="margin-top: 15px;" :row-class-name="$yid.util.getTableClass">
+                </el-form>
+
+                <yid-table pagination ref="table" :data="jobData" style="margin-top: 15px;" :row-class-name="$yid.util.getTableClass">
                     <yid-table-column label="财务片区编码" min-width="100" prop="code"></yid-table-column>
                     <yid-table-column label="财务片区名称" min-width="150" prop="name"></yid-table-column>
 
@@ -23,12 +44,19 @@
                         </template>
                     </yid-table-column>
                 </yid-table>
-            </el-tab-pane>
+            </div>
+        </el-collapse-transition>
 
-        </el-tabs>
-
-        <yid-dialog :title="jobDialog.title" :visible.sync="jobDialog.visible" width="450px">
+        <el-collapse-transition>
+            <div v-show="!showList">
+                <el-button @click="back" type="primary">返回</el-button>
+                <el-button @click="saveJob" type="primary">保存</el-button>
+                <div style="margin-top: -5px;">
+                    <el-divider/>
+                </div>
             <el-form ref="financialAreaForm" :model="financialAreaForm"  label-width="140px">
+                <el-row :gutter="20">
+                    <el-col :span="8">
                 <el-form-item label="财务片区编码：" prop="code" :rules="[{ required: true, message: '财务片区编码为空'}]">
                     {{financialAreaForm.code}}
                 </el-form-item>
@@ -43,13 +71,11 @@
                         <el-option label="停用" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-
-                <el-form-item>
-                    <el-button @click="saveJob" type="primary">保存</el-button>
-                    <el-button @click="jobCancel">取消</el-button>
-                </el-form-item>
+                    </el-col>
+                </el-row>
             </el-form>
-        </yid-dialog>
+            </div>
+        </el-collapse-transition>
 
     </div>
 </template>
@@ -62,9 +88,12 @@
         data() {
             return {
                 activeName: 'position',
-
+                showList:true,
                 type:'1',
-
+                searchForm:{
+                    name :'',
+                    status : '',
+                },
                 financialAreaForm:{
                     code :'',
                     name :'',
@@ -87,7 +116,7 @@
             }
         },
         created() {
-            this.getjobList();
+            //this.getjobList();
         },
 
         mounted() {
@@ -97,16 +126,37 @@
         },
         methods: {
 
+            search() {
+                this.pageInfo.page = 1
+                this.pageInfo.limit = this.$refs.table.Pagination.internalPageSize;
+                this.getData(this.searchForm);
 
+            },
+            rest() {
+                this.$refs["searchForm"].resetFields()
+                this.searchForm.name = "";
+                this.searchForm.status = "";
+                this.search()
+            },
+            getData(reqParams) {
+                this.pageInfo.page = 1
+                this.pageInfo.limit = this.$refs.table.Pagination.internalPageSize;
+                const fetch =  service.finance.dicFinancialArea.jobList
+                const params = {...this.pageInfo, ...reqParams}
+                this.$refs.table.reloadData({
+                    fetch,
+                    params,
+                });
+            },
             getjobList(type){
 
                 this.pageInfo.page=1
-                this.pageInfo.limit = this.$refs.jobtable.Pagination.internalPageSize;
+                this.pageInfo.limit = this.$refs.table.Pagination.internalPageSize;
                 const fetch = service.finance.dicFinancialArea.jobList
                 const params = this.pageInfo
                 params.type = type
 
-                this.$refs.jobtable.reloadData({
+                this.$refs.table.reloadData({
                     fetch,
                     params
                 });
@@ -120,15 +170,8 @@
                 })
             },
 
-            handleClick(tab, event) {
-                this.getjobList();
-            },
-
-            jobAlert(tag = false,row) {
-                this.jobDialog.visible = true;
-                this.jobDialog.title = tag? '编辑财务片区字典' : '添加财务片区字典';
-
-
+            jobAlert(tag,row) {
+                this.showList = false;
                 if(tag == false){
                     this.financialAreaForm.id = ''
                     /**获取最大code+1**/
@@ -150,20 +193,20 @@
 
                         service.finance.dicFinancialArea.saveJob(this.financialAreaForm).then(res=> {
                             if(res.resp_code == 200) {
-                                yid.util.success(res.resp_msg)
+                                yid.util.success(res.resp_msg);
+                                this.back();
+                                this.getData(this.searchForm);
                             }else{
                                 yid.util.error(res.resp_msg)
                             }
-                            this.getjobList();
+
                         });
-                        this.jobCancel();
+
                     }
                 })
 
             },
-            jobCancel() {
-                this.jobDialog.visible = false;
-            },
+
             jobDelete(row) {
                 let tip = '';
                 if(row.status === '2'){
@@ -192,7 +235,11 @@
                         this.getjobList("");
                     });
                 })
-            }
+            },
+            back() {
+                this.$refs['financialAreaForm'].resetFields();
+                this.showList = true;
+            },
         }
     }
 </script>

@@ -72,34 +72,31 @@
 
                 <el-form ref="monthlockForm" :model="monthlockForm" style="margin-top: 16px"
                          label-width="130px" label-position="right">
-                    <el-row :gutter="20">
-                        <el-col :span="8">
-                <el-form-item label="年月：" prop="yearmonth" :rules="[{ required: true, message: '年月为空'}]">
-                    <el-date-picker
-                            v-model="monthlockForm.yearmonth"
-                            type="month"
-                            value-format="yyyyMM"
-                            placeholder="选择日期"
-                            @change="getMonthlock">
-                    </el-date-picker>
-                </el-form-item>
 
-                <el-form-item label="类型：" prop="type"  :rules="[{ required: true, message: '请选择类型'}]">
-                    <el-select value-key="id" placeholder="请选择" v-model="monthlockForm.type">
-                        <el-option label="资金锁" value="1"></el-option>
-                        <el-option label="预留申报锁" value="2"></el-option>
-                    </el-select>
-                </el-form-item>
+                    <el-form-item label="年月：" prop="yearmonth" :rules="[{ required: true, message: '年月为空'}]">
+                        <el-date-picker
+                                v-model="monthlockForm.yearmonth"
+                                type="month"
+                                value-format="yyyy-MM"
+                                placeholder="选择日期">
+                        </el-date-picker>
+                    </el-form-item>
 
-                <el-form-item label="状态：" prop="status" :rules="[{ required: true, message: '请选择状态'}]">
-                    <el-select value-key="id" placeholder="请选择" v-model="monthlockForm.status">
-                        <el-option label="未锁定" value="0"></el-option>
-                        <el-option label="已锁定" value="1"></el-option>
-                    </el-select>
-                </el-form-item>
-                        </el-col>
-                    </el-row>
-            </el-form>
+                    <el-form-item label="类型：" prop="type"  :rules="[{ required: true, message: '请选择类型'}]">
+                        <el-select value-key="id" placeholder="请选择" v-model="monthlockForm.type">
+                            <el-option label="资金锁" value="1"></el-option>
+                            <el-option label="预留申报锁" value="2"></el-option>
+                        </el-select>
+                    </el-form-item>
+
+                    <el-form-item label="状态：" prop="status" :rules="[{ required: true, message: '请选择状态'}]">
+                        <el-select value-key="id" placeholder="请选择" v-model="monthlockForm.status">
+                            <el-option label="未锁定" value="0"></el-option>
+                            <el-option label="已锁定" value="1"></el-option>
+                        </el-select>
+                    </el-form-item>
+
+                </el-form>
             </div>
         </el-collapse-transition>
 
@@ -122,10 +119,10 @@
                     yearmonth: "",
                 },
                 monthlockForm:{
-                    id:'',
-                    yearmonth :'',
-                    type :'',
-                    status : '',
+                    id:"",
+                    yearmonth :"",
+                    type :"",
+                    status : "",
                 },
                 pageInfo:{page:1,limit:10},
                 maxCode:0,
@@ -222,24 +219,19 @@
                 }
             },
             saveJob(){
-
-               /* let yearmonth =this.monthlockForm.yearmonth;
-                let type =this.monthlockForm.type;
-                let status =this.monthlockForm.status;*/
-console.log("saveJob1",this.monthlockForm);
-                console.log("yearmonth",this.monthlockForm.yearmonth)
                     this.$refs['monthlockForm'].validate((valid) => {
                     if(valid){
-                        console.log("saveJob2",this.monthlockForm);
                         service.finance.monthLock.saveJob(this.monthlockForm).then(res=> {
                             if(res.resp_code == 200) {
                                 yid.util.success(res.resp_msg)
+                                this.back();
+                                this.getjobList();
                             }else{
                                 yid.util.error(res.resp_msg)
                             }
-                            this.getjobList();
+
                         });
-                        this.back();
+
                     }
                 })
 

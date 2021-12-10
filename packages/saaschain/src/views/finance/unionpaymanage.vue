@@ -2,8 +2,14 @@
     <div class="salaryRewardDetail">
         <el-collapse-transition>
             <div v-show="showList">
+                <el-row>
+                    <el-button @click="addUnionpay" type="primary">新增</el-button>
+                    <el-button @click="mutiImportEmployee" type="primary">导入</el-button>
+                </el-row>
+                <div style="margin-top: -5px;">
+                    <el-divider/>
+                </div>
                 <el-form ref="searchForm" inline :model="searchForm">
-
 
                     <el-form-item label="类型：" prop="shopType">
                             <el-select v-model="searchForm.shopType" clearable placeholder="请选择">
@@ -31,8 +37,7 @@
                     <el-form-item label="">
                         <el-button @click="search" type="primary">查询</el-button>
                         <el-button @click="rest" type="primary">重置</el-button>
-                        <el-button @click="addUnionpay" type="primary">新增</el-button>
-                        <el-button @click="mutiImportEmployee" type="primary">导入</el-button>
+
                     </el-form-item>
                 </el-form>
                 <yid-table ref="table" pagination style="width: 100%;margin-top: 10px;">
@@ -323,9 +328,6 @@
                 }
             },
 
-            selectPositionLevel() {
-                this.$forceUpdate();
-            },
             addUnionpay() {
 
                 this.uplshopaccountForm.shopid = "";
@@ -344,6 +346,7 @@
                 this.uplshopaccountForm.cbTerminalCode = "";
                 this.uplshopaccountForm.cbMerchantCode = "";
                 this.showList = false;
+                this.qrcode="";
 
                 this.myheaders = {
                     authorization: 'Bearer ' + yid.cache.get(yid.type.USER.TOKEN)
@@ -373,6 +376,7 @@
                 this.uplshopaccountForm.cbTerminalCode = row.cbTerminalCode;
                 this.uplshopaccountForm.cbMerchantCode = row.cbMerchantCode;
                 this.showList = false;
+                this.qrcode="";
             },
             search() {
                 this.pageInfo.page = 1
@@ -397,9 +401,6 @@
                         if (that.uplshopaccountForm.status == null || that.uplshopaccountForm.status.length == 0) {
                             that.uplshopaccountForm.status = "1";
                         }
-
-
-
                         service.finance.unionpaymanage.save(that.uplshopaccountForm).then(res => {
                             if (res.resp_code == 200) {
                                 yid.util.success("保存成功");
@@ -449,14 +450,14 @@
                     this.uplshopaccountForm.shopType = shopPobj.type;
                     this.uplshopaccountForm.brandId = shopPobj.brandId;
                     this.uplshopaccountForm.brandCode = shopPobj.brandCode;
-                    this.qrcode = "";
                 })
-
-
             },
-
             getUnionQr(){
                 let shopid = this.uplshopaccountForm.shopid;
+                if (shopid === '') {
+                    yid.util.error("请先填写门店信息");
+                    return false;
+                }
                 service.finance.unionpaymanage.getUnionQr({shopid:shopid}).then(res => {
 
                     if(res.resp_code == 200){
@@ -502,7 +503,7 @@
             },
             handleAvatarExcelSuccess(res) {
                 this.mutiImportDialog.unionpays = res.data;
-                debugger;
+
                 console.log(this.mutiImportDialog.unionpays);
             },
             saveImportAccount() {

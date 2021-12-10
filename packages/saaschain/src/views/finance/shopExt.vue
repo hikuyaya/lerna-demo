@@ -1,11 +1,25 @@
 <template>
-    <div class="dept">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
+    <div class="salaryRewardDetail">
+        <el-collapse-transition>
+            <div v-show="showList">
+                <el-row>
+                    <el-button @click="addShopExt('')" type="primary">添加</el-button>
+                </el-row>
+                <div style="margin-top: -5px;">
+                    <el-divider/>
+                </div>
+                <el-form ref="searchForm" inline :model="searchForm">
+                    <el-form-item label="门店编码：" prop="shopcode">
+                        <el-input v-model="searchForm.shopcode" clearable   style="width: 150px;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="">
+                        <el-button @click="search" type="primary">查询</el-button>
+                        <el-button @click="rest" type="primary">重置</el-button>
+                    </el-form-item>
 
-            <el-tab-pane label="门店财务资料维护" name="position">
-                <el-button @click="jobAlert(false,'')" type="primary">添加</el-button>
+                </el-form>
 
-                <yid-table pagination ref="jobtable" :data="jobData" style="margin-top: 15px;" :row-class-name="$yid.util.getTableClass">
+                <yid-table pagination ref="table" :data="jobData" style="margin-top: 15px;" :row-class-name="$yid.util.getTableClass">
                     <yid-table-column label="门店编码" min-width="100" prop="shopcode"></yid-table-column>
                     <yid-table-column label="门店名称" min-width="150" prop="shopname"></yid-table-column>
                     <yid-table-column label="门店类型" min-width="100" prop="shopType">
@@ -47,44 +61,39 @@
 
                     <yid-table-column label="操作" min-width="150" prop="content" fixed="right">
                         <template slot-scope="scope">
-                            <el-link type="primary" @click="jobAlert(true,scope.row)">编辑</el-link>
+                            <el-link type="primary" @click="editAction(scope.row)">编辑</el-link>
                         </template>
                     </yid-table-column>
                 </yid-table>
-            </el-tab-pane>
-
-        </el-tabs>
-
-        <yid-dialog :title="jobDialog.title" :visible.sync="jobDialog.visible" width="450px">
+            </div>
+        </el-collapse-transition>
+        <el-collapse-transition>
+            <div v-show="!showList">
+                <el-button @click="back" type="primary">返回</el-button>
+                <el-button @click="saveJob" type="primary">保存</el-button>
+                <div style="margin-top: -5px;">
+                    <el-divider/>
+                </div>
             <el-form ref="shopExtForm" :model="shopExtForm"  label-width="140px">
-
+                <el-row :gutter="20">
+                    <el-col :span="8">
                 <el-form-item label="门店编码：" prop="shopcode" :rules="[{ required: true, message: '门店编码为空'}]">
                     <el-input v-model="shopExtForm.shopcode"  @change="getshopcode"></el-input>
                 </el-form-item>
-                <el-form-item label="门店名称：" prop="shopname" >
-                    {{shopExtForm.shopname}}
-                </el-form-item>
+
                 <el-form-item label="门店类型：" prop="shopType"  >
                     <el-select value-key="id" placeholder="请选择" v-model.trim="shopExtForm.shopType" disabled>
                         <el-option label="美发" value="1"></el-option>
                         <el-option label="美容" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="门店品牌：" prop="brandName"  :disabled="true">
-                    {{shopExtForm.brandName}}
-                </el-form-item>
+
                 <el-form-item label="收款人姓名：" prop="payee"  :rules="[{ required: true, message: '收款人姓名为空'}]">
                     <el-input v-model="shopExtForm.payee"></el-input>
                 </el-form-item>
 
                 <el-form-item label="开户行：" prop="bank"  :rules="[{ required: true, message: '开户行为空'}]">
                     <el-input v-model="shopExtForm.bank"></el-input>
-                </el-form-item>
-                <el-form-item label="开户账号：" prop="bankno"  :rules="[{ required: true, message: '开户账号为空'}]">
-                    <el-input v-model="shopExtForm.bankno"></el-input>
-                </el-form-item>
-                <el-form-item label="支行名称：" prop="branchbank"  :rules="[{ required: true, message: '支行名称为空'}]">
-                    <el-input v-model="shopExtForm.branchbank"></el-input>
                 </el-form-item>
                 <el-form-item label="财务片区：" prop=""  :rules="[{ required: true, message: '财务片区为空'}]">
                     <el-select value-key="pid" placeholder="请选择" v-model="shopExtForm.facode">
@@ -99,8 +108,19 @@
                         <el-option label="已关店" value="1"></el-option>
                     </el-select>
                 </el-form-item>
-                <el-form-item label="关店清零日期：" prop="closeDate" >
-                    <el-input v-model="shopExtForm.closeDate"></el-input>
+                    </el-col>
+                    <el-col :span="8">
+                        <el-form-item label="门店名称：" prop="shopname" >
+                            {{shopExtForm.shopname}}
+                        </el-form-item>
+                        <el-form-item label="门店品牌：" prop="brandName"  :disabled="true">
+                            {{shopExtForm.brandName}}
+                        </el-form-item>
+                <el-form-item label="开户账号：" prop="bankno"  :rules="[{ required: true, message: '开户账号为空'}]">
+                    <el-input v-model="shopExtForm.bankno"></el-input>
+                </el-form-item>
+                <el-form-item label="支行名称：" prop="branchbank"  :rules="[{ required: true, message: '支行名称为空'}]">
+                    <el-input v-model="shopExtForm.branchbank"></el-input>
                 </el-form-item>
                 <el-form-item label="财务公司类型：" prop="ftype" :rules="[{ required: true, message: '请选择财务公司类型'}]">
                     <el-select value-key="id" placeholder="请选择" v-model.trim="shopExtForm.ftype">
@@ -108,13 +128,16 @@
                         <el-option label="咨询公司" value="2"></el-option>
                     </el-select>
                 </el-form-item>
-
-                <el-form-item>
-                    <el-button @click="saveJob" type="primary">保存</el-button>
-                    <el-button @click="jobCancel">取消</el-button>
+                <el-form-item label="关店清零日期：" prop="closeDate" >
+                    <el-input v-model="shopExtForm.closeDate"></el-input>
                 </el-form-item>
+
+
+                    </el-col>
+                </el-row>
             </el-form>
-        </yid-dialog>
+            </div>
+        </el-collapse-transition>
 
     </div>
 </template>
@@ -127,9 +150,12 @@
         data() {
             return {
                 activeName: 'position',
-
+                showList: true,
                 type:'1',
+                searchForm: {
+                    shopcode: "",
 
+                },
                 shopExtForm:{
                     shopid:'',
                     shopcode :'',
@@ -167,7 +193,7 @@
             }
         },
         created() {
-            this.getjobList();
+           // this.getjobList();
         },
 
         mounted() {
@@ -177,17 +203,38 @@
             this.getFinanceAreaList();
         },
         methods: {
+            search() {
+                this.pageInfo.page = 1
+                this.pageInfo.limit = this.$refs.table.Pagination.internalPageSize;
+                this.getData(this.searchForm);
 
-
+            },
+            rest() {
+                this.$refs["searchForm"].resetFields()
+                this.searchForm.yearmonth = "";
+                this.searchForm.type = "";
+                this.searchForm.status = "";
+                this.search()
+            },
+            getData(reqParams) {
+                this.pageInfo.page = 1
+                this.pageInfo.limit = this.$refs.table.Pagination.internalPageSize;
+                const fetch =  service.finance.shopExt.jobList
+                const params = {...this.pageInfo, ...reqParams}
+                this.$refs.table.reloadData({
+                    fetch,
+                    params,
+                });
+            },
             getjobList(type){
 
                 this.pageInfo.page=1
-                this.pageInfo.limit = this.$refs.jobtable.Pagination.internalPageSize;
+                this.pageInfo.limit = this.$refs.table.Pagination.internalPageSize;
                 const fetch = service.finance.shopExt.jobList
                 const params = this.pageInfo
                 params.type = type
 
-                this.$refs.jobtable.reloadData({
+                this.$refs.table.reloadData({
                     fetch,
                     params
                 });
@@ -204,7 +251,6 @@
 
                     return shopp.shopcode === shopcode;
                 });
-
                 this.shopExtForm.shopname = shopPobj.shopname;
                 this.shopExtForm.shopType = shopPobj.type;
                 this.shopExtForm.brandId = shopPobj.brandId;
@@ -231,59 +277,56 @@
                     }
                 })
             },
-            jobAlert(tag = false,row) {
-                this.jobDialog.visible = true;
-                this.jobDialog.title = tag? '编辑门店财务资料' : '添加门店财务资料';
 
+            addShopExt() {
+                this.shopExtForm.id = ''
+                this.shopExtForm.name= '';
+                this.shopExtForm.shopid='';
+                this.shopExtForm.shopcode ='';
+                this.shopExtForm.shponame ='';
+                this.shopExtForm.shopType = '';
+                this.shopExtForm.brandid = '';
+                this.shopExtForm.brandCode = '';
+                this.shopExtForm.payee = '';
+                this.shopExtForm.bank = '';
+                this.shopExtForm.bankno = '';
+                this.shopExtForm.branchbank = '';
+                this.shopExtForm.faid = '';
+                this.shopExtForm.facode = '';
+                this.shopExtForm.faname = '';
+                this.shopExtForm.isClosed = '';
+                this.shopExtForm.closeDate = '';
+                this.shopExtForm.ftype = '';
+                this.showList = false;
 
-                if(tag == false){
-                    this.shopExtForm.id = ''
-                    this.shopExtForm.name= '';
-                    this.shopExtForm.shopid='';
-                    this.shopExtForm.shopcode ='';
-                    this.shopExtForm.shponame ='';
-                    this.shopExtForm.shopType = '';
-                    this.shopExtForm.brandid = '';
-                    this.shopExtForm.brandCode = '';
-                    this.shopExtForm.payee = '';
-                    this.shopExtForm.bank = '';
-                    this.shopExtForm.bankno = '';
-                    this.shopExtForm.branchbank = '';
-                    this.shopExtForm.faid = '';
-                    this.shopExtForm.facode = '';
-                    this.shopExtForm.faname = '';
-                    this.shopExtForm.isClosed = '';
-                    this.shopExtForm.closeDate = '';
-                    this.shopExtForm.ftype = '';
-
-                }else{
-
-                    this.shopExtForm.id = row.id;
-                    this.shopExtForm.name= row.name;
-                    this.shopExtForm.shopid=row.shopid;
-                    this.shopExtForm.shopcode =row.shopcode;
-                    this.shopExtForm.shopname =row.shopname;
-                    this.shopExtForm.shopType = row.shopType;
-                    this.shopExtForm.brandId = row.brandId;
-                    this.shopExtForm.brandCode =  row.brandCode;
-                    let brandPobj = {};
-                    brandPobj = this.allShopList.find((item)=>{
-                        return item.brandCode === row.brandCode;
-                    });
-                    this.shopExtForm.brandName =  brandPobj.brandName;
-                    this.shopExtForm.payee = row.payee;
-                    this.shopExtForm.bank = row.bank;
-                    this.shopExtForm.bankno = row.bankno;
-                    this.shopExtForm.branchbank = row.branchbank;
-                    this.shopExtForm.faid =  row.faid;
-                    this.shopExtForm.facode =  row.facode;
-                    this.shopExtForm.faname =  row.faname;
-                    this.shopExtForm.isClosed =  row.isClosed;
-                    this.shopExtForm.closeDate = row.closeDate;
-                    this.shopExtForm.ftype = row.ftype;
-
-                }
             },
+            async editAction(row) {
+                this.shopExtForm.id = row.id;
+                this.shopExtForm.name= row.name;
+                this.shopExtForm.shopid=row.shopid;
+                this.shopExtForm.shopcode =row.shopcode;
+                this.shopExtForm.shopname =row.shopname;
+                this.shopExtForm.shopType = row.shopType;
+                this.shopExtForm.brandId = row.brandId;
+                this.shopExtForm.brandCode =  row.brandCode;
+                let brandPobj = {};
+                brandPobj = this.allShopList.find((item)=>{
+                    return item.brandCode === row.brandCode;
+                });
+                this.shopExtForm.brandName =  brandPobj.brandName;
+                this.shopExtForm.payee = row.payee;
+                this.shopExtForm.bank = row.bank;
+                this.shopExtForm.bankno = row.bankno;
+                this.shopExtForm.branchbank = row.branchbank;
+                this.shopExtForm.faid =  row.faid;
+                this.shopExtForm.facode =  row.facode;
+                this.shopExtForm.faname =  row.faname;
+                this.shopExtForm.isClosed =  row.isClosed;
+                this.shopExtForm.closeDate = row.closeDate;
+                this.shopExtForm.ftype = row.ftype;
+                this.showList = false;
+            },
+
             saveJob(){
                 this.$refs['shopExtForm'].validate((valid) => {
                     if(valid){
@@ -301,18 +344,21 @@
                         service.finance.shopExt.saveJob(this.shopExtForm).then(res=> {
                             if(res.resp_code == 200) {
                                 yid.util.success(res.resp_msg)
+                                this.back();
+                                this.getData(this.searchForm);
                             }else{
                                 yid.util.error(res.resp_msg)
                             }
-                            this.getjobList();
+
                         });
-                        this.jobCancel();
+
                     }
                 })
 
             },
-            jobCancel() {
-                this.jobDialog.visible = false;
+            back() {
+                this.$refs['shopExtForm'].resetFields();
+                this.showList = true;
             },
 
         }

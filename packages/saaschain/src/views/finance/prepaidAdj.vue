@@ -1,9 +1,39 @@
 <template>
-    <div class="dept">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
+    <div class="salaryRewardDetail">
+        <el-collapse-transition>
+            <div v-show="showList">
+                <el-row>
+                    <el-button @click="jobAlert(false,'')" type="primary">添加</el-button>
+                </el-row>
+                <div style="margin-top: -5px;">
+                    <el-divider/>
+                </div>
+                <el-form :model="searchForm" inline ref="searchForm">
+                    <el-form-item label="原门店编码：" prop="shopcode">
+                        <el-input v-model="searchForm.shopcode" clearable   style="width: 150px;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="现门店编码：" prop="adjShopcode">
+                        <el-input v-model="searchForm.adjShopcode" clearable   style="width: 150px;"></el-input>
+                    </el-form-item>
+                    <el-form-item label="交易时间：" prop="payTimeRange">
+                        <div class="block">
+                            <el-date-picker
+                                    :clearable = false
+                                    v-model="searchForm.payTimeRange"
+                                    type="daterange"
+                                    value-format="yyyy-MM-dd"
+                                    range-separator="至"
+                                    start-placeholder="开始日期"
+                                    end-placeholder="结束日期">
+                            </el-date-picker>
+                        </div>
+                    </el-form-item>
 
-            <el-tab-pane label="银联通归属门店调整" name="position">
-                <el-button @click="jobAlert(false,'')" type="primary">添加</el-button>
+                    <el-form-item>
+                        <el-button @click="search" type="primary">查询</el-button>
+                        <el-button @click="rest" type="primary">重置</el-button>
+                    </el-form-item>
+                </el-form>
 
                 <yid-table pagination ref="jobtable" :data="jobData" style="margin-top: 15px;" :row-class-name="$yid.util.getTableClass">
                     <yid-table-column label="原交易门店编码" min-width="150" prop="shopcode"></yid-table-column>
@@ -21,13 +51,20 @@
                         </template>
                     </yid-table-column>
                 </yid-table>
-            </el-tab-pane>
+            </div>
+        </el-collapse-transition>
 
-        </el-tabs>
-
-        <yid-dialog :title="jobDialog.title" :visible.sync="jobDialog.visible" width="450px">
-            <el-form ref="prepaidAdjForm" :model="prepaidAdjForm"  label-width="140px">
-
+        <el-collapse-transition>
+            <div v-show="!showList">
+                <el-button @click="back" type="primary">返回</el-button>
+                <el-button @click="saveJob" type="primary">保存</el-button>
+                <div style="margin-top: -5px;">
+                    <el-divider/>
+                </div>
+                <el-form ref="prepaidAdjForm" :model="prepaidAdjForm" style="margin-top: 16px"
+                         label-width="130px" label-position="right">
+                    <el-row :gutter="20">
+                        <el-col :span="8">
                 <el-form-item label="商户订单号：" prop="paymentNo" :rules="[{ required: true, message: '商户订单号为空'}]">
                     <el-input v-model="prepaidAdjForm.paymentNo"  @change="getprepaid"></el-input>
                 </el-form-item>
@@ -54,13 +91,11 @@
                 <el-form-item label="调整门店名称：" prop="adjShopname"  >
                     {{prepaidAdjForm.adjShopname}}
                 </el-form-item>
-
-                <el-form-item>
-                    <el-button @click="saveJob" type="primary">保存</el-button>
-                    <el-button @click="jobCancel">取消</el-button>
-                </el-form-item>
+                        </el-col>
+                    </el-row>
             </el-form>
-        </yid-dialog>
+            </div>
+        </el-collapse-transition>
 
     </div>
 </template>
@@ -73,9 +108,13 @@
         data() {
             return {
                 activeName: 'position',
-
+                showList: true,
                 type:'1',
-
+                searchForm: {
+                    shopcode: "",
+                    adjShopcode: "",
+                    payTimeRange : [],
+                },
                 prepaidAdjForm:{
                     billcode:'',
                     paymentNo :'',
@@ -110,21 +149,55 @@
             }
         },
         created() {
-            this.getjobList();
+          //  this.getjobList();
+            this.getShopList();
         },
 
         mounted() {
 
             this.getjobList();
-            this.getShopList();
+
+        },
+        computed:{
+            searchFormReq: function () {
+                let reqObj = {}
+                reqObj.shopcode = this.searchForm.shopcode;
+                reqObj.adjShopcode =  this.searchForm.adjShopcode;
+                let payTimeRange = this.searchForm.payTimeRange;
+                if(payTimeRange){
+                    reqObj.sPayTimeStart = this.searchForm.payTimeRange[0];
+                    reqObj.sPayTimeEnd = this.searchForm.payTimeRange[1];
+                }else{
+                    reqObj.sPayTimeStart = ''
+                    reqObj.sPayTimeEnd = ''
+                }
+                return reqObj;
+            }
         },
         methods: {
-
+            getData(reqParams) {
+                this.pageInfo.page = 1
+                this.pageInfo.limit = this.$refs.jobtable.Pagination.internalPageSize;
+                const fetch = service.finance.prepaidAdj.queryList
+                const params = {...this.pageInfo, ...reqParams}
+                params.isDel = "0"
+                this.$refs.jobtable.reloadData({
+                    fetch,
+                    params,
+                });
+            },
+            search(){
+                this.pageInfo.page=0
+                this.getData(this.searchFormReq);
+            },
+            rest(){
+                this.$refs["searchForm"].resetFields()
+            },
 
             getjobList(type){
 
                 this.pageInfo.page=1
-                this.pageInfo.limit = this.$refs.jobtable.Pagination.internalPageSize;
+                this.pageInfo.limit = this.$refs.table.Pagination.internalPageSize;
                 const fetch = service.finance.prepaidAdj.jobList
                 const params = this.pageInfo
                 params.type = type
@@ -135,9 +208,7 @@
                 });
             },
 
-            handleClick(tab, event) {
-                this.getjobList();
-            },
+
 
             getshopcode() {
                 let adjshopPobj = {};
@@ -146,7 +217,8 @@
 
                     return shopp.shopcode === adjshopcode;
                 });
-                this.prepaidAdjForm.adjShopid = adjshopPobj.shopid;
+                debugger;
+                this.prepaidAdjForm.adjShopid = adjshopPobj.id;
                 this.prepaidAdjForm.adjShopname = adjshopPobj.shopname;
 
             },
@@ -188,11 +260,8 @@
                     }
                 })
             },
-            jobAlert(tag = false,row) {
-                this.jobDialog.visible = true;
-                this.jobDialog.title = tag? '编辑门店财务资料' : '添加门店财务资料';
-
-
+            jobAlert(tag,row) {
+                this.showList = false;
                 if(tag == false){
                     this.prepaidAdjForm.id = ''
                     this.prepaidAdjForm.billcode= '';
@@ -238,7 +307,7 @@
 
                             return shopp.shopcode === shopcode;
                         });
-                        this.prepaidAdjForm.shopid = shopPobj.shopid;
+                        this.prepaidAdjForm.shopid = shopPobj.id;
                         this.prepaidAdjForm.shopname = shopPobj.shopname;
                         this.prepaidAdjForm.shopType = shopPobj.type;
                         this.prepaidAdjForm.brandId = shopPobj.brandId;
@@ -252,13 +321,14 @@
                             }
                             this.getjobList();
                         });
-                        this.jobCancel();
+                        this.back();
                     }
                 })
 
             },
-            jobCancel() {
-                this.jobDialog.visible = false;
+            back() {
+                this.$refs['prepaidAdjForm'].resetFields();
+                this.showList = true;
             },
 
         }

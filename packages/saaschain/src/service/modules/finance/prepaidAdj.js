@@ -12,10 +12,16 @@ export function saveJob(params) {
     return yid.http.post(url, params )
 }
 
+export function queryList(params) {
+    return yid.http.get(`${prefix}/queryList`, {params})
+}
+
 export default {
     /** 列表 */
     jobList,
     /**保存或更新**/
     saveJob,
+
+    queryList,
 }
 

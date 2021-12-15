@@ -437,6 +437,11 @@
 
                     return shopp.shopcode === shopcode;
                 });
+                if(yid.util.isEmpty(shopPobj)){
+                    yid.util.error("没有店号为"+shopcode+"的门店信息，请重新输入");
+                    this.uplshopaccountForm.shopcode="";
+                    return;
+                }
                 service.finance.unionpaymanage.getShopcodeAccountShow({shopcode:shopcode}).then(res => {
 
                     if(res.resp_code == 200){

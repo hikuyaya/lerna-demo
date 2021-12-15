@@ -251,6 +251,11 @@
 
                     return shopp.shopcode === shopcode;
                 });
+                if(yid.util.isEmpty(shopPobj)){
+                    yid.util.error("没有店号为"+shopcode+"的门店信息，请重新输入");
+                    this.shopExtForm.shopcode="";
+                    return;
+                }
                 this.shopExtForm.shopname = shopPobj.shopname;
                 this.shopExtForm.shopType = shopPobj.type;
                 this.shopExtForm.brandId = shopPobj.brandId;

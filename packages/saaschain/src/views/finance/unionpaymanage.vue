@@ -232,7 +232,7 @@
                     limitMoney: ""
                 },
                 uplshopaccountForm: {
-
+                    id:"",
                     shopid: "",
                     shopcode: "",
                     shopname: "",
@@ -398,15 +398,16 @@
                 const that = this;
                 this.$refs['uplshopaccountForm'].validate((valid) => {
                     if (valid) {
-                        if (that.uplshopaccountForm.status == null || that.uplshopaccountForm.status.length == 0) {
+                      /*  if (that.uplshopaccountForm.status == null || that.uplshopaccountForm.status.length == 0) {
                             that.uplshopaccountForm.status = "1";
-                        }
+                        }*/
                         service.finance.unionpaymanage.save(that.uplshopaccountForm).then(res => {
                             if (res.resp_code == 200) {
                                 yid.util.success("保存成功");
-                                if (that.uplshopaccountForm.id == '' || that.uplshopaccountForm.id.length == 0) {
+                                that.getData("1", that.searchForm);
+                               /* if (that.uplshopaccountForm.id == '' || that.uplshopaccountForm.id.length == 0) {
                                     that.status = "2";
-                                    that.getData("1", that.searchForm);
+
                                 } else {
                                     if (that.status == '2') {
                                         that.status = "2";
@@ -415,7 +416,7 @@
                                         that.status = "1";
                                         that.getData("2", that.searchForm);
                                     }
-                                }
+                                }*/
                                 that.$refs['uplshopaccountForm'].resetFields()
                                 that.showList = true
                             }

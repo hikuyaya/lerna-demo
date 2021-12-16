@@ -122,8 +122,8 @@
                             </el-form-item>
 
                             <el-form-item label="对公限金额：" prop="limitMoney">
-                                <el-input v-model="uplshopaccountForm.limitMoney"
-                                          style="width: 150px;"></el-input>
+                                <el-input type ='number' v-model="uplshopaccountForm.limitMoney"  style="width: 150px;">
+                                </el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">

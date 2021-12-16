@@ -13,7 +13,7 @@ export function saveJob(params) {
 }
 
 export function queryList(params) {
-    return yid.http.get(`${prefix}/queryList`, {params})
+    return yid.http.get(`${prefix}/prepaidadj/queryList`, {params})
 }
 
 export default {

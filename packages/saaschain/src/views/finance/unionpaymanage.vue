@@ -156,10 +156,12 @@
                             </el-form-item>
                             <el-form-item label="对私C扫B二维码：" >
                                 <el-button type="primary" @click="getUnionQr">点击生成</el-button>
+                                <div  v-show="showQrcode" >
                                 <VueQrcode
                                         :value="this.qrcode"
                                         :size="250"
                                 />
+                                </div>
                             </el-form-item>
                         </el-col>
 
@@ -215,6 +217,7 @@
             return {
                 upload: yid.config.API.UPLOAD,
                 showList: true,
+                showQrcode:false,
                 myheaders: {},
                 dataList: [],
                 status: '2',
@@ -347,7 +350,7 @@
                 this.uplshopaccountForm.cbMerchantCode = "";
                 this.showList = false;
                 this.qrcode="";
-
+                this.showQrcode = false;
                 this.myheaders = {
                     authorization: 'Bearer ' + yid.cache.get(yid.type.USER.TOKEN)
                 };
@@ -377,6 +380,7 @@
                 this.uplshopaccountForm.cbMerchantCode = row.cbMerchantCode;
                 this.showList = false;
                 this.qrcode="";
+                this.showQrcode = false;
             },
             search() {
                 this.pageInfo.page = 1
@@ -432,6 +436,7 @@
 
             },
             getshopcode() {
+                this.showQrcode = false;
                 let shopPobj = {};
                 let shopcode = this.uplshopaccountForm.shopcode;
                 shopPobj = this.allShopList.find((shopp)=>{
@@ -441,6 +446,7 @@
                 if(yid.util.isEmpty(shopPobj)){
                     yid.util.error("没有店号为"+shopcode+"的门店信息，请重新输入");
                     this.uplshopaccountForm.shopcode="";
+                    this.uplshopaccountForm.shopid="";
                     return;
                 }
                 service.finance.unionpaymanage.getShopcodeAccountShow({shopcode:shopcode}).then(res => {
@@ -452,6 +458,7 @@
                     }else{
                         yid.util.info(res.resp_msg);
                     }
+                    this.uplshopaccountForm.shopid = shopPobj.id;
                     this.uplshopaccountForm.shopname = shopPobj.shopname;
                     this.uplshopaccountForm.shopType = shopPobj.type;
                     this.uplshopaccountForm.brandId = shopPobj.brandId;
@@ -464,15 +471,15 @@
                     yid.util.error("请先填写门店信息");
                     return false;
                 }
-                service.finance.unionpaymanage.getUnionQr({shopid:shopid}).then(res => {
 
-                    if(res.resp_code == 200){
+                service.finance.unionpaymanage.getUnionQr({shopid:shopid}).then(res => {
+                    if(res.data.resultCode == '0000'){
                         this.qrcode = res.data.qrcode;
                     }else{
-                        yid.util.info(res.resp_msg);
+                        yid.util.error(res.data.resultMsg);
                     }
                 })
-
+                this.showQrcode = true;
             },
             getShopList() {
                 service.chain.shop.shopList({status: '1'}).then(res => {

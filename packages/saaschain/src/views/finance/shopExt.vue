@@ -256,6 +256,7 @@
                     this.shopExtForm.shopcode="";
                     return;
                 }
+                this.shopExtForm.shopid = shopPobj.id;
                 this.shopExtForm.shopname = shopPobj.shopname;
                 this.shopExtForm.shopType = shopPobj.type;
                 this.shopExtForm.brandId = shopPobj.brandId;
@@ -346,6 +347,7 @@
                         });
                         this.shopExtForm.faid = financeAreapobj.id;
                         this.shopExtForm.faname = financeAreapobj.name;
+                        debugger;
                         service.finance.shopExt.saveJob(this.shopExtForm).then(res=> {
                             if(res.resp_code == 200) {
                                 yid.util.success(res.resp_msg)

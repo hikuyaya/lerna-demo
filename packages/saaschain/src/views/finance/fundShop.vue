@@ -117,7 +117,7 @@
             }
         },
         mounted() {
-            this.getData("1");
+           this.getData("1");
             this.getShopList();
         },
         filters: {},

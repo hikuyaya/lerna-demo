@@ -2,7 +2,7 @@ import yid from '@src/library'
 
 const prefix = 'api-finance/uplshopaccount/';
 export function list(params) {
-    return yid.http.get(`${prefix}list/all`, {params})
+    return yid.http.get(`${prefix}/list`, {params})
 }
 
 export function save(params) {

@@ -65,8 +65,8 @@
                          label-width="130px" label-position="right">
                     <el-row :gutter="20">
                         <el-col :span="8">
-                <el-form-item label="商户订单号：" prop="paymentNo" :rules="[{ required: true, message: '商户订单号为空'}]">
-                    <el-input v-model="prepaidAdjForm.paymentNo"  @change="getprepaid"></el-input>
+                <el-form-item label="商户订单号：" prop="paymentNo">
+                   {{prepaidAdjForm.paymentNo}}
                 </el-form-item>
                 <el-form-item label="系统订单号：" prop="billcode" :rules="[{ required: true, message: '系统订单号为空'}]">
                     <el-input v-model="prepaidAdjForm.billcode"  @change="getprepaid"></el-input>
@@ -155,7 +155,7 @@
 
         mounted() {
 
-            this.getjobList();
+            //this.getjobList();
 
         },
         computed:{
@@ -236,6 +236,7 @@
 
                         if(res.data.length==0){
                             yid.util.info("未找到订单信息,请确认")
+                            return;
                         }
                         this.prepaidData = res.data[0];
                         this.prepaidAdjForm.billcode=  this.prepaidData.billcode;
@@ -323,9 +324,10 @@
                             }else{
                                 yid.util.error(res.resp_msg)
                             }
-                            this.getjobList();
+                            this.back();
+                            this.getData(this.searchFormReq);
                         });
-                        this.back();
+
                     }
                 })
 

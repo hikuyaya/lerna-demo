@@ -230,15 +230,14 @@
                 if(this.prepaidAdjForm.paymentNo=='' && this.prepaidAdjForm.billcode==''){
                     return false;
                 }
-                service.cashier.prepaidorder.queryByno({paymentNo: this.prepaidAdjForm.paymentNo,
-                    billcode:this.prepaidAdjForm.billcode,status:'1'}).then(res => {
+                service.cashier.prepaidorder.queryByno({
+                    billcode:this.prepaidAdjForm.billcode}).then(res => {
                     if (res.resp_code == 200) {
-
-                        if(res.data.length==0){
+                        if(res.data==null){
                             yid.util.info("未找到订单信息,请确认")
                             return;
                         }
-                        this.prepaidData = res.data[0];
+                        this.prepaidData = res.data;
                         this.prepaidAdjForm.billcode=  this.prepaidData.billcode;
 
                         this.prepaidAdjForm.paymentNo= this.prepaidData.paymentNo;

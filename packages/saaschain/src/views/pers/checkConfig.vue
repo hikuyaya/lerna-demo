@@ -332,6 +332,13 @@
                     yid.util.info("请选择旷工天数");
                     return false;
                 }
+                if(yid.util.isEmpty(this.configForm.shopid)){
+                    yid.util.info("请选择门店查询后进行添加");
+                    return false;
+                }
+                this.ruleForm.shopid = this.configForm.shopid;
+                this.ruleForm.shopcode = this.configForm.shopcode;
+                this.ruleForm.shopname = this.configForm.shopname;
                 service.pers.checkRule.saveCheckrule(this.ruleForm).then(res=>{
                     if(res.resp_code == 200) {
                         this.getCheckRuleList();

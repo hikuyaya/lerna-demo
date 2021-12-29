@@ -112,6 +112,12 @@
                             {{$yid.util.formatTime(scope.row.quitTime)}}
                         </template>
                     </yid-table-column>
+                  <yid-table-column label="剪发原件" min-width="100" prop="jfyjMoney">
+
+                  </yid-table-column>
+                  <yid-table-column label="剪发会员价" min-width="100" prop="jfhyjMoney">
+
+                  </yid-table-column>
                     <yid-table-column
                             label="操作" min-width="150" fixed="right">
                         <template slot-scope="scope">

@@ -46,7 +46,7 @@
             <yid-table-column label="班次" min-width="150" prop="pcInfo">
                 <template slot-scope="scope">
                     {{getPcInfo(scope.row)}}
-                    <i class="el-icon-edit" @click="alertBcDialog(scope.row)"></i>
+                    <!--<i class="el-icon-edit" @click="alertBcDialog(scope.row)"></i>-->
                 </template>
             </yid-table-column>
             <yid-table-column label="日期" min-width="100" prop="cdate">

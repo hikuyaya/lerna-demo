@@ -51,6 +51,7 @@
         mounted() {
             this.importUrl = yid.config.API.BASE + this.importPath;
             this.myheaders['authorization'] = 'Bearer ' + yid.cache.get(yid.type.USER.TOKEN);
+            this.myheaders['x-appId-header'] =  yid.cache.get(yid.type.USER.APPID);
         },
         computed:{
 
@@ -68,15 +69,16 @@
                 this.importData = res.data;
             },
             beforeAvatarExcelUpload(file){
-                const isExcel = (file.type.indexOf("sheet") ||file.type.indexOf('excel'));
+                debugger;
+                const isExcel = (file.type.indexOf("sheet")>=0 ||file.type.indexOf('excel'))>=0;
                 const isLt2M = file.size / 1024 / 1024 < 10;
                 if (!isExcel) {
                     yid.util.error('上传excel只能是 xls/xlsx 格式!');
-                    return;
+                    return isExcel;
                 }
                 if (!isLt2M) {
                     yid.util.error('上传excel大小不能超过 10MB!');
-                    return;
+                    return isLt2M;
                 }
 
                 return isExcel && isLt2M;

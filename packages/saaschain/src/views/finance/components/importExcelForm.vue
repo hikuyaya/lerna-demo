@@ -70,7 +70,7 @@
             },
             beforeAvatarExcelUpload(file){
                 debugger;
-                const isExcel = (file.type.indexOf("sheet")>=0 ||file.type.indexOf('excel'))>=0;
+                const isExcel = (file.type.indexOf("sheet")>=0 ||file.type.indexOf('excel')>=0);
                 const isLt2M = file.size / 1024 / 1024 < 10;
                 if (!isExcel) {
                     yid.util.error('上传excel只能是 xls/xlsx 格式!');

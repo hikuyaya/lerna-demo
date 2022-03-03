@@ -20,7 +20,7 @@
                         :on-success="handleAvatarExcelSuccess"
                         :before-upload="beforeAvatarExcelUpload">
                     <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip">支持上传 .xls .xlsx后缀文件，表格中一行为一条数据，一次最多可导入3000条数据。</div>
+                    <div slot="tip" class="el-upload__tip">支持上传 .xls .xlsx后缀文件。</div>
                 </el-upload>
             </el-form-item>
             <slot></slot>

@@ -15,7 +15,7 @@
                         <el-date-picker
                                 v-model="searchForm.yearmonth"
                                 type="month"
-                                value-format="yyyyMM"
+                                value-format="yyyy-MM"
                                 placeholder="选择日期">
                         </el-date-picker>
                     </el-form-item>

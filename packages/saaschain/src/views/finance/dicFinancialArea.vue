@@ -210,9 +210,9 @@
             jobDelete(row) {
                 let tip = '';
                 if(row.status === '2'){
-                    tip = '停用'
-                }else(
                     tip = '恢复'
+                }else(
+                    tip = '停用'
                 )
                 yid.util.confirm('你确定要'+tip+row.name+'吗？', '','', ()=> {
                     const job = {};

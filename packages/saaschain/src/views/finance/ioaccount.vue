@@ -128,6 +128,9 @@
                     width="700px">
             <el-form :model="mutiImportDialog.model" label-width="120px" ref="copyForm" :label-position="labelPosition">
                 <p>操作提示</p>
+                <p>1、点击链接：下载门店汇款信息模板；</p>
+                <p>2、下载完成并保存文件，然后打开文件并输入门店汇款信息；</p>
+                <p>3、在下面导入修改完毕的模板文件。</p>
                 <el-form-item label="下载导入模板：" align="left">
                     <el-link @click="downExcelTemplate" type="primary">导入模板</el-link>
                 </el-form-item>

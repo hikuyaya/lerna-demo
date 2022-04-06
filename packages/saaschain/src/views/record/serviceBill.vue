@@ -446,6 +446,7 @@
             cleanSearch(){
                 this.searchForm.billcode = '';
                 this.searchForm.mobile = '';
+                this.searchForm.cpname = '';
                 this.searchForm.cardpay = '';
                 this.searchForm.memName = '';
                 this.searchForm.cmcode = '';

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-form label-width="120px" ref="importForm">
+        <el-form :model="formData"  label-width="120px" ref="importForm">
             <p>批量导入方法</p>
             <p>1、点击链接：下载模板；</p>
             <p>2、下载完成并保存文件，然后打开文件并输入需要导入的数据，请不要修改模板中的列名；</p>
@@ -43,6 +43,7 @@
         data(){
             return {
                 importData:[],
+                formData:{},
                 importUrl:"",
                 myheaders:{},
             }
@@ -90,7 +91,6 @@
             },
             cancelImp(){
                 this.$refs['uploadExcel'].clearFiles();
-                this.importData = [];
                 if(this.importCancel)
                     this.importCancel();
             },

@@ -26,7 +26,7 @@
             <slot></slot>
             <el-form-item>
                 <el-button @click="doImportFunc" type="primary">确定</el-button>
-                <el-button @click="importCancel">取消</el-button>
+                <el-button @click="cancelImp">取消</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -65,7 +65,6 @@
                 return;
             },
             handleAvatarExcelSuccess(res){
-                console.log(res.data);
                 this.importData = res.data;
             },
             beforeAvatarExcelUpload(file){
@@ -89,6 +88,11 @@
                 }else{
                     this.importFunc(this.importData);
                 }
+            },
+            cancelImp(){
+                this.$refs['uploadExcel'].clearFiles();
+                if(this.importCancel)
+                    this.importCancel();
             },
         },
     }

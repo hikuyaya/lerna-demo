@@ -23,6 +23,9 @@
                           prop="sname"
                           label="消费内容"
                           width="180">
+                    <template slot-scope="scope">
+                          {{scope.row.sname}}{{(scope.row.norms == undefined || scope.row.norms == '')?'':'('+scope.row.norms+')'}}
+                    </template>
                   </el-table-column>
                   <el-table-column
                           prop="stype"

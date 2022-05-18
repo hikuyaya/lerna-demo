@@ -23,6 +23,7 @@
     th.is-leaf,
     td {
       border-bottom: 1px solid #f2f2f2;
+      height: 79px !important;
     }
   }
 }
@@ -31,6 +32,7 @@
   &.el-table--border {
     .el-table__header-wrapper th {
       background: #f5f7fa;
+      height: 79px !important;
     }
   }
 

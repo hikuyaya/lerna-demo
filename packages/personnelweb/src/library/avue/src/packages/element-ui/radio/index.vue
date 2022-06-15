@@ -1,39 +1,43 @@
 <template>
   <div :class="b()">
-    <el-radio-group v-model="text"
-                    :size="size"
-                    @change="handleChange"
-                    @click.native="handleClick"
-                    :disabled="disabled">
-      <component :is="componentName"
-                 v-for="(item,index) in dic"
-                 :label="item[valueKey]"
-                 :border="border"
-                 :readonly="readonly"
-                 :disabled="item[disabledKey]"
-                 :key="index">{{item[labelKey]}}</component>
+    <el-radio-group
+      v-model="text"
+      :size="size"
+      @change="handleChange"
+      @click.native="handleClick"
+      :disabled="disabled">
+      <component
+        :is="componentName"
+        v-for="(item, index) in dic"
+        :label="item[valueKey]"
+        :border="border"
+        :readonly="readonly"
+        :disabled="item[disabledKey]"
+        :key="index"
+        >{{ item[labelKey] }}</component
+      >
     </el-radio-group>
   </div>
 </template>
 
 <script>
-import create from "../../../core/create";
-import props from "../../core/common/props.js";
-import event from "../../core/common/event.js";
+import create from '../../../core/create'
+import props from '../../core/common/props.js'
+import event from '../../core/common/event.js'
 export default create({
-  name: "radio",
+  name: 'radio',
   mixins: [props(), event()],
-  data () {
+  data() {
     return {
-      name: 'radio',
-    };
+      name: 'radio'
+    }
   },
   props: {
     value: {}
   },
   watch: {},
-  created () { },
-  mounted () { },
+  created() {},
+  mounted() {},
   methods: {}
-});
+})
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div :class="[b(),className]">
+  <div :class="[b(), className]">
     <div id="keyboard"></div>
   </div>
 </template>
@@ -8,7 +8,7 @@
 import Keyboard from '../../../plugin/keyboard/index'
 import NumberKeyboard from '../../../plugin/keyboard/number'
 import MobileKeyboard from '../../../plugin/keyboard/mobile'
-import create from "../../../core/create";
+import create from '../../../core/create'
 export default create({
   name: 'keyboard',
   props: {
@@ -20,14 +20,14 @@ export default create({
     theme: {
       type: String,
       default: 'default',
-      validator: (value) => {
+      validator: value => {
         return ['default', 'dark', 'green', 'classic'].includes(value)
       }
     },
     type: {
       type: String,
       default: 'default',
-      validator: (value) => {
+      validator: value => {
         return ['default', 'number', 'mobile'].includes(value)
       }
     },
@@ -41,25 +41,25 @@ export default create({
     }
   },
   watch: {
-    ele () {
+    ele() {
       this.init()
     }
   },
-  data () {
+  data() {
     return {
       customClick: {}
     }
   },
   computed: {
-    className () {
+    className() {
       return `avue-keyboard--${this.theme}`
     }
   },
-  mounted () {
-    this.init();
+  mounted() {
+    this.init()
   },
   methods: {
-    init () {
+    init() {
       if (!this.ele) return
       let keyboard
       const config = {
@@ -72,14 +72,19 @@ export default create({
       else if (this.type == 'number') keyboard = new NumberKeyboard(config)
       else if (this.type == 'mobile') keyboard = new MobileKeyBoard(config)
 
-      const ele = this.ele.indexOf("#") == 0 ? this.ele.substring(1) : this.ele
-      keyboard.inputOn(`#${ele}`, 'value', (e, val) => {
-        this.$emit('click', e, val)
-      }, this.rebind ? this.customClick : null)
+      const ele = this.ele.indexOf('#') == 0 ? this.ele.substring(1) : this.ele
+      keyboard.inputOn(
+        `#${ele}`,
+        'value',
+        (e, val) => {
+          this.$emit('click', e, val)
+        },
+        this.rebind ? this.customClick : null
+      )
 
       this.keyboard = keyboard
     },
-    bindClick (btn, fn) {
+    bindClick(btn, fn) {
       this.keyboard.onclick(btn, fn)
       this.customClick[btn] = fn
     }

@@ -1,34 +1,33 @@
 <template>
-  <el-cascader :options="dic"
-               v-model="text"
-               :placeholder="placeholder"
-               :props="allProps"
-               :size="size"
-               :clearable="clearableVal"
-               :show-all-levels="showAllLevels"
-               :filterable="filterable"
-               :popper-class="popperClass"
-               :separator="separator"
-               :disabled="disabled"
-               :collapse-tags="tags"
-               @focus="handleFocus"
-               @blur="handleBlur"
-               @click.native="handleClick">
-    <template slot-scope="{data,node}">
-      <slot v-if="$scopedSlots.default"
-            :data="data"
-            :node="node"></slot>
-      <span v-else>{{data[labelKey]}}</span>
+  <el-cascader
+    :options="dic"
+    v-model="text"
+    :placeholder="placeholder"
+    :props="allProps"
+    :size="size"
+    :clearable="clearableVal"
+    :show-all-levels="showAllLevels"
+    :filterable="filterable"
+    :popper-class="popperClass"
+    :separator="separator"
+    :disabled="disabled"
+    :collapse-tags="tags"
+    @focus="handleFocus"
+    @blur="handleBlur"
+    @click.native="handleClick">
+    <template slot-scope="{ data, node }">
+      <slot v-if="$scopedSlots.default" :data="data" :node="node"></slot>
+      <span v-else>{{ data[labelKey] }}</span>
     </template>
   </el-cascader>
 </template>
 
 <script>
-import create from "../../../core/create";
-import props from "../../core/common/props.js";
-import event from "../../core/common/event.js";
+import create from '../../../core/create'
+import props from '../../core/common/props.js'
+import event from '../../core/common/event.js'
 export default create({
-  name: "cascader",
+  name: 'cascader',
   mixins: [props(), event()],
   props: {
     checkStrictly: {
@@ -45,7 +44,7 @@ export default create({
     },
     expandTrigger: {
       type: String,
-      default: "hover"
+      default: 'hover'
     },
     showAllLevels: {
       type: Boolean,
@@ -68,12 +67,12 @@ export default create({
       type: String
     }
   },
-  data () {
-    return {};
+  data() {
+    return {}
   },
   watch: {},
   computed: {
-    allProps () {
+    allProps() {
       return {
         label: this.labelKey,
         value: this.valueKey,
@@ -83,7 +82,7 @@ export default create({
         emitPath: this.emitPath,
         lazy: this.lazy,
         lazyLoad: (node, resolve) => {
-          let callback = (list) => {
+          let callback = list => {
             let findDic = (list, value, children) => {
               list.forEach(ele => {
                 if (ele[this.valueKey] == value) {
@@ -94,7 +93,7 @@ export default create({
               })
             }
             findDic(this.dic, node[this.valueKey], list)
-            resolve(list);
+            resolve(list)
           }
           this.lazyLoad && this.lazyLoad(node, callback)
         },
@@ -102,12 +101,10 @@ export default create({
       }
     }
   },
-  created () { },
-  mounted () { },
+  created() {},
+  mounted() {},
   methods: {
-    refresh(){
-
-    }
+    refresh() {}
   }
-});
+})
 </script>

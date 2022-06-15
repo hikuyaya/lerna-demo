@@ -1,3 +1,3 @@
 module.exports = path => {
-  return require(path);
-};
+  return require(path)
+}

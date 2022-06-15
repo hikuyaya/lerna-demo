@@ -1,32 +1,32 @@
-.avue-input-icon{
+.avue-input-icon {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
-  &__item{
+  &__item {
     text-align: center;
     width: 60px;
     padding: 10px 20px 0 20px;
-    transition: all .2s;
-    p{
+    transition: all 0.2s;
+    p {
       font-size: 12px;
       margin-top: 5px;
     }
-    &:hover{
+    &:hover {
       transform: scale(1.4);
     }
-    &--active{
+    &--active {
       transform: scale(1.4);
-      color:#409EFF;
+      color: #409eff;
     }
   }
-  &__list{
+  &__list {
     display: flex;
     flex-wrap: wrap;
   }
-  &__icon{
+  &__icon {
     font-size: 32px !important;
   }
-  &__icon-symbol{
+  &__icon-symbol {
     width: 32px;
     height: 32px;
     margin: 0 auto;

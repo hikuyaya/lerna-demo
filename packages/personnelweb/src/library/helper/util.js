@@ -38,7 +38,12 @@ export function queryUrlParam(name, url) {
  * @param {string} [childrenKey='children']
  * @returns
  */
-export function toTree(nodes, idKey = 'id', pIdKey = 'pId', childrenKey = 'children') {
+export function toTree(
+  nodes,
+  idKey = 'id',
+  pIdKey = 'pId',
+  childrenKey = 'children'
+) {
   let map = {}
   let node
   let roots = []
@@ -48,7 +53,11 @@ export function toTree(nodes, idKey = 'id', pIdKey = 'pId', childrenKey = 'child
   })
   for (let i = 0; i < nodes.length; i += 1) {
     node = nodes[i]
-    if (node[pIdKey] !== '-1' && node[pIdKey] !== '' && nodes[map[node[pIdKey]]]) {
+    if (
+      node[pIdKey] !== '-1' &&
+      node[pIdKey] !== '' &&
+      nodes[map[node[pIdKey]]]
+    ) {
       if (!nodes[map[node[pIdKey]]][childrenKey]) {
         nodes[map[node[pIdKey]]][childrenKey] = []
         nodes[map[node[pIdKey]]][childrenKey].push(node)
@@ -81,7 +90,7 @@ export function deepClone(item) {
   let result
 
   // normalizing primitives if someone did new String('aaa'), or new Number('444');
-  types.forEach(function(type) {
+  types.forEach(function (type) {
     if (item instanceof type) {
       result = type(item)
     }
@@ -90,7 +99,7 @@ export function deepClone(item) {
   if (typeof result == 'undefined') {
     if (Object.prototype.toString.call(item) === '[object Array]') {
       result = []
-      item.forEach(function(child, index) {
+      item.forEach(function (child, index) {
         result[index] = deepClone(child)
       })
     } else if (typeof item == 'object') {
@@ -135,19 +144,31 @@ export function deepClone(item) {
  * @param {string} [type='success'] 提示类型，默认'success'
  * @returns
  */
-export function alert(message = '温馨提示', title = '温馨提示', type = 'success') {
+export function alert(
+  message = '温馨提示',
+  title = '温馨提示',
+  type = 'success'
+) {
   return Message({ message, title, type })
 }
 export function info(msg = '温馨提示', title = '温馨提示', type = 'info') {
   return Message({ message: msg, title, type })
 }
-export function warning(msg = '温馨提示', title = '温馨提示', type = 'warning') {
+export function warning(
+  msg = '温馨提示',
+  title = '温馨提示',
+  type = 'warning'
+) {
   return Message({ message: msg, title, type })
 }
 export function error(msg = '温馨提示', title = '温馨提示', type = 'error') {
   return Message({ message: msg, title, type })
 }
-export function success(msg = '温馨提示', title = '温馨提示', type = 'success') {
+export function success(
+  msg = '温馨提示',
+  title = '温馨提示',
+  type = 'success'
+) {
   return Message({ message: msg, title, type })
 }
 
@@ -164,7 +185,11 @@ export function success(msg = '温馨提示', title = '温馨提示', type = 'su
 export function confirm(
   msg = '温馨提示',
   title = '温馨提示',
-  options = { type: 'info', confirmButtonText: '确定', cancelButtonText: '取消' },
+  options = {
+    type: 'info',
+    confirmButtonText: '确定',
+    cancelButtonText: '取消'
+  },
   confirmCallBack,
   cancelCallBack
 ) {
@@ -191,7 +216,10 @@ export function confirm(
  */
 export function formatDuration(bgTime, endTime) {
   if (bgTime > endTime) {
-    console.warn('【 yid 】【 util 】【 formatDuration 】格式化时间间隔出错，开始时间不能大于结束时间。', new Date())
+    console.warn(
+      '【 yid 】【 util 】【 formatDuration 】格式化时间间隔出错，开始时间不能大于结束时间。',
+      new Date()
+    )
 
     return ''
   }
@@ -238,95 +266,104 @@ export function getDuration(bgTime, endTime) {
 
 export function jsToFormData(config) {
   //对象转formdata格式
-  let formArr = [];
-  let formString = '';
-  for(let key in config) {
-    formArr.push(key + "=" +  config[key]);
+  let formArr = []
+  let formString = ''
+  for (let key in config) {
+    formArr.push(key + '=' + config[key])
   }
-  formString = formArr.join("&");
-  return formString;
+  formString = formArr.join('&')
+  return formString
 }
 
-
 export function formatDate(now) {
-  if(!now){
+  if (!now) {
     return now
   }
-  var year= new Date(now).getFullYear();  //取得4位数的年份
-  var month= new Date(now).getMonth()+1;  //取得日期中的月份，其中0表示1月，11表示12月
-  var date= new Date(now).getDate();      //返回日期月份中的天数（1到31）
+  var year = new Date(now).getFullYear() //取得4位数的年份
+  var month = new Date(now).getMonth() + 1 //取得日期中的月份，其中0表示1月，11表示12月
+  var date = new Date(now).getDate() //返回日期月份中的天数（1到31）
   // var hour=now.getHours();     //返回日期中的小时数（0到23）
   // var minute=now.getMinutes(); //返回日期中的分钟数（0到59）
   // var second=now.getSeconds(); //返回日期中的秒数（0到59）
-  month = month >= 10 ? month : '0' +month;
-  date = date >= 10 ? date : '0' +date;
-  return year+"-"+month+"-"+date;
+  month = month >= 10 ? month : '0' + month
+  date = date >= 10 ? date : '0' + date
+  return year + '-' + month + '-' + date
 }
 
 export function formatTime(now) {
-  if(!now){
+  if (!now) {
     return now
   }
-  var year= new Date(now).getFullYear();  //取得4位数的年份
-  var month= new Date(now).getMonth()+1;  //取得日期中的月份，其中0表示1月，11表示12月
-  var date= new Date(now).getDate();      //返回日期月份中的天数（1到31）
-  var hour= new Date(now).getHours();     //返回日期中的小时数（0到23）
-  var minute=new Date(now).getMinutes(); //返回日期中的分钟数（0到59）
-  month = month >= 10 ? month : '0' +month;
-  date = date >= 10 ? date : '0' +date;
-  hour = hour >= 10 ? hour : '0' +hour;
-  minute = minute >= 10 ? minute : '0' +minute;
+  var year = new Date(now).getFullYear() //取得4位数的年份
+  var month = new Date(now).getMonth() + 1 //取得日期中的月份，其中0表示1月，11表示12月
+  var date = new Date(now).getDate() //返回日期月份中的天数（1到31）
+  var hour = new Date(now).getHours() //返回日期中的小时数（0到23）
+  var minute = new Date(now).getMinutes() //返回日期中的分钟数（0到59）
+  month = month >= 10 ? month : '0' + month
+  date = date >= 10 ? date : '0' + date
+  hour = hour >= 10 ? hour : '0' + hour
+  minute = minute >= 10 ? minute : '0' + minute
   // var second=now.getSeconds(); //返回日期中的秒数（0到59）
-  return year+"-"+month+"-"+date+" "+hour+":"+minute;
+  return year + '-' + month + '-' + date + ' ' + hour + ':' + minute
 }
 
 export function getStockClass(item) {
-  let rowClass = ""
-  if(parseInt(item.row.status) == 1) {
-      rowClass = 'normal'
+  let rowClass = ''
+  if (parseInt(item.row.status) == 1) {
+    rowClass = 'normal'
   } else {
     //forbidden
     rowClass = 'lack'
   }
-  return rowClass;
+  return rowClass
 }
 
 export function getPersCheckClass(item) {
-  let rowClass = ""
-  if(item.row.ccode == '0001') {
+  let rowClass = ''
+  if (item.row.ccode == '0001') {
     rowClass = 'forbidden'
-  }else if(item.row.ccode == '0002'){
+  } else if (item.row.ccode == '0002') {
     rowClass = 'forbidden'
   } else {
     //forbidden
     rowClass = 'normal'
   }
-  return rowClass;
+  return rowClass
 }
 
 export function getTableClass(item) {
-  let rowClass = ""
-  if(parseInt(item.row.status) == 1) {
+  let rowClass = ''
+  if (parseInt(item.row.status) == 1) {
     rowClass = 'normal'
   } else {
     rowClass = 'forbidden'
   }
-  return rowClass;
+  return rowClass
 }
 
-export function isEmpty (v){
-    switch (typeof v){
-        case 'undefined' : return true;
-        case 'string' : if(v.trim().length == 0) return true; break;
-        case 'boolean' : if(!v) return true; break;
-        case 'number' : if(0 === v) return false; break;
-        case 'object' :
-            if(null === v) return true;
-            if(undefined !== v.length && v.length==0) return true;
-            for(var k in v){return false;} return true;
-            break;
-    }
-    return false;
+export function isEmpty(v) {
+  switch (typeof v) {
+    case 'undefined':
+      return true
+    case 'string':
+      if (v.trim().length == 0) return true
+      break
+    case 'boolean':
+      if (!v) return true
+      break
+    case 'number':
+      if (0 === v) return false
+      break
+    case 'object':
+      if (null === v) return true
+      if (undefined !== v.length && v.length == 0) return true
+      for (var k in v) {
+        return false
+      }
+      return true
+      break
+  }
+  return false
 }
 
 /**
@@ -350,5 +387,5 @@ export default {
   getStockClass,
   getPersCheckClass,
   getTableClass,
-    isEmpty
+  isEmpty
 }

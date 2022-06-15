@@ -64,8 +64,7 @@ export default {
     // 可接收 Pagination Props
     ...Pagination.props,
     // 扩展 Pagination Props ( 相当于修改 Pagination Props )
-    ...ExtendPaginationProps,
-
+    ...ExtendPaginationProps
   },
 
   data() {
@@ -161,7 +160,10 @@ export default {
       )
 
       // 区别 axios 对 get / post 不同的传参方式
-      if (this.config.method.toLocaleLowerCase() === 'get' || this.config.method.toLocaleLowerCase() === 'delete') {
+      if (
+        this.config.method.toLocaleLowerCase() === 'get' ||
+        this.config.method.toLocaleLowerCase() === 'delete'
+      ) {
         delete this.config.params.params
 
         this.config.params = { params: this.config.params }
@@ -184,14 +186,14 @@ export default {
 
     reloadData(config = {}) {
       if (this.pagination) {
-        this.Pagination.internalCurrentPage = 1;
+        this.Pagination.internalCurrentPage = 1
       }
       return this.loadData(config)
     },
 
     reloadDataNoChangePage(config = {}) {
       if (this.pagination) {
-        this.Pagination.internalCurrentPage = config.params.page;
+        this.Pagination.internalCurrentPage = config.params.page
       }
       return this.loadData(config)
     },
@@ -202,61 +204,61 @@ export default {
     },
 
     clearData(config = {}) {
-        if (this.pagination) {
-          this.internalData = []
-          //console.log('DATAAAAA',this.internalData);
-          this.Pagination.internalTotal = 0
-          //console.log(this.Pagination.internalTotal)
-        } else {
-          this.internalData = []
-        }
+      if (this.pagination) {
+        this.internalData = []
+        //console.log('DATAAAAA',this.internalData);
+        this.Pagination.internalTotal = 0
+        //console.log(this.Pagination.internalTotal)
+      } else {
+        this.internalData = []
+      }
     },
 
     clearSelection() {
       if (this.pagination) {
-        this.$children[1].clearSelection();
+        this.$children[1].clearSelection()
       } else {
-        this.$children[0].clearSelection();
+        this.$children[0].clearSelection()
       }
       // this.$refs.tableShop.clearSelection();
     },
 
     toggleRowSelection(row) {
-
       if (this.pagination) {
-        this.$children[1].toggleRowSelection(row);
+        this.$children[1].toggleRowSelection(row)
       } else {
-        this.$children[0].toggleRowSelection(row);
+        this.$children[0].toggleRowSelection(row)
       }
       // this.$refs.tableShop.clearSelection();
     },
 
-    toggleRowExpansion(row, expanded){
-        if (this.pagination) {
-            this.$children[1].toggleRowExpansion(row,expanded);
-        } else {
-            this.$children[0].toggleRowExpansion(row,expanded);
-        }
+    toggleRowExpansion(row, expanded) {
+      if (this.pagination) {
+        this.$children[1].toggleRowExpansion(row, expanded)
+      } else {
+        this.$children[0].toggleRowExpansion(row, expanded)
+      }
     },
 
-      getCurData(){
-          return this.internalData
-      },
+    getCurData() {
+      return this.internalData
+    },
 
     fetch() {
       // 当远端数据请求成功时
 
       const fetchThenFunction = res => {
         if (res.data) {
-
           if (this.pagination) {
-
-            this.internalData = res.data.returnData || res.data.list || res.data || []
+            this.internalData =
+              res.data.returnData || res.data.list || res.data || []
             //console.log('DATAAAAA',this.internalData);
-            this.Pagination.internalTotal = res.data.count || res.data.total || res.count || 0
+            this.Pagination.internalTotal =
+              res.data.count || res.data.total || res.count || 0
             //console.log(this.Pagination.internalTotal)
           } else {
-            this.internalData = res.data.returnData || res.data.list || res.data || []
+            this.internalData =
+              res.data.returnData || res.data.list || res.data || []
           }
         }
 
@@ -270,8 +272,15 @@ export default {
 
       // 传递了远端api， 使用 api 加载
       else if (this.config.api) {
-        console.warn('【 Components 】【 yidTable 】', new Date(), 'api 请求形式已过期，请使用 fetch 定义数据加载方式')
-        return $yid.http[this.config.method](this.config.api, this.config.params).then(fetchThenFunction)
+        console.warn(
+          '【 Components 】【 yidTable 】',
+          new Date(),
+          'api 请求形式已过期，请使用 fetch 定义数据加载方式'
+        )
+        return $yid.http[this.config.method](
+          this.config.api,
+          this.config.params
+        ).then(fetchThenFunction)
       }
 
       // 异常
@@ -283,10 +292,10 @@ export default {
 
   render(h) {
     return h(Table, {
-      props: { ...this.$props, data: this.internalData, border:true},
+      props: { ...this.$props, data: this.internalData, border: true },
       attrs: this.$attrs,
       on: { ...this.$listeners, 'sort-change': this.internalSortChange },
       scopedSlots: this.$scopedSlots
     })
-  },
+  }
 }

@@ -72,4 +72,3 @@ export default {
     delBtn: '删 除'
   }
 }
-  ;

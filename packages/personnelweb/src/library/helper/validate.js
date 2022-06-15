@@ -42,7 +42,8 @@ export const pattern = {
   telephone: /^(\(\d{3,4}\)|\d{3,4}-|\s)?\d{7,14}$/,
 
   // idCard 验证,验证身份证号
-  idCard: /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
+  idCard:
+    /^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/,
 
   // email 验证,验证邮箱
   email: /\w[-\w.+]*@([A-Za-z0-9][-A-Za-z0-9]+\.)+[A-Za-z]{2,14}$/,
@@ -51,13 +52,13 @@ export const pattern = {
   percente: /^(((\d|[1-9]\d)(\.\d{1,2})?)|100|100.0|100.00)$/,
 
   //验证是否存在中文
-  isHaveChinese:/.*[\u4e00-\u9fa5]+.*$/,
+  isHaveChinese: /.*[\u4e00-\u9fa5]+.*$/,
 
   //验证数字和字母
-  isInputCode:/^[0-9a-zA-Z]+$/,
+  isInputCode: /^[0-9a-zA-Z]+$/,
 
   //验证数字和字母和'-'
-  isInputCode2:/^[0-9a-zA-Z-]+$/
+  isInputCode2: /^[0-9a-zA-Z-]+$/
 }
 
 /**
@@ -258,7 +259,7 @@ export function mobile(param) {
 }
 
 export function eecode(param) {
-    return pattern.eecode.test(param)
+  return pattern.eecode.test(param)
 }
 
 /**
@@ -309,17 +310,17 @@ export function email(param) {
  * @returns {*}
  */
 export function isHaveChinese(param) {
-    return pattern.isHaveChinese.test(param);
+  return pattern.isHaveChinese.test(param)
 }
 
 //只能有数字字母
 export function isInputCode(param) {
-  return pattern.isInputCode.test(param);
+  return pattern.isInputCode.test(param)
 }
 
 //只能有数字字母-
 export function isInputCode2(param) {
-  return pattern.isInputCode2.test(param);
+  return pattern.isInputCode2.test(param)
 }
 
 export default {
@@ -344,5 +345,5 @@ export default {
   isInputCode,
   isInputCode2,
   pNumerical2,
-  pNumerical3,
+  pNumerical3
 }

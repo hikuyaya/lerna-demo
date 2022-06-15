@@ -20,30 +20,58 @@
         <div class="login-form-right">
           <el-form @keyup.enter.native="signIn" @submit.native.prevent>
             <el-form-item label=" ">
-              <el-input placeholder="请输入登录账号" prefix-icon="el-icon-user" ref="username" size="large" v-model.trim="model.username">
+              <el-input
+                placeholder="请输入登录账号"
+                prefix-icon="el-icon-user"
+                ref="username"
+                size="large"
+                v-model.trim="model.username">
                 <transition name="bounceRight" slot="suffix">
-                  <i :title="warning.message" class="warning el-input__icon el-icon-warning" v-show="warning.type === 'username'"></i>
+                  <i
+                    :title="warning.message"
+                    class="warning el-input__icon el-icon-warning"
+                    v-show="warning.type === 'username'"></i>
                 </transition>
               </el-input>
             </el-form-item>
             <el-form-item label=" ">
-              <el-input placeholder="请输入登录密码" prefix-icon="el-icon-unlock" ref="password" size="large" type="password" v-model.trim="model.password">
+              <el-input
+                placeholder="请输入登录密码"
+                prefix-icon="el-icon-unlock"
+                ref="password"
+                size="large"
+                type="password"
+                v-model.trim="model.password">
                 <transition name="bounceRight" slot="suffix">
-                  <i :title="warning.message" class="warning el-input__icon el-icon-warning" v-show="warning.type === 'password'"></i>
+                  <i
+                    :title="warning.message"
+                    class="warning el-input__icon el-icon-warning"
+                    v-show="warning.type === 'password'"></i>
                 </transition>
               </el-input>
             </el-form-item>
             <el-form-item label=" ">
-              <el-input placeholder="请输入登录验证码" prefix-icon="el-icon-unlock" ref="validCode" size="large"  v-model.trim="model.validCode">
+              <el-input
+                placeholder="请输入登录验证码"
+                prefix-icon="el-icon-unlock"
+                ref="validCode"
+                size="large"
+                v-model.trim="model.validCode">
                 <transition name="bounceRight" slot="suffix">
-<!--                  <i :title="warning.message" class="warning el-input__icon el-icon-warning" v-show="warning.type === 'password'"></i>-->
+                  <!--                  <i :title="warning.message" class="warning el-input__icon el-icon-warning" v-show="warning.type === 'password'"></i>-->
                 </transition>
               </el-input>
             </el-form-item>
 
-            <img class="login-captcha" :src="config.API.BASE  + 'api-uaa/validata/code/'+ this.deviceId" style="" @click="changeCode()">
+            <img
+              class="login-captcha"
+              :src="config.API.BASE + 'api-uaa/validata/code/' + this.deviceId"
+              style=""
+              @click="changeCode()" />
             <el-form-item label=" ">
-              <el-button @click="signIn" size="large" type="primary">登录</el-button>
+              <el-button @click="signIn" size="large" type="primary"
+                >登录</el-button
+              >
             </el-form-item>
           </el-form>
         </div>
@@ -54,8 +82,8 @@
 
 <script>
 import yid from '@src/library'
-import {error} from "../../library/helper/util";
-import service from "../../service";
+import { error } from '../../library/helper/util'
+import service from '../../service'
 import config from '@src/config'
 export default {
   data() {
@@ -64,9 +92,7 @@ export default {
       model: {
         username: '',
         password: '',
-        validCode: '',
-
-
+        validCode: ''
       },
       deviceId: '',
       warning: {
@@ -76,39 +102,54 @@ export default {
     }
   },
   created() {
-      //console.log("enter");
-      if(yid.cache.get(yid.type.USER.TOKEN)) {
-          this.$router.push(yid.config.SYSTEM.DIRECT_HOME)
-      }
+    //console.log("enter");
+    if (yid.cache.get(yid.type.USER.TOKEN)) {
+      this.$router.push(yid.config.SYSTEM.DIRECT_HOME)
+    }
   },
   mounted() {
-     this.$refs.username.focus()
-     this.deviceId = Math.uuid();
+    this.$refs.username.focus()
+    this.deviceId = Math.uuid()
   },
 
   methods: {
     changeCode() {
-        this.deviceId = Math.uuid();
+      this.deviceId = Math.uuid()
     },
-  async  signIn() {
+    async signIn() {
       if (this.validateForm()) {
         const params = this.model
-        params.deviceId = this.deviceId;
+        params.deviceId = this.deviceId
         let promise = await this.$yid.service.icdriver.getMac()
-        params.mac=promise;
-        yid.service.auth.login(params).then(res => {
-          // 存储登录信息到本地缓存
-          yid.cache.set(yid.type.USER.TOKEN, res.data.access_token, yid.type.SYSTEM.CACHE.LOCAL_STORAGE)
-          yid.cache.set(yid.type.USER.APPID, 'shop_chain', yid.type.SYSTEM.CACHE.LOCAL_STORAGE)
-          yid.cache.set(yid.type.USER.TENANTID, res.data.tenantId, yid.type.SYSTEM.CACHE.LOCAL_STORAGE)
+        params.mac = promise
+        yid.service.auth
+          .login(params)
+          .then(res => {
+            // 存储登录信息到本地缓存
+            yid.cache.set(
+              yid.type.USER.TOKEN,
+              res.data.access_token,
+              yid.type.SYSTEM.CACHE.LOCAL_STORAGE
+            )
+            yid.cache.set(
+              yid.type.USER.APPID,
+              process.env.VUE_APP_CLIENTID,
+              yid.type.SYSTEM.CACHE.LOCAL_STORAGE
+            )
+            yid.cache.set(
+              yid.type.USER.TENANTID,
+              res.data.tenantId,
+              yid.type.SYSTEM.CACHE.LOCAL_STORAGE
+            )
 
-          // 跳转登录后首页
-          this.$router.push(yid.config.SYSTEM.DIRECT_HOME)
-        }).catch((res)=> {
-           // yid.util.error("用户名或密码错误");
-            this.deviceId = Math.uuid();
-            yid.util.error(res.data.resp_msg);
-        });
+            // 跳转登录后首页
+            this.$router.push(yid.config.SYSTEM.DIRECT_HOME)
+          })
+          .catch(res => {
+            // yid.util.error("用户名或密码错误");
+            this.deviceId = Math.uuid()
+            yid.util.error(res.data.resp_msg)
+          })
       }
     },
 

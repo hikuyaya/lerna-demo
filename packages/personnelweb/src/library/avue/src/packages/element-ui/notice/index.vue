@@ -1,30 +1,30 @@
 <template>
   <div :class="b()">
-    <div :class="b('item')"
-         :key="index"
-         @click="click(item)"
-         v-for="(item,index) in data">
-      <div :class="b('img')"
-           v-if="item[imgKey]">
-        <img :src="item[imgKey]"
-             alt="">
+    <div
+      :class="b('item')"
+      :key="index"
+      @click="click(item)"
+      v-for="(item, index) in data">
+      <div :class="b('img')" v-if="item[imgKey]">
+        <img :src="item[imgKey]" alt="" />
       </div>
       <div :class="b('content')">
         <div :class="b('title')">
-          <span :class="b('name')">{{item[titleKey]}}</span>
-          <span :class="b('tag')"
-                v-if="item[tagKey]">
-            <el-tag size="small"
-                    :type="getType(item[statusKey])">{{item[tagKey]}}</el-tag>
+          <span :class="b('name')">{{ item[titleKey] }}</span>
+          <span :class="b('tag')" v-if="item[tagKey]">
+            <el-tag size="small" :type="getType(item[statusKey])">{{
+              item[tagKey]
+            }}</el-tag>
           </span>
         </div>
-        <div :class="b('subtitle')">{{item[subtitleKey]}}</div>
+        <div :class="b('subtitle')">{{ item[subtitleKey] }}</div>
       </div>
     </div>
-    <div :class="b('more')"
-         v-if="!finish"
-         v-loading="loading"
-         @click="handleClick">
+    <div
+      :class="b('more')"
+      v-if="!finish"
+      v-loading="loading"
+      @click="handleClick">
       加载更多
     </div>
   </div>
@@ -38,7 +38,7 @@ const propsDefault = {
   tag: 'tag',
   status: 'status'
 }
-import create from "../../../core/create";
+import create from '../../../core/create'
 export default create({
   name: 'notice',
   props: {
@@ -59,45 +59,45 @@ export default create({
       }
     }
   },
-  data () {
+  data() {
     return {
       page: 1,
-      loading: false,
+      loading: false
     }
   },
   computed: {
-    props () {
-      return this.option.props || propsDefault;
+    props() {
+      return this.option.props || propsDefault
     },
-    imgKey () {
+    imgKey() {
       return this.props.img || propsDefault.img
     },
-    titleKey () {
+    titleKey() {
       return this.props.title || propsDefault.title
     },
-    subtitleKey () {
+    subtitleKey() {
       return this.props.subtitle || propsDefault.subtitle
     },
-    tagKey () {
+    tagKey() {
       return this.props.tag || propsDefault.tag
     },
-    statusKey () {
+    statusKey() {
       return this.props.status || propsDefault.status
     }
   },
   methods: {
-    click (item) {
+    click(item) {
       this.$emit('click', item)
     },
-    handleClick () {
-      this.loading = true;
+    handleClick() {
+      this.loading = true
       const done = () => {
-        this.loading = false;
+        this.loading = false
       }
-      this.page++;
+      this.page++
       this.$emit('page-change', this.page, done)
     },
-    getType (status = 0) {
+    getType(status = 0) {
       if (status == 0) {
         return 'info'
       } else if (status == 1) {

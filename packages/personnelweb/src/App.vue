@@ -9,7 +9,7 @@ import yid from '@src/library'
 
 export default {
   beforeDestroy() {
-     yid.service.IM.stopIM()
+    yid.service.IM.stopIM()
   },
   created() {
     document.title = yid.config.SYSTEM.TITLE
@@ -22,21 +22,16 @@ export default {
     } else {
       this.$router.push(yid.config.SYSTEM.ROUTER_LOGIN)
     }
-
-
   },
   watch: {
-    '$route': function (newVal, oldVal) {
+    $route: function (newVal, oldVal) {
       // if(newVal.path && newVal.path == '/') {
       //   this.$router.push(yid.config.SYSTEM.DIRECT_HOME)
       // }
     }
   },
-  methods: {
-
-  }
+  methods: {}
 }
 </script>
 
-<style>
-</style>
+<style></style>

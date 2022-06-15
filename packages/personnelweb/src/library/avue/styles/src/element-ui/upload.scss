@@ -1,12 +1,13 @@
 .avue-upload {
-  &--upload{
-    .el-upload,.el-upload__tip{
+  &--upload {
+    .el-upload,
+    .el-upload__tip {
       display: none;
     }
-    .el-upload--picture-img{
+    .el-upload--picture-img {
       display: inline-block;
     }
-    .el-upload-list{
+    .el-upload-list {
       margin-top: -6px;
     }
   }
@@ -22,29 +23,29 @@
       border-color: #409eff;
     }
   }
-  &__dialog{
-    .el-dialog__header{
+  &__dialog {
+    .el-dialog__header {
       display: none;
     }
-    .el-dialog__body{
-      padding:10px;
+    .el-dialog__body {
+      padding: 10px;
       display: flex;
       justify-content: center;
     }
   }
-  &__menu{
+  &__menu {
     position: absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background-color: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index:1024;
-    i{
-      color:#fff;
+    z-index: 1024;
+    i {
+      color: #fff;
       margin: 0 8px;
       font-size: 20px;
     }
@@ -63,5 +64,3 @@
     display: block;
   }
 }
-
-

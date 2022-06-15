@@ -1,13 +1,13 @@
-.avue-array{
-  &__item{
+.avue-array {
+  &__item {
     margin-bottom: 5px;
   }
-  &__input{
+  &__input {
     display: flex;
-    .el-input{
-      flex:auto;
+    .el-input {
+      flex: auto;
     }
-    .el-button{
+    .el-button {
       margin-left: 5px;
     }
   }

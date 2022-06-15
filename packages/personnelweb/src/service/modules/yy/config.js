@@ -1,23 +1,22 @@
 import yid from '@src/library'
 
-const prefix = 'api-chain/config';
+const prefix = 'api-chain/config'
 
 export function getYYconfig(params) {
-    return yid.http.get(`${prefix}/getYYconfig`, {params})
+  return yid.http.get(`${prefix}/getYYconfig`, { params })
 }
 
 export function setYYconfig(params) {
-    return yid.http.post(`${prefix}/setYYconfig`, params)
+  return yid.http.post(`${prefix}/setYYconfig`, params)
 }
 
-
 export default {
-    /**
-     * 获取规则设置
-     */
-    getYYconfig,
-    /**
-     * 更新规则设置
-     */
-    setYYconfig,
+  /**
+   * 获取规则设置
+   */
+  getYYconfig,
+  /**
+   * 更新规则设置
+   */
+  setYYconfig
 }

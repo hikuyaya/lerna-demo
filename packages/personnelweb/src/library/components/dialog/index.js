@@ -1,6 +1,6 @@
 import Dialog from './src/dialog'
 
-Dialog.install = function(Vue) {
+Dialog.install = function (Vue) {
   Vue.component(Dialog.name, Dialog)
 }
 

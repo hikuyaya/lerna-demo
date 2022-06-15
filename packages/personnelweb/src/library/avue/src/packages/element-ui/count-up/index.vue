@@ -1,12 +1,12 @@
 <template>
-  <span>{{end}}</span>
+  <span>{{ end }}</span>
 </template>
 
 <script>
-import CountUp from "countup.js";
-import create from "../../../core/create";
+import CountUp from 'countup.js'
+import create from '../../../core/create'
 export default create({
-  name: "count-up",
+  name: 'count-up',
   props: {
     animation: {
       type: Boolean,
@@ -33,41 +33,40 @@ export default create({
     options: {
       type: Object,
       required: false,
-      default () {
-        return {};
+      default() {
+        return {}
       }
     },
     callback: {
       type: Function,
       required: false,
-      default: () => { }
+      default: () => {}
     }
   },
-  data () {
+  data() {
     return {
       c: null
-    };
+    }
   },
   watch: {
-    decimals () {
+    decimals() {
       if (this.c && this.c.update) {
-        this.c.update(this.end);
+        this.c.update(this.end)
       }
     },
-    end (value) {
+    end(value) {
       if (this.c && this.c.update) {
-        this.c.update(value);
+        this.c.update(value)
       }
     }
   },
-  mounted () {
+  mounted() {
     if (this.animation) {
-      this.init();
+      this.init()
     }
-
   },
   methods: {
-    init () {
+    init() {
       if (!this.c) {
         this.c = new CountUp(
           this.$el,
@@ -76,40 +75,40 @@ export default create({
           this.decimals,
           this.duration,
           this.options
-        );
+        )
         this.c.start(() => {
-          this.callback(this.c);
-        });
+          this.callback(this.c)
+        })
       }
     },
-    destroy () {
-      this.c = null;
+    destroy() {
+      this.c = null
     }
   },
-  beforeDestroy () {
-    this.destroy();
+  beforeDestroy() {
+    this.destroy()
   },
-  start (callback) {
+  start(callback) {
     if (this.c && this.c.start) {
       this.c.start(() => {
-        callback && callback(this.c);
-      });
+        callback && callback(this.c)
+      })
     }
   },
-  pauseResume () {
+  pauseResume() {
     if (this.c && this.c.pauseResume) {
-      this.c.pauseResume();
+      this.c.pauseResume()
     }
   },
-  reset () {
+  reset() {
     if (this.c && this.c.reset) {
-      this.c.reset();
+      this.c.reset()
     }
   },
-  update (newEndVal) {
+  update(newEndVal) {
     if (this.c && this.c.update) {
-      this.c.update(newEndVal);
+      this.c.update(newEndVal)
     }
   }
-});
+})
 </script>

@@ -1,7 +1,7 @@
-import packages from "../../core/packages";
+import packages from '../../core/packages'
 export default function (doc, option = {}) {
   if (!window.html2canvas) {
-    packages.logs("Screenshot");
+    packages.logs('Screenshot')
     return
   }
   return window.html2canvas(doc, option)

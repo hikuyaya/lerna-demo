@@ -1,7 +1,7 @@
 export default {
   name: 'focus',
 
-  inserted: function(el, binding) {
+  inserted: function (el, binding) {
     if (binding.value) {
       el.focus()
     } else {
@@ -9,7 +9,7 @@ export default {
     }
   },
 
-  componentUpdated: function(el, binding) {
+  componentUpdated: function (el, binding) {
     if (binding.modifiers.lazy) {
       if (Boolean(binding.value) === Boolean(binding.oldValue)) {
         return

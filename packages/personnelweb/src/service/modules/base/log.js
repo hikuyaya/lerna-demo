@@ -1,10 +1,10 @@
 import yid from '@src/library'
 
-const prefix = 'api-chain/logger';
+const prefix = 'api-chain/logger'
 export function list(params) {
-    return yid.http.get(`${prefix}`, {params})
+  return yid.http.get(`${prefix}`, { params })
 }
 //log
 export default {
-   list
+  list
 }

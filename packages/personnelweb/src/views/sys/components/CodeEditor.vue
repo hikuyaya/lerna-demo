@@ -1,21 +1,35 @@
 <template>
   <div v-bind="fullScreenParentProps">
-    <a  v-if="fullScreen" class="full-screen-icon el-icon-full-screen" :type="iconType" @click="()=>fullCoder=!fullCoder"/>
+    <a
+      v-if="fullScreen"
+      class="full-screen-icon el-icon-full-screen"
+      :type="iconType"
+      @click="() => (fullCoder = !fullCoder)" />
 
     <div class="code-editor-cust full-screen-child">
       <textarea ref="textarea"></textarea>
-      <span @click="nullTipClick" class="null-tip" :class="{'null-tip-hidden':hasCode}" :style="nullTipStyle">{{ placeholderShow }}</span>
+      <span
+        @click="nullTipClick"
+        class="null-tip"
+        :class="{ 'null-tip-hidden': hasCode }"
+        :style="nullTipStyle"
+        >{{ placeholderShow }}</span
+      >
       <template v-if="languageChange">
-        <el-select v-model="mode" size="small" class="code-mode-select" @change="changeMode" placeholder="请选择主题">
+        <el-select
+          v-model="mode"
+          size="small"
+          class="code-mode-select"
+          @change="changeMode"
+          placeholder="请选择主题">
           <el-option
-              v-for="mode in modes"
-              :key="mode.value"
-              :value="mode.value">
+            v-for="mode in modes"
+            :key="mode.value"
+            :value="mode.value">
             {{ mode.label }}
           </el-option>
         </el-select>
       </template>
-
     </div>
   </div>
 </template>
@@ -246,7 +260,7 @@ export default {
         this.hasCode=false
       }
       // 支持双向绑定
-      this.coder.on('change', (coder) => {
+      this.coder.on('change', coder => {
         this.code = coder.getValue()
         if(this.code){
           this.hasCode=true
@@ -288,7 +302,7 @@ export default {
     // 获取当前语法类型
     _getLanguage (language) {
       // 在支持的语法类型列表中寻找传入的语法类型
-      return this.modes.find((mode) => {
+      return this.modes.find(mode => {
         // 所有的值都忽略大小写，方便比较
         let currentLanguage = language.toLowerCase()
         let currentLabel = mode.label.toLowerCase()
@@ -300,7 +314,7 @@ export default {
     },
     _getCoder() {
       let _this = this
-      return new Promise((resolve) => {
+      return new Promise(resolve => {
         (function get() {
           if (_this.coder) {
             resolve(_this.coder)
@@ -329,31 +343,30 @@ export default {
 </script>
 
 <style lang="scss">
-.code-editor-cust{
-  flex-grow:1;
-  display:flex;
-  position:relative;
-  height:100%;
-  .CodeMirror{
-    flex-grow:1;
-    z-index:1;
-    .CodeMirror-code{
-      line-height:19px;
+.code-editor-cust {
+  flex-grow: 1;
+  display: flex;
+  position: relative;
+  height: 100%;
+  .CodeMirror {
+    flex-grow: 1;
+    z-index: 1;
+    .CodeMirror-code {
+      line-height: 19px;
     }
-
   }
-  .code-mode-select{
-    position:absolute;
-    z-index:2;
-    right:10px;
-    top:10px;
-    max-width:130px;
+  .code-mode-select {
+    position: absolute;
+    z-index: 2;
+    right: 10px;
+    top: 10px;
+    max-width: 130px;
   }
-  .CodeMirror{
+  .CodeMirror {
     height: auto;
-    min-height:100%;
+    min-height: 100%;
   }
-  .null-tip{
+  .null-tip {
     position: absolute;
     top: 4px;
     left: 36px;
@@ -361,7 +374,7 @@ export default {
     color: #ffffffc9;
     line-height: initial;
   }
-  .null-tip-hidden{
+  .null-tip-hidden {
     display: none;
   }
 }
@@ -418,12 +431,11 @@ export default {
   .full-screen-child {
     min-height: 120px;
     max-height: 320px;
-    overflow:hidden;
+    overflow: hidden;
   }
-
 }
 
-.CodeMirror-cursor{
-  height:18.4px !important;
+.CodeMirror-cursor {
+  height: 18.4px !important;
 }
 </style>

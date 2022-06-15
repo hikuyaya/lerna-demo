@@ -1,5 +1,5 @@
-.avue-data-panel{
-  .item{
+.avue-data-panel {
+  .item {
     padding: 0 30px;
     margin: 0 20px;
     cursor: pointer;
@@ -9,24 +9,24 @@
     overflow: hidden;
     color: #666;
     background: #fff;
-    box-shadow: 4px 4px 40px rgba(0,0,0,.05);
-    border-color: rgba(0,0,0,.05);
+    box-shadow: 4px 4px 40px rgba(0, 0, 0, 0.05);
+    border-color: rgba(0, 0, 0, 0.05);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    &-icon{
+    &-icon {
       font-size: 52px;
     }
-    &-info{
+    &-info {
       text-align: center;
     }
-    &-title{
+    &-title {
       line-height: 18px;
-      color: rgba(0,0,0,.45);
+      color: rgba(0, 0, 0, 0.45);
       font-size: 16px;
       margin-bottom: 12px;
     }
-    &-count{
+    &-count {
       font-size: 20px;
     }
   }

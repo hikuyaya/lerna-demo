@@ -8,14 +8,13 @@
       </pre>
     </el-scrollbar>
   </div>
-
 </template>
 
 <script>
-import create from "../../../core/create";
-import packages from "../../../core/packages";
+import create from '../../../core/create'
+import packages from '../../../core/packages'
 export default create({
-  name: "code",
+  name: 'code',
   props: {
     height: {
       type: Number,
@@ -23,24 +22,24 @@ export default create({
     },
     syntax: {
       type: String,
-      default: "javascript"
+      default: 'javascript'
     }
   },
   computed: {
     styleName() {
       return {
         height: this.setPx(this.height)
-      };
+      }
     }
   },
   mounted() {
     if (!window.hljs) {
-      packages.logs("hljs");
-      return;
+      packages.logs('hljs')
+      return
     }
-    if (window.hljs && typeof window.hljs.highlightBlock === "function") {
-      window.hljs.highlightBlock(this.$refs["container"]);
+    if (window.hljs && typeof window.hljs.highlightBlock === 'function') {
+      window.hljs.highlightBlock(this.$refs['container'])
     }
   }
-});
+})
 </script>

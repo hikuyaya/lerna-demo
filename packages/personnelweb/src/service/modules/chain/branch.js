@@ -1,11 +1,11 @@
 import yid from '@src/library'
 
-const prefix = 'api-chain/branch';
+const prefix = 'api-chain/branch'
 
 export function listAll(params) {
-    return yid.http.get(`${prefix}/list/all`,{params})
+  return yid.http.get(`${prefix}/list/all`, { params })
 }
 
 export default {
-    listAll
+  listAll
 }

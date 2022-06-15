@@ -7,7 +7,9 @@
     <div class="title">
       <div>{{ internalData.hospitalName }}</div>
       <div>
-        <span style="color: #00c6ae;">{{ internalData.prescriptionType === '1' ? '西药' : '中药' }}</span>
+        <span style="color: #00c6ae">{{
+          internalData.prescriptionType === '1' ? '西药' : '中药'
+        }}</span>
         <span>处方笺</span>
       </div>
     </div>
@@ -72,7 +74,10 @@
     <div class="rp">
       <h4 class="rp-title">Rp</h4>
 
-      <div :key="drug.medicalName" class="rp-item" v-for="drug in internalData.prescriptionInfoVo">
+      <div
+        :key="drug.medicalName"
+        class="rp-item"
+        v-for="drug in internalData.prescriptionInfoVo">
         <div class="rp-item-title">
           <div>
             <strong>{{ drug.medicalName }}</strong>
@@ -83,7 +88,7 @@
           </div>
         </div>
         <div class="rp-item-use-way">
-          <span style="margin: 0 10px 0 0;">用法用量:</span>
+          <span style="margin: 0 10px 0 0">用法用量:</span>
           <span>{{ drug.theWay }}</span>
         </div>
       </div>
@@ -124,7 +129,15 @@
       <el-row>
         <el-col :span="24">
           <span class="label">处方有效天数</span>
-          <span class="value">{{ $yid.util.getDuration(new Date(internalData.recordsTime), new Date(internalData.prescriptionTerm) ).dd }} 天</span>
+          <span class="value"
+            >{{
+              $yid.util.getDuration(
+                new Date(internalData.recordsTime),
+                new Date(internalData.prescriptionTerm)
+              ).dd
+            }}
+            天</span
+          >
         </el-col>
       </el-row>
       <el-row>

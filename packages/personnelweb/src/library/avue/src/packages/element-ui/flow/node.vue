@@ -1,32 +1,28 @@
 <template>
-  <div ref="node"
-       :style="flowNodeContainer"
-       @mouseenter="showDelete"
-       @mouseleave="hideDelete"
-       @mouseup="changeNodeSite"
-       :left="node.left"
-       :top="node.top"
-       disabled
-       :mask="false">
-    <div :class="b('node',{'active':active===node.id})">
+  <div
+    ref="node"
+    :style="flowNodeContainer"
+    @mouseenter="showDelete"
+    @mouseleave="hideDelete"
+    @mouseup="changeNodeSite"
+    :left="node.left"
+    :top="node.top"
+    disabled
+    :mask="false">
+    <div :class="b('node', { active: active === node.id })">
       <div :class="b('node-header')">
-        <i class="el-icon-rank"
-           :class="b('node-drag')"></i>
-        <slot name="header"
-              :node="node">
-        </slot>
+        <i class="el-icon-rank" :class="b('node-drag')"></i>
+        <slot name="header" :node="node"> </slot>
       </div>
       <div :class="b('node-body')">
-        <slot :node="node">
-        </slot>
+        <slot :node="node"> </slot>
       </div>
-
     </div>
   </div>
 </template>
 
 <script>
-import create from "../../../core/create";
+import create from '../../../core/create'
 export default create({
   name: 'flow',
   props: {
@@ -34,7 +30,7 @@ export default create({
     index: [String, Number],
     node: Object
   },
-  data () {
+  data() {
     return {
       // 控制节点操作显示
       mouseEnter: false
@@ -43,7 +39,7 @@ export default create({
   computed: {
     // 节点容器样式
     flowNodeContainer: {
-      get () {
+      get() {
         return {
           position: 'absolute',
           width: '200px',
@@ -57,23 +53,26 @@ export default create({
   },
   methods: {
     // 鼠标进入
-    showDelete () {
+    showDelete() {
       this.mouseEnter = true
     },
     // 鼠标离开
-    hideDelete () {
+    hideDelete() {
       this.mouseEnter = false
     },
     // 鼠标移动后抬起
-    changeNodeSite () {
+    changeNodeSite() {
       // 避免抖动
-      if (this.node.left == this.$refs.node.style.left && this.node.top == this.$refs.node.style.top) {
-        return;
+      if (
+        this.node.left == this.$refs.node.style.left &&
+        this.node.top == this.$refs.node.style.top
+      ) {
+        return
       }
       this.$emit('changeNodeSite', {
         index: this.index,
         left: Number(this.$refs.node.style.left.replace('px', '')),
-        top: Number(this.$refs.node.style.top.replace('px', '')),
+        top: Number(this.$refs.node.style.top.replace('px', ''))
       })
     }
   }

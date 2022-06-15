@@ -1,52 +1,70 @@
-import { validatenull } from '../utils/validate';
-import { KEY_COMPONENT_NAME, DIC_SPLIT, ARRAY_LIST, DATE_LIST, INPUT_LIST, ARRAY_VALUE_LIST, MULTIPLE_LIST, SELECT_LIST, RANGE_LIST } from '../global/variable';
-import { detailDataType, findObject, createObj } from '../utils/util';
-import { t } from '../locale';
+import { validatenull } from '../utils/validate'
+import {
+  KEY_COMPONENT_NAME,
+  DIC_SPLIT,
+  ARRAY_LIST,
+  DATE_LIST,
+  INPUT_LIST,
+  ARRAY_VALUE_LIST,
+  MULTIPLE_LIST,
+  SELECT_LIST,
+  RANGE_LIST
+} from '../global/variable'
+import { detailDataType, findObject, createObj } from '../utils/util'
+import { t } from '../locale'
 /**
  * 计算级联属性
  */
 export const calcCascader = (list = []) => {
   list.forEach((ele, index) => {
     if (!validatenull(ele.cascaderItem)) {
-      let cascader = [...ele.cascaderItem];
-      let parentProp = ele.prop;
-      list[index].cascader = [...cascader];
+      let cascader = [...ele.cascaderItem]
+      let parentProp = ele.prop
+      list[index].cascader = [...cascader]
       cascader.forEach((citem, cindex) => {
-        let column = findObject(list, citem);
-        if (column === -1) return;
-        column.parentProp = parentProp;
-        column.cascader = [...cascader].splice(cindex + 1);
-        parentProp = column.prop;
-      });
+        let column = findObject(list, citem)
+        if (column === -1) return
+        column.parentProp = parentProp
+        column.cascader = [...cascader].splice(cindex + 1)
+        parentProp = column.prop
+      })
     }
-  });
-  return list;
-};
+  })
+  return list
+}
 /**
  * 计算空白列row
  */
-let count = 0;
+let count = 0
 export const calcCount = (ele, spanDefault = 12, init = false) => {
-  if (init) count = 0;
-  const spanAll = 24;
-  count = count + (ele.span || spanDefault) + (ele.offset || 0);
+  if (init) count = 0
+  const spanAll = 24
+  count = count + (ele.span || spanDefault) + (ele.offset || 0)
   if (count === spanAll) {
-    count = 0;
+    count = 0
   } else if (count > spanAll) {
-    count = 0 + (ele.span || spanDefault) + (ele.offset || 0);
+    count = 0 + (ele.span || spanDefault) + (ele.offset || 0)
   } else if (ele.row && count !== spanAll) {
-    ele.count = spanAll - count;
-    count = 0;
+    ele.count = spanAll - count
+    count = 0
   }
-  return ele;
-};
+  return ele
+}
 
 /**
  * 初始化数据格式
  */
 export const initVal = (value, column) => {
-  let { type, multiple, dataType, separator = DIC_SPLIT, alone, emitPath, range } = column
-  let list = value;
+  let {
+    type,
+    multiple,
+    dataType,
+    separator = DIC_SPLIT,
+    alone,
+    emitPath,
+    range
+  } = column
+  let list = value
   if (
     (MULTIPLE_LIST.includes(type) && multiple == true) ||
     (ARRAY_VALUE_LIST.includes(type) && emitPath !== false) ||
@@ -54,112 +72,113 @@ export const initVal = (value, column) => {
   ) {
     if (!Array.isArray(list)) {
       if (validatenull(list)) {
-        list = [];
+        list = []
       } else {
-        list = (list + '').split(separator) || [];
+        list = (list + '').split(separator) || []
       }
     }
     // 数据转化
     list.forEach((ele, index) => {
-      list[index] = detailDataType(ele, dataType);
-    });
-    if (ARRAY_LIST.includes(type) && validatenull(list) && alone) list = [''];
+      list[index] = detailDataType(ele, dataType)
+    })
+    if (ARRAY_LIST.includes(type) && validatenull(list) && alone) list = ['']
   } else {
     list = detailDataType(list, dataType)
   }
-  return list;
-};
+  return list
+}
 
 /**
  * 搜索框获取动态组件
  */
-export const getSearchType = (column) => {
-  const type = column.type;
-  const range = column.searchRange;
-  let result = type;
-  if (column.searchType) return column.searchType;
+export const getSearchType = column => {
+  const type = column.type
+  const range = column.searchRange
+  let result = type
+  if (column.searchType) return column.searchType
   if (['radio', 'checkbox', 'switch'].includes(type)) {
-    result = 'select';
+    result = 'select'
   } else if (DATE_LIST.includes(type)) {
-    let rangeKey = 'range';
+    let rangeKey = 'range'
     if (range) {
       if (!type.includes(rangeKey)) {
-        result = type + rangeKey;
+        result = type + rangeKey
       } else {
-        result = type;
+        result = type
       }
-    } else result = type.replace(rangeKey, '');
+    } else result = type.replace(rangeKey, '')
   } else if (['textarea'].includes(type)) {
-    result = 'input';
+    result = 'input'
   }
-  return result;
-};
+  return result
+}
 
 /**
  * 动态获取组件
  */
 export const getComponent = (type, component) => {
-  let result = type || 'input';
+  let result = type || 'input'
   if (!validatenull(component)) {
-    return component;
+    return component
   } else if (ARRAY_LIST.includes(type)) {
-    result = 'array';
+    result = 'array'
   } else if (['time', 'timerange'].includes(type)) {
-    result = 'time';
+    result = 'time'
   } else if (DATE_LIST.includes(type)) {
-    result = 'date';
+    result = 'date'
   } else if (['password', 'textarea', 'search'].includes(type)) {
-    result = 'input';
+    result = 'input'
   } else if (INPUT_LIST.includes(type)) {
-    result = 'input-' + type;
+    result = 'input-' + type
   }
-  return KEY_COMPONENT_NAME + result;
-};
+  return KEY_COMPONENT_NAME + result
+}
 
 /**
  * 表格初始化值
  */
 
 export const formInitVal = (list = []) => {
-  let tableForm = {};
+  let tableForm = {}
   list.forEach(ele => {
     if (
       (ARRAY_VALUE_LIST.includes(ele.type) && ele.emitPath !== false) ||
-      (MULTIPLE_LIST.includes(ele.type) && ele.multiple) || ele.dataType === 'array'
+      (MULTIPLE_LIST.includes(ele.type) && ele.multiple) ||
+      ele.dataType === 'array'
     ) {
-      tableForm[ele.prop] = [];
+      tableForm[ele.prop] = []
     } else if (RANGE_LIST.includes(ele.type) && ele.range == true) {
       tableForm[ele.prop] = [0, 0]
     } else if (
       ['rate', 'slider', 'number'].includes(ele.type) ||
       ele.dataType === 'number'
     ) {
-      tableForm[ele.prop] = undefined;
+      tableForm[ele.prop] = undefined
     } else {
-      tableForm[ele.prop] = '';
+      tableForm[ele.prop] = ''
     }
     if (ele.bind) {
-      tableForm = createObj(tableForm, ele.bind);
+      tableForm = createObj(tableForm, ele.bind)
     }
     // 表单默认值设置
     if (!validatenull(ele.value)) {
-      tableForm[ele.prop] = ele.value;
+      tableForm[ele.prop] = ele.value
     }
-  });
+  })
   return {
     tableForm
-  };
-};
+  }
+}
 
 export const getPlaceholder = function (column) {
-  const placeholder = column.placeholder;
-  const label = column.label;
+  const placeholder = column.placeholder
+  const label = column.label
   if (validatenull(placeholder)) {
     if (SELECT_LIST.includes(column.type)) {
-      return `${t('tip.select')} ${label}`;
+      return `${t('tip.select')} ${label}`
     } else {
-      return `${t('tip.input')} ${label}`;
+      return `${t('tip.input')} ${label}`
     }
   }
-  return placeholder;
-};
+  return placeholder
+}

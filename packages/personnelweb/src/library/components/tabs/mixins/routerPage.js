@@ -21,7 +21,7 @@ export default {
     // 监听routerTab字段，更新页签信息
     this.$watch(
       'routeTab',
-      function(val) {
+      function (val) {
         cacheItem.tab = typeof val === 'string' ? { title: val } : val
         $alive.set(key, cacheItem)
       },

@@ -1,16 +1,16 @@
-function init (el, binding) {
-  const value = binding.value;
+function init(el, binding) {
+  const value = binding.value
   if (value === false) {
-    el.style.display = "none"
+    el.style.display = 'none'
   } else {
-    el.style.display = ""
+    el.style.display = ''
   }
 }
 export default {
-  bind (el, binding) {
+  bind(el, binding) {
     init(el, binding)
   },
-  update (el, binding) {
+  update(el, binding) {
     init(el, binding)
   }
 }

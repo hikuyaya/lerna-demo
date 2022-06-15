@@ -1,32 +1,32 @@
 .data-price {
-  $color : #00a680;
-  .item{
+  $color: #00a680;
+  .item {
     margin: 0 20px;
     text-align: center;
     box-shadow: 2px 3px 15px #eee;
-    &:hover{
-      border:1px solid $color;
-     .body{
-       color:#fff;
-       background-color:$color;
-       &::after{
-        border-top-color:$color;
-       }
-     }
-     .list{
-      color:$color;
-     }
-     .price{
-      color:#fff;
-     }
+    &:hover {
+      border: 1px solid $color;
+      .body {
+        color: #fff;
+        background-color: $color;
+        &::after {
+          border-top-color: $color;
+        }
+      }
+      .list {
+        color: $color;
+      }
+      .price {
+        color: #fff;
+      }
     }
-    .title{
+    .title {
       height: 80px;
       line-height: 80px;
       font-size: 18px;
-      color:#333;
+      color: #333;
     }
-    .price{
+    .price {
       padding: 0 8px;
       margin: 0 0 50px;
       line-height: 120px;
@@ -34,10 +34,10 @@
       font-size: 42px;
       color: #6b6b6b;
     }
-    .append{
+    .append {
       font-size: 16px;
     }
-    .body{
+    .body {
       position: relative;
       padding: 0;
       margin: 0 0 50px;
@@ -46,12 +46,12 @@
       height: 120px;
       font-size: 42px;
       color: #6b6b6b;
-      &::before{
-        content: "¥";
+      &::before {
+        content: '¥';
         font-size: 16px;
         font-weight: normal;
       }
-      &::after{
+      &::after {
         content: '';
         position: absolute;
         display: block;
@@ -68,10 +68,10 @@
         border-top-color: #f4f4f4;
       }
     }
-    .list{
+    .list {
       padding-bottom: 30px;
       color: #666666;
-      font-size: 14px
+      font-size: 14px;
     }
   }
 }

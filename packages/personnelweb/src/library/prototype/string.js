@@ -14,10 +14,13 @@
  * @param {*} replacements
  * @returns
  */
-String.prototype.restfulFormat = function(replacements) {
-  var format = function(str, replacements) {
-    replacements = typeof replacements === 'object' ? replacements : Array.prototype.slice.call(arguments, 1)
-    return str.replace(/\{\{|\}\}|\{(\w+)\}/g, function(m, n) {
+String.prototype.restfulFormat = function (replacements) {
+  var format = function (str, replacements) {
+    replacements =
+      typeof replacements === 'object'
+        ? replacements
+        : Array.prototype.slice.call(arguments, 1)
+    return str.replace(/\{\{|\}\}|\{(\w+)\}/g, function (m, n) {
       if (m === '{{') {
         return '{'
       }
@@ -27,7 +30,10 @@ String.prototype.restfulFormat = function(replacements) {
       return replacements[n]
     })
   }
-  replacements = typeof replacements === 'object' ? replacements : Array.prototype.slice.call(arguments, 0)
+  replacements =
+    typeof replacements === 'object'
+      ? replacements
+      : Array.prototype.slice.call(arguments, 0)
   return format(this, replacements)
 }
 
@@ -36,7 +42,7 @@ String.prototype.restfulFormat = function(replacements) {
  * e.g.  '{0} world {1}'.format('hello','!!!!') => hello world !!!!
  * @returns
  */
-String.prototype.format = function() {
+String.prototype.format = function () {
   let str = this
   for (let i = 0; i < arguments.length; i++) {
     let exp = new RegExp('\\{' + i + '\\}', 'gm')
@@ -51,7 +57,7 @@ String.prototype.format = function() {
  * e.g. '你好,world'.byteLength() => 10
  * @returns
  */
-String.prototype.byteLength = function() {
+String.prototype.byteLength = function () {
   let byteLength = 0
   let l = this.length
   if (l) {
@@ -73,7 +79,7 @@ String.prototype.byteLength = function() {
  * e.g. '2016-01-01 02:00'.toDate().formatDate() =>  "2016-01-01"
  * @returns
  */
-String.prototype.toDate = function() {
+String.prototype.toDate = function () {
   if (this instanceof Date) {
     return this
   }
@@ -84,7 +90,16 @@ String.prototype.toDate = function() {
   var b = a[0].split('-') || a[0].split('/')
   var c = a.length > 1 ? a[1].split(':') : ''
 
-  var localDate = new Date(Date.UTC(b[0] || 0, (b[1] || 1) - 1, b[2] || 1, (c[0] || 8) - 8, c[1] || 0, c[2] || 0))
+  var localDate = new Date(
+    Date.UTC(
+      b[0] || 0,
+      (b[1] || 1) - 1,
+      b[2] || 1,
+      (c[0] || 8) - 8,
+      c[1] || 0,
+      c[2] || 0
+    )
+  )
   // var localOffset = localDate.getTimezoneOffset() * 60 * 1000
 
   return new Date(localDate.getTime())
@@ -96,7 +111,7 @@ String.prototype.toDate = function() {
  * @param {*} parse
  * @returns
  */
-String.prototype.toFixed = function(parse) {
+String.prototype.toFixed = function (parse) {
   if (parseFloat(this)) {
     return parseFloat(this).toFixed(parse)
   } else {
@@ -118,10 +133,13 @@ String.prototype.toFixed = function(parse) {
  * @param {*} format
  * @returns
  */
-String.prototype.formatDate = function(format) {
+String.prototype.formatDate = function (format) {
   let date = this
   // 兼容 element-table 的 formatter
-  if (arguments.length === 3 && arguments[0][arguments[1].property] === arguments[2]) {
+  if (
+    arguments.length === 3 &&
+    arguments[0][arguments[1].property] === arguments[2]
+  ) {
     date = arguments[2]
   }
   if ($yid.valid.isEmpty(date)) throw Error('日期不能为空')

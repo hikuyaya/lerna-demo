@@ -1,20 +1,21 @@
 <template>
   <div :class="b()">
-    <div :class="b('item')"
-         v-if="loading"
-         v-for="(citem,cindex) in number"
-         :key="cindex">
+    <div
+      :class="b('item')"
+      v-if="loading"
+      v-for="(citem, cindex) in number"
+      :key="cindex">
       <div :class="b('header')">
-        <span :class="[b('avatar'),className]"
-              v-if="avatar"></span>
+        <span :class="[b('avatar'), className]" v-if="avatar"></span>
       </div>
       <div :class="b('content')">
-        <h3 :class="[b('title'),className]"></h3>
+        <h3 :class="[b('title'), className]"></h3>
         <div :class="b('list')">
-          <li :class="[b('li'),className]"
-              :style="styleName"
-              v-for="(item,index) in rows"
-              :key="index"></li>
+          <li
+            :class="[b('li'), className]"
+            :style="styleName"
+            v-for="(item, index) in rows"
+            :key="index"></li>
         </div>
       </div>
     </div>
@@ -25,10 +26,10 @@
 </template>
 
 <script>
-import create from "../../../core/create";
-const prefixCls = "avue-skeleton";
+import create from '../../../core/create'
+const prefixCls = 'avue-skeleton'
 export default create({
-  name: "skeleton",
+  name: 'skeleton',
   props: {
     loading: {
       type: Boolean,
@@ -53,15 +54,15 @@ export default create({
     styleName() {
       if (this.block) {
         return {
-          width: "100%"
-        };
+          width: '100%'
+        }
       }
-      return {};
+      return {}
     },
     className() {
-      let { active } = this;
-      return { [`${prefixCls}__loading`]: active };
+      let { active } = this
+      return { [`${prefixCls}__loading`]: active }
     }
   }
-});
+})
 </script>

@@ -18,14 +18,14 @@ import sysUser from './modules/sysUser'
 import sysUserType from './modules/sysUserType'
 import sysMenu from './modules/sysMenu'
 import sysRole from './modules/sysRole'
-import stockConfig from "./modules/stockConfig"
-import stockInout from "./modules/stockInout"
+import stockConfig from './modules/stockConfig'
+import stockInout from './modules/stockInout'
 import stock from './modules/stock'
 import fwbackConfig from './modules/fwbackConfig'
 import base from './modules/base'
 import product from './modules/product'
-import productBrand from "./modules/productBrand";
-import productCategory from "./modules/productCategory";
+import productBrand from './modules/productBrand'
+import productCategory from './modules/productCategory'
 import payType from './modules/payType'
 import sms from './modules/sms'
 import wxTemplate from './modules/wxTemplate'
@@ -40,20 +40,20 @@ import servicepackage from './modules/config/servicepackage'
 import cardinfo from './modules/config/cardinfo'
 import member from './modules/member'
 import yy from './modules/yy'
-import servicetype from "./modules/config/servicetype";
-import pers from "./modules/pers"
-import cashier from "./modules/cashier"
-import pay from "./modules/config/pay"
-import payment from "./modules/config/payment"
+import servicetype from './modules/config/servicetype'
+import pers from './modules/pers'
+import cashier from './modules/cashier'
+import pay from './modules/config/pay'
+import payment from './modules/config/payment'
 import royalty from './modules/finance/royalty'
-import chain from "./modules/chain"
+import chain from './modules/chain'
 import employeelog from './modules/employeelog'
 import btype from './modules/btype'
 import userShop from './modules/userShop'
 
-import mtkeysConfig from "./modules/mtkeysConfig";
+import mtkeysConfig from './modules/mtkeysConfig'
 import mac from './modules/mac'
-import positionRole from "./modules/positionRole"
+import positionRole from './modules/positionRole'
 import icdriver from './modules/icdriver'
 import report from './modules/report'
 import billheadsync from './modules/billheadsync'
@@ -62,65 +62,63 @@ import dispatch from './modules/dispatch'
 import dayreport from './modules/dayreport'
 
 export default {
-    IM,
-    auth,
-    sms,
-    user,
-    wheelConfig,
-    wheelRest,
-    batchCard,
-    marketOrderConfig,
-    dept,
-    tc,
-    payType,
-    awardDict,
-    employee,
-    position,
-    positionLevel,
-    memInfo,
-    branch,
-    sysRoleType,
-    sysUser,
-    sysUserType,
-    stockConfig,
-    stockInout,
-    product,
-    productBrand,
-    productCategory,
-    fwbackConfig,
-    base,
-    stock,
-    push,
-    wxTemplate,
-    index,
-    serviceInfo,
-    servicepackage,
-    cardinfo,
-    member,
-    shop,
-    finance,
-    yy,
-    servicetype,
-    pers,
-    cashier,
-    pay,
-    payment,
-    royalty,
-    chain,
-    employeelog,
-    btype,
-    userShop,
-    sysMenu,
-    sysRole,
-    servicePrice,
-    mtkeysConfig,
-    mac,
-    positionRole,
-    icdriver,
-    report,
-    billheadsync,
-    dispatch,
-    dayreport
+  IM,
+  auth,
+  sms,
+  user,
+  wheelConfig,
+  wheelRest,
+  batchCard,
+  marketOrderConfig,
+  dept,
+  tc,
+  payType,
+  awardDict,
+  employee,
+  position,
+  positionLevel,
+  memInfo,
+  branch,
+  sysRoleType,
+  sysUser,
+  sysUserType,
+  stockConfig,
+  stockInout,
+  product,
+  productBrand,
+  productCategory,
+  fwbackConfig,
+  base,
+  stock,
+  push,
+  wxTemplate,
+  index,
+  serviceInfo,
+  servicepackage,
+  cardinfo,
+  member,
+  shop,
+  finance,
+  yy,
+  servicetype,
+  pers,
+  cashier,
+  pay,
+  payment,
+  royalty,
+  chain,
+  employeelog,
+  btype,
+  userShop,
+  sysMenu,
+  sysRole,
+  servicePrice,
+  mtkeysConfig,
+  mac,
+  positionRole,
+  icdriver,
+  report,
+  billheadsync,
+  dispatch,
+  dayreport
 }
-
-

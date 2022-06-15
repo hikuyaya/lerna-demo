@@ -1,28 +1,28 @@
 import yid from '@src/library'
 
-const prefix = 'api-finance/dicdjitem';
+const prefix = 'api-finance/dicdjitem'
 
 export function list(params) {
-    return yid.http.get(`${prefix}`, {params})
+  return yid.http.get(`${prefix}`, { params })
 }
 
 export function listAll(params) {
-    return yid.http.get(`${prefix}/list/all`, {params})
+  return yid.http.get(`${prefix}/list/all`, { params })
 }
 
 export function save(params) {
-    const url = `${prefix}`
-    return yid.http.post(url, params )
+  const url = `${prefix}`
+  return yid.http.post(url, params)
 }
 
-export function checkColname(params){
-    const url = `${prefix}/checkColname`
-    return yid.http.post(url, params )
+export function checkColname(params) {
+  const url = `${prefix}/checkColname`
+  return yid.http.post(url, params)
 }
 
 export default {
-    list,
-    listAll,
-    save,
-    checkColname,
+  list,
+  listAll,
+  save,
+  checkColname
 }

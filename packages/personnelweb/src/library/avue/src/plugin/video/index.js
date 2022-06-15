@@ -1,14 +1,13 @@
 export default class RecordVideo {
-
   /**
    * 构造函数
    *
    * @param  {Object}   videoObj 视频对象
    */
   constructor(videoObj) {
-    this.video = videoObj;
-    this.mediaRecorder = null;
-    this.chunks = [];
+    this.video = videoObj
+    this.mediaRecorder = null
+    this.chunks = []
   }
 
   /**
@@ -21,8 +20,7 @@ export default class RecordVideo {
     // resolve 正常处理
     // reject 处理异常情况
     return new Promise((resovle, reject) => {
-      navigator
-        .mediaDevices
+      navigator.mediaDevices
         .getUserMedia({
           audio: true,
           video: true
@@ -35,27 +33,27 @@ export default class RecordVideo {
         .then(stream => {
           // 检测是否支持 srcObject，该属性在新的浏览器支持
           if ('srcObject' in this.video) {
-            this.video.srcObject = stream;
+            this.video.srcObject = stream
           } else {
             // 兼容旧的浏览器
-            this.video.src = window.URL.createObjectURL(stream);
+            this.video.src = window.URL.createObjectURL(stream)
           }
 
           // 当视频的元数据已经加载时触发
           this.video.addEventListener('loadmetadata', () => {
-            this.video.play();
-          });
-          this.mediaRecorder = new MediaRecorder(stream);
+            this.video.play()
+          })
+          this.mediaRecorder = new MediaRecorder(stream)
           this.mediaRecorder.addEventListener('dataavailable', e => {
-            this.chunks.push(e.data);
-          });
-          resovle();
+            this.chunks.push(e.data)
+          })
+          resovle()
         })
         // 异常抓取，包括用于禁用麦克风、摄像头
         .catch(error => {
-          reject(error);
-        });
-    });
+          reject(error)
+        })
+    })
   }
 
   /**
@@ -63,7 +61,7 @@ export default class RecordVideo {
    */
   startRecord() {
     if (this.mediaRecorder.state === 'inactive') {
-      this.mediaRecorder.start();
+      this.mediaRecorder.start()
     }
   }
 
@@ -72,7 +70,7 @@ export default class RecordVideo {
    */
   stopRecord() {
     if (this.mediaRecorder.state === 'recording') {
-      this.mediaRecorder.stop();
+      this.mediaRecorder.stop()
     }
   }
 
@@ -82,9 +80,9 @@ export default class RecordVideo {
    * @return {boolean} 当前浏览器是否支持
    */
   isSupport() {
-    const flag = navigator.mediaDevices && navigator.mediaDevices.getUserMedia;
+    const flag = navigator.mediaDevices && navigator.mediaDevices.getUserMedia
     if (flag) {
-      return true;
+      return true
     }
   }
 }

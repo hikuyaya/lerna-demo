@@ -5,16 +5,16 @@ import rule from './RouterTab/rule'
 
 export default {
   name: 'RouterAlive',
-  mixins: [ rule ],
+  mixins: [rule],
 
-  created () {
+  created() {
     Object.assign(this, {
       cache: Object.create(null),
       lastRoute: this.$route
     })
   },
 
-  render () {
+  render() {
     const slot = this.$slots.default
     const vnode = getFirstComponentChild(slot)
     const vmOpts = vnode && vnode.componentOptions
@@ -38,7 +38,8 @@ export default {
         let isRouteChange = lastRoute !== $route
 
         // 是否跟上次路由共用组件
-        let isShareComp = isRouteChange &&
+        let isShareComp =
+          isRouteChange &&
           !this.isAlikeRoute($route, lastRoute) &&
           this.getPageComp($route) === this.getPageComp(lastRoute)
 
@@ -79,7 +80,7 @@ export default {
 
   methods: {
     // 设置缓存项
-    set (key, item) {
+    set(key, item) {
       const { cache } = this
       const origin = cache[key]
 
@@ -94,7 +95,7 @@ export default {
     },
 
     // 删除缓存项
-    remove (key) {
+    remove(key) {
       const { cache } = this
       const item = cache[key]
 
@@ -105,11 +106,11 @@ export default {
         delete cache[key]
       }
 
-      this.$emit('remove', [ key ])
+      this.$emit('remove', [key])
     },
 
     // 清理缓存
-    clear (key) {
+    clear(key) {
       const item = this.cache[key]
       const vm = item && item.vm
       if (vm) {

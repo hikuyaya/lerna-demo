@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import sysNews from "./components/sysNews";
-import sysNotice from "./components/sysNotice";
-import sysAnouncement from "./components/sysAnouncement";
+import sysNews from './components/sysNews'
+import sysNotice from './components/sysNotice'
+import sysAnouncement from './components/sysAnouncement'
 
 export default {
   components: {
@@ -27,18 +27,15 @@ export default {
   },
   data() {
     return {
-      activeName: 'first',
+      activeName: 'first'
     }
   },
 
-  created() {
-
-  },
+  created() {}
 }
 </script>
 
 <style lang="scss" scoped>
- .sys-news {
-
- }
+.sys-news {
+}
 </style>

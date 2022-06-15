@@ -49,7 +49,7 @@ export default {
       activedTab: null, // 当前激活的页签
       isViewAlive: true,
       breadcrumbClass1: '',
-      breadcrumbClass2: '',
+      breadcrumbClass2: ''
     }
   },
 
@@ -59,7 +59,7 @@ export default {
       this.loading = false
       this.updateActivedTab()
       this.fixCommentPage()
-      this.getActiveRoute();
+      this.getActiveRoute()
     }
   },
 
@@ -68,28 +68,32 @@ export default {
     Vue.prototype.$routerTab = this
     this.getTabItems()
     this.updateActivedTab()
-    this.getActiveRoute();
-
+    this.getActiveRoute()
   },
 
   methods: {
     getActiveRoute() {
       const menuList = $yid.util.deepClone($yid.config.MENU.LIST)
       const menuListForShow = menuList.filter(menu => menu.canShow !== false)
-      const menuTree = $yid.util.toTree(menuListForShow, 'id', 'pid', 'children')
-      let path = this.$route.path;
+      const menuTree = $yid.util.toTree(
+        menuListForShow,
+        'id',
+        'pid',
+        'children'
+      )
+      let path = this.$route.path
       let menu = menuTree.map(item => {
-        if(item.children) {
+        if (item.children) {
           let children = item.children
           children.map(cItem => {
-            if(cItem.path === path) {
+            if (cItem.path === path) {
               this.breadcrumbClass1 = item.name
               this.breadcrumbClass2 = this.$route.name
             }
-          });
+          })
         }
       })
-     // console.log(menu);
+      // console.log(menu);
     },
     // 根据初始页签数据生成页签列表
     getTabItems() {
@@ -98,7 +102,8 @@ export default {
 
       this.items = tabs
         .map(item => {
-          let { to, closable, title, tips } = typeof item === 'string' ? { to: item } : item || emptyObj
+          let { to, closable, title, tips } =
+            typeof item === 'string' ? { to: item } : item || emptyObj
           let route = to && $router.match(to)
 
           if (route) {
@@ -117,7 +122,7 @@ export default {
           }
         })
         .filter(item => !!item)
-     // console.log(this.items);
+      // console.log(this.items);
     },
 
     // 更新激活的页签
@@ -137,7 +142,7 @@ export default {
         item.closable = matchTab.closable !== false
         this.$set(items, matchIdx, item)
       } else {
-        items.splice(1, 0, item);
+        items.splice(1, 0, item)
       }
     },
 
@@ -150,7 +155,9 @@ export default {
       // 路由地址精确匹配页签
       if (fullMatch) {
         let matchPath = this.getPathWithoutHash(route)
-        let matchTab = this.items.find(({ to }) => to.split('#')[0] === matchPath)
+        let matchTab = this.items.find(
+          ({ to }) => to.split('#')[0] === matchPath
+        )
 
         if (matchTab) {
           return matchTab.id

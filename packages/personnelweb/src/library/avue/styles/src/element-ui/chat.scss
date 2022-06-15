@@ -1,17 +1,18 @@
-.avue-chat{
+.avue-chat {
   box-shadow: 1px 2px 10px #eee;
   position: relative;
   background-color: #fcfcfc;
-  ul,li{
-    padding:0;
+  ul,
+  li {
+    padding: 0;
     margin: 0;
   }
-  li{
+  li {
     list-style: none;
     cursor: pointer;
   }
-  .web__content{
-    height:100%;
+  .web__content {
+    height: 100%;
     display: flex;
   }
   .web__main {
@@ -21,34 +22,35 @@
     overflow-y: auto;
     box-sizing: border-box;
   }
-  .web__logo{
+  .web__logo {
     background-color: #409eff;
     display: flex;
     padding: 15px 12px;
     margin: 0 auto;
     vertical-align: middle;
   }
-  .web__logo-img{
+  .web__logo-img {
     margin-top: 3px;
     width: 35px;
     height: 35px;
     border-radius: 100%;
-    box-shadow: 0 3px 3px 0 rgba(0,0,0,.1);
+    box-shadow: 0 3px 3px 0 rgba(0, 0, 0, 0.1);
   }
-  .web__logo-info{
+  .web__logo-info {
     margin-left: 10px;
   }
-  .web__logo-name{
+  .web__logo-name {
     position: relative;
     margin-top: 5px;
     font-size: 13px;
   }
-  .web__logo-dept{
+  .web__logo-dept {
     margin-top: 1px;
     font-size: 12px;
   }
-  .web__logo-name,.web__logo-dept{
-    color:#fff;
+  .web__logo-name,
+  .web__logo-dept {
+    color: #fff;
     margin: 0;
     padding: 0;
     width: 175px;
@@ -114,9 +116,9 @@
     word-break: break-all;
   }
 
-  .web__main-arrow{
-    top:6px;
-    left:-8px;
+  .web__main-arrow {
+    top: 6px;
+    left: -8px;
     position: absolute;
     display: block;
     width: 0;
@@ -127,10 +129,10 @@
     border-left-width: 0;
     border-right-color: #ebeef5;
   }
-  .web__main-arrow::after{
-    content: " ";
-    top:-7px;
-    left:1px;
+  .web__main-arrow::after {
+    content: ' ';
+    top: -7px;
+    left: 1px;
     position: absolute;
     display: block;
     width: 0;
@@ -141,30 +143,30 @@
     border-left-width: 0;
     border-right-color: #fff;
   }
-  .web__main-item--mine .web__main-text .web__main-arrow{
-    left:auto;
-    right:-5px;
+  .web__main-item--mine .web__main-text .web__main-arrow {
+    left: auto;
+    right: -5px;
     border-color: transparent;
     border-style: solid;
     border-width: 8px;
     border-right-width: 0;
     border-left-color: #409eff;
   }
-  .web__main-item--mine .web__main-text .web__main-arrow::after{
-    left:auto;
-    right:-2px;
+  .web__main-item--mine .web__main-text .web__main-arrow::after {
+    left: auto;
+    right: -2px;
     border-color: transparent;
     border-style: solid;
     border-width: 7px;
     border-right-width: 0;
     border-left-color: #409eff;
   }
-  .web__main-list{
-    margin:10px 0;
+  .web__main-list {
+    margin: 10px 0;
   }
-  .web__main-list li{
+  .web__main-list li {
     height: 30px;
-    color:#409eff;
+    color: #409eff;
     line-height: 30px;
   }
 
@@ -196,60 +198,62 @@
     background-color: #409eff;
     color: #fff;
   }
-  .web__footer{
-    box-shadow: 0 -1px 0 0 rgba(0,0,0,.04), 0 -2px 0 0 rgba(0,0,0,.01);
+  .web__footer {
+    box-shadow: 0 -1px 0 0 rgba(0, 0, 0, 0.04), 0 -2px 0 0 rgba(0, 0, 0, 0.01);
     position: absolute;
     left: 0;
-    bottom:0;
-    width:100%;
+    bottom: 0;
+    width: 100%;
     background-color: #fff;
   }
-  .web__msg{
+  .web__msg {
     padding: 10px 10px;
     height: auto;
     overflow: hidden;
-    &--img,&--video,&--file{
+    &--img,
+    &--video,
+    &--file {
       position: relative;
       max-width: 250px;
       min-width: 200px;
-      width:100%;
-      margin:10px 0;
-      border:1px solid #eee;
+      width: 100%;
+      margin: 10px 0;
+      border: 1px solid #eee;
       overflow: hidden;
       border-radius: 5px;
       cursor: pointer;
       display: block;
     }
-    &--file{
+    &--file {
       height: 140px;
       background-color: #fff;
-      span{
+      span {
         box-sizing: border-box;
         padding: 3px 5px;
-        color:#333;
+        color: #333;
         display: flex;
         align-items: center;
-        width:100%;
+        width: 100%;
         justify-content: center;
-        height:calc(100% - 80px);
+        height: calc(100% - 80px);
         overflow: hidden;
         font-size: 13px;
         text-align: center;
       }
-      h2{
+      h2 {
         margin: 0;
         width: 100%;
         text-align: center;
         line-height: 80px;
-        background-color: #409EFF;
-        color:#fff;
+        background-color: #409eff;
+        color: #fff;
       }
     }
-    &--map{
+    &--map {
       height: 160px;
     }
   }
-  .web__msg-input{
+  .web__msg-input {
     display: block;
     width: 100%;
     height: 60px;
@@ -265,22 +269,22 @@
     line-height: 17px;
     -webkit-appearance: none;
   }
-  .web__msg-submit{
+  .web__msg-submit {
     float: right;
     display: block;
     outline: none;
     cursor: pointer;
     text-align: center;
   }
-  .web__tools{
+  .web__tools {
     padding: 8px 10px 0 10px;
     box-sizing: border-box;
-    i{
+    i {
       margin-right: 12px;
       font-size: 20px;
-      color:#888a91;
-      &:hover{
-        color:#76b1f9;
+      color: #888a91;
+      &:hover {
+        color: #76b1f9;
       }
     }
   }

@@ -1,32 +1,33 @@
 <template>
-  <el-input-number v-model.number="text"
-                   :class="b()"
-                   @click.native="handleClick"
-                   @focus="handleFocus"
-                   @blur="handleBlur"
-                   :precision="precision"
-                   :placeholder="placeholder"
-                   :size="size"
-                   :min="minRows"
-                   :max="maxRows"
-                   :step="step"
-                   :clearable="clearableVal"
-                   :readonly="readonly"
-                   :controls-position="controlsPosition"
-                   :controls="controls"
-                   :label="placeholder"
-                   :disabled="disabled"></el-input-number>
+  <el-input-number
+    v-model.number="text"
+    :class="b()"
+    @click.native="handleClick"
+    @focus="handleFocus"
+    @blur="handleBlur"
+    :precision="precision"
+    :placeholder="placeholder"
+    :size="size"
+    :min="minRows"
+    :max="maxRows"
+    :step="step"
+    :clearable="clearableVal"
+    :readonly="readonly"
+    :controls-position="controlsPosition"
+    :controls="controls"
+    :label="placeholder"
+    :disabled="disabled"></el-input-number>
 </template>
 
 <script>
-import create from "../../../core/create";
-import props from "../../core/common/props.js";
-import event from "../../core/common/event.js";
+import create from '../../../core/create'
+import props from '../../core/common/props.js'
+import event from '../../core/common/event.js'
 export default create({
-  name: "input-number",
+  name: 'input-number',
   mixins: [props(), event()],
-  data () {
-    return {};
+  data() {
+    return {}
   },
   props: {
     controls: {
@@ -39,7 +40,7 @@ export default create({
     },
     controlsPosition: {
       type: String,
-      default: "right"
+      default: 'right'
     },
     precision: {
       type: Number
@@ -53,8 +54,8 @@ export default create({
       default: Infinity
     }
   },
-  created () { },
-  mounted () { },
+  created() {},
+  mounted() {},
   methods: {}
-});
+})
 </script>

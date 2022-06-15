@@ -1,11 +1,10 @@
 <template>
   <div class="layout">
-<!--    <LayoutHeader class="header"></LayoutHeader>-->
+    <!--    <LayoutHeader class="header"></LayoutHeader>-->
     <div class="content">
       <LayoutNav class="content-left"></LayoutNav>
       <LayoutContent class="content-right"></LayoutContent>
     </div>
-
   </div>
 </template>
 
@@ -16,7 +15,7 @@ import LayoutContent from './LayoutContent'
 
 export default {
   components: {
-   // LayoutHeader,
+    // LayoutHeader,
     LayoutNav,
     LayoutContent
   }

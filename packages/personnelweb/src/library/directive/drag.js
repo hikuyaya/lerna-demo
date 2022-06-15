@@ -1,7 +1,7 @@
 export default {
   name: 'drag',
 
-  bind: function(el) {
+  bind: function (el) {
     var dlg = el.getElementsByClassName('el-dialog')[0]
     var title = el.getElementsByClassName('el-dialog__title')[0]
     title.style.userSelect = 'none'
@@ -12,19 +12,19 @@ export default {
     dlg.offsetX = 0
     dlg.offsetY = 0
 
-    var move = function(e) {
+    var move = function (e) {
       dlg.style.marginLeft = '0px'
       dlg.style.marginTop = '0px'
       dlg.style.left = e.pageX - dlg.offsetX + 'px'
       dlg.style.top = e.pageY - dlg.offsetY + 'px'
     }
 
-    var up = function() {
+    var up = function () {
       removeEventListener('mousemove', move)
       removeEventListener('mouseup', up)
     }
 
-    var down = function(e) {
+    var down = function (e) {
       dlg.offsetX = e.pageX - dlg.offsetLeft
       dlg.offsetY = e.pageY - dlg.offsetTop
 

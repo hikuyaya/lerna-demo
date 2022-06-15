@@ -1,24 +1,25 @@
 <template>
-  <el-rate v-model="text"
-           style="margin-top:10px"
-           @change="handleChange"
-           @click.native="handleClick"
-           :max="max"
-           :readonly="readonly"
-           :texts="texts"
-           :show-text="showText"
-           :icon-classes="iconClasses"
-           :void-icon-class="voidIconClass"
-           :disabled="disabled"
-           :colors="colors"></el-rate>
+  <el-rate
+    v-model="text"
+    style="margin-top: 10px"
+    @change="handleChange"
+    @click.native="handleClick"
+    :max="max"
+    :readonly="readonly"
+    :texts="texts"
+    :show-text="showText"
+    :icon-classes="iconClasses"
+    :void-icon-class="voidIconClass"
+    :disabled="disabled"
+    :colors="colors"></el-rate>
 </template>
 
 <script>
-import create from "../../../core/create";
-import props from "../../core/common/props.js";
-import event from "../../core/common/event.js";
+import create from '../../../core/create'
+import props from '../../core/common/props.js'
+import event from '../../core/common/event.js'
 export default create({
-  name: "rate",
+  name: 'rate',
   mixins: [props(), event()],
   props: {
     value: {
@@ -46,12 +47,12 @@ export default create({
       type: String
     }
   },
-  data () {
-    return {};
+  data() {
+    return {}
   },
   watch: {},
-  created () { },
-  mounted () { },
+  created() {},
+  mounted() {},
   methods: {}
-});
+})
 </script>

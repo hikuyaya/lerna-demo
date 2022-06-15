@@ -24,28 +24,27 @@ module.exports = {
   // },
   chainWebpack: config => {
     config.resolve.alias
-        .set('@public', path.join(__dirname, 'public'))
-        .set('@src', path.join(__dirname, 'src'))
-        .set('@views', path.join(__dirname, 'src/views'))
-        .set('@service', path.join(__dirname, 'src/service'))
+      .set('@public', path.join(__dirname, 'public'))
+      .set('@src', path.join(__dirname, 'src'))
+      .set('@views', path.join(__dirname, 'src/views'))
+      .set('@service', path.join(__dirname, 'src/service'))
 
-        config.externals({ './cptable': 'var cptable' })
+    config.externals({ './cptable': 'var cptable' })
     if (process.env.NODE_ENV === 'production') {
       // 为生产环境修改配置...
       // 用来打包删除所有config以及debugger,true打开
-      config.optimization
-          .minimizer[
-          new UglifyJsPlugin({
-            uglifyOptions: {
-              compress: {
-                warnings: false,
-                drop_console: true, // console
-                drop_debugger: false,
-                pure_funcs: ['console.log']// 移除console
-              }
+      config.optimization.minimizer[
+        new UglifyJsPlugin({
+          uglifyOptions: {
+            compress: {
+              warnings: false,
+              drop_console: true, // console
+              drop_debugger: false,
+              pure_funcs: ['console.log'] // 移除console
             }
-          })
-          ]
+          }
+        })
+      ]
     } else {
       // 为开发环境修改配置...
     }

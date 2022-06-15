@@ -1,7 +1,7 @@
 const state = {
   userToken: '',
   userInfo: {},
-  msg: ""
+  msg: ''
 }
 
 const mutations = {
@@ -22,42 +22,41 @@ const mutations = {
   },
 
   showMsg(state) {
-    state.msg = "你有一条新的系统消息"
+    state.msg = '你有一条新的系统消息'
   }
 }
 
-const actions= {
-  increment (context) {
+const actions = {
+  increment(context) {
     context.commit('increment')
   },
-  systemMsg (context) {
-
+  systemMsg(context) {
     context.commit('showMsg')
   }
 }
 
 const getters = {
   userInfo: state => {
-    return state.userInfo;
+    return state.userInfo
   },
   userName: state => {
-    return state.userInfo.username;
+    return state.userInfo.username
   },
   nickName: state => {
-    return state.userInfo.nickname;
+    return state.userInfo.nickname
   },
   headImgUrl: state => {
-    return state.userInfo.headImgUrl;
+    return state.userInfo.headImgUrl
   },
   msg: state => {
-    return state.msg;
+    return state.msg
   },
   permissions: state => {
-    return state.userInfo.permissions;
+    return state.userInfo.permissions
   },
   menus: state => {
-    return state.userInfo.menus;
-  },
+    return state.userInfo.menus
+  }
 }
 export default {
   namespaced: true,

@@ -1,6 +1,6 @@
 export default {
   methods: {
-    getSlotName (item = {}, type = 'D', slot) {
+    getSlotName(item = {}, type = 'D', slot) {
       let result = {
         F: 'Form',
         H: 'Header',
@@ -14,16 +14,16 @@ export default {
       if (slot) return slot[name]
       return name
     },
-    getSlotList (list = [], slot, propList) {
+    getSlotList(list = [], slot, propList) {
       propList = propList.map(ele => ele.prop)
       return Object.keys(slot).filter(ele => {
-        let result = false;
+        let result = false
         if (!propList.includes(ele)) {
           list.forEach(name => {
-            if (ele.includes(name)) result = true;
+            if (ele.includes(name)) result = true
           })
         }
-        return result;
+        return result
       })
     }
   }

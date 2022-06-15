@@ -1,16 +1,16 @@
-import { DIC_PROPS, DIC_SPLIT, DIC_HTTP_PROPS } from '../../../global/variable';
+import { DIC_PROPS, DIC_SPLIT, DIC_HTTP_PROPS } from '../../../global/variable'
 import slot from '../../../core/slot'
 export default function () {
   return {
     mixins: [slot],
-    data () {
+    data() {
       return {
         stringMode: false,
         name: '',
         text: undefined,
         propsHttpDefault: DIC_HTTP_PROPS,
         propsDefault: DIC_PROPS
-      };
+      }
     },
     props: {
       blur: Function,
@@ -30,7 +30,7 @@ export default function () {
         }
       },
       listType: {
-        type: String,
+        type: String
       },
       value: {},
       column: {
@@ -88,7 +88,7 @@ export default function () {
       dic: {
         type: Array,
         default: () => {
-          return [];
+          return []
         }
       },
       placeholder: {
@@ -129,7 +129,7 @@ export default function () {
         default: false
       },
       popperClass: {
-        type: String,
+        type: String
       },
       propsHttp: {
         type: Object,
@@ -142,73 +142,73 @@ export default function () {
     },
     watch: {
       text: {
-        handler (n) {
+        handler(n) {
           this.handleChange(n)
         }
       },
       value: {
-        handler () {
-          this.initVal();
+        handler() {
+          this.initVal()
         }
       }
     },
     computed: {
-      clearableVal () {
+      clearableVal() {
         return this.disabled ? false : this.clearable
       },
-      componentName () {
-        const type = this.$AVUE.ui.type;
+      componentName() {
+        const type = this.$AVUE.ui.type
         const result = `${type}-${this.name}${this.button ? '-button' : ''}`
         return result
       },
-      required () {
-        return !this.validatenull(this.rules);
+      required() {
+        return !this.validatenull(this.rules)
       },
-      isArray () {
-        return this.dataType === 'array';
+      isArray() {
+        return this.dataType === 'array'
       },
-      isString () {
-        return this.dataType === 'string';
+      isString() {
+        return this.dataType === 'string'
       },
-      isNumber () {
-        return this.dataType === 'number';
+      isNumber() {
+        return this.dataType === 'number'
       },
       nameKey: function () {
-        return this.propsHttp.name || this.propsHttpDefault.name;
+        return this.propsHttp.name || this.propsHttpDefault.name
       },
       urlKey: function () {
-        return this.propsHttp.url || this.propsHttpDefault.url;
+        return this.propsHttp.url || this.propsHttpDefault.url
       },
       resKey: function () {
-        return this.propsHttp.res || this.propsHttpDefault.res;
+        return this.propsHttp.res || this.propsHttpDefault.res
       },
       groupsKey: function () {
-        return this.props.groups || this.propsDefault.groups;
+        return this.props.groups || this.propsDefault.groups
       },
       valueKey: function () {
-        return this.props.value || this.propsDefault.value;
+        return this.props.value || this.propsDefault.value
       },
       descKey: function () {
-        return this.props.desc || this.propsDefault.desc;
+        return this.props.desc || this.propsDefault.desc
       },
       leafKey: function () {
-        return this.props.leaf || this.propsDefault.leaf;
+        return this.props.leaf || this.propsDefault.leaf
       },
       labelKey: function () {
-        return this.props.label || this.propsDefault.label;
+        return this.props.label || this.propsDefault.label
       },
       childrenKey: function () {
-        return this.props.children || this.propsDefault.children;
+        return this.props.children || this.propsDefault.children
       },
       disabledKey: function () {
-        return this.props.disabled || this.propsDefault.disabled;
+        return this.props.disabled || this.propsDefault.disabled
       },
       idKey: function () {
-        return this.props.id || this.propsDefault.id;
+        return this.props.id || this.propsDefault.id
       }
     },
-    created () {
-      this.initVal();
+    created() {
+      this.initVal()
     }
-  };
+  }
 }

@@ -6,7 +6,8 @@
 
 import axios from 'axios'
 
-const MSG_NOT_ALLOW_CONTENT_DISPOSITION = '无法获取 content-disposition, 请确保后端 CORS 的配置,允许访问该 content-disposition '
+const MSG_NOT_ALLOW_CONTENT_DISPOSITION =
+  '无法获取 content-disposition, 请确保后端 CORS 的配置,允许访问该 content-disposition '
 
 export default (url, param, method = 'get') => {
   const downloadFile = response => {
@@ -17,7 +18,9 @@ export default (url, param, method = 'get') => {
     const contentDisposition = response.headers['content-disposition']
     if (contentDisposition.indexOf('filename') !== -1) {
       // 获取文件名
-      const fileName = decodeURIComponent(contentDisposition.split('filename=')[1])
+      const fileName = decodeURIComponent(
+        contentDisposition.split('filename=')[1]
+      )
       // 根据 blob 创建 object url
       const blobURL = window.URL.createObjectURL(new Blob([response.data]))
 
@@ -44,7 +47,9 @@ export default (url, param, method = 'get') => {
       method: 'GET',
       responseType: 'blob',
       isDownload: true
-    }).then(downloadFile).catch(downloadFile)
+    })
+      .then(downloadFile)
+      .catch(downloadFile)
   }
 
   // POST 请求，参数处理
@@ -54,6 +59,8 @@ export default (url, param, method = 'get') => {
       method: 'POST',
       data: param,
       responseType: 'blob'
-    }).then(downloadFile).catch(downloadFile)
+    })
+      .then(downloadFile)
+      .catch(downloadFile)
   }
 }

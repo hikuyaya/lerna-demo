@@ -7,7 +7,7 @@
 
 <script>
 const imgDictionary = {
-  default: require('@src/assets/images/no-data.png'),
+  default: require('@src/assets/images/no-data.png')
 }
 
 export default {

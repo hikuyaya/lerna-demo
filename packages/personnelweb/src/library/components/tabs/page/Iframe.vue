@@ -13,13 +13,13 @@ export default {
     icon: String
   },
 
-  data () {
+  data() {
     return {
       routeTab: null
     }
   },
 
-  mounted () {
+  mounted() {
     let { src, title, icon, $routerTab: $tab } = this
     let { iframes } = $tab
 
@@ -32,16 +32,16 @@ export default {
     $tab.currentIframe = src
   },
 
-  activated () {
+  activated() {
     this.$routerTab.currentIframe = this.src
   },
 
-  deactivated () {
+  deactivated() {
     this.$routerTab.currentIframe = null
   },
 
   // 组件销毁后移除 iframe
-  destroyed () {
+  destroyed() {
     let { src } = this
     let { iframes } = this.$routerTab
     let index = iframes.indexOf(src)
@@ -51,4 +51,5 @@ export default {
     }
   }
 }
-</script>>
+</script>
+>

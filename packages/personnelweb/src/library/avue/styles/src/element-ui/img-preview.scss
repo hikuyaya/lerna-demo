@@ -11,42 +11,42 @@
   }
 }
 
-.avue-image-preview{
+.avue-image-preview {
   position: fixed;
-  top:0;
-  left:0;
-  width:100%;
+  top: 0;
+  left: 0;
+  width: 100%;
   height: 100%;
   transition: all 0.5s;
-  z-index:9998;
-  .el-image-viewer__close{
-    i{
-      color:#fff;
+  z-index: 9998;
+  .el-image-viewer__close {
+    i {
+      color: #fff;
     }
   }
-  .el-image-viewer__btn{
+  .el-image-viewer__btn {
     z-index: 1024;
   }
-  img{
+  img {
     transition: all 0.5s;
     cursor: pointer;
   }
-  &__file{
+  &__file {
     text-align: center;
-    a{
-      color:#fff;
+    a {
+      color: #fff;
     }
-    i{
+    i {
       font-size: 80px;
     }
   }
-  &__mask{
+  &__mask {
     position: absolute;
-    top:0;
-    left:0;
-    width:100%;
+    top: 0;
+    left: 0;
+    width: 100%;
     height: 100%;
-    background: rgba(0,0,0,.5);
+    background: rgba(0, 0, 0, 0.5);
   }
   &__box {
     width: 100%;
@@ -54,15 +54,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
-   
-    .el-carousel{
+
+    .el-carousel {
       width: 90%;
       height: 100%;
     }
-    .el-carousel__container{
+    .el-carousel__container {
       height: 100%;
     }
-    .el-carousel__item{
+    .el-carousel__item {
       width: 100%;
       height: 100%;
       display: flex;

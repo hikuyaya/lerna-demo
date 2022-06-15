@@ -19,8 +19,14 @@
 
       <el-dropdown>
         <div class="header-right-title">
-          <span style="margin-right: 10px;">欢迎您</span>
-          <span>, {{ $yid.cache.get($yid.type.USER.INFO) && $yid.cache.get($yid.type.USER.INFO).user.account }}</span>
+          <span style="margin-right: 10px">欢迎您</span>
+          <span
+            >,
+            {{
+              $yid.cache.get($yid.type.USER.INFO) &&
+              $yid.cache.get($yid.type.USER.INFO).user.account
+            }}</span
+          >
           <i class="el-icon-arrow-down el-icon--right"></i>
         </div>
 
@@ -247,4 +253,3 @@ export default {
   }
 }
 </style>
-

@@ -12,7 +12,6 @@
 }
 
 .el-table {
-
   color: #232323 !important;
 
   &.el-table--striped {
@@ -53,7 +52,6 @@
     }
   }
 
-
   thead {
     color: #333333;
   }
@@ -68,7 +66,6 @@
     background: #fff;
   }
 }
-
 
 .el-dialog__wrapper {
   display: flex;
@@ -159,18 +156,20 @@
   width: 8%;
 }
 
-
 /deep/ .el-date-table.is-week-mode .el-date-table__row.current div {
   background-color: #1c6eea;
 }
 
-/deep/ .el-table--enable-row-hover .el-table__body tr:hover > td.el-table__cell {
-  background-color: #1266e3
+/deep/
+  .el-table--enable-row-hover
+  .el-table__body
+  tr:hover
+  > td.el-table__cell {
+  background-color: #1266e3;
 }
 
-
 /deep/ .el-table--small {
-  font-size: 12px !important;;
+  font-size: 12px !important;
 }
 
 /deep/ .el-form-item__label {
@@ -187,9 +186,8 @@
 
 /deep/ .el-button--small {
   padding: 8px 12px !important;
-
 }
 
 /deep/ .el-table__footer-wrapper {
-  background-color: #F5F7FA !important;
+  background-color: #f5f7fa !important;
 }

@@ -33,7 +33,9 @@ export default {
         items,
         contextmenu: { id, index }
       } = this
-      return id ? items.slice(0, index).filter(({ closable }) => closable !== false) : emptyArray
+      return id
+        ? items.slice(0, index).filter(({ closable }) => closable !== false)
+        : emptyArray
     },
 
     // 左侧可关闭的页签
@@ -42,7 +44,9 @@ export default {
         items,
         contextmenu: { id, index }
       } = this
-      return id ? items.slice(index + 1).filter(({ closable }) => closable !== false) : emptyArray
+      return id
+        ? items.slice(index + 1).filter(({ closable }) => closable !== false)
+        : emptyArray
     },
 
     // 其他可关闭的页签
@@ -51,7 +55,11 @@ export default {
         items,
         contextmenu: { id }
       } = this
-      return id ? items.filter(({ closable, id: tid }) => closable !== false && id !== tid) : emptyArray
+      return id
+        ? items.filter(
+            ({ closable, id: tid }) => closable !== false && id !== tid
+          )
+        : emptyArray
     }
   },
 
@@ -68,7 +76,9 @@ export default {
         document.addEventListener(
           'click',
           (this.onClick = e => {
-            if (e.target !== this.$el.querySelector('.router-tab-contextmenu')) {
+            if (
+              e.target !== this.$el.querySelector('.router-tab-contextmenu')
+            ) {
               this.hideContextmenu()
             }
           })

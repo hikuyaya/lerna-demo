@@ -8,7 +8,7 @@ export default {
     // - 为字符串时，可以设置为内置的语言 'zh-CN' (默认) 和 'en'
     // - 为对象时，可设置自定义的语言
     language: {
-      type: [ String, Object ],
+      type: [String, Object],
       default: 'zh-CN'
     },
 
@@ -18,7 +18,7 @@ export default {
 
   computed: {
     // 语言内容
-    lang () {
+    lang() {
       let lang = this.language
 
       if (typeof lang === 'string') {
@@ -34,7 +34,7 @@ export default {
 
   methods: {
     // 获取国际化内容
-    i18nText (text) {
+    i18nText(text) {
       let { key, params } = this.i18nParse(text)
 
       if (key) {
@@ -55,7 +55,7 @@ export default {
     },
 
     // 解析国际化
-    i18nParse (text) {
+    i18nParse(text) {
       let key
       let params
 

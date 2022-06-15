@@ -1,42 +1,43 @@
 <template>
   <div :class="b()">
-    <el-date-picker :type="type"
-                    v-model="text"
-                    :popper-class="popperClass"
-                    :size="size"
-                    :editable="editable"
-                    :unlink-panels="unlinkPanels"
-                    :readonly="readonly"
-                    :default-value="defaultValue"
-                    :default-time="defaultTime"
-                    :range-separator="rangeSeparator"
-                    :start-placeholder="startPlaceholder"
-                    :end-placeholder="endPlaceholder"
-                    :format="format"
-                    :clearable="clearableVal"
-                    :picker-options="pickerOptions"
-                    :value-format="valueFormat"
-                    :placeholder="placeholder"
-                    @blur="handleBlur"
-                    @focus="handleFocus"
-                    @click.native="handleClick"
-                    :disabled="disabled"></el-date-picker>
+    <el-date-picker
+      :type="type"
+      v-model="text"
+      :popper-class="popperClass"
+      :size="size"
+      :editable="editable"
+      :unlink-panels="unlinkPanels"
+      :readonly="readonly"
+      :default-value="defaultValue"
+      :default-time="defaultTime"
+      :range-separator="rangeSeparator"
+      :start-placeholder="startPlaceholder"
+      :end-placeholder="endPlaceholder"
+      :format="format"
+      :clearable="clearableVal"
+      :picker-options="pickerOptions"
+      :value-format="valueFormat"
+      :placeholder="placeholder"
+      @blur="handleBlur"
+      @focus="handleFocus"
+      @click.native="handleClick"
+      :disabled="disabled"></el-date-picker>
   </div>
 </template>
 
 <script>
-import create from "../../../core/create";
-import props from "../../core/common/props.js";
-import event from "../../core/common/event.js";
-import locale from "../../core/common/locale";
+import create from '../../../core/create'
+import props from '../../core/common/props.js'
+import event from '../../core/common/event.js'
+import locale from '../../core/common/locale'
 export default create({
-  name: "date",
+  name: 'date',
   mixins: [props(), event(), locale],
-  data () {
+  data() {
     return {
-      text: "",
-      menu: [],
-    };
+      text: '',
+      menu: []
+    }
   },
   props: {
     editable: {
@@ -50,11 +51,11 @@ export default create({
     value: {},
     startPlaceholder: {
       type: String,
-      default: "开始日期"
+      default: '开始日期'
     },
     endPlaceholder: {
       type: String,
-      default: "结束日期"
+      default: '结束日期'
     },
     rangeSeparator: {
       type: String
@@ -67,15 +68,14 @@ export default create({
     },
     pickerOptions: {
       type: Object,
-      default: () => { }
+      default: () => {}
     },
     type: {
       type: String,
-      default: "date"
+      default: 'date'
     },
     valueFormat: {},
     format: {}
   }
-});
+})
 </script>
-

@@ -7,18 +7,31 @@
             <el-submenu :index="menu.id.toString()">
               <template slot="title">
                 <i :class="menu.css" class="nav-icon"></i>
-                <span style="font-weight:bold;">{{ menu.name }}</span>
+                <span style="font-weight: bold">{{ menu.name }}</span>
               </template>
 
               <el-menu-item-group>
                 <div :key="subMenu.id" v-for="subMenu in menu.subMenus">
-                  <template v-if="subMenu.subMenus &&  getValidMenu(subMenu.subMenus,'menu')">
-                        <span :class="['threemenu',{'is-active':getValidMenu(subMenu.subMenus,'active',$route.path)}]"
-                              @click="showMenu(subMenu)">
-                            <i :class="subMenu.css" class="nav-icon"></i>
-                            <label>{{ subMenu.name }}</label>
-                            <i class="icon iconfont el-icon-arrow-right"></i>
-                        </span>
+                  <template
+                    v-if="
+                      subMenu.subMenus && getValidMenu(subMenu.subMenus, 'menu')
+                    ">
+                    <span
+                      :class="[
+                        'threemenu',
+                        {
+                          'is-active': getValidMenu(
+                            subMenu.subMenus,
+                            'active',
+                            $route.path
+                          )
+                        }
+                      ]"
+                      @click="showMenu(subMenu)">
+                      <i :class="subMenu.css" class="nav-icon"></i>
+                      <label>{{ subMenu.name }}</label>
+                      <i class="icon iconfont el-icon-arrow-right"></i>
+                    </span>
                   </template>
                   <template v-else>
                     <el-menu-item :index="subMenu.url" @click="showOrgMenu">
@@ -33,28 +46,37 @@
           <template v-else>
             <el-menu-item :index="menu.url">
               <i :class="menu.css" class="nav-icon"></i>
-              <span style="font-weight:bold;">{{ menu.name }}</span>
+              <span style="font-weight: bold">{{ menu.name }}</span>
             </el-menu-item>
           </template>
         </div>
       </el-menu>
       <!--三级菜单-->
       <el-drawer
-          :visible.sync="showSjMenu"
-          :direction="direction"
-          class="sjdrawer" :modal="false" size="180" :show-close="false" :withHeader="false">
+        :visible.sync="showSjMenu"
+        :direction="direction"
+        class="sjdrawer"
+        :modal="false"
+        size="180"
+        :show-close="false"
+        :withHeader="false">
         <div class="menucon">
-        <span :class="{'is-active':sjmenu.url==$route.path}" v-for="sjmenu in sjMenuLists"
-              @click="openPath(sjmenu.url)">{{ sjmenu.name }}</span>
+          <span
+            :class="{ 'is-active': sjmenu.url == $route.path }"
+            v-for="sjmenu in sjMenuLists"
+            @click="openPath(sjmenu.url)"
+            >{{ sjmenu.name }}</span
+          >
         </div>
       </el-drawer>
     </div>
-    <el-input class="layout-nav-search"
-              placeholder="搜索菜单"
-              clearable
-              prefix-icon="el-icon-search"
-              @change="change"
-              v-model="filter">
+    <el-input
+      class="layout-nav-search"
+      placeholder="搜索菜单"
+      clearable
+      prefix-icon="el-icon-search"
+      @change="change"
+      v-model="filter">
     </el-input>
   </div>
 </template>
@@ -71,13 +93,12 @@ export default {
       showSjMenu: false,
       direction: 'ltr',
       sjMenuLists: [],
-      filter: null,
+      filter: null
     }
   },
 
   created() {
-    this.getMenu();
-
+    this.getMenu()
   },
 
   methods: {
@@ -104,7 +125,7 @@ export default {
     },
     openPath(url) {
       if (url.indexOf('?') != -1 && url.indexOf('report/') != -1) {
-        url = url.split('?')[0];
+        url = url.split('?')[0]
       }
       this.$router.push(url)
     },
@@ -123,68 +144,69 @@ export default {
       if (process.env.VUE_APP_ISCUSTOMMENU == 0) {
         const menuList = yid.util.deepClone(yid.config.MENU.LIST)
         const menuListForShow = menuList.filter(menu => menu.canShow !== false)
-        const menuTree = yid.util.toTree(menuListForShow, 'id', 'pid', 'subMenus')
+        const menuTree = yid.util.toTree(
+          menuListForShow,
+          'id',
+          'pid',
+          'subMenus'
+        )
         this.menuTree = menuTree
         //  console.log(this.menuTree);
       } else {
         service.user.menu().then(res => {
-          let menu = res.data;
+          let menu = res.data
           // this.menuTree = menu;
-          this.menuTreeData = menu;
-          this.menuTree = this.menuTreeData;
+          this.menuTreeData = menu
+          this.menuTree = this.menuTreeData
           // console.log('menu1', menu)
           // console.log('menu2', this.menuTree)
-        });
+        })
       }
-    }, change(value) {
-
+    },
+    change(value) {
       if (value.length > 0) {
-
-        this.menuTree = this.filterMenu(yid.util.deepClone(this.menuTreeData), value);
+        this.menuTree = this.filterMenu(
+          yid.util.deepClone(this.menuTreeData),
+          value
+        )
       } else {
-        this.menuTree = this.menuTreeData;
+        this.menuTree = this.menuTreeData
       }
-
-    }, filterMenu(data, name) {
+    },
+    filterMenu(data, name) {
       for (let index in data) {
         //一级菜单
-        let item = data[index];
+        let item = data[index]
         if (item.subMenus) {
           for (let item2 in item.subMenus) {
-            let subMenu = item.subMenus[item2];
-            let flag = false;
-            if (this.findMenu(subMenu, name)) flag = true;
+            let subMenu = item.subMenus[item2]
+            let flag = false
+            if (this.findMenu(subMenu, name)) flag = true
 
             if (subMenu.subMenus && !flag) {
-
               for (let item3 in subMenu.subMenus) {
-
                 if (this.findMenu(subMenu.subMenus[item3], name)) {
                   flag = true
                 } else {
-                  delete subMenu.subMenus[item3].name;
+                  delete subMenu.subMenus[item3].name
                 }
-
               }
-              let filter = subMenu.subMenus.filter(item => item.name);
-              subMenu.subMenus = filter;
+              let filter = subMenu.subMenus.filter(item => item.name)
+              subMenu.subMenus = filter
             }
 
-            if (!flag)
-              delete item.subMenus[item2].name;
-
+            if (!flag) delete item.subMenus[item2].name
           }
-          let filter = item.subMenus.filter(item => item.name);
-          item.subMenus = filter;
+          let filter = item.subMenus.filter(item => item.name)
+          item.subMenus = filter
         }
       }
-      let filter = data.filter(item => item.subMenus.length > 0);
-      return filter;
-    }, findMenu(item, name) {
-
-      return item.name && item.name.indexOf(name) != -1
-
+      let filter = data.filter(item => item.subMenus.length > 0)
+      return filter
     },
+    findMenu(item, name) {
+      return item.name && item.name.indexOf(name) != -1
+    }
   }
 }
 </script>
@@ -200,7 +222,7 @@ export default {
   .layout-nav-menu {
     flex: 1;
     margin-bottom: 40px;
-    overflow-y: scroll;;
+    overflow-y: scroll;
     overflow-x: hidden;
 
     ul {
@@ -212,7 +234,7 @@ export default {
   .layout-nav-search {
     margin-bottom: 2px;
     border-bottom: 1px solid gray;
-    background-color: transparent;;
+    background-color: transparent;
     padding: 0;
     height: 40px;
     line-height: 40px;
@@ -223,7 +245,7 @@ export default {
     bottom: 0;
 
     .el-input {
-      background-color: transparent;;
+      background-color: transparent;
     }
 
     .el-input:focus {
@@ -276,12 +298,12 @@ export default {
             white-space: nowrap;
 
             &:hover {
-              background-color: #2E8FF4;
+              background-color: #2e8ff4;
               color: #fff;
             }
 
             &.is-active {
-              background-color: #2E8FF4;
+              background-color: #2e8ff4;
               color: #fff;
             }
           }
@@ -333,12 +355,12 @@ export default {
       animation: kf-marque-animation 12s infinite linear;
 
       &:hover {
-        background-color: #272E3F;
+        background-color: #272e3f;
         color: #fff;
       }
 
       &.is-active {
-        background-color: #272E3F;
+        background-color: #272e3f;
         color: #fff;
       }
     }
@@ -351,7 +373,7 @@ export default {
     .el-submenu .el-menu-item {
       height: 44px;
       line-height: 44px;
-      color: rgba(255, 255, 255, .4);
+      color: rgba(255, 255, 255, 0.4);
       // margin-left: 10px;
     }
 
@@ -364,7 +386,7 @@ export default {
       padding-left: 10px !important;
 
       &:hover {
-        background: #1E2332;
+        background: #1e2332;
       }
     }
 
@@ -383,7 +405,7 @@ export default {
 
     .el-menu-item {
       &.is-active {
-        background-color: #272E3F;
+        background-color: #272e3f;
         color: #fff;
 
         &:before {
@@ -398,7 +420,7 @@ export default {
       }
 
       &:hover {
-        background-color: #272E3F;
+        background-color: #272e3f;
         color: #fff;
       }
 
@@ -409,4 +431,3 @@ export default {
   }
 }
 </style>
-

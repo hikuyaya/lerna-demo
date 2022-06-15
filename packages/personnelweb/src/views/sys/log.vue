@@ -3,41 +3,57 @@
     <el-form :model="model" inline>
       <el-form-item label="选择日期：">
         <el-date-picker
-            placeholder
-            v-model="model.startTime"
-            value-format="yyyy-MM-dd"
-        ></el-date-picker>
+          placeholder
+          v-model="model.startTime"
+          value-format="yyyy-MM-dd"></el-date-picker>
         <span class="character"></span>
-        <el-date-picker  placeholder v-model="model.endTime" value-format="yyyy-MM-dd"></el-date-picker>
+        <el-date-picker
+          placeholder
+          v-model="model.endTime"
+          value-format="yyyy-MM-dd"></el-date-picker>
       </el-form-item>
       <el-form-item label="操作类型：">
-<!--        <el-select clearable filterable placeholder="请选择" style="width: 160px;" v-model.trim="model.operType">-->
-<!--          <template v-if="typeMap.length>0">-->
-<!--            <el-option :key="'type' + item.value" :label="item.text" :value="item.text" v-for="item in typeMap"></el-option>-->
-<!--          </template>-->
-<!--        </el-select>-->
-        <el-input clearable placeholder="请输入操作类型" v-model.trim="model.operType" style="width: 180px;"></el-input>
+        <!--        <el-select clearable filterable placeholder="请选择" style="width: 160px;" v-model.trim="model.operType">-->
+        <!--          <template v-if="typeMap.length>0">-->
+        <!--            <el-option :key="'type' + item.value" :label="item.text" :value="item.text" v-for="item in typeMap"></el-option>-->
+        <!--          </template>-->
+        <!--        </el-select>-->
+        <el-input
+          clearable
+          placeholder="请输入操作类型"
+          v-model.trim="model.operType"
+          style="width: 180px"></el-input>
       </el-form-item>
       <el-form-item label="用户名：">
-        <el-input clearable placeholder="请输入用户名" v-model.trim="model.userName" style="width: 180px;"></el-input>
+        <el-input
+          clearable
+          placeholder="请输入用户名"
+          v-model.trim="model.userName"
+          style="width: 180px"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="get()">查询</el-button>
       </el-form-item>
     </el-form>
     <yid-table pagination ref="table">
-      <el-table-column
-          type="selection"
-          width="55">
-      </el-table-column>
-      <yid-table-column label="操作员" min-width="50" prop="userName"></yid-table-column>
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <yid-table-column
+        label="操作员"
+        min-width="50"
+        prop="userName"></yid-table-column>
       <yid-table-column label="时间" min-width="50" prop="createdTime">
-<!--        <template slot-scope="scope">-->
-<!--          {{$yid.util.formatDate(scope.row.updatedTime)}}-->
-<!--        </template>-->
+        <!--        <template slot-scope="scope">-->
+        <!--          {{$yid.util.formatDate(scope.row.updatedTime)}}-->
+        <!--        </template>-->
       </yid-table-column>
-      <yid-table-column label="操作类型" min-width="70" prop="operType"></yid-table-column>
-      <yid-table-column label="内容" min-width="150" prop="operation"></yid-table-column>
+      <yid-table-column
+        label="操作类型"
+        min-width="70"
+        prop="operType"></yid-table-column>
+      <yid-table-column
+        label="内容"
+        min-width="150"
+        prop="operation"></yid-table-column>
     </yid-table>
   </div>
 </template>
@@ -46,10 +62,8 @@
 import yid from '@src/library'
 import service from '@src/service'
 export default {
-  name: "log",
-  components: {
-
-  },
+  name: 'log',
+  components: {},
   data() {
     return {
       model: {
@@ -90,11 +104,9 @@ export default {
       ]
     }
   },
-  created() {
-
-  },
+  created() {},
   mounted() {
-    this.get();
+    this.get()
   },
   methods: {
     get() {
@@ -103,12 +115,10 @@ export default {
       this.$refs.table.reloadData({
         fetch,
         params
-      });
+      })
     }
   }
 }
 </script>
 
-<style scoped lang='scss'>
-
-</style>
+<style scoped lang="scss"></style>

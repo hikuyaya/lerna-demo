@@ -1,2 +1,2 @@
-import NProgress from 'nprogress';
-export default NProgress;
+import NProgress from 'nprogress'
+export default NProgress

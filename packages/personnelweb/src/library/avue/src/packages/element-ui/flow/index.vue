@@ -1,41 +1,36 @@
 <template>
-  <div :class="b()"
-       :style="styleName">
-    <div :id="id"
-         :style="styleName">
+  <div :class="b()" :style="styleName">
+    <div :id="id" :style="styleName">
       <div class="avue-grid"></div>
-      <flow-node v-for="(node,index) in option.nodeList"
-                 :node="node"
-                 :id="node.id"
-                 v-if="!node.display"
-                 @click.native="handleClick(node)"
-                 @changeNodeSite="changeNodeSite"
-                 :index="index"
-                 :active="active"
-                 :key="index">
-        <template slot="header"
-                  slot-scope="{node}">
-          <slot name="header"
-                :node="node">
-          </slot>
+      <flow-node
+        v-for="(node, index) in option.nodeList"
+        :node="node"
+        :id="node.id"
+        v-if="!node.display"
+        @click.native="handleClick(node)"
+        @changeNodeSite="changeNodeSite"
+        :index="index"
+        :active="active"
+        :key="index">
+        <template slot="header" slot-scope="{ node }">
+          <slot name="header" :node="node"> </slot>
         </template>
-        <slot :node="node">
-        </slot>
+        <slot :node="node"> </slot>
       </flow-node>
     </div>
   </div>
 </template>
 
 <script>
-import create from "../../../core/create";
+import create from '../../../core/create'
 import flowNode from './node'
-import { randomId } from '../../../utils/util';
+import { randomId } from '../../../utils/util'
 export default create({
-  name: "flow",
+  name: 'flow',
   components: {
     flowNode
   },
-  data () {
+  data() {
     return {
       active: '',
       jsPlumb: {},
@@ -43,7 +38,20 @@ export default create({
       // 默认设置参数
       jsplumbSetting: {
         // 动态锚点、位置自适应
-        Anchors: ['Top', 'TopCenter', 'TopRight', 'TopLeft', 'Right', 'RightMiddle', 'Bottom', 'BottomCenter', 'BottomRight', 'BottomLeft', 'Left', 'LeftMiddle'],
+        Anchors: [
+          'Top',
+          'TopCenter',
+          'TopRight',
+          'TopLeft',
+          'Right',
+          'RightMiddle',
+          'Bottom',
+          'BottomCenter',
+          'BottomRight',
+          'BottomLeft',
+          'Left',
+          'LeftMiddle'
+        ],
         Container: '',
         // 连线的样式 StateMachine、Flowchart
         Connector: 'Flowchart',
@@ -72,23 +80,25 @@ export default create({
       },
 
       jsplumbSourceOptions: {
-        filter: '.avue-flow__node-drag', /* "span"表示标签，".className"表示类，"#id"表示元素id*/
+        filter:
+          '.avue-flow__node-drag' /* "span"表示标签，".className"表示类，"#id"表示元素id*/,
         filterExclude: false,
         anchor: 'Continuous',
         allowLoopback: false
       },
       jsplumbTargetOptions: {
-        filter: '.avue-flow__node-drag', /*"span"表示标签，".className"表示类，"#id"表示元素id */
+        filter:
+          '.avue-flow__node-drag' /*"span"表示标签，".className"表示类，"#id"表示元素id */,
         filterExclude: false,
         anchor: 'Continuous',
         allowLoopback: false
       },
-      loadEasyFlowFinish: false,
+      loadEasyFlowFinish: false
     }
   },
   props: {
     value: {
-      type: String,
+      type: String
     },
     option: {
       type: Object
@@ -104,24 +114,24 @@ export default create({
   },
   watch: {
     value: {
-      handler () {
-        this.active = this.value;
+      handler() {
+        this.active = this.value
       },
       immediate: true
     },
-    active (val) {
+    active(val) {
       this.$emit('input', val)
     }
   },
-  created () {
-    this.id = randomId();
-    this.jsplumbSetting.Container = this.id;
+  created() {
+    this.id = randomId()
+    this.jsplumbSetting.Container = this.id
   },
-  mounted () {
-    this.init();
+  mounted() {
+    this.init()
   },
   computed: {
-    styleName () {
+    styleName() {
       return {
         position: 'relative',
         width: this.setPx(this.width),
@@ -130,17 +140,17 @@ export default create({
     }
   },
   methods: {
-    init () {
+    init() {
       this.jsPlumb = jsPlumb.getInstance()
       this.$nextTick(() => {
         this.jsPlumbInit()
       })
     },
-    handleClick (node) {
+    handleClick(node) {
       this.$emit('click', node)
     },
     // 是否具有该线
-    hasLine (from, to) {
+    hasLine(from, to) {
       for (var i = 0; i < this.data.lineList.length; i++) {
         var line = this.data.lineList[i]
         if (line.from === from && line.to === to) {
@@ -150,21 +160,21 @@ export default create({
       return false
     },
     // 是否含有相反的线
-    hashOppositeLine (from, to) {
+    hashOppositeLine(from, to) {
       return this.hasLine(to, from)
     },
     // 删除线
-    deleteLine (from, to) {
+    deleteLine(from, to) {
       this.option.lineList = this.option.lineList.filter(function (line) {
         return line.from !== from && line.to !== to
       })
     },
     // 改变连线
-    changeLine (oldFrom, oldTo) {
+    changeLine(oldFrom, oldTo) {
       this.deleteLine(oldFrom, oldTo)
     },
     // 改变节点的位置
-    changeNodeSite ({ index, left, top }) {
+    changeNodeSite({ index, left, top }) {
       for (var i = 0; i < this.option.nodeList.length; i++) {
         let node = this.option.nodeList[i]
         if (i === index) {
@@ -174,37 +184,37 @@ export default create({
       }
     },
     //删除节点
-    deleteNode (nodeId) {
+    deleteNode(nodeId) {
       this.$confirm('确定要删除节点' + nodeId + '?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning',
         closeOnClickModal: false
-      }).then(() => {
-        this.option.nodeList.forEach(node => {
-          if (node.id === nodeId) {
-            node.display = true;
-          }
-        })
-        this.$nextTick(function () {
-          this.jsPlumb.removeAllEndpoints(nodeId);
-        })
-      }).catch(() => {
       })
+        .then(() => {
+          this.option.nodeList.forEach(node => {
+            if (node.id === nodeId) {
+              node.display = true
+            }
+          })
+          this.$nextTick(function () {
+            this.jsPlumb.removeAllEndpoints(nodeId)
+          })
+        })
+        .catch(() => {})
       return true
     },
     // 添加新的节点
-    addNode (name) {
-      const index = this.option.nodeList.length;
+    addNode(name) {
+      const index = this.option.nodeList.length
       let nodeId = 'node' + index
       this.option.nodeList.push({
         id: 'node' + index,
         name: name,
         left: 0,
-        top: 0,
+        top: 0
       })
       this.$nextTick(function () {
-
         this.jsPlumb.makeSource(nodeId, this.jsplumbSourceOptions)
 
         this.jsPlumb.makeTarget(nodeId, this.jsplumbTargetOptions)
@@ -212,10 +222,9 @@ export default create({
         this.jsPlumb.draggable(nodeId, {
           containment: 'parent'
         })
-
       })
     },
-    loadEasyFlow () {
+    loadEasyFlow() {
       // 初始化节点
       for (var i = 0; i < this.option.nodeList.length; i++) {
         let node = this.option.nodeList[i]
@@ -229,16 +238,19 @@ export default create({
       // 初始化连线
       for (var i = 0; i < this.option.lineList.length; i++) {
         let line = this.option.lineList[i]
-        this.jsPlumb.connect({
-          source: line.from,
-          target: line.to
-        }, this.jsplumbConnectOptions)
+        this.jsPlumb.connect(
+          {
+            source: line.from,
+            target: line.to
+          },
+          this.jsplumbConnectOptions
+        )
       }
       this.$nextTick(function () {
         this.loadEasyFlowFinish = true
       })
     },
-    jsPlumbInit () {
+    jsPlumbInit() {
       const _this = this
       this.jsPlumb.ready(function () {
         // 导入默认配置
@@ -252,14 +264,16 @@ export default create({
         _this.jsPlumb.bind('click', function (conn, originalEvent) {
           console.log('click', conn)
 
-          _this.$confirm('确定删除所点击的线吗?', '提示', {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning'
-          }).then(() => {
-            _this.jsPlumb.deleteConnection(conn)
-          }).catch(() => {
-          })
+          _this
+            .$confirm('确定删除所点击的线吗?', '提示', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            })
+            .then(() => {
+              _this.jsPlumb.deleteConnection(conn)
+            })
+            .catch(() => {})
         })
         // 连线
         _this.jsPlumb.bind('connection', function (evt) {
@@ -328,6 +342,5 @@ export default create({
       })
     }
   }
-});
+})
 </script>
-

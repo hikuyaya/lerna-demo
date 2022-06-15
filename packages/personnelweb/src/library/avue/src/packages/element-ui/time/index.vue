@@ -1,36 +1,37 @@
 <template>
   <div :class="b()">
-    <el-time-picker v-model="text"
-                    :popper-class="popperClass"
-                    :is-range="isRange"
-                    :size="size"
-                    :editable="editable"
-                    :default-value="defaultValue"
-                    :range-separator="rangeSeparator"
-                    :arrow-control="arrowControl"
-                    :start-placeholder="startPlaceholder"
-                    :end-placeholder="endPlaceholder"
-                    :format="format"
-                    :readonly="readonly"
-                    :clearable="clearableVal"
-                    :value-format="valueFormat"
-                    :placeholder="placeholder"
-                    @change="handleChange"
-                    @click.native="handleClick"
-                    :disabled="disabled"></el-time-picker>
+    <el-time-picker
+      v-model="text"
+      :popper-class="popperClass"
+      :is-range="isRange"
+      :size="size"
+      :editable="editable"
+      :default-value="defaultValue"
+      :range-separator="rangeSeparator"
+      :arrow-control="arrowControl"
+      :start-placeholder="startPlaceholder"
+      :end-placeholder="endPlaceholder"
+      :format="format"
+      :readonly="readonly"
+      :clearable="clearableVal"
+      :value-format="valueFormat"
+      :placeholder="placeholder"
+      @change="handleChange"
+      @click.native="handleClick"
+      :disabled="disabled"></el-time-picker>
   </div>
 </template>
 
 <script>
-import create from "../../../core/create";
-import props from "../../core/common/props.js";
-import event from "../../core/common/event.js";
-import locale from "../../core/common/locale";
+import create from '../../../core/create'
+import props from '../../core/common/props.js'
+import event from '../../core/common/event.js'
+import locale from '../../core/common/locale'
 export default create({
-  name: "time",
+  name: 'time',
   mixins: [props(), event(), locale],
-  data () {
-    return {};
+  data() {
+    return {}
   },
   props: {
     editable: {
@@ -39,11 +40,11 @@ export default create({
     },
     startPlaceholder: {
       type: String,
-      default: "开始时间"
+      default: '开始时间'
     },
     endPlaceholder: {
       type: String,
-      default: "结束时间"
+      default: '结束时间'
     },
     rangeSeparator: {
       type: String
@@ -55,33 +56,33 @@ export default create({
       type: [String, Array]
     },
     valueFormat: {
-      default: ""
+      default: ''
     },
     arrowControl: {
       type: Boolean,
       default: false
     },
     type: {
-      default: ""
+      default: ''
     },
     format: {
-      default: ""
+      default: ''
     }
   },
   watch: {
-    text () {
+    text() {
       if (Array.isArray(this.text) && this.validatenull(this.text)) {
         this.text = this.text.join(',')
       }
     }
   },
-  created () { },
-  mounted () { },
+  created() {},
+  mounted() {},
   computed: {
-    isRange () {
-      return this.type === "timerange";
+    isRange() {
+      return this.type === 'timerange'
     }
   },
   methods: {}
-});
+})
 </script>

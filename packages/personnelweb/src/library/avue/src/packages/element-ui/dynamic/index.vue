@@ -2,96 +2,106 @@
   <div :class="b()">
     <template v-if="isForm">
       <div :class="b('header')">
-        <el-button size="mini"
-                   circle
-                   v-if="!readonly && !disabled && !addBtn"
-                   :disabled="disabled"
-                   type="primary"
-                   icon="el-icon-plus"
-                   @click="addRow"></el-button>
+        <el-button
+          size="mini"
+          circle
+          v-if="!readonly && !disabled && !addBtn"
+          :disabled="disabled"
+          type="primary"
+          icon="el-icon-plus"
+          @click="addRow"></el-button>
       </div>
       <div>
-        <div v-for="(item,index) in text"
-             :class="b('row')"
-             :key="index"
-             @mouseenter="cellMouseenter({$index:index})"
-             @mouseleave="cellMouseLeave({$index:index})">
-          <el-button v-if="!readonly && !disabled  && !delBtn && hoverList[index]"
-                     @click="delRow(item.$index)"
-                     type="danger"
-                     :class="b('menu')"
-                     size="mini"
-                     :disabled="disabled"
-                     icon="el-icon-delete"
-                     circle></el-button>
-          <avue-form :key="index"
-                     ref="main"
-                     :option="option"
-                     v-model="text[index]">
-            <div slot-scope="{}"
-                 slot="_index">
-              <span>{{item.$index+1}}</span>
+        <div
+          v-for="(item, index) in text"
+          :class="b('row')"
+          :key="index"
+          @mouseenter="cellMouseenter({ $index: index })"
+          @mouseleave="cellMouseLeave({ $index: index })">
+          <el-button
+            v-if="!readonly && !disabled && !delBtn && hoverList[index]"
+            @click="delRow(item.$index)"
+            type="danger"
+            :class="b('menu')"
+            size="mini"
+            :disabled="disabled"
+            icon="el-icon-delete"
+            circle></el-button>
+          <avue-form
+            :key="index"
+            ref="main"
+            :option="option"
+            v-model="text[index]">
+            <div slot-scope="{}" slot="_index">
+              <span>{{ item.$index + 1 }}</span>
             </div>
-            <template v-for="item in columnSlot"
-                      slot-scope="scope"
-                      :slot="item">
-              <slot :name="item"
-                    v-bind="Object.assign(scope,{
-                  row:text[index]
-                })"></slot>
+            <template
+              v-for="item in columnSlot"
+              slot-scope="scope"
+              :slot="item">
+              <slot
+                :name="item"
+                v-bind="
+                  Object.assign(scope, {
+                    row: text[index]
+                  })
+                "></slot>
             </template>
           </avue-form>
         </div>
       </div>
     </template>
-    <avue-crud v-else-if="isCrud"
-               ref="main"
-               :option="option"
-               :disabled="disabled"
-               @cell-mouse-enter="cellMouseenter"
-               @cell-mouse-leave="cellMouseLeave"
-               @selection-change="handleSelectionChange"
-               @sortable-change="handleSortableChange"
-               :data="text">
-      <template slot-scope="scope"
-                slot="_indexHeader">
-        <el-button v-if="!(addBtn || readonly)"
-                   @click="addRow()"
-                   type="primary"
-                   size="mini"
-                   :disabled="disabled"
-                   icon="el-icon-plus"
-                   circle></el-button>
+    <avue-crud
+      v-else-if="isCrud"
+      ref="main"
+      :option="option"
+      :disabled="disabled"
+      @cell-mouse-enter="cellMouseenter"
+      @cell-mouse-leave="cellMouseLeave"
+      @selection-change="handleSelectionChange"
+      @sortable-change="handleSortableChange"
+      :data="text">
+      <template slot-scope="scope" slot="_indexHeader">
+        <el-button
+          v-if="!(addBtn || readonly)"
+          @click="addRow()"
+          type="primary"
+          size="mini"
+          :disabled="disabled"
+          icon="el-icon-plus"
+          circle></el-button>
       </template>
-      <template slot-scope="scope"
-                slot="_index">
-        <el-button v-if="!readonly && !disabled  && !delBtn && hoverList[scope.row.$index]"
-                   @click="delRow(scope.row.$index)"
-                   type="danger"
-                   size="mini"
-                   :disabled="disabled"
-                   icon="el-icon-delete"
-                   circle></el-button>
-        <div v-else>{{scope.row.$index+1}}</div>
+      <template slot-scope="scope" slot="_index">
+        <el-button
+          v-if="
+            !readonly && !disabled && !delBtn && hoverList[scope.row.$index]
+          "
+          @click="delRow(scope.row.$index)"
+          type="danger"
+          size="mini"
+          :disabled="disabled"
+          icon="el-icon-delete"
+          circle></el-button>
+        <div v-else>{{ scope.row.$index + 1 }}</div>
       </template>
-      <template v-for="item in columnSlot"
-                slot-scope="scope"
-                :slot="getSlotName({prop:item},'F')">
-        <slot v-bind="scope"
-              :name="item"></slot>
+      <template
+        v-for="item in columnSlot"
+        slot-scope="scope"
+        :slot="getSlotName({ prop: item }, 'F')">
+        <slot v-bind="scope" :name="item"></slot>
       </template>
     </avue-crud>
   </div>
 </template>
 
 <script>
-import create from "../../../core/create";
-import props from "../../core/common/props.js";
-import event from "../../core/common/event.js";
+import create from '../../../core/create'
+import props from '../../core/common/props.js'
+import event from '../../core/common/event.js'
 export default create({
-  name: "dynamic",
+  name: 'dynamic',
   mixins: [props(), event()],
-  data () {
+  data() {
     return {
       hoverList: []
     }
@@ -111,175 +121,183 @@ export default create({
     }
   },
   computed: {
-    showIndex () {
+    showIndex() {
       return this.vaildData(this.children.index, true)
     },
-    showType () {
+    showType() {
       return this.children.type || 'crud'
     },
-    isForm () {
+    isForm() {
       return this.showType === 'form'
     },
-    isCrud () {
+    isCrud() {
       return this.showType === 'crud'
     },
-    selectionChange () {
+    selectionChange() {
       return this.children.selectionChange
     },
-    sortableChange () {
+    sortableChange() {
       return this.children.sortableChange
     },
-    rowAdd () {
+    rowAdd() {
       return this.children.rowAdd
     },
-    rowDel () {
+    rowDel() {
       return this.children.rowDel
     },
-    viewBtn () {
+    viewBtn() {
       return this.children.viewBtn === false
     },
-    addBtn () {
+    addBtn() {
       return this.children.addBtn === false
     },
-    delBtn () {
+    delBtn() {
       return this.children.delBtn === false
     },
-    valueOption () {
-      let result = {};
+    valueOption() {
+      let result = {}
       this.columnOption.forEach(ele => {
         if (ele.value) {
-          result[ele.prop] = ele.value;
+          result[ele.prop] = ele.value
         }
       })
-      return result;
+      return result
     },
-    rulesOption () {
-      let rules = {};
+    rulesOption() {
+      let rules = {}
       this.columnOption.forEach(ele => {
         if (ele.rules) {
-          rules[ele.prop] = ele.rules;
+          rules[ele.prop] = ele.rules
         }
       })
-      return rules;
+      return rules
     },
-    columnOption () {
+    columnOption() {
       return this.children.column || []
     },
-    option () {
-      return Object.assign({
-        border: true,
-        header: false,
-        menu: false,
-        size: this.size,
-        disabled: this.disabled,
-        readonly: this.readonly,
-        emptyBtn: false,
-        submitBtn: false,
-      }, (() => {
-        let option = this.deepClone(this.children)
-        delete option.column;
-        return option;
-      })(), (() => {
-        let list = [{
-          label: this.children.indexLabel || '#',
-          prop: '_index',
-          display: this.showIndex,
-          detail: true,
-          fixed: true,
-          align: 'center',
-          headerAlign: 'center',
-          span: 24,
-          width: 50
-        }];
-        this.columnOption.forEach(ele => {
-          list.push(Object.assign(ele, {
-            cell: this.vaildData(ele.cell, true)
-          }))
-        })
-        return {
-          column: list
-        }
-      })())
+    option() {
+      return Object.assign(
+        {
+          border: true,
+          header: false,
+          menu: false,
+          size: this.size,
+          disabled: this.disabled,
+          readonly: this.readonly,
+          emptyBtn: false,
+          submitBtn: false
+        },
+        (() => {
+          let option = this.deepClone(this.children)
+          delete option.column
+          return option
+        })(),
+        (() => {
+          let list = [
+            {
+              label: this.children.indexLabel || '#',
+              prop: '_index',
+              display: this.showIndex,
+              detail: true,
+              fixed: true,
+              align: 'center',
+              headerAlign: 'center',
+              span: 24,
+              width: 50
+            }
+          ]
+          this.columnOption.forEach(ele => {
+            list.push(
+              Object.assign(ele, {
+                cell: this.vaildData(ele.cell, true)
+              })
+            )
+          })
+          return {
+            column: list
+          }
+        })()
+      )
     }
   },
-  mounted () {
-    this.initData();
+  mounted() {
+    this.initData()
   },
   watch: {
-    textLen () {
-      return this.text.length;
+    textLen() {
+      return this.text.length
     },
-    text () {
-      this.initData();
+    text() {
+      this.initData()
     }
   },
   methods: {
-    handleSelectionChange (val) {
-      this.selectionChange && this.selectionChange(val);
+    handleSelectionChange(val) {
+      this.selectionChange && this.selectionChange(val)
     },
-    handleSortableChange (oldindex, newindex, row, list) {
-      this.sortableChange && this.sortableChange(oldindex, newindex, row, list);
+    handleSortableChange(oldindex, newindex, row, list) {
+      this.sortableChange && this.sortableChange(oldindex, newindex, row, list)
     },
-    cellMouseenter (row) {
-      let index = row.$index;
-      this.mouseoverRow(index);
+    cellMouseenter(row) {
+      let index = row.$index
+      this.mouseoverRow(index)
     },
-    cellMouseLeave (row, column, cell, event) {
-      let index = row.$index;
+    cellMouseLeave(row, column, cell, event) {
+      let index = row.$index
       this.mouseoutRow(index)
     },
-    initData () {
+    initData() {
       this.text.forEach((ele, index) => {
         ele = Object.assign(ele, {
           $cellEdit: true,
-          $index: index,
+          $index: index
         })
       })
     },
-    mouseoverRow (index) {
+    mouseoverRow(index) {
       if (this.delBtn) return
-      this.flagList();
+      this.flagList()
       this.$set(this.hoverList, index, true)
     },
-    mouseoutRow (index) {
+    mouseoutRow(index) {
       if (this.delBtn) return
-      this.flagList();
+      this.flagList()
       this.$set(this.hoverList, index, false)
     },
-    flagList () {
+    flagList() {
       this.hoverList.forEach((ele, index) => {
-        ele = false;
+        ele = false
       })
     },
-    delRow (index) {
+    delRow(index) {
       const callback = () => {
         let list = this.deepClone(this.text)
-        list.splice(index, 1);
-        this.text = list;
+        list.splice(index, 1)
+        this.text = list
       }
       if (typeof this.rowDel === 'function') {
-        this.rowDel(this.text[index], callback);
+        this.rowDel(this.text[index], callback)
       } else {
-        callback();
+        callback()
       }
     },
-    addRow () {
+    addRow() {
       const callback = (obj = {}) => {
         obj = Object.assign(this.valueOption, obj, {
           $index: this.textLen
-        });
+        })
         if (this.isCrud) {
-          this.$refs.main.rowCellAdd(obj);
+          this.$refs.main.rowCellAdd(obj)
         } else if (this.isForm) {
           this.text.push(obj)
         }
       }
       if (typeof this.rowAdd === 'function') {
-        this.rowAdd(callback);
+        this.rowAdd(callback)
       } else {
-        callback();
+        callback()
       }
     }
   }
-});
+})
 </script>

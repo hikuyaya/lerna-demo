@@ -1,10 +1,10 @@
 import yid from '@src/library'
-const prefix = 'api-push/smsdstatis/';
+const prefix = 'api-push/smsdstatis/'
 
 export function listChain(params) {
-    return yid.http.get(`${prefix}chain/list`, {params})
+  return yid.http.get(`${prefix}chain/list`, { params })
 }
 
 export default {
-    listChain
+  listChain
 }

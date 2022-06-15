@@ -1,183 +1,207 @@
-import { validatenull } from './validate';
-import { DIC_PROPS, DIC_SHOW_SPLIT } from '../global/variable';
-export function getFixed (val = 0, len = 2) {
-  return Number(val.toFixed(len));
+import { validatenull } from './validate'
+import { DIC_PROPS, DIC_SHOW_SPLIT } from '../global/variable'
+export function getFixed(val = 0, len = 2) {
+  return Number(val.toFixed(len))
 }
-export function getAsVal (obj, bind = '') {
-  let result = deepClone(obj);
-  if (validatenull(bind)) return result;
+export function getAsVal(obj, bind = '') {
+  let result = deepClone(obj)
+  if (validatenull(bind)) return result
   bind.split('.').forEach(ele => {
-    result = !validatenull(result[ele]) ? result[ele] : '';
-  });
-  return result;
+    result = !validatenull(result[ele]) ? result[ele] : ''
+  })
+  return result
 }
 
-export function setAsVal (obj, bind = '', value = '') {
-  eval('obj.' + bind + '=`' + value + '`');
-  return obj;
+export function setAsVal(obj, bind = '', value = '') {
+  eval('obj.' + bind + '=`' + value + '`')
+  return obj
 }
 export const loadScript = (type = 'js', url) => {
-  let flag = false;
+  let flag = false
   return new Promise(resolve => {
-    const head = document.getElementsByTagName('head')[0];
+    const head = document.getElementsByTagName('head')[0]
     head.children.forEach(ele => {
       if ((ele.src || '').indexOf(url) !== -1) {
-        flag = true;
-        resolve();
+        flag = true
+        resolve()
       }
-    });
-    if (flag) return;
-    let script;
+    })
+    if (flag) return
+    let script
     if (type === 'js') {
-      script = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = url;
+      script = document.createElement('script')
+      script.type = 'text/javascript'
+      script.src = url
     } else if (type === 'css') {
-      script = document.createElement('link');
-      script.rel = 'stylesheet';
-      script.type = 'text/css';
-      script.href = url;
+      script = document.createElement('link')
+      script.rel = 'stylesheet'
+      script.type = 'text/css'
+      script.href = url
     }
-    head.appendChild(script);
+    head.appendChild(script)
     script.onload = function () {
-      resolve();
-    };
-  });
-};
-export function downFile (url, saveName) {
+      resolve()
+    }
+  })
+}
+export function downFile(url, saveName) {
   if (typeof url == 'object' && url instanceof Blob) {
-    url = URL.createObjectURL(url); // 创建blob地址
+    url = URL.createObjectURL(url) // 创建blob地址
   }
-  var aLink = document.createElement('a');
-  aLink.href = url;
-  aLink.download = saveName || ''; // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
-  var event;
+  var aLink = document.createElement('a')
+  aLink.href = url
+  aLink.download = saveName || '' // HTML5新增的属性，指定保存文件名，可以不要后缀，注意，file:///模式下不会生效
+  var event
   if (window.MouseEvent) {
-    event = new MouseEvent('click');
+    event = new MouseEvent('click')
   } else {
-    event = document.createEvent('MouseEvents');
-    event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false,
-      false, false, false, 0, null);
+    event = document.createEvent('MouseEvents')
+    event.initMouseEvent(
+      'click',
+      true,
+      false,
+      window,
+      0,
+      0,
+      0,
+      0,
+      0,
+      false,
+      false,
+      false,
+      false,
+      0,
+      null
+    )
   }
-  aLink.dispatchEvent(event);
+  aLink.dispatchEvent(event)
 }
-export function strCorNum (list) {
+export function strCorNum(list) {
   list.forEach((ele, index) => {
-    list[index] = Number(ele);
-  });
-  return list;
+    list[index] = Number(ele)
+  })
+  return list
 }
-export function extend () {
-  var target = arguments[0] || {};
-  var deep = false;
-  var arr = Array.prototype.slice.call(arguments);
-  var i = 1;
-  var options, src, key, copy;
-  var isArray = false;
+export function extend() {
+  var target = arguments[0] || {}
+  var deep = false
+  var arr = Array.prototype.slice.call(arguments)
+  var i = 1
+  var options, src, key, copy
+  var isArray = false
   if (typeof target === 'boolean') {
-    deep = target;
-    i++;
-    target = arguments[1];
+    deep = target
+    i++
+    target = arguments[1]
   }
-  for (; i < arr.length; i++) { // 循环传入的对象数组
-    if ((options = arr[i]) != null) { // 如果当前值不是null，如果是null不做处理
-      for (key in options) { // for in循环对象中key
-        copy = options[key];
-        src = target[key];
+  for (; i < arr.length; i++) {
+    // 循环传入的对象数组
+    if ((options = arr[i]) != null) {
+      // 如果当前值不是null，如果是null不做处理
+      for (key in options) {
+        // for in循环对象中key
+        copy = options[key]
+        src = target[key]
         // 如果对象中value值任然是一个引用类型
-        if (deep && (toString.call(copy) === '[object Object]' || (isArray = toString.call(copy) == '[object Array]'))) {
-          if (isArray) { // 如果引用类型是数组
+        if (
+          deep &&
+          (toString.call(copy) === '[object Object]' ||
+            (isArray = toString.call(copy) == '[object Array]'))
+        ) {
+          if (isArray) {
+            // 如果引用类型是数组
             // 如果目标对象target存在当前key，且数据类型是数组，那就还原此值，如果不是就定义成一个空数组;
-            src = toString.call(src) === '[object Array]' ? src : [];
+            src = toString.call(src) === '[object Array]' ? src : []
           } else {
             // 如果目标对象target存在当前key，且数据类型是对象，那就还原此值，如果不是就定义成一个空对象;
-            src = toString.call(src) === '[object Object]' ? src : {};
+            src = toString.call(src) === '[object Object]' ? src : {}
           }
           // 引用类型就再次调用extend，递归，直到此时copy是一个基本类型的值。
-          target[key] = extend(deep, src, copy);
-        } else if (copy !== undefined && copy !== src) { // 如果这个值是基本值类型，且不是undefined
-          target[key] = copy;
+          target[key] = extend(deep, src, copy)
+        } else if (copy !== undefined && copy !== src) {
+          // 如果这个值是基本值类型，且不是undefined
+          target[key] = copy
         }
       }
     }
   }
-  return target;
+  return target
 }
-export function createObj (obj, bind) {
-  let list = bind.split('.');
-  let first = list.splice(0, 1)[0];
-  let deep = {};
-  deep[first] = {};
+export function createObj(obj, bind) {
+  let list = bind.split('.')
+  let first = list.splice(0, 1)[0]
+  let deep = {}
+  deep[first] = {}
   if (list.length >= 2) {
-    let start = '{';
-    let end = '}';
-    let result = '';
+    let start = '{'
+    let end = '}'
+    let result = ''
     list.forEach(ele => {
-      result = `${result}${start}"${ele}":`;
-    });
-    result = `${result}""`;
+      result = `${result}${start}"${ele}":`
+    })
+    result = `${result}""`
     for (let i = 0; i < list.length; i++) {
-      result = `${result}${end}`;
+      result = `${result}${end}`
     }
-    result = JSON.parse(result);
-    deep[first] = result;
+    result = JSON.parse(result)
+    deep[first] = result
   }
-  obj = extend(true, obj, deep);
-  return obj;
+  obj = extend(true, obj, deep)
+  return obj
 }
-export function dataURLtoFile (dataurl, filename) {
-  let arr = dataurl.split(',');
-  let mime = arr[0].match(/:(.*?);/)[1];
-  let bstr = atob(arr[1]);
-  let n = bstr.length;
-  let u8arr = new Uint8Array(n);
+export function dataURLtoFile(dataurl, filename) {
+  let arr = dataurl.split(',')
+  let mime = arr[0].match(/:(.*?);/)[1]
+  let bstr = atob(arr[1])
+  let n = bstr.length
+  let u8arr = new Uint8Array(n)
   while (n--) {
-    u8arr[n] = bstr.charCodeAt(n);
+    u8arr[n] = bstr.charCodeAt(n)
   }
   return new File([u8arr], filename, {
     type: mime
-  });
+  })
 }
 
-export function findObject (list, value, key = 'prop') {
-  let result = -1;
+export function findObject(list, value, key = 'prop') {
+  let result = -1
   let type = (() => {
-    let result;
+    let result
     list.forEach(ele => {
       if (ele.column) {
-        result = 'group';
+        result = 'group'
       } else if (ele.children) {
-        result = 'tree';
+        result = 'tree'
       }
-    });
-    return result;
-  })();
+    })
+    return result
+  })()
   if (type === 'group') {
     list.forEach(ele => {
-      const val = findArray(ele.column, value, key, true);
-      if (val !== -1) result = val;
-    });
+      const val = findArray(ele.column, value, key, true)
+      if (val !== -1) result = val
+    })
   } else if (type === 'tree') {
-    result = findLabelNode(list, value, { value: key }, true);
+    result = findLabelNode(list, value, { value: key }, true)
   } else {
-    result = findArray(list, value, key, true);
+    result = findArray(list, value, key, true)
   }
-  return result;
+  return result
 }
 /**
  * 生成随机数
  */
-export function randomId () {
-  let $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
-  let maxPos = $chars.length;
-  let id = '';
+export function randomId() {
+  let $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
+  let maxPos = $chars.length
+  let id = ''
   for (let i = 0; i < 16; i++) {
-    id += $chars.charAt(Math.floor(Math.random() * maxPos));
+    id += $chars.charAt(Math.floor(Math.random() * maxPos))
   }
-  return id;
+  return id
 }
 export const getObjType = obj => {
-  var toString = Object.prototype.toString;
+  var toString = Object.prototype.toString
   var map = {
     '[object Boolean]': 'boolean',
     '[object Number]': 'number',
@@ -189,12 +213,12 @@ export const getObjType = obj => {
     '[object Undefined]': 'undefined',
     '[object Null]': 'null',
     '[object Object]': 'object'
-  };
-  if (obj instanceof Element) {
-    return 'element';
   }
-  return map[toString.call(obj)];
-};
+  if (obj instanceof Element) {
+    return 'element'
+  }
+  return map[toString.call(obj)]
+}
 /**
  *判断是否为json对象
  */
@@ -202,75 +226,75 @@ export const getObjType = obj => {
 export const isJson = str => {
   if (Array.isArray(str)) {
     if (str[0] instanceof Object) {
-      return true;
+      return true
     } else {
-      return false;
+      return false
     }
   } else if (str instanceof Object) {
-    return true;
+    return true
   }
-  return false;
-};
+  return false
+}
 /**
  * 对象深拷贝
  */
 export const deepClone = data => {
-  var type = getObjType(data);
-  var obj;
-  if (type === 'array') obj = [];
-  else if (type === 'object') obj = {};
-  else return data;
+  var type = getObjType(data)
+  var obj
+  if (type === 'array') obj = []
+  else if (type === 'object') obj = {}
+  else return data
   if (type === 'array') {
     for (var i = 0, len = data.length; i < len; i++) {
       data[i] = (() => {
         if (data[i] === 0) {
-          return data[i];
+          return data[i]
         }
-        return data[i];
-      })();
+        return data[i]
+      })()
       if (data[i]) {
-        delete data[i].$parent;
+        delete data[i].$parent
       }
-      obj.push(deepClone(data[i]));
+      obj.push(deepClone(data[i]))
     }
   } else if (type === 'object') {
     for (var key in data) {
       if (data) {
-        delete data.$parent;
+        delete data.$parent
       }
-      obj[key] = deepClone(data[key]);
+      obj[key] = deepClone(data[key])
     }
   }
-  return obj;
-};
+  return obj
+}
 /**
  * 根据字段数组排序
  */
 export const sortArrys = (list, prop) => {
   list.sort(function (a, b) {
     if (a[prop] > b[prop]) {
-      return -1;
+      return -1
     }
     if (a[prop] < b[prop]) {
-      return 1;
+      return 1
     }
-    return 0;
-  });
-  return list;
-};
+    return 0
+  })
+  return list
+}
 
 /**
  * 设置px像素
  */
 export const setPx = (val, defval = '') => {
-  if (validatenull(val)) val = defval;
-  if (validatenull(val)) return '';
-  val = val + '';
+  if (validatenull(val)) val = defval
+  if (validatenull(val)) return ''
+  val = val + ''
   if (val.indexOf('%') === -1) {
-    val = val + 'px';
+    val = val + 'px'
   }
-  return val;
-};
+  return val
+}
 
 /**
  * 字符串数据类型转化
@@ -278,182 +302,185 @@ export const setPx = (val, defval = '') => {
 export const detailDataType = (value, type) => {
   if (validatenull(value)) return value
   if (type === 'number') {
-    return Number(value);
+    return Number(value)
   } else if (type === 'string') {
-    return value + '';
+    return value + ''
   } else {
-    return value;
+    return value
   }
-};
+}
 // 获取url中的参数
 export const getUrlParams = url => {
   let result = {
     url: '',
     params: {}
-  };
-  let list = url.split('?');
-  result.url = list[0];
-  let params = list[1];
-  if (params) {
-    let list = params.split('&');
-    list.forEach(ele => {
-      let dic = ele.split('=');
-      let label = dic[0];
-      let value = dic[1];
-      result.params[label] = value;
-    });
   }
-  return result;
-};
+  let list = url.split('?')
+  result.url = list[0]
+  let params = list[1]
+  if (params) {
+    let list = params.split('&')
+    list.forEach(ele => {
+      let dic = ele.split('=')
+      let label = dic[0]
+      let value = dic[1]
+      result.params[label] = value
+    })
+  }
+  return result
+}
 
 /**
  * 数组的数据类型转化
  */
 export const detailDic = (list = [], props = {}, type) => {
-  let valueKey = props.value || DIC_PROPS.value;
-  let childrenKey = props.children || DIC_PROPS.children;
+  let valueKey = props.value || DIC_PROPS.value
+  let childrenKey = props.children || DIC_PROPS.children
   list.forEach(ele => {
-    ele[valueKey] = detailDataType(ele[valueKey], type);
-    if (ele[childrenKey]) detailDic(ele[childrenKey], props, type);
-  });
-  return list;
-};
+    ele[valueKey] = detailDataType(ele[valueKey], type)
+    if (ele[childrenKey]) detailDic(ele[childrenKey], props, type)
+  })
+  return list
+}
 /**
  * 根据字典的value显示label
  */
 
 export const findByValue = (dic, value, props) => {
   // 如果为空直接返回
-  if (validatenull(dic)) return value;
-  let result = '';
+  if (validatenull(dic)) return value
+  let result = ''
   let isArray = value instanceof Array
   let list = isArray ? value : [value]
-  props = props || DIC_PROPS;
-  result = [];
+  props = props || DIC_PROPS
+  result = []
   for (let i = 0; i < list.length; i++) {
-    result.push(findLabelNode(dic, list[i], props) || list[i]);
+    result.push(findLabelNode(dic, list[i], props) || list[i])
   }
   if (isArray) {
-    return result.join(DIC_SHOW_SPLIT).toString();
+    return result.join(DIC_SHOW_SPLIT).toString()
   }
   return result.join()
-};
+}
 /**
  * 过滤字典翻译字段和空字段
  */
 export const filterDefaultParams = (form, translate = true) => {
-  let data = deepClone(form);
-  if (translate) return data;
+  let data = deepClone(form)
+  if (translate) return data
   for (let o in data) {
     if (o.indexOf('$') !== -1 || validatenull(data[o])) {
-      delete data[o];
+      delete data[o]
     }
   }
-  return data;
-};
+  return data
+}
 /**
  * 处理存在group分组的情况
  */
 export const detailDicGroup = (dic = [], props = {}) => {
-  let list = deepClone(dic);
+  let list = deepClone(dic)
   let groupsKey = props[DIC_PROPS.groups] || DIC_PROPS.groups
   dic.forEach(ele => {
     if (ele[groupsKey]) {
-      list = list.concat(ele[groupsKey]);
+      list = list.concat(ele[groupsKey])
     }
-  });
-  return list;
-};
+  })
+  return list
+}
 /**
  * 根据label去找到节点
  */
 export const findLabelNode = (dic, value, props, obj) => {
-  let result;
-  if (!obj) dic = detailDicGroup(dic, props);
+  let result
+  if (!obj) dic = detailDicGroup(dic, props)
   let rev = dic1 => {
-    const labelKey = props.label || DIC_PROPS.label;
-    const valueKey = props.value || DIC_PROPS.value;
-    const childrenKey = props.children || DIC_PROPS.children;
+    const labelKey = props.label || DIC_PROPS.label
+    const valueKey = props.value || DIC_PROPS.value
+    const childrenKey = props.children || DIC_PROPS.children
     for (let i = 0; i < dic1.length; i++) {
-      const ele = dic1[i];
-      const children = ele[childrenKey] || [];
+      const ele = dic1[i]
+      const children = ele[childrenKey] || []
       if (ele[valueKey] === value) {
-        result = obj ? ele : ele[labelKey];
+        result = obj ? ele : ele[labelKey]
       } else {
-        rev(children);
+        rev(children)
       }
     }
-  };
-  rev(dic);
-  return result;
-};
+  }
+  rev(dic)
+  return result
+}
 /**
  * 获取多层data
  */
 export const getDeepData = res => {
-  return (Array.isArray(res) ? res : res.data) || [];
-};
+  return (Array.isArray(res) ? res : res.data) || []
+}
 export const getObjValue = (data, params = '', type) => {
-  const list = params.split('.');
-  let result = data;
+  const list = params.split('.')
+  let result = data
   if (list[0] === '' && type !== 'object') {
-    return getDeepData(data);
+    return getDeepData(data)
   } else if (list[0] !== '') {
     list.forEach(ele => {
-      result = result[ele];
-    });
+      result = result[ele]
+    })
   }
-  return result;
-};
+  return result
+}
 
 /**
  * 根据值查找对应的序号
  */
 export const findArray = (dic, value, valueKey, obj) => {
-  valueKey = valueKey || DIC_PROPS.value;
+  valueKey = valueKey || DIC_PROPS.value
   for (let i = 0; i < dic.length; i++) {
     if (dic[i][valueKey] === value) {
-      return obj ? dic[i] : i;
+      return obj ? dic[i] : i
     }
   }
-  return -1;
-};
+  return -1
+}
 /**
  * 根据位数获取*密码程度
  */
 export const getPasswordChar = (result = '', char) => {
-  let len = result.toString().length;
-  result = '';
+  let len = result.toString().length
+  result = ''
   for (let i = 0; i < len; i++) {
-    result = result + char;
+    result = result + char
   }
-  return result;
-};
+  return result
+}
 
 export const arraySort = (list = [], prop, callback) => {
-  return list.filter(ele => !validatenull(ele[prop])).sort((a, b) => callback(a, b)).concat(list.filter(ele => validatenull(ele[prop])));
+  return list
+    .filter(ele => !validatenull(ele[prop]))
+    .sort((a, b) => callback(a, b))
+    .concat(list.filter(ele => validatenull(ele[prop])))
 }
 export const clearVal = (obj, list = []) => {
-  if (!obj) return {};
+  if (!obj) return {}
   Object.keys(obj).forEach(ele => {
     if (list.includes(ele)) return
     else if (ele.includes('$')) delete obj[ele]
     else if (!validatenull(obj[ele])) {
       let type = getObjType(obj[ele])
-      if (type === 'array') obj[ele] = [];
-      else if (type === 'object') obj[ele] = {};
-      else if (['number', 'boolean'].includes(type)) obj[ele] = undefined;
-      else obj[ele] = '';
+      if (type === 'array') obj[ele] = []
+      else if (type === 'object') obj[ele] = {}
+      else if (['number', 'boolean'].includes(type)) obj[ele] = undefined
+      else obj[ele] = ''
     }
-  });
-  return obj;
-};
+  })
+  return obj
+}
 /**
  * 验证是否存在true/false
  */
 export const vaildData = (val, dafult) => {
   if (typeof val === 'boolean') {
-    return val;
+    return val
   }
-  return !validatenull(val) ? val : dafult;
-};
+  return !validatenull(val) ? val : dafult
+}

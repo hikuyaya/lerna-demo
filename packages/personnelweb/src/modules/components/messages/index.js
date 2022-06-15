@@ -1,8 +1,8 @@
-import promptMessages from './promptMessages.vue';
+import promptMessages from './promptMessages.vue'
 
 /* istanbul ignore next */
 promptMessages.install = function (Vue) {
-  Vue.component(promptMessages.name, promptMessages);
-};
+  Vue.component(promptMessages.name, promptMessages)
+}
 
-export default promptMessages;
+export default promptMessages

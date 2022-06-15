@@ -1,25 +1,23 @@
 <template>
-  <div :class="[b(),{'avue-queue--block':block}]">
-    <div class="animated"
-         :class="animate"
-         ref="queue">
+  <div :class="[b(), { 'avue-queue--block': block }]">
+    <div class="animated" :class="animate" ref="queue">
       <slot></slot>
     </div>
   </div>
 </template>
 
 <script>
-import create from "../../../core/create";
+import create from '../../../core/create'
 export default create({
-  name: "queue",
+  name: 'queue',
   props: {
     enter: {
       type: String,
-      default: "fadeInLeft"
+      default: 'fadeInLeft'
     },
     leave: {
       type: String,
-      default: "fadeOutRight"
+      default: 'fadeOutRight'
     },
     block: {
       type: Boolean,
@@ -30,38 +28,37 @@ export default create({
       default: 0
     }
   },
-  data () {
+  data() {
     return {
       isFixed: 0,
       animate: []
-    };
+    }
   },
-  mounted () {
+  mounted() {
     this.$nextTick(() => {
-      addEventListener("scroll", this.handleAnimate);
-      this.handleAnimate();
-    });
+      addEventListener('scroll', this.handleAnimate)
+      this.handleAnimate()
+    })
   },
   methods: {
-    handleAnimate () {
+    handleAnimate() {
       let top =
         pageYOffset ||
         document.documentElement.scrollTop ||
-        document.body.scrollTop;
-      let vh = document.documentElement.clientHeight;
-      let v = this.$refs.queue;
+        document.body.scrollTop
+      let vh = document.documentElement.clientHeight
+      let v = this.$refs.queue
       if (top + vh > v.offsetTop) {
         setTimeout(() => {
-          this.animate = [this.enter, "avue-opacity--active"];
-        }, this.delay);
+          this.animate = [this.enter, 'avue-opacity--active']
+        }, this.delay)
       } else {
-        this.animate = ["avue-opacity"];
+        this.animate = ['avue-opacity']
       }
     }
   },
-  destroyed () {
-    removeEventListener("scroll", this.handleAnimate);
+  destroyed() {
+    removeEventListener('scroll', this.handleAnimate)
   }
-});
+})
 </script>
-

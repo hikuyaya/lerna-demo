@@ -1,53 +1,54 @@
 <template>
-  <el-input :class="b()"
-            :size="size"
-            :clearable="clearableVal"
-            v-model="text"
-            @keyup.enter="isSearch?appendClick():''"
-            @click.native="handleClick"
-            :type="typeParam"
-            :maxlength="maxlength"
-            :minlength="minlength"
-            :show-password="typeParam=='password'?showPassword:false"
-            :autosize="{ minRows: minRows, maxRows: maxRows}"
-            :prefix-icon="prefixIcon"
-            :suffix-icon="suffixIcon"
-            :readonly="readonly"
-            :placeholder="placeholder"
-            :show-word-limit="showWordLimit"
-            @focus="handleFocus"
-            @blur="handleBlur"
-            :disabled="disabled"
-            :autocomplete="autocomplete">
-    <template slot="prepend"
-              v-if="prepend"><span @click="prependClick()">{{prepend}}</span>
+  <el-input
+    :class="b()"
+    :size="size"
+    :clearable="clearableVal"
+    v-model="text"
+    @keyup.enter="isSearch ? appendClick() : ''"
+    @click.native="handleClick"
+    :type="typeParam"
+    :maxlength="maxlength"
+    :minlength="minlength"
+    :show-password="typeParam == 'password' ? showPassword : false"
+    :autosize="{ minRows: minRows, maxRows: maxRows }"
+    :prefix-icon="prefixIcon"
+    :suffix-icon="suffixIcon"
+    :readonly="readonly"
+    :placeholder="placeholder"
+    :show-word-limit="showWordLimit"
+    @focus="handleFocus"
+    @blur="handleBlur"
+    :disabled="disabled"
+    :autocomplete="autocomplete">
+    <template slot="prepend" v-if="prepend"
+      ><span @click="prependClick()">{{ prepend }}</span>
     </template>
-    <template slot="append"
-              v-if="append"><span @click="appendClick()">{{append}}</span></template>
-    <el-button slot="append"
-               v-else-if="isSearch"
-               icon="el-icon-search"
-               @click="appendClick()"></el-button>
+    <template slot="append" v-if="append"
+      ><span @click="appendClick()">{{ append }}</span></template
+    >
+    <el-button
+      slot="append"
+      v-else-if="isSearch"
+      icon="el-icon-search"
+      @click="appendClick()"></el-button>
   </el-input>
 </template>
 
 <script>
-import create from "../../../core/create";
-import props from "../../core/common/props.js";
-import event from "../../core/common/event.js";
-import { validatenull } from "../../../utils/validate";
+import create from '../../../core/create'
+import props from '../../core/common/props.js'
+import event from '../../core/common/event.js'
+import { validatenull } from '../../../utils/validate'
 export default create({
-  name: "input",
+  name: 'input',
   mixins: [props(), event()],
-  data () {
-    return {
-
-    };
+  data() {
+    return {}
   },
   props: {
     value: {},
-    maxlength: "",
-    minlength: "",
+    maxlength: '',
+    minlength: '',
     showPassword: {
       type: Boolean,
       default: true
@@ -68,14 +69,14 @@ export default create({
     },
     prependClick: {
       type: Function,
-      default: () => { }
+      default: () => {}
     },
     prepend: {
       type: String
     },
     appendClick: {
       type: Function,
-      default: () => { }
+      default: () => {}
     },
     append: {
       type: String
@@ -99,18 +100,18 @@ export default create({
     }
   },
   computed: {
-    isSearch () {
+    isSearch() {
       return this.type == 'search'
     },
     typeParam: function () {
-      if (this.type === "textarea") {
-        return "textarea";
-      } else if (this.type === "password") {
-        return "password";
+      if (this.type === 'textarea') {
+        return 'textarea'
+      } else if (this.type === 'password') {
+        return 'password'
       } else {
-        return "text";
+        return 'text'
       }
     }
   }
-});
+})
 </script>

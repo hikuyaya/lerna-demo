@@ -3,21 +3,22 @@
     display: flex;
     justify-content: center;
   }
-  .el-button+.el-button {
+  .el-button + .el-button {
     margin-left: 0;
   }
   .el-upload-list--picture-card .el-upload-list__item,
   .avue-upload__avatar,
-  .el-upload--picture-card,.avue-upload__icon {
-    $size:100px;
-    width:  $size;
+  .el-upload--picture-card,
+  .avue-upload__icon {
+    $size: 100px;
+    width: $size;
     height: $size;
     line-height: $size;
   }
   .avue-tip {
     display: none;
   }
-  .avue-crud__menu{
+  .avue-crud__menu {
     display: block !important;
   }
   .avue-crud {

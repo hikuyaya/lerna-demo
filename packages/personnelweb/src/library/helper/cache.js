@@ -19,7 +19,9 @@ export function set(key = '', value, type = 'localStorage') {
   const encodeKey = encode(key)
 
   if (value !== null) {
-    const encodeValue = encode(window.unescape(window.encodeURIComponent(JSON.stringify(value))))
+    const encodeValue = encode(
+      window.unescape(window.encodeURIComponent(JSON.stringify(value)))
+    )
 
     window[type].setItem(encodeKey, encodeValue)
   }

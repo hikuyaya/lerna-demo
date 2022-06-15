@@ -1,19 +1,19 @@
 import yid from '@src/library'
 
-const prefix = 'api-pers/shopconfig';
+const prefix = 'api-pers/shopconfig'
 
 export function shopconfigList(params) {
-    return yid.http.get(`${prefix}/list/all`, {params})
+  return yid.http.get(`${prefix}/list/all`, { params })
 }
 
 export function saveShopconfig(params) {
-    const url = `${prefix}`
-    return yid.http.post(url, params )
+  const url = `${prefix}`
+  return yid.http.post(url, params)
 }
 
 export default {
-    /**考勤配置列表**/
-    shopconfigList,
-    /**考勤配置保存**/
-    saveShopconfig,
+  /**考勤配置列表**/
+  shopconfigList,
+  /**考勤配置保存**/
+  saveShopconfig
 }

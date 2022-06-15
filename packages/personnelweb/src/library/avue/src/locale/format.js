@@ -1,16 +1,15 @@
-const hasOwnProperty = Object.prototype.hasOwnProperty;
+const hasOwnProperty = Object.prototype.hasOwnProperty
 
-export function hasOwn (obj, key) {
-  return hasOwnProperty.call(obj, key);
-};
-const RE_NARGS = /(%|)\{([0-9a-zA-Z_]+)\}/g;
+export function hasOwn(obj, key) {
+  return hasOwnProperty.call(obj, key)
+}
+const RE_NARGS = /(%|)\{([0-9a-zA-Z_]+)\}/g
 /**
  *  String format template
  *  - Inspired:
  *    https://github.com/Matt-Esch/string-template/index.js
  */
 export default function (Vue) {
-
   /**
    * template
    *
@@ -19,31 +18,30 @@ export default function (Vue) {
    * @return {String}
    */
 
-  function template (string = '', ...args) {
+  function template(string = '', ...args) {
     if (args.length === 1 && typeof args[0] === 'object') {
-      args = args[0];
+      args = args[0]
     }
 
     if (!args || !args.hasOwnProperty) {
-      args = {};
+      args = {}
     }
 
     return string.replace(RE_NARGS, (match, prefix, i, index) => {
-      let result;
+      let result
 
-      if (string[index - 1] === '{' &&
-        string[index + match.length] === '}') {
-        return i;
+      if (string[index - 1] === '{' && string[index + match.length] === '}') {
+        return i
       } else {
-        result = hasOwn(args, i) ? args[i] : null;
+        result = hasOwn(args, i) ? args[i] : null
         if (result === null || result === undefined) {
-          return '';
+          return ''
         }
 
-        return result;
+        return result
       }
-    });
+    })
   }
 
-  return template;
+  return template
 }

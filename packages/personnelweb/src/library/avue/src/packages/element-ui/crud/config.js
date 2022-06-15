@@ -72,5 +72,5 @@ export default {
   searchSpan: 6,
   dropRowClass: '.el-table__body-wrapper > table > tbody',
   dropColClass: '.el-table__header-wrapper tr',
-  ghostClass: 'avue-crud__ghost',
+  ghostClass: 'avue-crud__ghost'
 }

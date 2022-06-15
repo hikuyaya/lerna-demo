@@ -15,7 +15,7 @@
  * e.g.         new Date().formatDate('yyyy-MM-dd')  =>  '2016-12-12'
  */
 
-Date.prototype.formatDate = function(formatStr) {
+Date.prototype.formatDate = function (formatStr) {
   if (!formatStr) {
     formatStr = 'yyyy-MM-dd'
   }
@@ -33,7 +33,7 @@ Date.prototype.formatDate = function(formatStr) {
     mm: ('' + (this.getMinutes() + 100)).substr(1),
     ss: ('' + (this.getSeconds() + 100)).substr(1)
   }
-  return formatStr.replace(/(yyyy|MM?|dd?|HH?|ss?|mm?)/g, function() {
+  return formatStr.replace(/(yyyy|MM?|dd?|HH?|ss?|mm?)/g, function () {
     return dict[arguments[0]]
   })
 }
@@ -44,7 +44,7 @@ Date.prototype.formatDate = function(formatStr) {
  * @return:    Date
  * e.g.         new Date().formatTime('yyyy-MM-dd HH:mm:ss')  =>  '2016-12-12 12:00:00'
  */
-Date.prototype.formatTime = function(formatStr) {
+Date.prototype.formatTime = function (formatStr) {
   if (!formatStr) {
     formatStr = 'yyyy-MM-dd HH:mm:ss'
   }
@@ -58,8 +58,8 @@ Date.prototype.formatTime = function(formatStr) {
  * @return:    Date
  * e.g.         new Date().proDate('{%y+1}-{%M+2}-{%d+1}-{%H+1}-{%m+1}-{%s+1}') //年月日时分秒全部加1
  */
-Date.prototype.proDate = function(proStr) {
-  var dealWith = function(str, date) {
+Date.prototype.proDate = function (proStr) {
+  var dealWith = function (str, date) {
     let t = str.substr(0, 1)
     let num = 0
     if (str.indexOf('+') > -1) {
@@ -104,6 +104,6 @@ Date.prototype.proDate = function(proStr) {
 /*
  * 为了避免日期类型没有原型方法而扩展, 无实际意义
  */
-Date.prototype.toDate = function() {
+Date.prototype.toDate = function () {
   return this
 }

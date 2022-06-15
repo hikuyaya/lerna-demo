@@ -1,0 +1,9 @@
+# docker  忽略文件夹
+
+/src*
+/platforms*
+/ios*
+/plugins*
+/public*
+/hooks*
+/node_modules*

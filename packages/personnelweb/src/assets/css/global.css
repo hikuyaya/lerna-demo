@@ -1,0 +1,125 @@
+* {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  overflow: hidden;
+}
+
+html {
+  font-family: sans-serif;
+  line-height: 1.15;
+}
+
+body {
+  margin: 0;
+  font-family: PingFangSC-Regular, Chinese Quote, -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue,
+    Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
+  font-size: 13px;
+  font-weight: 400;
+  font-variant: tabular-nums;
+  line-height: 1.5;
+  color: #333333;
+  background-color: #fff;
+}
+
+h1,
+h2,
+h4,
+h4,
+h5,
+h6,
+p,
+a {
+  margin: 0;
+  padding: 0;
+}
+
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #f2f2f2;
+  margin-bottom: 16px;
+  padding: 0;
+}
+
+.el-loading-mask.is-fullscreen {
+  cursor: wait;
+}
+
+#nprogress .bar {
+  /* background: #ff0000; */
+  position: fixed;
+  z-index: 2031;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+}
+
+#nprogress .spinner {
+  z-index: 2031;
+}
+
+#nprogress .spinner-icon {
+  position: fixed;
+  z-index: 2031;
+  top: 50%;
+  right: 50%;
+
+  width: 24px;
+  height: 24px;
+  box-sizing: border-box;
+  border: solid 4px transparent;
+  border-top-color: #5daf34;
+  border-left-color: #f56c6c;
+  border-radius: 50%;
+  animation: nprogress-spinner 400ms linear infinite;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track-piece {
+  background-color: transparent;
+  margin: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(144, 147, 153, 0.3);
+  min-height: 8px;
+  min-width: 150px;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:vertical:hover {
+  background: rgba(70, 70, 70, 0.5);
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+  background: rgba(70, 70, 70, 0.5);
+}
+
+explain {
+  display: inline;
+  margin-left: 15px;
+  color: rgba(144, 147, 153, 0.3);
+  font-size: 12px;
+}
+
+.el-table__row.lack {
+  color: red;
+}
+
+.el-table__row.normal {
+  color: black;
+}
+.el-table__row.forbidden {
+  color: gray;
+}
+

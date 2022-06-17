@@ -116,6 +116,7 @@
                     payTimeRange : [],
                 },
                 prepaidAdjForm:{
+                    id:'',
                     billcode:'',
                     paymentNo :'',
                     orderinfo :'',

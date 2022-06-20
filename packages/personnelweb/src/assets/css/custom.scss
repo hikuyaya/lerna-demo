@@ -1,0 +1,82 @@
+@mixin mg-t($value) {
+  margin-top: $value;
+}
+@mixin mg-l($value) {
+  margin-left: $value;
+}
+@mixin mg-r($value) {
+  margin-right: $value;
+}
+@mixin mg-b($value) {
+  margin-bottom: $value;
+}
+
+.flex {
+  display: flex;
+}
+.flex-justify__center {
+  justify-content: center;
+}
+.flex-justify__spacebetween {
+  justify-content: space-between;
+}
+.flex-alignitems__center {
+  align-items: center;
+}
+.flex-con-1 {
+  flex: 1;
+}
+.w100 {
+  width: 100%;
+}
+.h100 {
+  height: 100%;
+}
+.c-pointer {
+  cursor: pointer;
+}
+.tac {
+  text-align: center;
+}
+.tal {
+  text-align: left;
+}
+.tar {
+  text-align: right;
+}
+.mg-t-4 {
+  margin-top: 4px !important;
+}
+.mg-t-5 {
+  margin-top: 5px !important;
+}
+.mg-t-12 {
+  margin-top: 12px !important;
+}
+.mg-t-24 {
+  margin-top: 24px !important;
+}
+.mg-r-6 {
+  margin-right: 6px !important;
+}
+.mg-r-12 {
+  margin-right: 12px !important;
+}
+.mg-l-8 {
+  margin-left: 8px !important;
+}
+.mg-l-12 {
+  margin-left: 12px !important;
+}
+.mg-l-16 {
+  margin-left: 16px !important;
+}
+.mg-l-22 {
+  margin-left: 22px !important;
+}
+.mg-b-8 {
+  margin-bottom: 8px !important;
+}
+.mg-b-12 {
+  margin-bottom: 12px !important;
+}

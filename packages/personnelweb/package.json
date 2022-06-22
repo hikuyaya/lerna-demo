@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@chenfengyuan/vue-qrcode": "^1.0.2",
+    "@riophae/vue-treeselect": "^0.4.0",
     "@tinymce/tinymce-vue": "^2.0.0",
     "async-validator": "^1.10.0",
     "axios": "^0.19.0",
@@ -65,6 +66,7 @@
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "node-sass": "^4.12.0",
+    "patch-package": "^6.4.7",
     "prettier": "^2.7.0",
     "quill-image-drop-module": "^1.0.3",
     "quill-image-resize-module": "^3.0.0",

@@ -85,33 +85,31 @@ export default {
   },
   methods: {
     async getUserInfo() {
-      await service.user.userInfo().then(res => {
-        // yid.cache.set(yid.type.USER.APPID,  res.data.appId, yid.type.SYSTEM.CACHE.LOCAL_STORAGE)
-        this.$store.commit('user/setUserInfo', res.data)
+      const res = await service.user.userInfo()
+      // yid.cache.set(yid.type.USER.APPID,  res.data.appId, yid.type.SYSTEM.CACHE.LOCAL_STORAGE)
+      this.$store.commit('user/setUserInfo', res.data)
 
-        let filter = res.data.menus.filter(
-          item => item.url.indexOf('/report/') != -1
-        )
-        filter.forEach(item => {
-          let code = item.url.split('/report/')[1].split('?')[0]
-          let split = item.url.split('?')[1]
-          let queryVariable = getQueryVariable(split)
-          queryVariable.code = code
-          this.$router.$addRoutes({
-            path:
-              item.url.indexOf('?') != -1 ? item.url.split('?')[0] : item.url,
-            name: item.name,
-            meta: {
-              title: item.name,
-              closable: true,
-              auth: true,
-              params: queryVariable
-            },
-            component: () => import('@src/views/sys/ReportAutoList.vue')
-          })
+      let filter = res.data.menus.filter(
+        item => item.url.indexOf('/report/') != -1
+      )
+      filter.forEach(item => {
+        let code = item.url.split('/report/')[1].split('?')[0]
+        let split = item.url.split('?')[1]
+        let queryVariable = getQueryVariable(split)
+        queryVariable.code = code
+        this.$router.$addRoutes({
+          path: item.url.indexOf('?') != -1 ? item.url.split('?')[0] : item.url,
+          name: item.name,
+          meta: {
+            title: item.name,
+            closable: true,
+            auth: true,
+            params: queryVariable
+          },
+          component: () => import('@src/views/sys/ReportAutoList.vue')
         })
-        //console.log('getters', this.$store.getters);
       })
+      //console.log('getters', this.$store.getters);
     },
     signOut() {
       this.$confirm('确定要退出登录吗?', '提示', {

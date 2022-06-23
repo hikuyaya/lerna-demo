@@ -23,8 +23,8 @@ let loading
 function startLoading() {
   loading = Loading.service({
       lock: true,
-      text: '加载中……',
-      background: 'rgba(0, 0, 0, 0.7)'
+      // text: '加载中……',
+      background: 'rgba(0, 0, 0, 0)',
   })
 }
 
@@ -153,7 +153,12 @@ axios.interceptors.response.use(
     if (httpCount === 0) {
       nprogress.done(false)
     }
-
+     //关闭loading
+     if (needLoadingRequestCount <= 0) return
+     needLoadingRequestCount--
+     if (needLoadingRequestCount === 0) {
+         endLoading()
+     }
     // 超时处理
     if (error.code === 'ECONNABORTED') {
       if (!error.config.__isRetryComplete) {

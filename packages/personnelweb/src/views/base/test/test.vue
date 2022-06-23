@@ -2,39 +2,46 @@
  * @Author: wqy
  * @Date: 2022-06-16 14:57:05
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-17 17:58:27
+ * @LastEditTime: 2022-06-20 17:28:19
  * @FilePath: \personnelweb\src\views\base\test\test.vue
  * @Description: 
 -->
 <template>
   <div>
-    <search-top
-      ref="searchTop"
-      :options="conditions"
-      :advanceOptions="advanceConditions"
-      advance>
-      <template #inlineBtn>
-        <div class="flex flex-alignitems__center mg-l-12">
-          <el-button type="primary" @click="onSearch">查询</el-button>
-          <el-button type="default" @click="onAdd">新增</el-button>
-        </div>
-      </template>
-    </search-top>
-    <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-      <yid-table-column
-        label="渠道编码"
-        min-width="100"
-        prop="date"></yid-table-column>
-      <yid-table-column
-        label="渠道名称"
-        min-width="150"
-        prop="name"></yid-table-column>
-      <yid-table-column label="操作" min-width="100" prop="content">
-        <template slot-scope="scope">
-          <el-link type="primary" @click="onEdit(scope.row)">编辑</el-link>
-        </template>
-      </yid-table-column>
-    </yid-table>
+    <div class="container">
+      <div class="left-side">
+        <left-tree />
+      </div>
+      <div class="right-content">
+        <search-top
+          ref="searchTop"
+          :options="conditions"
+          :advanceOptions="advanceConditions"
+          advance>
+          <template #inlineBtn>
+            <div class="flex flex-alignitems__center mg-l-12">
+              <el-button type="primary" @click="onSearch">查询</el-button>
+              <el-button type="default" @click="onAdd">新增</el-button>
+            </div>
+          </template>
+        </search-top>
+        <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
+          <yid-table-column
+            label="渠道编码"
+            min-width="100"
+            prop="date"></yid-table-column>
+          <yid-table-column
+            label="渠道名称"
+            min-width="150"
+            prop="name"></yid-table-column>
+          <yid-table-column label="操作" min-width="100" prop="content">
+            <template slot-scope="scope">
+              <el-link type="primary" @click="onEdit(scope.row)">编辑</el-link>
+            </template>
+          </yid-table-column>
+        </yid-table>
+      </div>
+    </div>
     <el-dialog
       :title="operateType === 'add' ? '新增' : '修改'"
       :visible.sync="addCompVisible"
@@ -51,9 +58,9 @@
 <script>
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
-
+import LeftTree from './components/LeftTree.vue'
 export default {
-  components: { SearchTop, AddComp },
+  components: { SearchTop, AddComp, LeftTree },
   data() {
     return {
       addCompVisible: false,
@@ -61,54 +68,93 @@ export default {
       selectRow: {},
       conditions: [
         {
-          label: '内容1', // 标签
+          label: '员工姓名', // 标签
           prop: 'text1', // 绑定的字段
-          labelWidth: '80px', // label宽度
-          // width: '10%', // 整个组件占的宽度
-          widgetWidth: '200px', // 控件的宽度
-          required: true // 是否必填
+          labelWidth: '1rem', // label宽度
+          type: 'input',
+          width: '20%' // 整个组件占的宽度
+          // widgetWidth: '200px', // 控件的宽度
+          // required: true // 是否必填
         },
         {
-          label: '内容2',
+          label: '员工编码',
           prop: 'text2',
-          type: 'select' // 搜索类型
-        },
-        {
-          label: '内容3',
-          prop: 'text3',
-          width: '10%'
-        },
-        {
-          label: '内容4',
-          prop: 'text4',
-          width: '10%'
-        },
-        {
-          label: '内容5',
-          prop: 'text5',
-          width: '10%'
+          type: 'input', // 搜索类型
+          width: '20%'
         }
       ],
       advanceConditions: [
         {
-          label: '高级1',
-          prop: 'davance1',
-          width: '25%'
+          label: '机构编码',
+          prop: 'advance1',
+          type: 'input', // 搜索类型
+          width: '20%'
         },
         {
-          label: '高级2',
-          prop: 'davance2',
-          width: '25%'
+          label: '机构名称',
+          prop: 'advance2',
+          type: 'input', // 搜索类型
+          width: '20%'
         },
         {
-          label: '高级3',
-          prop: 'davance3',
-          width: '25%'
+          label: '手机号',
+          prop: 'advance3',
+          type: 'input', // 搜索类型
+          width: '20%'
         },
         {
-          label: '高级4',
-          prop: 'davance4',
-          width: '25%'
+          label: '身份证号',
+          prop: 'advance4',
+          type: 'input', // 搜索类型
+          width: '20%'
+        },
+        {
+          label: '状态',
+          prop: 'advance5',
+          type: 'select', // 搜索类型
+          width: '20%'
+        },
+        {
+          label: '转正日期',
+          prop: 'advance6',
+          type: 'daterange',
+          widgetWidth: '3.1rem'
+        },
+        {
+          label: '连续工龄>',
+          prop: 'advance7',
+          type: 'number',
+          labelWidth: '1rem',
+          width: 'calc((100% - 4.1rem) / 4)'
+        },
+        {
+          label: '延续工龄>',
+          prop: 'advance8',
+          type: 'number',
+          labelWidth: '1rem',
+          width: 'calc((100% - 4.1rem) / 4)'
+        },
+        {
+          label: '是否股东',
+          prop: 'advance9',
+          type: 'select',
+          width: 'calc((100% - 4.1rem) / 4)',
+          options: [
+            { label: '所有', value: '' },
+            { label: '是', value: 1 },
+            { label: '否', value: 0 }
+          ]
+        },
+        {
+          label: '合同状态',
+          prop: 'advance10',
+          type: 'select',
+          width: 'calc((100% - 4.1rem) / 4)',
+          options: [
+            { label: '所有', value: '' },
+            { label: '有效', value: 1 },
+            { label: '无效', value: 0 }
+          ]
         }
       ],
       tableData: [
@@ -157,3 +203,18 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.container {
+  display: flex;
+  height: 100%;
+  .left-side {
+    flex-basis: 2.8rem;
+    padding-right: 0.12rem;
+    border-right: 1px solid #dcdfe6;
+  }
+  .right-content {
+    flex: 1;
+    padding-left: 0.12rem;
+  }
+}
+</style>

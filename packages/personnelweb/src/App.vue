@@ -13,6 +13,10 @@ export default {
   },
   created() {
     document.title = yid.config.SYSTEM.TITLE
+    const dev = process.env.NODE_ENV === 'development'
+    if (dev) {
+      return
+    }
     // setTimeout(() => {
     //   yid.service.IM.initIM()
     // }, 1000)

@@ -79,6 +79,15 @@ export const MENU = {
       icon: null
     },
     {
+      id: 15,
+      pid: 1,
+      name: '职务设置',
+      title: '职务设置',
+      path: '/base/duty',
+      component: 'base/duty/duty',
+      icon: null
+    },
+    {
       id: 16,
       pid: 1,
       name: '门店入职审核',
@@ -136,7 +145,7 @@ export const MENU = {
       icon: null
     },
     {
-      id: 15,
+      id: 115,
       pid: 1,
       name: '基础信息',
       title: '基础信息',

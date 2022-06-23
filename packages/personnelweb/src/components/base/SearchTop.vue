@@ -2,31 +2,60 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-17 17:59:49
+ * @LastEditTime: 2022-06-22 13:41:21
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
 <template>
   <div class="search-area">
-    <div class="search-row">
+    <div class="search-row pd-r-12">
       <form-item
         v-for="option in options"
         :key="option.prop"
         :label="option.label"
         prefix="："
         :width="option.width"
-        :labelWidth="option.labelWidth || '80px'">
+        :labelWidth="option.labelWidth || '1rem'">
         <el-select
           v-if="option.type === 'select'"
           v-model="params[option.prop]"
-          :style="{ width: option.widgetWidth ? option.widgetWidth : 'auto' }">
-          <el-option v-for="(item, index) in option.options" :key="index">
+          :style="{ width: option.widgetWidth ? option.widgetWidth : '100%' }">
+          <el-option
+            v-for="(item, index) in option.options"
+            :key="index"
+            :label="item.label"
+            :value="item.value">
           </el-option>
         </el-select>
+
+        <tree-select
+          v-else-if="option.type === 'treeselect'"
+          v-model="params[option.prop]"
+          :props="option.defaultProps ? option.defaultProps : defaultProps"
+          :data="option.treeSelectData || []"
+          :defaultExpand="true"
+          :style="{
+            width: option.widgetWidth ? option.widgetWidth : '100%'
+          }"></tree-select>
+
+        <el-date-picker
+          v-else-if="option.type === 'daterange'"
+          v-model="params[option.prop]"
+          type="daterange"
+          format="yyyy 年 MM 月 dd 日"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          placement="bottom"
+          value-format="timestamp"
+          :style="{
+            width: option.widgetWidth ? option.widgetWidth : '100%'
+          }">
+        </el-date-picker>
 
         <el-input
           v-else
           v-model="params[option.prop]"
+          :type="option.type"
           :placeholder="
             option.placeholder
               ? `请输入${option.placeholder}`
@@ -36,6 +65,7 @@
             width: option.widgetWidth ? option.widgetWidth : '100%'
           }"></el-input>
       </form-item>
+      <!-- <form-area :options="options" /> -->
 
       <slot name="inlineBtn"></slot>
       <div v-if="advance" class="flex flex-alignitems__center mg-l-12">
@@ -47,22 +77,78 @@
           >高级查询</el-button
         >
       </div>
-      <template v-if="advance">
-        <el-collapse-transition>
-          <!-- <transition name="el-zoom-in-top"> -->
-          <div
-            class="search-row search-advance"
-            v-show="showAdvance && advanceOptions.length > 0">
-            <form-area :options="advanceOptions"> </form-area>
-
-            <div class="close-folder" v-if="false">
-              <el-button type="text">收起</el-button>
-            </div>
-          </div>
-          <!-- </transition> -->
-        </el-collapse-transition>
-      </template>
     </div>
+    <template v-if="advance">
+      <el-collapse-transition>
+        <!-- <transition name="el-zoom-in-top"> -->
+        <div
+          class="search-row search-advance"
+          v-show="showAdvance && advanceOptions.length > 0">
+          <form-item
+            v-for="option in advanceOptions"
+            :key="option.prop"
+            :label="option.label"
+            prefix="："
+            :width="option.width"
+            :labelWidth="option.labelWidth || '1rem'">
+            <el-select
+              v-if="option.type === 'select'"
+              v-model="params[option.prop]"
+              :style="{
+                width: option.widgetWidth ? option.widgetWidth : '100%'
+              }">
+              <el-option
+                v-for="(item, index) in option.options"
+                :key="index"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
+
+            <tree-select
+              v-else-if="option.type === 'treeselect'"
+              v-model="params[option.prop]"
+              :props="option.defaultProps ? option.defaultProps : defaultProps"
+              :data="option.treeSelectData || []"
+              :defaultExpand="true"
+              :style="{
+                width: option.widgetWidth ? option.widgetWidth : '100%'
+              }"></tree-select>
+
+            <el-date-picker
+              v-else-if="option.type === 'daterange'"
+              v-model="params[option.prop]"
+              type="daterange"
+              format="yyyy 年 MM 月 dd 日"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              placement="bottom"
+              value-format="timestamp"
+              :style="{
+                width: option.widgetWidth ? option.widgetWidth : '100%'
+              }">
+            </el-date-picker>
+
+            <el-input
+              v-else
+              v-model="params[option.prop]"
+              :type="option.type"
+              :placeholder="
+                option.placeholder
+                  ? `请输入${option.placeholder}`
+                  : `请输入${option.label}`
+              "
+              :style="{
+                width: option.widgetWidth ? option.widgetWidth : '100%'
+              }"></el-input>
+          </form-item>
+          <div class="close-folder" v-if="false">
+            <el-button type="text">收起</el-button>
+          </div>
+        </div>
+        <!-- </transition> -->
+      </el-collapse-transition>
+    </template>
   </div>
 </template>
 
@@ -70,6 +156,11 @@
 import FormArea from '@src/components/base/FormArea.vue'
 import FormItem from '@src/components/base/FormItem.vue'
 import { deepClone } from '@src/library/helper/util'
+import TreeSelect from '@src/components/base/TreeSelect.vue'
+const defaultProps = {
+  children: 'children',
+  label: 'name'
+}
 export default {
   name: 'SearchTop',
   props: {
@@ -91,7 +182,8 @@ export default {
   },
   components: {
     FormItem,
-    FormArea
+    FormArea,
+    TreeSelect
   },
   data() {
     return {
@@ -130,25 +222,25 @@ export default {
 
 <style lang="scss" scoped>
 .search-area {
-  margin-bottom: 12px;
+  margin-bottom: 0.12rem;
   .search-row {
     width: 100%;
     display: flex;
     flex-wrap: wrap;
     .search-item {
-      margin: 8px;
+      margin: 0.08rem;
       width: 24%;
     }
   }
   .search-advance {
     position: relative;
-    padding: 8px 12px 8px 0;
+    padding: 0.08rem 0.12rem 0.08rem 0;
     margin-top: 8px;
     box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
     .close-folder {
       position: absolute;
       bottom: 0;
-      right: 12px;
+      right: 0.12rem;
     }
   }
   .btn-group {

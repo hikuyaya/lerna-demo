@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 16:59:30
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-17 14:43:54
+ * @LastEditTime: 2022-06-20 17:16:32
  * @FilePath: \personnelweb\src\components\base\FormItem.vue
  * @Description: 
 -->
@@ -15,11 +15,11 @@
         margin: '8px 0',
         color: 'rgb(96, 98, 102)'
       }"
-      :class="required ? 'required' : ''">
+      :class="['label', { required: required }]">
       {{ label }}
       <span v-if="prefix">{{ prefix }}</span>
     </div>
-    <div class="item-slot" :style="{ 'margin-left': margin ? '12px' : '0' }">
+    <div class="item-slot" :style="{ 'margin-left': margin ? '0.12rem' : '0' }">
       <slot></slot>
     </div>
   </div>
@@ -43,7 +43,7 @@ export default {
     labelWidth: {
       type: String || Number,
       default() {
-        return '80px'
+        return '0.8rem'
       }
     },
     width: {
@@ -81,6 +81,9 @@ export default {
 .form-query-item {
   display: flex;
   align-items: center;
+  .label {
+    font-size: 0.14rem;
+  }
   .required {
     &::before {
       content: '*';

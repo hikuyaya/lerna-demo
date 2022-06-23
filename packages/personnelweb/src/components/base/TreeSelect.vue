@@ -1,84 +1,3 @@
-<!--
- * @Author: wqy
- * @Date: 2022-05-13 10:00:15
- * @LastEditors: wqy
- * @LastEditTime: 2022-06-16 16:59:59
- * @FilePath: \personnelweb\src\components\base\TreeSelect.vue
- * @Description: 
--->
-<template>
-  <div class="form-query-item">
-    <div
-      :style="{ width, 'text-align': align, margin: '8px 0' }"
-      :class="required ? 'required' : ''">
-      {{ label }}<span v-if="prefix">{{ prefix }}</span>
-    </div>
-    <div class="item-slot">
-      <slot></slot>
-    </div>
-  </div>
-</template>
-
-<script>
-export default {
-  props: {
-    required: {
-      type: Boolean,
-      default() {
-        return false
-      }
-    },
-    label: {
-      type: String,
-      default() {
-        return ''
-      }
-    },
-    width: {
-      type: String || Number,
-      default() {
-        return '80px'
-      }
-    },
-    align: {
-      type: String,
-      default() {
-        return 'right'
-      }
-    },
-    prefix: {
-      type: String,
-      default() {
-        return ''
-      }
-    }
-  },
-  data() {
-    return {}
-  },
-  methods: {}
-}
-</script>
-<style lang="scss" scoped>
-.form-query-item {
-  display: flex;
-  align-items: center;
-  .required {
-    &::before {
-      content: '*';
-      display: inline-block;
-      margin-right: 4px;
-      color: #f5222d;
-      font-size: 14px;
-      vertical-align: middle;
-    }
-  }
-  .item-slot {
-    margin-left: 12px;
-  }
-}
-</style>
-
 <template>
   <el-select
     ref="select"
@@ -170,11 +89,13 @@ export default {
   },
   watch: {
     value: function (val) {
+      console.log(94, val)
       if (!this.isEmpty(this.data)) {
         this.init(val)
       }
     },
     data: function (val) {
+      console.log(100, val)
       if (!this.isEmpty(val)) {
         this.init(this.value)
       }
@@ -220,6 +141,10 @@ export default {
           this.$refs.select.scrollToOption({ $el: selectDom })
         }, 0)
       }
+    },
+    filterNode(value, data) {
+      if (!value) return true
+      return data.name.indexOf(value) !== -1
     },
     clear() {
       this.$emit('input', '')

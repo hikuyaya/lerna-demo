@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-17 17:42:27
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-17 17:59:26
+ * @LastEditTime: 2022-06-22 11:35:21
  * @FilePath: \personnelweb\src\components\base\FormArea.vue
  * @Description: 
 -->
@@ -14,7 +14,7 @@
       :label="option.label"
       prefix="："
       :width="option.width"
-      :labelWidth="option.labelWidth || '80px'">
+      :labelWidth="option.labelWidth || '0.8rem'">
       <el-select
         v-if="option.type === 'select'"
         v-model="params[option.prop]"
@@ -48,6 +48,12 @@ export default {
   props: {
     options: {
       type: Array
+    },
+    advance: {
+      type: Boolean,
+      default: function () {
+        return false
+      }
     }
   },
   data() {

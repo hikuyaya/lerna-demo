@@ -11,6 +11,7 @@
   margin-bottom: $value;
 }
 
+// flex
 .flex {
   display: flex;
 }
@@ -26,15 +27,21 @@
 .flex-con-1 {
   flex: 1;
 }
+
+// layout
 .w100 {
   width: 100%;
 }
 .h100 {
   height: 100%;
 }
+
+// cursor
 .c-pointer {
   cursor: pointer;
 }
+
+// text-align
 .tac {
   text-align: center;
 }
@@ -44,6 +51,13 @@
 .tar {
   text-align: right;
 }
+
+// padding
+.pd-r-12 {
+  padding-right: 12px;
+}
+
+// margin
 .mg-t-4 {
   margin-top: 4px !important;
 }

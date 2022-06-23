@@ -96,6 +96,7 @@ export default {
         .router-tab-page {
           background: #fff;
           padding: 20px;
+          height: 100%;
         }
       }
     }

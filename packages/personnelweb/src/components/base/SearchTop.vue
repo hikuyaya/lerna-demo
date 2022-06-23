@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-22 13:41:21
+ * @LastEditTime: 2022-06-23 10:14:47
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -157,10 +157,7 @@ import FormArea from '@src/components/base/FormArea.vue'
 import FormItem from '@src/components/base/FormItem.vue'
 import { deepClone } from '@src/library/helper/util'
 import TreeSelect from '@src/components/base/TreeSelect.vue'
-const defaultProps = {
-  children: 'children',
-  label: 'name'
-}
+
 export default {
   name: 'SearchTop',
   props: {
@@ -192,7 +189,11 @@ export default {
         pageSize: 12
       },
       params: {},
-      showAdvance: false
+      showAdvance: false,
+      defaultProps: {
+        children: 'children',
+        label: 'name'
+      }
     }
   },
   methods: {

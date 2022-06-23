@@ -165,7 +165,7 @@ export const MENU = {
     {
       id: 2,
       pid: null,
-      name: '人事管理',
+      name: '员工管理',
       title: null,
       path: null,
       icon: 'iconfont-channelmanagement'
@@ -173,10 +173,10 @@ export const MENU = {
     {
       id: 21,
       pid: 2,
-      name: '员工资料',
-      title: '员工资料',
-      path: '/staff/profile',
-      component: 'staff/profile',
+      name: '入职申请',
+      title: '入职申请',
+      path: '/staff/takeOfficeApplication',
+      component: 'staff/takeOfficeApplication',
       icon: null,
       canShow: true
     },

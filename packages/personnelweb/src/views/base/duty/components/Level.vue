@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:41:05
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-22 18:00:53
+ * @LastEditTime: 2022-06-23 09:45:40
  * @FilePath: \personnelweb\src\views\base\duty\components\level.vue
  * @Description: 
 -->
@@ -17,7 +17,6 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="机构编码" prop="date"> </yid-table-column>
         <yid-table-column label="级别编码" prop="name"></yid-table-column>
         <yid-table-column label="级别名称" prop="name"></yid-table-column>
         <yid-table-column label="所属职务" prop="name"></yid-table-column>
@@ -59,38 +58,13 @@ export default {
           width: '16%'
         }
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
-      treeData: []
+      tableData: []
     }
   },
   methods: {
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
       console.log('params', params)
-    },
-    onCancel(row) {
-      this.addCompVisible = false
     }
   }
 }

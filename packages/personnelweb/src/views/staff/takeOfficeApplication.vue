@@ -178,6 +178,7 @@ export default {
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
       console.log('params', params)
+      console.log(123)
     },
     onEdit(row) {
       this.selectRow = row

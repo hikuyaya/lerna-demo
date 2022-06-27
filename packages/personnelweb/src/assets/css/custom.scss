@@ -97,6 +97,9 @@
 .mg-b-12 {
   margin-bottom: 12px !important;
 }
+.mg-center {
+  margin: 0 auto;
+}
 
 // font-size
 .font-size-14rem {
@@ -110,4 +113,12 @@
 }
 .font-size-16px {
   font-size: 16px;
+}
+
+// display
+.hide {
+  display: none;
+}
+.block {
+  display: block;
 }

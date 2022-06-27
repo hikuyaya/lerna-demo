@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:09:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-22 15:48:46
+ * @LastEditTime: 2022-06-24 14:48:48
  * @FilePath: \personnelweb\src\views\base\station\station.vue
  * @Description: 
 -->
@@ -172,10 +172,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container {
-  display: flex;
+  // display: flex;
   height: 100%;
   .content {
-    flex: 1;
+    // flex: 1;
   }
 }
 </style>

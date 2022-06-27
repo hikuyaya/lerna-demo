@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-23 10:04:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-23 17:30:53
+ * @LastEditTime: 2022-06-24 14:42:51
  * @FilePath: \personnelweb\src\views\staff\components\AddComp.vue
  * @Description: 
 -->
@@ -22,7 +22,11 @@
           </el-form-item>
         </el-col>
         <el-col :span="4" class="mg-l-16">
-          <el-button type="primary" icon="el-icon-search" circle></el-button>
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            circle
+            @click="chooseStationVisible = true"></el-button>
         </el-col>
       </el-row>
       <title-header title="基本信息" />
@@ -214,7 +218,7 @@
       </el-row>
       <title-header title="附件信息" />
       <div class="flex mg-t-12">
-        <img-item title="大头照"></img-item>
+        <img-item title="大头照" :url.sync="url"></img-item>
         <img-item title="身份证正面"></img-item>
         <img-item title="身份证反面"></img-item>
         <img-item title="银行卡正面"></img-item>
@@ -222,14 +226,25 @@
         <img-item title="毕业证"></img-item>
       </div>
     </el-form>
+    <el-dialog
+      title="选择岗位"
+      :visible.sync="chooseStationVisible"
+      :close-on-click-modal="false"
+      append-to-body
+      width="800px">
+      <choose-station
+        v-if="chooseStationVisible"
+        @select="handleSelectStation"></choose-station>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import TitleHeader from '@src/components/base/TitleHeader'
+import ChooseStation from './ChooseStation'
 import ImgItem from './ImgItem'
 export default {
-  components: { TitleHeader, ImgItem },
+  components: { TitleHeader, ImgItem, ChooseStation },
   props: {
     value: {
       type: Object,
@@ -244,12 +259,20 @@ export default {
   },
   data() {
     return {
+      chooseStationVisible: true,
       info: {},
       rules: {
         code: [{ required: true, message: '请输入机构编码' }],
         name: [{ required: true, message: '请输入机构名称' }],
         date: [{ required: true, message: '请输入机构名称' }]
-      }
+      },
+      url: 'http://file.yidmall.com//group1/M00/00/0C/eHdu-2K1LgOASHIHAABfDv2ET_Y837.png'
+    }
+  },
+  methods: {
+    handleSelectStation(selectRow) {
+      console.log(selectRow)
+      this.chooseStationVisible = false
     }
   },
   watch: {

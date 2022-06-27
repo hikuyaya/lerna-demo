@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:17:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-23 11:27:57
+ * @LastEditTime: 2022-06-24 14:49:19
  * @FilePath: \personnelweb\src\views\staff\takeOfficeApplication.vue
  * @Description: 门店入职审核
 -->
@@ -66,7 +66,11 @@
       :close-on-click-modal="false"
       append-to-body
       width="1000px">
-      <add-comp v-if="addCompVisible" :value="selectRow" :treeData="treeData" />
+      <add-comp
+        v-if="addCompVisible"
+        :value="selectRow"
+        :treeData="treeData"
+        @cancel="addCompVisible = false" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
         <el-button @click="onCancel">取 消</el-button>
@@ -200,10 +204,10 @@ export default {
 </script>
 <style lang="scss" scoped>
 .container {
-  display: flex;
+  // display: flex;
   height: 100%;
   .content {
-    flex: 1;
+    // flex: 1;
   }
 }
 </style>

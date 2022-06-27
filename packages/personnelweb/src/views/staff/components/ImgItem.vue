@@ -2,46 +2,59 @@
  * @Author: wqy
  * @Date: 2022-06-23 16:55:05
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-23 17:50:44
+ * @LastEditTime: 2022-06-24 13:42:03
  * @FilePath: \personnelweb\src\views\staff\components\ImgItem.vue
  * @Description: 
 -->
 <template>
   <div>
-    <!-- <img src="" :alt="title" /> -->
-    <el-upload
-      class="avatar-uploader"
-      :action="action"
-      :show-file-list="false"
-      :on-success="handleAvatarSuccess"
-      :before-upload="beforeAvatarUpload">
-      <div v-if="imageUrl">
-        <img
-          class="el-upload-list__item-thumbnail"
-          width="148px"
-          height="148px"
-          :src="imageUrl"
-          alt="" />
-        <!-- <span class="el-upload-list__item-actions">
-          <span
-            class="el-upload-list__item-preview"
-            @click="handlePictureCardPreview(file)">
-            <i class="el-icon-zoom-in"></i>
-          </span>
-          <span
-            v-if="!disabled"
-            class="el-upload-list__item-delete"
-            @click="handleRemove(file)">
-            <i class="el-icon-delete"></i>
-          </span>
-        </span> -->
-      </div>
-      <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
+    <div class="avatar-uploader">
+      <img
+        class="avatar"
+        v-if="imageUrl"
+        :src="imageUrl"
+        alt=""
+        @click="handlePictureCardPreview" />
+      <i
+        v-else
+        class="el-icon-plus avatar-uploader-icon"
+        @click="onShowUpload"></i>
+    </div>
     <p class="tac mg-t-4">{{ title }}</p>
-    <el-button type="text" class="tac">重新上传</el-button>
-    <el-dialog :title="title" :visible.sync="dialogVisible" append-to-body>
-      <img width="100%" :src="dialogImageUrl" alt="" />
+    <el-button
+      type="text"
+      v-if="newImageUrl"
+      class="mg-center block"
+      @click="onShowUpload"
+      >重新上传</el-button
+    >
+    <el-dialog :title="title" :visible.sync="dialog.detail" append-to-body>
+      <img width="100%" :src="imageUrl" alt="" />
+    </el-dialog>
+    <el-dialog
+      :title="title"
+      :visible.sync="dialog.upload"
+      width="440px"
+      append-to-body>
+      <el-upload
+        class="tac mg-center"
+        drag
+        :action="action"
+        :limit="1"
+        :file-list="fileList"
+        list-type="picture"
+        :on-success="handleAvatarSuccess"
+        :before-upload="beforeAvatarUpload">
+        <i class="el-icon-upload"></i>
+        <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
+        <div class="el-upload__tip" slot="tip">
+          只能上传图片文件，且不超过10mb
+        </div>
+      </el-upload>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button @click="onCancel">取 消</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -49,24 +62,30 @@
 <script>
 export default {
   props: {
-    title: String
+    title: String,
+    url: String
   },
   data() {
     return {
-      dialogImageUrl: '',
-      dialogVisible: false,
+      dialog: {
+        detail: false,
+        upload: false
+      },
       disabled: false,
       action: `${this.$yid.config.API.BASE}api-file/files-anon`,
-      imageUrl: ''
+      fileList: [],
+      imageUrl: '',
+      newImageUrl: ''
     }
   },
-  mounted() {
-    console.log(this.action, 'action')
-  },
+  mounted() {},
   methods: {
+    onShowUpload() {
+      this.dialog.upload = true
+    },
     handleAvatarSuccess(res, file) {
-      this.imageUrl = res?.data?.url
-      this.$emit('input', this.imageUrl)
+      this.newImageUrl = res?.data?.url
+      this.$emit('input', this.newImageUrl)
     },
     beforeAvatarUpload(file) {
       console.log(file.type)
@@ -85,8 +104,23 @@ export default {
       this.imageUrl = ''
     },
     handlePictureCardPreview(file) {
-      this.dialogImageUrl = file.url
-      this.dialogVisible = true
+      this.dialog.detail = true
+    },
+    onSubmit() {
+      this.$emit('update:url', this.newImageUrl)
+      this.dialog.upload = false
+    },
+    onCancel() {
+      this.dialog.upload = false
+    }
+  },
+  watch: {
+    url: {
+      immediate: true,
+      handler: function (val) {
+        console.log('url', val)
+        this.imageUrl = val
+      }
     }
   }
 }
@@ -95,15 +129,28 @@ export default {
 <style lang="scss" scoped>
 .avatar-uploader {
   margin-right: 12px;
-  /deep/ .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-    &:hover {
-      border-color: #409eff;
+  border: 1px dashed #d9d9d9;
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  &:hover {
+    border-color: #409eff;
+    .item-actions {
+      z-index: 1;
     }
+  }
+  .item-actions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    z-index: -1;
+    color: white;
+    font-size: 20px;
+    margin: 60px 0;
+    text-align: center;
   }
   .avatar-uploader-icon {
     font-size: 28px;
@@ -118,5 +165,8 @@ export default {
     height: 148px;
     display: block;
   }
+}
+.disabled {
+  display: none;
 }
 </style>

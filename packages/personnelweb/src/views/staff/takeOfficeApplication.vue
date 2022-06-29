@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:17:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-24 14:49:19
+ * @LastEditTime: 2022-06-27 11:17:59
  * @FilePath: \personnelweb\src\views\staff\takeOfficeApplication.vue
  * @Description: 门店入职审核
 -->
@@ -65,7 +65,7 @@
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="1000px">
+      width="1040px">
       <add-comp
         v-if="addCompVisible"
         :value="selectRow"
@@ -177,6 +177,7 @@ export default {
     onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
+      this.selectRow = {}
       this.addCompVisible = true
     },
     onSearch() {

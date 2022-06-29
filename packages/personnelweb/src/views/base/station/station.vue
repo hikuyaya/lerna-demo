@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:09:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-24 14:48:48
+ * @LastEditTime: 2022-06-27 11:17:52
  * @FilePath: \personnelweb\src\views\base\station\station.vue
  * @Description: 
 -->
@@ -147,6 +147,7 @@ export default {
     onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
+      this.selectRow = {}
       this.addCompVisible = true
     },
     onSearch() {

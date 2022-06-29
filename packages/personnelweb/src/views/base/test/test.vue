@@ -185,6 +185,7 @@ export default {
     onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
+      this.selectRow = {}
       this.addCompVisible = true
     },
     onSearch() {

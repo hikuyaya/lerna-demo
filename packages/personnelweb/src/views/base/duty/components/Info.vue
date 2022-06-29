@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:40:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-22 17:49:51
+ * @LastEditTime: 2022-06-27 11:11:34
  * @FilePath: \personnelweb\src\views\base\duty\components\Info.vue
  * @Description: 
 -->
@@ -44,7 +44,10 @@
       :close-on-click-modal="false"
       append-to-body
       width="600px">
-      <add-comp v-if="addCompVisible" :value="selectRow" :treeData="treeData" />
+      <info-add-comp
+        v-if="addCompVisible"
+        :value="selectRow"
+        :treeData="treeData" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
         <el-button @click="onCancel">取 消</el-button>
@@ -54,11 +57,11 @@
 </template>
 <script>
 import SearchTop from '@src/components/base/SearchTop'
-import AddComp from './InfoAddComp'
+import InfoAddComp from './InfoAddComp'
 // import AddComp from './components/test.vue'
 import service from '@src/service'
 export default {
-  components: { SearchTop, AddComp },
+  components: { SearchTop, InfoAddComp },
   data() {
     return {
       addCompVisible: false,
@@ -132,6 +135,7 @@ export default {
     onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
+      this.selectRow = {}
       this.addCompVisible = true
     },
     onSearch() {

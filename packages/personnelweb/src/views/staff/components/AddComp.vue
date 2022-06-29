@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-23 10:04:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-24 14:42:51
+ * @LastEditTime: 2022-06-29 10:00:49
  * @FilePath: \personnelweb\src\views\staff\components\AddComp.vue
  * @Description: 
 -->
@@ -54,13 +54,21 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="出生日期" prop="date">
-            <el-input
-              v-model="info.date"
-              style="width: calc(100% - 80px)"></el-input>
-            <el-input
+          <el-form-item label="出生日期" prop="birth">
+            <el-date-picker
+              v-model="info.birth"
+              type="date"
+              format="yyyy年MM月dd日"
+              placement="bottom"
+              value-format="timestamp"
+              style="width: calc(100% - 80px)">
+            </el-date-picker>
+            <el-input-number
               v-model="info.age"
-              style="width: 50px; margin-left: 4px"></el-input
+              :controls="false"
+              :min="1"
+              :max="120"
+              style="width: 50px; margin-left: 4px"></el-input-number
             >&nbsp;岁
           </el-form-item>
         </el-col>
@@ -112,7 +120,13 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="健康证有效期" prop="date">
-            <el-input v-model="info.date"></el-input>
+            <el-date-picker
+              v-model="info.date"
+              type="date"
+              format="yyyy年MM月dd日"
+              placement="bottom"
+              value-format="timestamp">
+            </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -185,34 +199,70 @@
       <el-row class="mg-t-12">
         <el-col :span="8">
           <el-form-item label="签订日期" prop="code">
-            <el-input v-model="info.code"></el-input>
+            <el-date-picker
+              v-model="info.date"
+              type="date"
+              format="yyyy年MM月dd日"
+              placement="bottom"
+              value-format="timestamp">
+            </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="合同生效日期" prop="date">
-            <el-input v-model="info.date"></el-input>
+            <el-date-picker
+              v-model="info.date"
+              type="date"
+              format="yyyy年MM月dd日"
+              placement="bottom"
+              value-format="timestamp">
+            </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="合同结束日期" prop="code">
-            <el-input v-model="info.code"></el-input>
+            <el-date-picker
+              v-model="info.date"
+              type="date"
+              format="yyyy年MM月dd日"
+              placement="bottom"
+              value-format="timestamp">
+            </el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8">
           <el-form-item label="合同有效期" prop="code">
-            <el-input v-model="info.code"></el-input>
+            <el-date-picker
+              v-model="info.date"
+              type="date"
+              format="yyyy年MM月dd日"
+              placement="bottom"
+              value-format="timestamp">
+            </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="试用结束日期" prop="date">
-            <el-input v-model="info.date"></el-input>
+            <el-date-picker
+              v-model="info.date"
+              type="date"
+              format="yyyy年MM月dd日"
+              placement="bottom"
+              value-format="timestamp">
+            </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="入职日期" prop="code">
-            <el-input v-model="info.code"></el-input>
+            <el-date-picker
+              v-model="info.date"
+              type="date"
+              format="yyyy年MM月dd日"
+              placement="bottom"
+              value-format="timestamp">
+            </el-date-picker>
           </el-form-item>
         </el-col>
       </el-row>
@@ -243,6 +293,7 @@
 import TitleHeader from '@src/components/base/TitleHeader'
 import ChooseStation from './ChooseStation'
 import ImgItem from './ImgItem'
+import { getAge } from '@src/library/helper/util'
 export default {
   components: { TitleHeader, ImgItem, ChooseStation },
   props: {
@@ -280,6 +331,20 @@ export default {
       immediate: true,
       handler: function (val) {
         this.info = JSON.parse(JSON.stringify(val))
+      }
+    },
+    'info.birth': {
+      handler: function (val) {
+        if (!val) {
+          // 点击清空时
+          this.$set(this.info, 'age', undefined)
+        } else {
+          // 正常选择时
+          const birth = new Date(val).formatDate().split('-')
+          console.log(birth)
+          const age = getAge(birth)?.[0]
+          this.$set(this.info, 'age', age)
+        }
       }
     }
   }

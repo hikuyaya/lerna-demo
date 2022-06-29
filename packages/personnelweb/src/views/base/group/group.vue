@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:09:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-22 15:42:33
+ * @LastEditTime: 2022-06-29 16:40:54
  * @FilePath: \personnelweb\src\views\base\group\group.vue
  * @Description: 
 -->
@@ -49,7 +49,11 @@
       :close-on-click-modal="false"
       append-to-body
       width="800px">
-      <add-comp v-if="addCompVisible" :value="selectRow" :treeData="treeData" />
+      <add-comp
+        ref="addCompRef"
+        v-if="addCompVisible"
+        :value="selectRow"
+        :treeData="treeData" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
         <el-button @click="onCancel">取 消</el-button>
@@ -135,10 +139,10 @@ export default {
     }
   },
   created() {
-    this.initData()
+    this.queryGroupTree()
   },
   methods: {
-    async initData() {
+    async queryGroupTree() {
       const { data, resp_code } = await service.chain.region.treeAll({})
       if (resp_code !== 200) {
         return
@@ -148,6 +152,7 @@ export default {
     onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
+      this.selectRow = {}
       this.addCompVisible = true
     },
     onSearch() {
@@ -164,7 +169,20 @@ export default {
       this.operateType = 'detail'
       this.addCompVisible = true
     },
-    onSubmit(row) {},
+    async onSubmit() {
+      const info = await this.$refs.addCompRef.getData()
+      if (!info) {
+        return
+      }
+      const { resp_code } = await service.chain.region.saveRegion(info)
+      if (resp_code !== 200) {
+        return
+      }
+      this.$message.success('操作成功！')
+      this.addCompVisible = false
+      // 刷新左侧机构树
+      this.queryGroupTree()
+    },
     onCancel(row) {
       this.addCompVisible = false
     }

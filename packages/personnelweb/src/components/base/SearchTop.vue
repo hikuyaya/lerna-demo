@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-23 10:14:47
+ * @LastEditTime: 2022-06-30 14:23:34
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -19,6 +19,7 @@
         <el-select
           v-if="option.type === 'select'"
           v-model="params[option.prop]"
+          clearable
           :style="{ width: option.widgetWidth ? option.widgetWidth : '100%' }">
           <el-option
             v-for="(item, index) in option.options"
@@ -56,6 +57,7 @@
           v-else
           v-model="params[option.prop]"
           :type="option.type"
+          clearable
           :placeholder="
             option.placeholder
               ? `请输入${option.placeholder}`
@@ -94,6 +96,7 @@
             <el-select
               v-if="option.type === 'select'"
               v-model="params[option.prop]"
+              clearable
               :style="{
                 width: option.widgetWidth ? option.widgetWidth : '100%'
               }">
@@ -133,6 +136,7 @@
               v-else
               v-model="params[option.prop]"
               :type="option.type"
+              clearable
               :placeholder="
                 option.placeholder
                   ? `请输入${option.placeholder}`
@@ -185,8 +189,8 @@ export default {
   data() {
     return {
       page: {
-        pageNo: 1,
-        pageSize: 12
+        page: 1,
+        limit: 10
       },
       params: {},
       showAdvance: false,
@@ -202,7 +206,7 @@ export default {
     },
     reset() {
       this.params = {}
-      this.page.pageNo = 1
+      this.page.page = 1
     },
     onOpenAdvance() {
       this.showAdvance = !this.showAdvance

@@ -1,14 +1,16 @@
-import product from './product'
-import productBrand from './productBrand'
-import productCategory from './productCategory'
-import log from './log'
-import servicebaseInfo from './servicebaseInfo'
+/*
+ * @Author: wqy
+ * @Date: 2022-06-15 14:05:18
+ * @LastEditors: wqy
+ * @LastEditTime: 2022-06-30 11:30:11
+ * @FilePath: \personnelweb\src\service\modules\base\index.js
+ * @Description:
+ */
 
-//  base库 相关
+import duty from './duty'
+import group from './group'
+
 export default {
-  product,
-  productBrand,
-  productCategory,
-  log,
-  servicebaseInfo
+  duty,
+  group
 }

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:40:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-27 11:11:34
+ * @LastEditTime: 2022-06-30 11:13:01
  * @FilePath: \personnelweb\src\views\base\duty\components\Info.vue
  * @Description: 
 -->
@@ -18,19 +18,40 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="机构编码" prop="date">
+        <yid-table-column label="职务编码" prop="pscode"></yid-table-column>
+        <yid-table-column label="职务名称" prop="name">
           <template slot-scope="scope">
+            <el-link type="primary" @click="onShowDetail(scope.row)">{{
+              scope.row.psname
+            }}</el-link>
+          </template>
+        </yid-table-column>
+        <yid-table-column label="组织名称" prop="bname"></yid-table-column>
+        <yid-table-column label="同步业务组" prop="bbnames"></yid-table-column>
+        <yid-table-column label="状态" prop="status">
+          <template slot-scope="scope">
+            {{
+              scope.row.status === '1'
+                ? '正常'
+                : scope.row.status === '2'
+                ? '停用'
+                : '未知'
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column label="级别操作" prop="name">
+          <template slot-scope="scope">
+            <el-link
+              type="primary"
+              class="mg-r-16"
+              @click="onShowDetail(scope.row)"
+              >查看</el-link
+            >
             <el-link type="primary" @click="onShowDetail(scope.row)"
-              >编辑</el-link
+              >维护</el-link
             >
           </template>
         </yid-table-column>
-        <yid-table-column label="机构名称" prop="name"></yid-table-column>
-        <yid-table-column label="上级机构" prop="name"></yid-table-column>
-        <yid-table-column label="机构电话" prop="name"></yid-table-column>
-        <yid-table-column label="负责人" prop="name"></yid-table-column>
-        <yid-table-column label="状态" prop="name"></yid-table-column>
-        <yid-table-column label="是否子公司" prop="name"></yid-table-column>
         <yid-table-column label="操作" min-width="100">
           <template slot-scope="scope">
             <el-link type="primary" @click="onEdit(scope.row)">编辑</el-link>
@@ -44,10 +65,7 @@
       :close-on-click-modal="false"
       append-to-body
       width="600px">
-      <info-add-comp
-        v-if="addCompVisible"
-        :value="selectRow"
-        :treeData="treeData" />
+      <info-add-comp v-if="addCompVisible" :value="selectRow" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
         <el-button @click="onCancel">取 消</el-button>
@@ -70,7 +88,7 @@ export default {
       conditions: [
         {
           label: '职务编码', // 标签
-          prop: 'text1', // 绑定的字段
+          prop: 'pscode', // 绑定的字段
           // label宽度
           type: 'input',
           width: '16%' // 整个组件占的宽度
@@ -79,58 +97,33 @@ export default {
         },
         {
           label: '职务名称',
-          prop: 'text2',
+          prop: 'psname',
           type: 'input', // 搜索类型
           width: '16%'
         },
         {
           label: '状态',
-          prop: 'text5',
+          prop: 'status',
           type: 'select',
           labelWidth: '0.8rem',
           options: [
             { label: '所有', value: '' },
-            { label: '正常', value: 1 },
-            { label: '停用', value: 0 }
+            { label: '正常', value: '1' },
+            { label: '停用', value: '2' }
           ],
           width: '16%'
         }
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
-      treeData: []
+      tableData: [],
+      total: 0
     }
   },
-  created() {
-    this.initData()
+  mounted() {
+    this.queryPositionList()
   },
   methods: {
-    async initData() {
-      const { data, resp_code } = await service.chain.region.treeAll({})
-      if (resp_code !== 200) {
-        return
-      }
-      this.treeData = data
+    queryPositionList() {
+      this.onSearch()
     },
     onOpenAdvance() {},
     onAdd() {
@@ -140,7 +133,11 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      console.log('params', params)
+      const fetch = service.base.duty.list
+      this.$refs.table.reloadData({
+        fetch,
+        params
+      })
     },
     onEdit(row) {
       this.selectRow = row

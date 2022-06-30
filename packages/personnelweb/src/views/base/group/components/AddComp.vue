@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-20 17:37:43
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-29 16:48:14
+ * @LastEditTime: 2022-06-30 14:26:15
  * @FilePath: \personnelweb\src\views\base\group\components\AddComp.vue
  * @Description: 组织架构 —— 新增、编辑
 -->
@@ -12,38 +12,64 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="机构编码" prop="code">
-            <el-input clearable v-model="info.code"></el-input>
+            <el-input
+              clearable
+              :disabled="operateType === 'edit' || operateType === 'detail'"
+              v-model="info.code"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="上级机构" prop="parentCode">
-            <tree-select
+            <!-- <tree-select
               v-model="info.parentCode"
               :props="defaultProps"
               :data="treeData"
-              :defaultExpand="false"></tree-select>
+              :defaultExpand="false"></tree-select> -->
+
+            <treeselect
+              v-model="info.parentId"
+              :options="treeData"
+              :multiple="false"
+              :normalizer="normalizer"
+              :clearable="false"
+              :disabled="operateType === 'edit' || operateType === 'detail'"
+              @select="handleTreeSelect"
+              placeholder="请选择"
+              noResultsText="查无数据"
+              noChildrenText="无子节点" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="机构名称" prop="name">
-            <el-input clearable v-model="info.name"></el-input>
+            <el-input
+              clearable
+              v-model="info.name"
+              :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8">
           <el-form-item label="负责人" prop="director">
-            <el-input clearable v-model="info.director"></el-input>
+            <el-input
+              clearable
+              v-model="info.director"
+              :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="负责人电话" prop="telephone">
-            <el-input clearable v-model="info.telephone"></el-input>
+            <el-input
+              clearable
+              v-model="info.telephone"
+              :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="状态" prop="status">
-            <el-select v-model="info.status">
+            <el-select
+              v-model="info.status"
+              :disabled="operateType === 'detail'">
               <el-option
                 v-for="(item, index) in statusOptions"
                 :key="index"
@@ -57,7 +83,10 @@
       <el-row>
         <el-col :span="16">
           <el-form-item label="备注" prop="remark">
-            <el-input clearable v-model="info.remark"></el-input>
+            <el-input
+              clearable
+              v-model="info.remark"
+              :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
         <!-- <el-col :span="8">
@@ -67,8 +96,18 @@
         </el-col> -->
         <el-col :span="8">
           <el-form-item label="是否子公司" prop="isCompany">
-            <el-radio v-model="info.isCompany" :label="1">是</el-radio>
-            <el-radio v-model="info.isCompany" :label="0">否</el-radio>
+            <el-radio
+              v-model="info.isCompany"
+              :label="1"
+              :disabled="operateType === 'detail'"
+              >是</el-radio
+            >
+            <el-radio
+              v-model="info.isCompany"
+              :label="0"
+              :disabled="operateType === 'detail'"
+              >否</el-radio
+            >
           </el-form-item>
         </el-col>
       </el-row>
@@ -78,7 +117,8 @@
             <el-input
               clearable
               v-model="info.address"
-              style="width: 100%"></el-input>
+              style="width: 100%"
+              :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -87,9 +127,13 @@
 </template>
 
 <script>
-import TreeSelect from '@src/components/base/TreeSelect.vue'
+// import TreeSelect from '@src/components/base/TreeSelect.vue'
+// import the component
+import Treeselect from '@riophae/vue-treeselect'
+// import the styles
+import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 export default {
-  components: { TreeSelect },
+  components: { Treeselect },
   props: {
     value: {
       type: Object,
@@ -101,6 +145,9 @@ export default {
       type: String
     },
     treeData: Array
+  },
+  created() {
+    console.log(this.operateType)
   },
   data() {
     return {
@@ -119,6 +166,13 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'oname'
+      },
+      normalizer(node) {
+        return {
+          id: node.id,
+          label: node.oname,
+          children: node.children
+        }
       }
     }
   },
@@ -128,14 +182,28 @@ export default {
         .validate()
         .catch(err => console.error(err))
       if (result) {
-        return this.info
+        if (this.treeSelectNode) {
+          return {
+            ...this.info,
+            parentCode: this.treeSelectNode.code
+          }
+        } else {
+          return this.info
+        }
       }
+    },
+    handleTreeSelect(node, instanceId) {
+      console.log(node, instanceId)
+      this.treeSelectNode = node
     }
   },
   watch: {
     value: {
       immediate: true,
       handler: function (val) {
+        if (val.parentId === -1) {
+          val.parentId = null
+        }
         this.info = JSON.parse(JSON.stringify(val))
       }
     }

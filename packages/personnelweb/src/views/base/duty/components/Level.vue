@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:41:05
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-23 09:45:40
+ * @LastEditTime: 2022-06-30 11:17:53
  * @FilePath: \personnelweb\src\views\base\duty\components\level.vue
  * @Description: 
 -->
@@ -17,10 +17,10 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="级别编码" prop="name"></yid-table-column>
-        <yid-table-column label="级别名称" prop="name"></yid-table-column>
-        <yid-table-column label="所属职务" prop="name"></yid-table-column>
-        <yid-table-column label="职务编码" prop="name"></yid-table-column>
+        <yid-table-column label="级别编码" prop="pslcode"></yid-table-column>
+        <yid-table-column label="级别名称" prop="pslname"></yid-table-column>
+        <yid-table-column label="所属职务" prop="psname"></yid-table-column>
+        <yid-table-column label="职务编码" prop="pscode"></yid-table-column>
       </yid-table>
     </div>
   </div>
@@ -38,7 +38,7 @@ export default {
       conditions: [
         {
           label: '职务编码', // 标签
-          prop: 'text1', // 绑定的字段
+          prop: 'pscode', // 绑定的字段
           // label宽度
           type: 'input',
           width: '16%' // 整个组件占的宽度
@@ -47,13 +47,13 @@ export default {
         },
         {
           label: '职务名称',
-          prop: 'text2',
+          prop: 'psname',
           type: 'input', // 搜索类型
           width: '16%'
         },
         {
           label: '级别名称',
-          prop: 'text3',
+          prop: 'pslname',
           type: 'input', // 搜索类型
           width: '16%'
         }
@@ -61,10 +61,20 @@ export default {
       tableData: []
     }
   },
+  mounted() {
+    this.queryList()
+  },
   methods: {
+    queryList() {
+      this.onSearch()
+    },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      console.log('params', params)
+      const fetch = service.base.duty.positionLevelList
+      this.$refs.table.reloadData({
+        fetch,
+        params
+      })
     }
   }
 }

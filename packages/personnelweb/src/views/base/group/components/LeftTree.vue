@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-20 16:14:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-21 17:21:55
+ * @LastEditTime: 2022-06-30 14:38:40
  * @FilePath: \personnelweb\src\views\base\group\components\LeftTree.vue
  * @Description: 组织机构树
 -->
@@ -16,7 +16,7 @@
       class="filter-tree"
       :data="treeData"
       :props="defaultProps"
-      :default-expand-all="false"
+      :default-expand-all="true"
       :expand-on-click-node="false"
       :filter-node-method="filterNode"
       :render-content="renderContent"

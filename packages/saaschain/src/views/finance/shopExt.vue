@@ -157,6 +157,7 @@
 
                 },
                 shopExtForm:{
+                    id:'',
                     shopid:'',
                     shopcode :'',
                     shponame :'',

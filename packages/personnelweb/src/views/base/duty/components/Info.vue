@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:40:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-30 11:13:01
+ * @LastEditTime: 2022-06-30 15:32:28
  * @FilePath: \personnelweb\src\views\base\duty\components\Info.vue
  * @Description: 
 -->
@@ -44,10 +44,10 @@
             <el-link
               type="primary"
               class="mg-r-16"
-              @click="onShowDetail(scope.row)"
+              @click="onShowLevelDetail(scope.row)"
               >查看</el-link
             >
-            <el-link type="primary" @click="onShowDetail(scope.row)"
+            <el-link type="primary" @click="onShowLevelAdd(scope.row)"
               >维护</el-link
             >
           </template>
@@ -59,16 +59,51 @@
         </yid-table-column>
       </yid-table>
     </div>
+    <!-- 职务 -->
     <el-dialog
-      :title="operateType === 'add' ? '新增' : '修改'"
+      :title="
+        operateType === 'add'
+          ? '新增'
+          : operateType === 'edit'
+          ? '修改'
+          : '详情'
+      "
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
       width="600px">
-      <info-add-comp v-if="addCompVisible" :value="selectRow" />
-      <span slot="footer" class="dialog-footer">
+      <info-add-comp
+        v-if="addCompVisible"
+        :value="selectRow"
+        :operateType="operateType" />
+      <span v-if="operateType === 'detail'" slot="footer" class="dialog-footer">
+        <el-button @click="onCancel">关 闭</el-button>
+      </span>
+      <span v-else slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
         <el-button @click="onCancel">取 消</el-button>
+      </span>
+    </el-dialog>
+    <!-- 职务级别 -->
+    <el-dialog
+      :title="levelOperateType === 'detail' ? '级别详细信息' : '级别维护'"
+      :visible.sync="addLevelVisible"
+      :close-on-click-modal="false"
+      append-to-body
+      width="800px">
+      <level-add-comp
+        v-if="addLevelVisible"
+        :value="selectLevelRow"
+        :operateType="levelOperateType" />
+      <span
+        v-if="levelOperateType === 'detail'"
+        slot="footer"
+        class="dialog-footer">
+        <el-button @click="addLevelVisible = false">关 闭</el-button>
+      </span>
+      <span v-else slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="onLevelSubmit">确 定</el-button>
+        <el-button @click="addLevelVisible = false">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -76,15 +111,19 @@
 <script>
 import SearchTop from '@src/components/base/SearchTop'
 import InfoAddComp from './InfoAddComp'
+import LevelAddComp from './LevelAddComp'
 // import AddComp from './components/test.vue'
 import service from '@src/service'
 export default {
-  components: { SearchTop, InfoAddComp },
+  components: { SearchTop, InfoAddComp, LevelAddComp },
   data() {
     return {
       addCompVisible: false,
+      addLevelVisible: true,
       operateType: 'add',
+      levelOperateType: 'add',
       selectRow: {},
+      selectLevelRow: {},
       conditions: [
         {
           label: '职务编码', // 标签
@@ -152,6 +191,19 @@ export default {
     onSubmit(row) {},
     onCancel(row) {
       this.addCompVisible = false
+    },
+    onShowLevelDetail(row) {
+      this.selectLevelRow = row
+      this.levelOperateType = 'detail'
+      this.addLevelVisible = true
+    },
+    onShowLevelAdd(row) {
+      this.selectLevelRow = row
+      this.levelOperateType = 'add'
+      this.addLevelVisible = true
+    },
+    onLevelSubmit() {
+      this.addLevelVisible = false
     }
   }
 }

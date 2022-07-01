@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:41:18
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-30 14:44:48
+ * @LastEditTime: 2022-07-01 15:21:14
  * @FilePath: \personnelweb\src\views\base\duty\components\LevelOne.vue
  * @Description: 
 -->
@@ -70,6 +70,7 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
+      params.limit = this.$refs.table.Pagination.internalPageSize
       const fetch = service.base.duty.positionLevel1List
       this.$refs.table.reloadData({
         fetch,

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-30 16:18:59
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-01 09:12:32
+ * @LastEditTime: 2022-07-01 13:50:41
  * @FilePath: \personnelweb\src\views\base\duty\components\LevelOperate.vue
  * @Description: 
 -->
@@ -13,7 +13,10 @@
       <li>级别名称</li>
       <li>备注</li>
       <li>
-        <i @click="onAddRow" class="el-icon-circle-plus-outline c-pointer"></i>
+        <i
+          @click="onAddRow"
+          class="el-icon-circle-plus-outline c-pointer"
+          :class="{ hide: operateType === 'detail' }"></i>
       </li>
     </ul>
     <ul class="body" v-for="(item, index) in items" :key="item.id">
@@ -23,12 +26,20 @@
           v-model="item.clevel"
           :min="0"
           :controls="false"
-          style="width: 80px" />
+          style="width: 80px"
+          :disabled="operateType === 'detail'" />
       </li>
-      <li><el-input v-model="item.pslname" /></li>
-      <li><el-input v-model="item.remark" /></li>
       <li>
-        <el-popconfirm title="确定删除吗？" @confirm="onDeleteRow(item, index)">
+        <el-input v-model="item.pslname" :disabled="operateType === 'detail'" />
+      </li>
+      <li>
+        <el-input v-model="item.remark" :disabled="operateType === 'detail'" />
+      </li>
+      <li>
+        <el-popconfirm
+          title="确定删除吗？"
+          @confirm="onDeleteRow(item, index)"
+          :class="{ hide: operateType === 'detail' }">
           <i slot="reference" class="el-icon-remove-outline c-pointer"></i>
         </el-popconfirm>
       </li>
@@ -44,12 +55,18 @@ export default {
     },
     position: {
       type: Object
+    },
+    operateType: {
+      type: String
     }
   },
   data() {
     return {
       items: []
     }
+  },
+  created() {
+    console.log('position', this.position)
   },
   methods: {
     onAddRow() {
@@ -58,8 +75,8 @@ export default {
         pslname: '',
         bbids: this.position.bbids,
         bbnames: this.position.bbnames,
-        btype: 1,
-        psid: this.position.psid,
+        btype: this.position.btype,
+        psid: this.position.id,
         pscode: this.position.pscode,
         clevel: undefined,
         remark: ''
@@ -76,7 +93,13 @@ export default {
     list: {
       immediate: true,
       handler: function (val) {
-        this.items = JSON.parse(JSON.stringify(val))
+        this.items = val
+      }
+    },
+    items: {
+      immediate: true,
+      handler: function (val) {
+        this.$emit('update:list', val)
       }
     }
   }

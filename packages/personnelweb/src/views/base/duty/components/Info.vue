@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:40:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-30 15:32:28
+ * @LastEditTime: 2022-07-01 15:19:38
  * @FilePath: \personnelweb\src\views\base\duty\components\Info.vue
  * @Description: 
 -->
@@ -54,7 +54,21 @@
         </yid-table-column>
         <yid-table-column label="操作" min-width="100">
           <template slot-scope="scope">
-            <el-link type="primary" @click="onEdit(scope.row)">编辑</el-link>
+            <el-link type="primary" class="mg-r-16" @click="onEdit(scope.row)"
+              >编辑</el-link
+            >
+            <el-link
+              v-if="scope.row.status === '2'"
+              type="primary"
+              @click="onUpdateStatus(scope.row, 1)"
+              >启用</el-link
+            >
+            <el-link
+              v-else-if="scope.row.status === '1'"
+              type="primary"
+              @click="onUpdateStatus(scope.row, 2)"
+              >禁用</el-link
+            >
           </template>
         </yid-table-column>
       </yid-table>
@@ -93,6 +107,7 @@
       width="800px">
       <level-add-comp
         v-if="addLevelVisible"
+        ref="levelAddCompRef"
         :value="selectLevelRow"
         :operateType="levelOperateType" />
       <span
@@ -119,7 +134,7 @@ export default {
   data() {
     return {
       addCompVisible: false,
-      addLevelVisible: true,
+      addLevelVisible: false,
       operateType: 'add',
       levelOperateType: 'add',
       selectRow: {},
@@ -172,6 +187,7 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
+      params.limit = this.$refs.table.Pagination.internalPageSize
       const fetch = service.base.duty.list
       this.$refs.table.reloadData({
         fetch,
@@ -202,8 +218,49 @@ export default {
       this.levelOperateType = 'add'
       this.addLevelVisible = true
     },
-    onLevelSubmit() {
-      this.addLevelVisible = false
+    async onLevelSubmit() {
+      const {
+        success,
+        data: { positionLevel1List, positionLevelList }
+      } = this.$refs.levelAddCompRef.getData()
+      if (!success) {
+        return
+      }
+      this.$confirm('是否保存数据？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'btn-custom-cancel',
+        type: 'warning'
+      })
+        .then(async () => {
+          this.addLevelVisible = false
+          const params = {
+            psid: this.selectLevelRow.id,
+            positionLevel1List,
+            positionLevelList
+          }
+          await service.base.duty.positionLevelOperate(params)
+          this.$message.success('操作成功')
+        })
+        .catch(() => {})
+    },
+    async onUpdateStatus(row, status) {
+      this.$yid.util.confirm(
+        `你确定要${status === 1 ? '启用' : '禁用'} ${row.psname} 职务吗？`,
+        '',
+        '',
+        async () => {
+          const { resp_code } = await service.base.duty.updateStatus({
+            bbids: row.bbids,
+            id: row.id,
+            psname: row.psname,
+            status
+          })
+          this.$yid.util.success('操作成功')
+          // 更新列表
+          this.queryPositionList()
+        }
+      )
     }
   }
 }

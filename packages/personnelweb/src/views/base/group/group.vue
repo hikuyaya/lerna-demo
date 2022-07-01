@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:09:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-30 14:33:44
+ * @LastEditTime: 2022-07-01 15:20:44
  * @FilePath: \personnelweb\src\views\base\group\group.vue
  * @Description: 
 -->
@@ -176,6 +176,7 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
+      params.limit = this.$refs.table.Pagination.internalPageSize
       const fetch = service.base.group.list
       this.$refs.table.reloadData({
         fetch,

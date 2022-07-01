@@ -49,3 +49,8 @@ $border-color: rgba(235, 238, 245, 1);
 .el-tree-node__content > .el-checkbox {
   margin-right: 8px !important;
 }
+
+// disabled样式
+.el-input.is-disabled .el-input__inner {
+  color: #666 !important;
+}

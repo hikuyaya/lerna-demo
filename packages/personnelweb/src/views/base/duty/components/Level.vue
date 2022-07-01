@@ -70,6 +70,7 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
+      params.limit = this.$refs.table.Pagination.internalPageSize
       const fetch = service.base.duty.positionLevelList
       this.$refs.table.reloadData({
         fetch,

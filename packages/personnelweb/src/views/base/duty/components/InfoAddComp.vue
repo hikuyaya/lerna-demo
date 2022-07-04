@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:45:13
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 10:02:15
+ * @LastEditTime: 2022-07-04 10:26:08
  * @FilePath: \personnelweb\src\views\base\duty\components\InfoAddComp.vue
  * @Description: 
 -->
@@ -85,10 +85,7 @@ export default {
       info: {},
       rules: {
         pscode: [{ required: true, message: '请输入职务编码' }],
-        psname: [{ required: true, message: '请输入职务名称' }],
-        bbids: [
-          { required: true, message: '请选择同步分发组', trigger: 'blur' }
-        ]
+        psname: [{ required: true, message: '请输入职务名称' }]
       },
       statusOptions: [
         { label: '正常', value: '1' },
@@ -120,10 +117,16 @@ export default {
         .validate()
         .catch(err => console.error(err))
       if (result) {
+        let params = {}
+        if (this.info.bbids.length) {
+          params.bbids = this.info.bbids.join(',')
+          params.bbnames = this.info.bbnames.join(',')
+        } else {
+          params.bbids = null
+        }
         return {
           ...this.info,
-          bbnames: this.info.bbnames.join(','),
-          bbids: this.info.bbids.join(',')
+          ...params
         }
       }
     }

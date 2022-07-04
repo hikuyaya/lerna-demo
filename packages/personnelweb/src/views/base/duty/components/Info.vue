@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:40:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 09:48:17
+ * @LastEditTime: 2022-07-04 10:37:54
  * @FilePath: \personnelweb\src\views\base\duty\components\Info.vue
  * @Description: 
 -->
@@ -210,11 +210,24 @@ export default {
       if (!result) {
         return
       }
-      await service.base.duty.saveOrUpdate(result)
-      this.$message.success('操作成功')
-      this.addCompVisible = false
-      // 刷新列表
-      this.queryPositionList()
+      this.$confirm(
+        `您确认${operateType === 'add' ? '新增' : '修改'}此条职务信息吗？`,
+        `确认${operateType === 'add' ? '新增' : '修改'}`,
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          cancelButtonClass: 'btn-custom-cancel',
+          type: 'warning'
+        }
+      )
+        .then(async () => {
+          await service.base.duty.saveOrUpdate(result)
+          this.$message.success('操作成功')
+          this.addCompVisible = false
+          // 刷新列表
+          this.queryPositionList()
+        })
+        .catch(() => {})
     },
     onCancel(row) {
       this.addCompVisible = false

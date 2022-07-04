@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:40:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 10:37:54
+ * @LastEditTime: 2022-07-04 15:54:53
  * @FilePath: \personnelweb\src\views\base\duty\components\Info.vue
  * @Description: 
 -->
@@ -260,6 +260,7 @@ export default {
           this.addLevelVisible = false
           const params = {
             psid: this.selectLevelRow.id,
+            psCode: this.selectLevelRow.pscode,
             positionLevel1List,
             positionLevelList
           }

@@ -1,87 +1,66 @@
+<!--
+ * @Author: wqy
+ * @Date: 2022-07-04 11:12:52
+ * @LastEditors: wqy
+ * @LastEditTime: 2022-07-04 15:11:48
+ * @FilePath: \personnelweb\src\views\staff\black\components\AddComp.vue
+ * @Description: 
+-->
+
 <template>
   <div>
     <el-form ref="form" :model="info" :rules="rules" label-width="90px">
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="组织" prop="bbCode">
-            <treeselect
-              v-model="info.bbCode"
-              :options="treeData"
-              :multiple="false"
-              :normalizer="normalizer"
-              :clearable="false"
-              @select="handleTreeSelect"
-              placeholder="请选择"
-              noResultsText="查无数据"
-              noChildrenText="无子节点"
-              :disabled="operateType !== 'add'" />
+        <el-col :span="10">
+          <el-form-item label="离职员工" prop="parentCode">
+            <el-input disabled v-model="info.code"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="职务" prop="positionCode">
-            <el-select
-              v-model="info.positionCode"
-              @change="handleSelect"
-              filterable
-              :disabled="operateType !== 'add'">
-              <el-option
-                v-for="(item, index) in positionList"
-                :key="index"
-                :label="item.psname"
-                :value="item.pscode">
-              </el-option>
-            </el-select>
-          </el-form-item>
+        <el-col :span="2" class="mg-l-16">
+          <el-button
+            type="primary"
+            icon="el-icon-search"
+            circle
+            @click="chooseStaffVisible = true"></el-button>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="岗位名称" prop="postName">
+          <el-form-item label="姓名" prop="postName">
             <el-input
               v-model="info.postName"
               :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="12" v-if="operateType !== 'add'">
-          <el-form-item label="岗位编码" prop="postCode">
-            <el-input
-              v-model="info.postCode"
-              :disabled="operateType !== 'add'"></el-input>
+        <el-col :span="12">
+          <el-form-item label="身份证号" prop="postCode">
+            <el-input v-model="info.postCode"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="职务编码" v-if="operateType !== 'add'">
-            <el-input
-              v-model="info.positionCode"
-              :disabled="operateType !== 'add'"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12" v-if="operateType !== 'add'">
-          <el-form-item label="状态" prop="status">
-            <el-select
-              v-model="info.status"
-              :disabled="operateType === 'detail'">
-              <el-option
-                v-for="(item, index) in statusOptions"
-                :key="index"
-                :label="item.label"
-                :value="item.value">
-              </el-option>
-            </el-select>
+        <el-col :span="24">
+          <el-form-item label="报备原因">
+            <el-input v-model="info.positionCode"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
+    <el-dialog
+      title="选择人员"
+      :visible.sync="chooseStaffVisible"
+      :close-on-click-modal="false"
+      append-to-body
+      width="800px">
+      <choose-staff
+        v-if="chooseStaffVisible"
+        @select="handleSelectStaff"></choose-staff>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-// import the component
-import Treeselect from '@riophae/vue-treeselect'
-// import the styles
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import ChooseStaff from '@src/components/business/ChooseStaff'
 
 export default {
   props: {
@@ -103,7 +82,7 @@ export default {
     treeData: Array
   },
   components: {
-    Treeselect
+    ChooseStaff
   },
   data() {
     return {
@@ -122,6 +101,7 @@ export default {
         label: 'oname'
       },
       treeSelectNode: null,
+      chooseStaffVisible: true,
       normalizer(node) {
         return {
           id: node.code,
@@ -132,16 +112,9 @@ export default {
     }
   },
   methods: {
-    handleSelect(selectedValue) {
-      const positionItem = this.positionList.find(
-        p => p.pscode === selectedValue
-      )
-      this.$set(this.info, 'positionName', positionItem.psname)
-    },
-    handleTreeSelect(node, instanceId) {
-      console.log(node, instanceId)
-      this.treeSelectNode = node
-      this.$set(this.info, 'bbName', node.oname)
+    handleSelectStaff(selectRow) {
+      console.log(selectRow)
+      this.chooseStaffVisible = false
     },
     async getData() {
       const result = await this.$refs.form

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-23 10:04:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-29 10:00:49
+ * @LastEditTime: 2022-07-04 14:54:26
  * @FilePath: \personnelweb\src\views\staff\components\AddComp.vue
  * @Description: 
 -->
@@ -291,7 +291,7 @@
 
 <script>
 import TitleHeader from '@src/components/base/TitleHeader'
-import ChooseStation from './ChooseStation'
+import ChooseStation from '@src/components/business/ChooseStation'
 import ImgItem from './ImgItem'
 import { getAge } from '@src/library/helper/util'
 export default {

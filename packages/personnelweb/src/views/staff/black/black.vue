@@ -1,3 +1,11 @@
+<!--
+ * @Author: wqy
+ * @Date: 2022-07-04 11:10:06
+ * @LastEditors: wqy
+ * @LastEditTime: 2022-07-04 16:09:43
+ * @FilePath: \personnelweb\src\views\staff\black\black.vue
+ * @Description: 黑名单管理
+-->
 <template>
   <div class="container">
     <div class="content">
@@ -10,11 +18,19 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="单号" prop="postCode"> </yid-table-column>
-        <yid-table-column label="姓名" prop="postName"> </yid-table-column>
-        <yid-table-column label="身份证号" prop="bbCode"></yid-table-column>
-        <yid-table-column label="员工编码" prop="bbName"></yid-table-column>
-        <yid-table-column label="状态" prop="status">
+        <yid-table-column label="单号" prop="postCode" fixed>
+        </yid-table-column>
+        <yid-table-column label="姓名" prop="postName" fixed>
+        </yid-table-column>
+        <yid-table-column
+          label="身份证号"
+          prop="bbCode"
+          fixed></yid-table-column>
+        <yid-table-column
+          label="员工编码"
+          prop="bbName"
+          fixed></yid-table-column>
+        <yid-table-column label="状态" prop="status" fixed>
           <template slot-scope="scope">
             {{
               scope.row.status == 1
@@ -33,15 +49,27 @@
         <yid-table-column
           label="移除时间"
           prop="positionName"></yid-table-column>
-        <yid-table-column label="操作" min-width="100">
+        <yid-table-column
+          label="报备原因"
+          prop="positionName"></yid-table-column>
+        <yid-table-column
+          label="移除原因"
+          prop="positionName"></yid-table-column>
+        <yid-table-column
+          label="机构编码"
+          prop="positionName"></yid-table-column>
+        <yid-table-column
+          label="机构名称"
+          prop="positionName"></yid-table-column>
+        <yid-table-column label="操作" min-width="100" fixed="right">
           <template slot-scope="scope">
-            <el-link type="primary" @click="onEdit(scope.row)">移除</el-link>
+            <el-link type="primary" @click="onRemove(scope.row)">移除</el-link>
           </template>
         </yid-table-column>
       </yid-table>
     </div>
     <el-dialog
-      :title="operateType === 'add' ? '新增' : '修改'"
+      title="新增人员"
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
@@ -50,12 +78,22 @@
         v-if="addCompVisible"
         ref="addCompRef"
         :value="selectRow"
-        :operateType="operateType"
-        :positionList="positionList"
-        :treeData="treeData" />
+        :operateType="operateType" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
-        <el-button @click="onCancel">取 消</el-button>
+        <el-button @click="addCompVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="移除黑名单确认"
+      :visible.sync="removeCompVisible"
+      :close-on-click-modal="false"
+      append-to-body
+      width="380px">
+      <remove-comp v-if="removeCompVisible" ref="removeCompRef" />
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="onRemoveSubmit">确 定</el-button>
+        <el-button @click="removeCompVisible = false">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -63,13 +101,14 @@
 <script>
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
-// import AddComp from './components/test.vue'
+import RemoveComp from './components/RemoveComp.vue'
 import service from '@src/service'
 export default {
-  components: { SearchTop, AddComp },
+  components: { SearchTop, AddComp, RemoveComp },
   data() {
     return {
       addCompVisible: false,
+      removeCompVisible: false,
       operateType: 'add',
       selectRow: {},
       conditions: [
@@ -111,35 +150,14 @@ export default {
           width: '20%'
         }
       ],
-      tableData: [],
-      positionList: [],
-      treeData: []
+      tableData: []
     }
   },
-  created() {
-    this.queryGroup()
-    this.queryPositionList()
-  },
   mounted() {
-    this.queryStationList()
+    this.queryBlackList()
   },
   methods: {
-    async queryGroup() {
-      const { data, resp_code } =
-        await service.chain.shop.getRegionAndShopTree()
-      if (resp_code !== 200) {
-        return
-      }
-      this.treeData = data
-    },
-    async queryPositionList() {
-      const { data } = await service.base.duty.list({
-        page: 1,
-        limit: 1000
-      })
-      this.positionList = data
-    },
-    queryStationList() {
+    queryBlackList() {
       this.onSearch()
     },
     onOpenAdvance() {},
@@ -182,8 +200,16 @@ export default {
       // 刷新列表
       this.queryStationList()
     },
-    onCancel() {
-      this.addCompVisible = false
+    onRemove() {
+      this.removeCompVisible = true
+    },
+    // 移除确定
+    async onRemoveSubmit() {
+      const result = await this.$refs.removeCompRef.getData()
+      if (!result) {
+        return
+      }
+      this.removeCompVisible = false
     }
   }
 }

@@ -1,10 +1,10 @@
 <!--
  * @Author: wqy
- * @Date: 2022-06-24 13:46:47
+ * @Date: 2022-07-04 14:30:12
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-24 14:11:00
- * @FilePath: \personnelweb\src\views\staff\components\ChooseStation.vue
- * @Description: 
+ * @LastEditTime: 2022-07-04 15:08:18
+ * @FilePath: \personnelweb\src\components\business\ChooseStaff.vue
+ * @Description: 业务相关——选择人员
 -->
 <template>
   <div>
@@ -21,12 +21,12 @@
       @current-change="handleCurrentChange"
       ref="table"
       class="mg-t-12">
-      <yid-table-column label="岗位名称" prop="date"></yid-table-column>
-      <yid-table-column label="岗位编码" prop="name"></yid-table-column>
-      <yid-table-column label="机构编码" prop="address"></yid-table-column>
-      <yid-table-column label="机构名称" prop="name"></yid-table-column>
-      <yid-table-column label="职务名称" prop="name"></yid-table-column>
-      <yid-table-column label="职务编码" prop="name"></yid-table-column>
+      <yid-table-column label="员工姓名" prop="date"></yid-table-column>
+      <yid-table-column label="员工编码" prop="name"></yid-table-column>
+      <yid-table-column label="职务" prop="name"></yid-table-column>
+      <yid-table-column label="身份证号" prop="address"></yid-table-column>
+      <yid-table-column label="状态" prop="name"></yid-table-column>
+      <yid-table-column label="离职原因" prop="name"></yid-table-column>
     </yid-table>
   </div>
 </template>
@@ -49,7 +49,7 @@ export default {
       selectRow: null,
       conditions: [
         {
-          label: '机构编码', // 标签
+          label: '员工姓名', // 标签
           prop: 'text1', // 绑定的字段
           // label宽度
           type: 'input',
@@ -58,13 +58,13 @@ export default {
           // required: true // 是否必填
         },
         {
-          label: '机构名称',
+          label: '员工编码',
           prop: 'text2',
           type: 'input', // 搜索类型
           width: '30%'
         },
         {
-          label: '岗位名称',
+          label: '身份证号',
           prop: 'text3',
           type: 'input',
           width: '30%'

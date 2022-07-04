@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-30 16:18:59
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-01 13:50:41
+ * @LastEditTime: 2022-07-01 15:46:17
  * @FilePath: \personnelweb\src\views\base\duty\components\LevelOperate.vue
  * @Description: 
 -->
@@ -71,6 +71,10 @@ export default {
   methods: {
     onAddRow() {
       const copyItems = [...this.items]
+      const flag = this.validate(copyItems)
+      if (!flag) {
+        return
+      }
       copyItems.push({
         pslname: '',
         bbids: this.position.bbids,
@@ -82,6 +86,20 @@ export default {
         remark: ''
       })
       this.items = copyItems
+    },
+    validate(copyItems) {
+      let flag = true
+      for (const key in copyItems) {
+        if (Object.hasOwnProperty.call(copyItems, key)) {
+          const element = copyItems[key]
+          if (element.clevel === undefined || !element.pslname) {
+            flag = false
+            this.$message.error('请先完成上一行数据')
+            return
+          }
+        }
+      }
+      return flag
     },
     onDeleteRow(item, index) {
       const copyItems = [...this.items]

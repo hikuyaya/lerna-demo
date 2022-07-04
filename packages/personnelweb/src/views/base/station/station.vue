@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:09:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-27 11:17:52
+ * @LastEditTime: 2022-07-01 18:20:45
  * @FilePath: \personnelweb\src\views\base\station\station.vue
  * @Description: 
 -->
@@ -18,22 +18,36 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="机构编码" prop="date">
+        <yid-table-column label="岗位编码" prop="postCode"> </yid-table-column>
+        <yid-table-column label="岗位名称" prop="postName">
           <template slot-scope="scope">
-            <el-link type="primary" @click="onShowDetail(scope.row)"
-              >编辑</el-link
-            >
+            <el-link type="primary" @click="onShowDetail(scope.row)">{{
+              scope.row.postName
+            }}</el-link>
           </template>
         </yid-table-column>
-        <yid-table-column label="机构名称" prop="name"></yid-table-column>
-        <yid-table-column label="上级机构" prop="name"></yid-table-column>
-        <yid-table-column label="机构电话" prop="name"></yid-table-column>
-        <yid-table-column label="负责人" prop="name"></yid-table-column>
-        <yid-table-column label="状态" prop="name"></yid-table-column>
-        <yid-table-column label="是否子公司" prop="name"></yid-table-column>
+        <yid-table-column label="组织编码" prop="bbCode"></yid-table-column>
+        <yid-table-column label="组织名称" prop="bbName"></yid-table-column>
+        <yid-table-column
+          label="职务编码"
+          prop="positionCode"></yid-table-column>
+        <yid-table-column
+          label="职务名称"
+          prop="positionName"></yid-table-column>
+        <yid-table-column label="状态" prop="status">
+          <template slot-scope="scope">
+            {{
+              scope.row.status == 1
+                ? '正常'
+                : scope.row.status == 2
+                ? '停用'
+                : '未知'
+            }}
+          </template>
+        </yid-table-column>
         <yid-table-column label="操作" min-width="100">
           <template slot-scope="scope">
-            <el-link type="primary" @click="onEdit(scope.row)">编辑</el-link>
+            <el-link type="primary" @click="onEdit(scope.row)">修改</el-link>
           </template>
         </yid-table-column>
       </yid-table>
@@ -43,8 +57,14 @@
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="600px">
-      <add-comp v-if="addCompVisible" :value="selectRow" :treeData="treeData" />
+      width="800px">
+      <add-comp
+        v-if="addCompVisible"
+        ref="addCompRef"
+        :value="selectRow"
+        :operateType="operateType"
+        :positionList="positionList"
+        :treeData="treeData" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
         <el-button @click="onCancel">取 消</el-button>
@@ -67,7 +87,7 @@ export default {
       conditions: [
         {
           label: '岗位编码', // 标签
-          prop: 'text1', // 绑定的字段
+          prop: 'postCode', // 绑定的字段
           // label宽度
           type: 'input',
           width: '16%' // 整个组件占的宽度
@@ -76,13 +96,13 @@ export default {
         },
         {
           label: '岗位名称',
-          prop: 'text2',
+          prop: 'postName',
           type: 'input', // 搜索类型
           width: '16%'
         },
         {
           label: '职务名称',
-          prop: 'text3',
+          prop: 'psName',
           options: [
             { label: '所有', value: '' },
             { label: '正常', value: 1 },
@@ -92,7 +112,7 @@ export default {
         },
         {
           label: '组织名称',
-          prop: 'text4',
+          prop: 'reginName',
           width: '16%'
         },
         {
@@ -102,47 +122,41 @@ export default {
           labelWidth: '0.8rem',
           options: [
             { label: '所有', value: '' },
-            { label: '正常', value: 1 },
-            { label: '停用', value: 0 }
+            { label: '正常', value: '1' },
+            { label: '停用', value: '2' }
           ],
           width: '16%'
         }
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
+      tableData: [],
+      positionList: [],
       treeData: []
     }
   },
   created() {
-    this.initData()
+    this.queryGroup()
+    this.queryPositionList()
+  },
+  mounted() {
+    this.queryStationList()
   },
   methods: {
-    async initData() {
+    async queryGroup() {
       const { data, resp_code } = await service.chain.region.treeAll({})
       if (resp_code !== 200) {
         return
       }
       this.treeData = data
+    },
+    async queryPositionList() {
+      const { data } = await service.base.duty.list({
+        page: 1,
+        limit: 1000
+      })
+      this.positionList = data
+    },
+    queryStationList() {
+      this.onSearch()
     },
     onOpenAdvance() {},
     onAdd() {
@@ -152,7 +166,12 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      console.log('params', params)
+      params.limit = this.$refs.table.Pagination.internalPageSize
+      const fetch = service.base.station.list
+      this.$refs.table.reloadData({
+        fetch,
+        params
+      })
     },
     onEdit(row) {
       this.selectRow = row
@@ -164,8 +183,22 @@ export default {
       this.operateType = 'detail'
       this.addCompVisible = true
     },
-    onSubmit(row) {},
-    onCancel(row) {
+    async onSubmit() {
+      const result = await this.$refs.addCompRef.getData()
+      if (!result) {
+        return
+      }
+      if (this.operateType === 'add') {
+        await service.base.station.save(result)
+      } else {
+        await service.base.station.update(result)
+      }
+      this.$message.success('操作成功')
+      this.addCompVisible = false
+      // 刷新列表
+      this.queryStationList()
+    },
+    onCancel() {
       this.addCompVisible = false
     }
   }

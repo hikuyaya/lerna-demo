@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-30 09:27:49
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-01 14:53:03
+ * @LastEditTime: 2022-07-04 09:46:52
  * @FilePath: \personnelweb\src\service\modules\base\duty.js
  * @Description: 职务、级别设置接口
  */
@@ -32,10 +32,15 @@ export function positionLevelOperate(params) {
 export function updateStatus(params) {
   return yid.http.post(`api-chain/position/updateStatus`, params)
 }
+// 职务新增或更新接口
+export function saveOrUpdate(params) {
+  return yid.http.post(`api-chain/position`, params)
+}
 export default {
   list,
   positionLevelList,
   positionLevel1List,
   positionLevelOperate,
-  updateStatus
+  updateStatus,
+  saveOrUpdate
 }

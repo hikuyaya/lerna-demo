@@ -2,24 +2,19 @@
  * @Author: wqy
  * @Date: 2022-06-22 14:26:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-30 14:14:26
+ * @LastEditTime: 2022-07-04 09:00:03
  * @FilePath: \personnelweb\src\views\base\station\components\AddComp.vue
  * @Description: 
 -->
 
 <template>
   <div>
-    <el-form :model="info" :rules="rules" label-width="90px">
+    <el-form ref="form" :model="info" :rules="rules" label-width="90px">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="组织" prop="code">
-            <!-- <tree-select
-              v-model="info.parentCode"
-              :props="defaultProps"
-              :data="treeData"
-              :defaultExpand="false"></tree-select> -->
+          <el-form-item label="组织" prop="bbCode">
             <treeselect
-              v-model="info.code"
+              v-model="info.bbCode"
               :options="treeData"
               :multiple="false"
               :normalizer="normalizer"
@@ -27,17 +22,21 @@
               @select="handleTreeSelect"
               placeholder="请选择"
               noResultsText="查无数据"
-              noChildrenText="无子节点" />
+              noChildrenText="无子节点"
+              :disabled="operateType !== 'add'" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="职务" prop="duty">
-            <el-select v-model="info.duty" @change="handleSelect">
+          <el-form-item label="职务" prop="positionCode">
+            <el-select
+              v-model="info.positionCode"
+              @change="handleSelect"
+              :disabled="operateType !== 'add'">
               <el-option
-                v-for="(item, index) in dutyOptions"
+                v-for="(item, index) in positionList"
                 :key="index"
-                :label="item.label"
-                :value="item.value">
+                :label="item.psname"
+                :value="item.pscode">
               </el-option>
             </el-select>
           </el-form-item>
@@ -45,13 +44,40 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="岗位名称" prop="stationName">
-            <el-input v-model="info.stationName"></el-input>
+          <el-form-item label="岗位名称" prop="postName">
+            <el-input
+              v-model="info.postName"
+              :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="12" v-if="operateType !== 'add'">
+          <el-form-item label="岗位编码" prop="postCode">
+            <el-input
+              v-model="info.postCode"
+              :disabled="operateType !== 'add'"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="12">
-          <el-form-item label="岗位编码" prop="date">
-            <el-input clearable v-model="info.date"></el-input>
+          <el-form-item label="职务编码" v-if="operateType !== 'add'">
+            <el-input
+              v-model="info.positionCode"
+              :disabled="operateType !== 'add'"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-if="operateType !== 'add'">
+          <el-form-item label="状态" prop="status">
+            <el-select
+              v-model="info.status"
+              :disabled="operateType === 'detail'">
+              <el-option
+                v-for="(item, index) in statusOptions"
+                :key="index"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -76,6 +102,12 @@ export default {
     operateType: {
       type: String
     },
+    positionList: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
     treeData: Array
   },
   components: {
@@ -85,13 +117,13 @@ export default {
     return {
       info: {},
       rules: {
-        code: [{ required: true, message: '请输入机构编码' }],
-        name: [{ required: true, message: '请输入机构名称' }],
-        duty: [{ required: true, message: '请选择职务' }]
+        bbCode: [{ required: true, message: '请选择组织' }],
+        positionCode: [{ required: true, message: '请选择职务' }],
+        postName: [{ required: true, message: '请输入岗位名称' }]
       },
-      dutyOptions: [
+      statusOptions: [
         { label: '正常', value: 1 },
-        { label: '停用', value: 0 }
+        { label: '停用', value: 2 }
       ],
       defaultProps: {
         children: 'children',
@@ -100,7 +132,7 @@ export default {
       treeSelectNode: null,
       normalizer(node) {
         return {
-          id: node.id,
+          id: node.code,
           label: node.oname,
           children: node.children
         }
@@ -109,15 +141,23 @@ export default {
   },
   methods: {
     handleSelect(selectedValue) {
-      console.log('changes', selectedValue)
+      const positionItem = this.positionList.find(
+        p => p.pscode === selectedValue
+      )
+      this.$set(this.info, 'positionName', positionItem.psname)
     },
-    // stationNameChange(val) {
-    //   console.log(val)
-    //   this.info.
-    // }
     handleTreeSelect(node, instanceId) {
       console.log(node, instanceId)
       this.treeSelectNode = node
+      this.$set(this.info, 'bbName', node.oname)
+    },
+    async getData() {
+      const result = await this.$refs.form
+        .validate()
+        .catch(err => console.error(err))
+      if (result) {
+        return this.info
+      }
     }
   },
 
@@ -128,17 +168,22 @@ export default {
         this.info = JSON.parse(JSON.stringify(val))
       }
     },
-    'info.code': {
+    'info.bbCode': {
       handler: function (val) {
         console.log(val, this.treeSelectNode)
-        this.info.stationName = `${this.treeSelectNode.oname}${
-          this.info.duty || ''
+        const postName = `${this.treeSelectNode.oname}${
+          this.info.positionName || ''
         }`
+        this.$set(this.info, 'postName', postName)
       }
     },
-    'info.duty': {
+    'info.positionCode': {
       handler: function (val) {
-        this.info.stationName = `${this.treeSelectNode.oname || ''}${val}`
+        const positionItem = this.positionList.find(p => p.pscode === val)
+        const postName = `${this.treeSelectNode.oname || ''}${
+          positionItem.psname
+        }`
+        this.$set(this.info, 'postName', postName)
       }
     }
   }

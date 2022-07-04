@@ -3,6 +3,7 @@ import auth from './modules/auth'
 import user from './modules/user'
 import icdriver from './modules/icdriver'
 import index from './modules/index'
+import dept from './modules/dept'
 
 // 业务相关
 import base from './modules/base'
@@ -15,5 +16,6 @@ export default {
   base,
   index,
   icdriver,
-  chain
+  chain,
+  dept
 }

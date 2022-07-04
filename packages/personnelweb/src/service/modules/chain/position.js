@@ -1,3 +1,11 @@
+/*
+ * @Author: wqy
+ * @Date: 2022-06-15 14:05:18
+ * @LastEditors: wqy
+ * @LastEditTime: 2022-07-04 10:51:34
+ * @FilePath: \personnelweb\src\service\modules\chain\position.js
+ * @Description:
+ */
 import yid from '@src/library'
 
 const prefix = 'api-chain/position'

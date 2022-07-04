@@ -211,8 +211,8 @@ export default {
         return
       }
       this.$confirm(
-        `您确认${operateType === 'add' ? '新增' : '修改'}此条职务信息吗？`,
-        `确认${operateType === 'add' ? '新增' : '修改'}`,
+        `您确认${this.operateType === 'add' ? '新增' : '修改'}此条职务信息吗？`,
+        `确认${this.operateType === 'add' ? '新增' : '修改'}`,
         {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

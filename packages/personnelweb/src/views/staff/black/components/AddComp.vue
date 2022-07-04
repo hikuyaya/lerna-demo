@@ -1,12 +1,3 @@
-<!--
- * @Author: wqy
- * @Date: 2022-06-22 14:26:01
- * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 11:41:07
- * @FilePath: \personnelweb\src\views\base\station\components\AddComp.vue
- * @Description: 
--->
-
 <template>
   <div>
     <el-form ref="form" :model="info" :rules="rules" label-width="90px">
@@ -126,11 +117,15 @@ export default {
         { label: '正常', value: 1 },
         { label: '停用', value: 2 }
       ],
+      defaultProps: {
+        children: 'children',
+        label: 'oname'
+      },
       treeSelectNode: null,
       normalizer(node) {
         return {
           id: node.code,
-          label: node.name,
+          label: node.oname,
           children: node.children
         }
       }
@@ -146,7 +141,7 @@ export default {
     handleTreeSelect(node, instanceId) {
       console.log(node, instanceId)
       this.treeSelectNode = node
-      this.$set(this.info, 'bbName', node.name)
+      this.$set(this.info, 'bbName', node.oname)
     },
     async getData() {
       const result = await this.$refs.form
@@ -168,7 +163,7 @@ export default {
     'info.bbCode': {
       handler: function (val) {
         console.log(val, this.treeSelectNode)
-        const postName = `${this.treeSelectNode.name}${
+        const postName = `${this.treeSelectNode.oname}${
           this.info.positionName || ''
         }`
         this.$set(this.info, 'postName', postName)
@@ -177,7 +172,7 @@ export default {
     'info.positionCode': {
       handler: function (val) {
         const positionItem = this.positionList.find(p => p.pscode === val)
-        const postName = `${this.treeSelectNode.name || ''}${
+        const postName = `${this.treeSelectNode.oname || ''}${
           positionItem.psname
         }`
         this.$set(this.info, 'postName', postName)

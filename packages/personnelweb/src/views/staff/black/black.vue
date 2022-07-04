@@ -1,11 +1,3 @@
-<!--
- * @Author: wqy
- * @Date: 2022-06-15 17:09:48
- * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 12:33:58
- * @FilePath: \personnelweb\src\views\base\station\station.vue
- * @Description: 
--->
 <template>
   <div class="container">
     <div class="content">
@@ -18,36 +10,32 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="岗位编码" prop="postCode"> </yid-table-column>
-        <yid-table-column label="岗位名称" prop="postName">
-          <template slot-scope="scope">
-            <el-link type="primary" @click="onShowDetail(scope.row)">{{
-              scope.row.postName
-            }}</el-link>
-          </template>
-        </yid-table-column>
-        <yid-table-column label="组织编码" prop="bbCode"></yid-table-column>
-        <yid-table-column label="组织名称" prop="bbName"></yid-table-column>
-        <yid-table-column
-          label="职务编码"
-          prop="positionCode"></yid-table-column>
-        <yid-table-column
-          label="职务名称"
-          prop="positionName"></yid-table-column>
+        <yid-table-column label="单号" prop="postCode"> </yid-table-column>
+        <yid-table-column label="姓名" prop="postName"> </yid-table-column>
+        <yid-table-column label="身份证号" prop="bbCode"></yid-table-column>
+        <yid-table-column label="员工编码" prop="bbName"></yid-table-column>
         <yid-table-column label="状态" prop="status">
           <template slot-scope="scope">
             {{
               scope.row.status == 1
-                ? '正常'
+                ? '有效'
                 : scope.row.status == 2
-                ? '停用'
+                ? '无效'
                 : '未知'
             }}
           </template>
         </yid-table-column>
+        <yid-table-column label="创建人" prop="positionName"></yid-table-column>
+        <yid-table-column
+          label="创建时间"
+          prop="positionName"></yid-table-column>
+        <yid-table-column label="移除人" prop="positionName"></yid-table-column>
+        <yid-table-column
+          label="移除时间"
+          prop="positionName"></yid-table-column>
         <yid-table-column label="操作" min-width="100">
           <template slot-scope="scope">
-            <el-link type="primary" @click="onEdit(scope.row)">修改</el-link>
+            <el-link type="primary" @click="onEdit(scope.row)">移除</el-link>
           </template>
         </yid-table-column>
       </yid-table>
@@ -56,6 +44,7 @@
       :title="operateType === 'add' ? '新增' : '修改'"
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
+      append-to-body
       width="800px">
       <add-comp
         v-if="addCompVisible"
@@ -85,34 +74,29 @@ export default {
       selectRow: {},
       conditions: [
         {
-          label: '岗位编码', // 标签
+          label: '员工姓名', // 标签
           prop: 'postCode', // 绑定的字段
           // label宽度
           type: 'input',
-          width: '16%' // 整个组件占的宽度
+          width: '20%' // 整个组件占的宽度
           // widgetWidth: '200px', // 控件的宽度
           // required: true // 是否必填
         },
         {
-          label: '岗位名称',
+          label: '员工编码',
           prop: 'postName',
           type: 'input', // 搜索类型
-          width: '16%'
+          width: '20%'
         },
         {
-          label: '职务名称',
+          label: '身份证号',
           prop: 'psName',
           options: [
             { label: '所有', value: '' },
             { label: '正常', value: 1 },
             { label: '停用', value: 0 }
           ],
-          width: '16%'
-        },
-        {
-          label: '组织名称',
-          prop: 'reginName',
-          width: '16%'
+          width: '20%'
         },
         {
           label: '状态',
@@ -121,10 +105,10 @@ export default {
           labelWidth: '0.8rem',
           options: [
             { label: '所有', value: '' },
-            { label: '正常', value: '1' },
-            { label: '停用', value: '2' }
+            { label: '有效', value: '1' },
+            { label: '无效', value: '2' }
           ],
-          width: '16%'
+          width: '20%'
         }
       ],
       tableData: [],
@@ -188,16 +172,6 @@ export default {
       if (!result) {
         return
       }
-      await this.$confirm(
-        `您确认${this.operateType === 'add' ? '新增' : '修改'}此条职务信息吗？`,
-        `确认${this.operateType === 'add' ? '新增' : '修改'}`,
-        {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          cancelButtonClass: 'btn-custom-cancel',
-          type: 'warning'
-        }
-      ).catch(() => {})
       if (this.operateType === 'add') {
         await service.base.station.save(result)
       } else {
@@ -220,12 +194,6 @@ export default {
   height: 100%;
   .content {
     // flex: 1;
-  }
-}
-/deep/ .el-dialog__wrapper {
-  // 让treeselect组件下拉项充分展示出来
-  .el-dialog__body {
-    overflow: visible;
   }
 }
 </style>

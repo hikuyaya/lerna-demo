@@ -88,81 +88,6 @@ export const MENU = {
       icon: null
     },
     {
-      id: 16,
-      pid: 1,
-      name: '门店入职审核',
-      title: '门店入职审核',
-      path: '/staff/shopAppointmentCheck',
-      component: 'staff/shopAppointmentCheck',
-      icon: null,
-      canShow: true
-    },
-    {
-      id: 17,
-      pid: 1,
-      name: '菜单管理',
-      title: '菜单管理',
-      path: '/sys/menu',
-      component: 'sys/menu',
-      icon: null,
-      canShow: true
-    },
-    {
-      id: 20,
-      pid: 1,
-      name: '职位权限配置',
-      title: '职位权限配置',
-      path: '/sys/positionRole',
-      component: 'sys/positionRole',
-      icon: null,
-      canShow: true
-    },
-    {
-      id: 18,
-      pid: 1,
-      name: '授权管理',
-      title: '授权管理',
-      path: '/sys/mac',
-      component: 'sys/mac',
-      icon: null
-    },
-    {
-      id: 13,
-      pid: 1,
-      name: '消息中心',
-      title: '消息中心',
-      path: '/sys/newscenter',
-      component: 'sys/newsCenter',
-      icon: null
-    },
-    {
-      id: 14,
-      pid: 1,
-      name: '系统操作日志',
-      title: '系统操作日志',
-      path: '/sys/log',
-      component: 'sys/log',
-      icon: null
-    },
-    {
-      id: 115,
-      pid: 1,
-      name: '基础信息',
-      title: '基础信息',
-      path: '/sys/info',
-      component: 'sys/info',
-      icon: null
-    },
-    {
-      id: 19,
-      pid: 1,
-      name: '操作授权配置',
-      title: '操作授权配置',
-      path: '/sys/authority',
-      component: 'sys/authority',
-      icon: null
-    },
-    {
       id: 2,
       pid: null,
       name: '员工管理',
@@ -183,10 +108,10 @@ export const MENU = {
     {
       id: 22,
       pid: 2,
-      name: '员工异动明细',
-      title: '员工异动明细',
-      path: '/staff/profilelog',
-      component: 'staff/profilelog',
+      name: '黑名单管理',
+      title: '黑名单管理',
+      path: '/staff/black',
+      component: 'staff/black/black',
       icon: null,
       canShow: true
     },

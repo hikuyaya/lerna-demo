@@ -60,6 +60,12 @@ export function shopPageList(params) {
 export function findShopByCode(params) {
   return yid.http.get(`${prefix}/findShopByCode`, { params })
 }
+export function getRegionAndShopTree() {
+  return yid.http.get(`${prefix}/getRegionAndShopTree`, {})
+}
+export function getRegionAndShop() {
+  return yid.http.get(`${prefix}/getRegionAndShop`, {})
+}
 
 export default {
   /** 门店列表 不带分页的*/
@@ -82,5 +88,9 @@ export default {
   regionShopListAll,
   getShopListByIds,
   shopPageList,
-  findShopByCode
+  findShopByCode,
+  // 查询门店组织树
+  getRegionAndShopTree,
+  // 查询门店组织列表
+  getRegionAndShop
 }

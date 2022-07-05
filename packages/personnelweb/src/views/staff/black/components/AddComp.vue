@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 11:12:52
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 15:11:48
+ * @LastEditTime: 2022-07-05 11:36:21
  * @FilePath: \personnelweb\src\views\staff\black\components\AddComp.vue
  * @Description: 
 -->
@@ -12,8 +12,8 @@
     <el-form ref="form" :model="info" :rules="rules" label-width="90px">
       <el-row>
         <el-col :span="10">
-          <el-form-item label="离职员工" prop="parentCode">
-            <el-input disabled v-model="info.code"></el-input>
+          <el-form-item label="离职员工">
+            <el-input disabled v-model="selectStaff.eename"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="2" class="mg-l-16">
@@ -26,22 +26,20 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="姓名" prop="postName">
-            <el-input
-              v-model="info.postName"
-              :disabled="operateType === 'detail'"></el-input>
+          <el-form-item label="姓名" prop="eename">
+            <el-input v-model="info.eename"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="身份证号" prop="postCode">
-            <el-input v-model="info.postCode"></el-input>
+          <el-form-item label="身份证号" prop="idno">
+            <el-input v-model="info.idno"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="24">
-          <el-form-item label="报备原因">
-            <el-input v-model="info.positionCode"></el-input>
+          <el-form-item label="报备原因" prop="addRemark">
+            <el-input v-model="info.addRemark"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -87,33 +85,35 @@ export default {
   data() {
     return {
       info: {},
+      selectStaff: {},
       rules: {
-        bbCode: [{ required: true, message: '请选择组织' }],
-        positionCode: [{ required: true, message: '请选择职务' }],
-        postName: [{ required: true, message: '请输入岗位名称' }]
-      },
-      statusOptions: [
-        { label: '正常', value: 1 },
-        { label: '停用', value: 2 }
-      ],
-      defaultProps: {
-        children: 'children',
-        label: 'oname'
+        addRemark: [{ required: true, message: '请输入报备原因' }],
+        idno: [
+          { required: true, message: '请输入身份证号', trigger: 'blur' },
+          {
+            min: 15,
+            max: 18,
+            message: '请输入正确的身份证号码',
+            trigger: 'blur'
+          },
+          {
+            required: true,
+            pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
+            message: '请输入正确的身份证号码',
+            trigger: 'blur'
+          }
+        ],
+        eename: [{ required: true, message: '请输入姓名' }]
       },
       treeSelectNode: null,
-      chooseStaffVisible: true,
-      normalizer(node) {
-        return {
-          id: node.code,
-          label: node.oname,
-          children: node.children
-        }
-      }
+      chooseStaffVisible: false
     }
   },
   methods: {
     handleSelectStaff(selectRow) {
       console.log(selectRow)
+      this.selectStaff = Object.assign({}, selectRow)
+      this.info = Object.assign({}, selectRow)
       this.chooseStaffVisible = false
     },
     async getData() {
@@ -121,7 +121,11 @@ export default {
         .validate()
         .catch(err => console.error(err))
       if (result) {
-        return this.info
+        return {
+          eeName: this.info.eename,
+          idCard: this.info.idno,
+          addRemark: this.info.addRemark
+        }
       }
     }
   },

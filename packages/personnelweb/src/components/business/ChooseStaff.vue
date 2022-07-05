@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 14:30:12
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 15:08:18
+ * @LastEditTime: 2022-07-05 11:05:25
  * @FilePath: \personnelweb\src\components\business\ChooseStaff.vue
  * @Description: 业务相关——选择人员
 -->
@@ -19,20 +19,36 @@
       :data="tableData"
       highlight-current-row
       @current-change="handleCurrentChange"
+      pagination
       ref="table"
       class="mg-t-12">
-      <yid-table-column label="员工姓名" prop="date"></yid-table-column>
-      <yid-table-column label="员工编码" prop="name"></yid-table-column>
-      <yid-table-column label="职务" prop="name"></yid-table-column>
-      <yid-table-column label="身份证号" prop="address"></yid-table-column>
-      <yid-table-column label="状态" prop="name"></yid-table-column>
-      <yid-table-column label="离职原因" prop="name"></yid-table-column>
+      <yid-table-column label="员工姓名" prop="eename"></yid-table-column>
+      <yid-table-column
+        label="员工编码"
+        prop="eecode"
+        width="90px"></yid-table-column>
+      <yid-table-column label="职务" prop="psname"></yid-table-column>
+      <yid-table-column label="身份证号" prop="idno"></yid-table-column>
+      <yid-table-column label="状态" prop="status" width="60px">
+        <template slot-scope="scope">
+          {{
+            scope.row.status == '1'
+              ? '在职'
+              : scope.row.status == '2'
+              ? '离职'
+              : '未知'
+          }}
+        </template>
+      </yid-table-column>
+      <yid-table-column label="离职原因" prop="quitReason"></yid-table-column>
     </yid-table>
   </div>
 </template>
 
 <script>
 import SearchTop from '@src/components/base/SearchTop.vue'
+import service from '@src/service'
+
 export default {
   components: { SearchTop },
   props: {
@@ -50,7 +66,7 @@ export default {
       conditions: [
         {
           label: '员工姓名', // 标签
-          prop: 'text1', // 绑定的字段
+          prop: 'eename', // 绑定的字段
           // label宽度
           type: 'input',
           width: '30%' // 整个组件占的宽度
@@ -59,42 +75,27 @@ export default {
         },
         {
           label: '员工编码',
-          prop: 'text2',
+          prop: 'eecode',
           type: 'input', // 搜索类型
           width: '30%'
         },
         {
           label: '身份证号',
-          prop: 'text3',
+          prop: 'idno',
           type: 'input',
           width: '30%'
         }
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ]
+      tableData: []
     }
   },
+  mounted() {
+    this.queryStaffList()
+  },
   methods: {
+    queryStaffList() {
+      this.onSearch()
+    },
     handleCurrentChange(val) {
       this.selectRow = val
       this.$emit('select', this.selectRow)
@@ -102,7 +103,16 @@ export default {
     onOpenAdvance() {},
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      console.log('params', params)
+      // 身份证号转大写
+      params.idno = params.idCard?.toUpperCase()
+      params.status = '2'
+      params.isDel = 0
+      params.limit = this.$refs.table.Pagination.internalPageSize
+      const fetch = service.chain.employee.list
+      this.$refs.table.reloadData({
+        fetch,
+        params
+      })
     },
     onEdit(row) {
       this.selectRow = row

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 11:10:06
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 17:29:50
+ * @LastEditTime: 2022-07-05 13:58:32
  * @FilePath: \personnelweb\src\views\staff\black\black.vue
  * @Description: 黑名单管理
 -->
@@ -18,17 +18,19 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="姓名" prop="postName" fixed>
+        <yid-table-column label="姓名" prop="eeName" width="100px" fixed>
         </yid-table-column>
         <yid-table-column
           label="身份证号"
-          prop="bbCode"
+          prop="idCard"
+          width="150px"
           fixed></yid-table-column>
         <yid-table-column
           label="员工编码"
-          prop="bbName"
+          prop="eeCode"
+          width="80px"
           fixed></yid-table-column>
-        <yid-table-column label="状态" prop="status" fixed>
+        <yid-table-column label="状态" prop="status" width="70px" fixed>
           <template slot-scope="scope">
             {{
               scope.row.status == 1
@@ -39,27 +41,27 @@
             }}
           </template>
         </yid-table-column>
-        <yid-table-column label="创建人" prop="positionName"></yid-table-column>
+        <yid-table-column
+          label="创建人"
+          prop="createdBy"
+          width="100px"></yid-table-column>
         <yid-table-column
           label="创建时间"
-          prop="positionName"></yid-table-column>
-        <yid-table-column label="移除人" prop="positionName"></yid-table-column>
+          prop="createdTime"
+          width="150px"></yid-table-column>
+        <yid-table-column
+          label="移除人"
+          prop="removeBy"
+          width="100px"></yid-table-column>
         <yid-table-column
           label="移除时间"
-          prop="positionName"></yid-table-column>
-        <yid-table-column
-          label="报备原因"
-          prop="positionName"></yid-table-column>
+          prop="removeDate"
+          width="150px"></yid-table-column>
+        <yid-table-column label="报备原因" prop="addRemark"></yid-table-column>
         <yid-table-column
           label="移除原因"
-          prop="positionName"></yid-table-column>
-        <yid-table-column
-          label="机构编码"
-          prop="positionName"></yid-table-column>
-        <yid-table-column
-          label="机构名称"
-          prop="positionName"></yid-table-column>
-        <yid-table-column label="操作" min-width="100" fixed="right">
+          prop="removeRemark"></yid-table-column>
+        <yid-table-column label="操作" width="100" fixed="right">
           <template slot-scope="scope">
             <el-link type="primary" @click="onRemove(scope.row)">移除</el-link>
           </template>
@@ -112,7 +114,7 @@ export default {
       conditions: [
         {
           label: '员工姓名', // 标签
-          prop: 'postCode', // 绑定的字段
+          prop: 'eeName', // 绑定的字段
           // label宽度
           type: 'input',
           width: '20%' // 整个组件占的宽度
@@ -121,23 +123,19 @@ export default {
         },
         {
           label: '员工编码',
-          prop: 'postName',
+          prop: 'eeCode',
           type: 'input', // 搜索类型
           width: '20%'
         },
         {
           label: '身份证号',
-          prop: 'psName',
-          options: [
-            { label: '所有', value: '' },
-            { label: '正常', value: 1 },
-            { label: '停用', value: 0 }
-          ],
+          prop: 'idCard',
+          type: 'input',
           width: '20%'
         },
         {
           label: '状态',
-          prop: 'text5',
+          prop: 'status',
           type: 'select',
           labelWidth: '0.8rem',
           options: [
@@ -166,8 +164,11 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
+      // 身份证号转大写
+      params.idCard = params.idCard?.toUpperCase()
+      params.isDel = 0
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.base.station.list
+      const fetch = service.staff.black.list
       this.$refs.table.reloadData({
         fetch,
         params
@@ -188,17 +189,14 @@ export default {
       if (!result) {
         return
       }
-      if (this.operateType === 'add') {
-        await service.base.station.save(result)
-      } else {
-        await service.base.station.update(result)
-      }
+      await service.staff.black.save(result)
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表
-      this.queryStationList()
+      this.queryBlackList()
     },
-    onRemove() {
+    onRemove(row) {
+      this.selectRow = row
       this.removeCompVisible = true
     },
     // 移除确定
@@ -207,7 +205,14 @@ export default {
       if (!result) {
         return
       }
+      await service.staff.black.remove({
+        removeRemark: result.reason,
+        id: this.selectRow.id
+      })
+      this.$message.success('操作成功')
       this.removeCompVisible = false
+      // 刷新列表
+      this.queryBlackList()
     }
   }
 }

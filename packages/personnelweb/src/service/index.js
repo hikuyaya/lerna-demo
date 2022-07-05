@@ -4,6 +4,7 @@ import user from './modules/user'
 import icdriver from './modules/icdriver'
 import index from './modules/index'
 import dept from './modules/dept'
+import staff from './modules/staff'
 
 // 业务相关
 import base from './modules/base'
@@ -17,5 +18,6 @@ export default {
   index,
   icdriver,
   chain,
-  dept
+  dept,
+  staff
 }

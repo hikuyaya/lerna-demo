@@ -117,7 +117,6 @@
 import yid from '@src/library'
 import service from '@src/service'
 import YidAsk from '../../library/components/ask/src/index.vue'
-import { addPerfratioData } from '@src/service/modules/config/servicePrice'
 
 /**
  * 清空

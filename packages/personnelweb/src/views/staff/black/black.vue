@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 11:10:06
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 16:09:43
+ * @LastEditTime: 2022-07-04 17:29:50
  * @FilePath: \personnelweb\src\views\staff\black\black.vue
  * @Description: 黑名单管理
 -->
@@ -18,8 +18,6 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="单号" prop="postCode" fixed>
-        </yid-table-column>
         <yid-table-column label="姓名" prop="postName" fixed>
         </yid-table-column>
         <yid-table-column

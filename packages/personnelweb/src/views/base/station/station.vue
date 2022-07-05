@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:09:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 12:33:58
+ * @LastEditTime: 2022-07-05 15:56:09
  * @FilePath: \personnelweb\src\views\base\station\station.vue
  * @Description: 
 -->
@@ -53,7 +53,13 @@
       </yid-table>
     </div>
     <el-dialog
-      :title="operateType === 'add' ? '新增' : '修改'"
+      :title="
+        operateType === 'add'
+          ? '新增'
+          : operateType === 'edit'
+          ? '修改'
+          : '详情'
+      "
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       width="800px">
@@ -116,7 +122,7 @@ export default {
         },
         {
           label: '状态',
-          prop: 'text5',
+          prop: 'status',
           type: 'select',
           labelWidth: '0.8rem',
           options: [

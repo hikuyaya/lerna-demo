@@ -1,11 +1,12 @@
 <!--
  * @Author: wqy
- * @Date: 2022-06-23 10:04:15
+ * @Date: 2022-07-05 17:18:09
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 14:54:26
- * @FilePath: \personnelweb\src\views\staff\components\AddComp.vue
- * @Description: 
+ * @LastEditTime: 2022-07-05 17:19:01
+ * @FilePath: \personnelweb\src\components\business\staffProfile\StaffProfile.vue
+ * @Description: 员工资料
 -->
+
 <template>
   <div>
     <el-form :model="info" :rules="rules" label-width="90px">
@@ -43,7 +44,14 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="性别" prop="code">
-            <el-input v-model="info.code"></el-input>
+            <el-select v-model="info.code" :disabled="operateType === 'detail'">
+              <el-option
+                v-for="(item, index) in sexOptions"
+                :key="index"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -80,13 +88,23 @@
       </el-row>
       <el-row>
         <el-col :span="8">
-          <el-form-item label="证件类型" prop="code">
-            <el-input v-model="info.code"></el-input>
+          <el-form-item label="证件类型" prop="cardType">
+            <el-select
+              v-model="info.cardType"
+              filterable
+              :disabled="operateType !== 'add'">
+              <el-option
+                v-for="item in cardTypeOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="证件号" prop="date">
-            <el-input v-model="info.date"></el-input>
+          <el-form-item label="证件号" prop="idCard">
+            <el-input v-model="info.idCard"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -161,7 +179,10 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="是否股东" prop="date">
-            <el-input v-model="info.date"></el-input>
+            <el-radio-group v-model="info.date">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="0">否</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -174,7 +195,17 @@
       <el-row class="mg-t-12">
         <el-col :span="8">
           <el-form-item label="学历" prop="code">
-            <el-input v-model="info.code"></el-input>
+            <el-select
+              v-model="info.code"
+              filterable
+              :disabled="operateType !== 'add'">
+              <el-option
+                v-for="item in educationData"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -306,17 +337,46 @@ export default {
     operateType: {
       type: String
     },
-    treeData: Array
+    treeData: {
+      type: Array
+    },
+    educationData: {
+      type: Array
+    }
   },
   data() {
+    const validateIdCard = (rule, value, callback) => {
+      // 等于身份证时进行身份证合法性校验
+      if (this.info.cardType === 1) {
+        const reg = new RegExp(/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/)
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('身份证格式不正确'))
+        }
+      } else {
+        callback()
+      }
+    }
     return {
-      chooseStationVisible: true,
+      chooseStationVisible: false,
       info: {},
       rules: {
         code: [{ required: true, message: '请输入机构编码' }],
         name: [{ required: true, message: '请输入机构名称' }],
-        date: [{ required: true, message: '请输入机构名称' }]
+        date: [{ required: true, message: '请输入机构名称' }],
+        idCard: [{ validator: validateIdCard, trigger: 'blur' }]
       },
+      cardTypeOptions: [
+        { label: '身份证', value: 1 },
+        { label: '护照', value: 2 },
+        { label: '其他', value: 3 }
+      ],
+      sexOptions: [
+        { label: '男', value: 1 },
+        { label: '女', value: 0 },
+        { label: '未知', value: '' }
+      ],
       url: 'http://file.yidmall.com//group1/M00/00/0C/eHdu-2K1LgOASHIHAABfDv2ET_Y837.png'
     }
   },

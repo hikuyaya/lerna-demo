@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:17:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-27 11:17:59
- * @FilePath: \personnelweb\src\views\staff\takeOfficeApplication.vue
+ * @LastEditTime: 2022-07-05 17:20:47
+ * @FilePath: \personnelweb\src\views\staff\entry\entry.vue
  * @Description: 门店入职审核
 -->
 <template>
@@ -66,10 +66,12 @@
       :close-on-click-modal="false"
       append-to-body
       width="1040px">
-      <add-comp
+      <staff-profile
         v-if="addCompVisible"
         :value="selectRow"
         :treeData="treeData"
+        :educationData="educationData"
+        :operateType="operateType"
         @cancel="addCompVisible = false" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
@@ -80,14 +82,14 @@
 </template>
 <script>
 import SearchTop from '@src/components/base/SearchTop'
-import AddComp from './components/AddComp.vue'
+import StaffProfile from '@src/components/business/staffProfile/StaffProfile.vue'
 // import AddComp from './components/test.vue'
 import service from '@src/service'
 export default {
-  components: { SearchTop, AddComp },
+  components: { SearchTop, StaffProfile },
   data() {
     return {
-      addCompVisible: true,
+      addCompVisible: false,
       operateType: 'add',
       selectRow: {},
       conditions: [
@@ -138,41 +140,23 @@ export default {
           ]
         }
       ],
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
-      treeData: []
+      tableData: [],
+      treeData: [],
+      educationData: []
     }
   },
   created() {
-    this.initData()
+    this.queryGroup()
+    this.queryEducation()
   },
   methods: {
-    async initData() {
-      const { data, resp_code } = await service.chain.region.treeAll({})
-      if (resp_code !== 200) {
-        return
-      }
+    async queryGroup() {
+      const { data } = await service.chain.region.treeAll({})
       this.treeData = data
+    },
+    async queryEducation() {
+      const { data } = await service.dic.getEducationList()
+      this.educationData = data
     },
     onOpenAdvance() {},
     onAdd() {

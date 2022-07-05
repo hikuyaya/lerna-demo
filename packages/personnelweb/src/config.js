@@ -100,13 +100,93 @@ export const MENU = {
       pid: 2,
       name: '入职申请',
       title: '入职申请',
-      path: '/staff/takeOfficeApplication',
-      component: 'staff/takeOfficeApplication',
-      icon: null,
-      canShow: true
+      path: '/staff/entry',
+      component: 'staff/entry/entry',
+      icon: null
     },
     {
       id: 22,
+      pid: 2,
+      name: '员工资料维护',
+      title: '员工资料维护',
+      path: '/staff/profile',
+      component: 'staff/profile/profile',
+      icon: null
+    },
+    {
+      id: 23,
+      pid: 2,
+      name: '员工级别维护',
+      title: '员工级别维护',
+      path: '/staff/level',
+      component: 'staff/level/level',
+      icon: null
+    },
+    {
+      id: 24,
+      pid: 2,
+      name: '员工调岗',
+      title: '员工调岗',
+      path: '/staff/transfer-position',
+      component: 'staff/transferPosition/transferPosition',
+      icon: null
+    },
+    {
+      id: 25,
+      pid: 2,
+      name: '员工状态维护',
+      title: '员工状态维护',
+      path: '/staff/status',
+      component: 'staff/status/status',
+      icon: null
+    },
+    {
+      id: 26,
+      pid: 2,
+      name: '门店员工资料维护',
+      title: '门店员工资料维护',
+      path: '/staff/profile-shop',
+      component: 'staff/profileShop/profileShop',
+      icon: null
+    },
+    {
+      id: 27,
+      pid: 2,
+      name: '门店员工资料审核',
+      title: '门店员工资料审核',
+      path: '/staff/profile-review-shop',
+      component: 'staff/profileReviewShop/profileReviewShop',
+      icon: null
+    },
+    {
+      id: 28,
+      pid: 2,
+      name: '合同状态维护',
+      title: '合同状态维护',
+      path: '/staff/contract',
+      component: 'staff/contract/contract',
+      icon: null
+    },
+    {
+      id: 29,
+      pid: 2,
+      name: '员工工龄维护',
+      title: '员工工龄维护',
+      path: '/staff/workingage',
+      component: 'staff/workingage/workingage',
+      icon: null
+    },
+    {
+      id: 30,
+      pid: 2,
+      name: '员工履历',
+      title: '员工履历',
+      path: '/staff/career',
+      component: 'staff/career/career',
+      icon: null
+    },
+    {
+      id: 31,
       pid: 2,
       name: '黑名单管理',
       title: '黑名单管理',

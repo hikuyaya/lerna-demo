@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-30 16:18:59
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-01 15:46:17
+ * @LastEditTime: 2022-07-06 16:35:03
  * @FilePath: \personnelweb\src\views\base\duty\components\LevelOperate.vue
  * @Description: 
 -->
@@ -19,31 +19,40 @@
           :class="{ hide: operateType === 'detail' }"></i>
       </li>
     </ul>
-    <ul class="body" v-for="(item, index) in items" :key="item.id">
-      <li>
-        <el-input-number
-          controls-position="right"
-          v-model="item.clevel"
-          :min="0"
-          :controls="false"
-          style="width: 80px"
-          :disabled="operateType === 'detail'" />
-      </li>
-      <li>
-        <el-input v-model="item.pslname" :disabled="operateType === 'detail'" />
-      </li>
-      <li>
-        <el-input v-model="item.remark" :disabled="operateType === 'detail'" />
-      </li>
-      <li>
-        <el-popconfirm
-          title="确定删除吗？"
-          @confirm="onDeleteRow(item, index)"
-          :class="{ hide: operateType === 'detail' }">
-          <i slot="reference" class="el-icon-remove-outline c-pointer"></i>
-        </el-popconfirm>
-      </li>
-    </ul>
+    <template v-if="items.length">
+      <ul class="body" v-for="(item, index) in items" :key="item.id">
+        <li>
+          <el-input-number
+            controls-position="right"
+            v-model="item.clevel"
+            :min="0"
+            :controls="false"
+            style="width: 80px"
+            :disabled="operateType === 'detail'" />
+        </li>
+        <li>
+          <el-input
+            v-model="item.pslname"
+            :disabled="operateType === 'detail'" />
+        </li>
+        <li>
+          <el-input
+            v-model="item.remark"
+            :disabled="operateType === 'detail'" />
+        </li>
+        <li>
+          <el-popconfirm
+            title="确定删除吗？"
+            @confirm="onDeleteRow(item, index)"
+            :class="{ hide: operateType === 'detail' }">
+            <i slot="reference" class="el-icon-remove-outline c-pointer"></i>
+          </el-popconfirm>
+        </li>
+      </ul>
+    </template>
+    <template v-else>
+      <el-empty />
+    </template>
   </div>
 </template>
 
@@ -139,6 +148,7 @@ export default {
       &:nth-child(4) {
         width: 10%;
         font-size: 22px;
+        color: #409eff;
       }
       height: 40px;
       line-height: 40px;

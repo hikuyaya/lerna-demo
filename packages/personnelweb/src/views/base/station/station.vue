@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:09:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-05 15:56:09
+ * @LastEditTime: 2022-07-06 15:42:32
  * @FilePath: \personnelweb\src\views\base\station\station.vue
  * @Description: 
 -->
@@ -194,7 +194,8 @@ export default {
       if (!result) {
         return
       }
-      await this.$confirm(
+
+      this.$confirm(
         `您确认${this.operateType === 'add' ? '新增' : '修改'}此条职务信息吗？`,
         `确认${this.operateType === 'add' ? '新增' : '修改'}`,
         {
@@ -203,16 +204,19 @@ export default {
           cancelButtonClass: 'btn-custom-cancel',
           type: 'warning'
         }
-      ).catch(() => {})
-      if (this.operateType === 'add') {
-        await service.base.station.save(result)
-      } else {
-        await service.base.station.update(result)
-      }
-      this.$message.success('操作成功')
-      this.addCompVisible = false
-      // 刷新列表
-      this.queryStationList()
+      )
+        .then(async () => {
+          if (this.operateType === 'add') {
+            await service.base.station.save(result)
+          } else {
+            await service.base.station.update(result)
+          }
+          this.$message.success('操作成功')
+          this.addCompVisible = false
+          // 刷新列表
+          this.queryStationList()
+        })
+        .catch(() => {})
     },
     onCancel() {
       this.addCompVisible = false

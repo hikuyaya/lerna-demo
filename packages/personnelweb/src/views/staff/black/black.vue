@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 11:10:06
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-05 13:58:32
+ * @LastEditTime: 2022-07-06 09:36:33
  * @FilePath: \personnelweb\src\views\staff\black\black.vue
  * @Description: 黑名单管理
 -->
@@ -57,10 +57,14 @@
           label="移除时间"
           prop="removeDate"
           width="150px"></yid-table-column>
-        <yid-table-column label="报备原因" prop="addRemark"></yid-table-column>
+        <yid-table-column
+          label="报备原因"
+          prop="addRemark"
+          width="340px"></yid-table-column>
         <yid-table-column
           label="移除原因"
-          prop="removeRemark"></yid-table-column>
+          prop="removeRemark"
+          width="340px"></yid-table-column>
         <yid-table-column label="操作" width="100" fixed="right">
           <template slot-scope="scope">
             <el-link type="primary" @click="onRemove(scope.row)">移除</el-link>

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-30 15:28:58
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-01 13:56:24
+ * @LastEditTime: 2022-07-06 16:33:11
  * @FilePath: \personnelweb\src\views\base\duty\components\LevelAddComp.vue
  * @Description: 
 -->
@@ -52,8 +52,7 @@ export default {
   methods: {
     async queryLevel() {
       const { data } = await service.base.duty.positionLevelList({
-        // pscode: this.value.pscode,
-        pscode: '0024',
+        pscode: this.value.pscode,
         page: 1,
         limit: 100
       })
@@ -61,8 +60,7 @@ export default {
     },
     async queryLevel1() {
       const { data } = await service.base.duty.positionLevel1List({
-        // psCode: this.value.pscode,
-        psCode: '0024',
+        psCode: this.value.pscode,
         page: 1,
         limit: 100
       })

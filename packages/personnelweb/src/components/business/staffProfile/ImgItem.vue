@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-06-23 16:55:05
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-24 13:42:03
- * @FilePath: \personnelweb\src\views\staff\components\ImgItem.vue
+ * @LastEditTime: 2022-07-06 14:50:57
+ * @FilePath: \personnelweb\src\components\business\staffProfile\ImgItem.vue
  * @Description: 
 -->
 <template>
@@ -23,7 +23,7 @@
     <p class="tac mg-t-4">{{ title }}</p>
     <el-button
       type="text"
-      v-if="newImageUrl"
+      v-if="reloadVisible"
       class="mg-center block"
       @click="onShowUpload"
       >重新上传</el-button
@@ -63,7 +63,8 @@
 export default {
   props: {
     title: String,
-    url: String
+    url: String,
+    operateType: String
   },
   data() {
     return {
@@ -72,6 +73,7 @@ export default {
         upload: false
       },
       disabled: false,
+      reloadVisible: false,
       action: `${this.$yid.config.API.BASE}api-file/files-anon`,
       fileList: [],
       imageUrl: '',
@@ -108,6 +110,7 @@ export default {
     },
     onSubmit() {
       this.$emit('update:url', this.newImageUrl)
+      this.reloadVisible = true
       this.dialog.upload = false
     },
     onCancel() {
@@ -119,7 +122,13 @@ export default {
       immediate: true,
       handler: function (val) {
         console.log('url', val)
+        if (!val) {
+          return
+        }
         this.imageUrl = val
+        if (this.operateType !== 'detail') {
+          this.reloadVisible = true
+        }
       }
     }
   }

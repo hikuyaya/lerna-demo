@@ -332,7 +332,7 @@
             },
 
             addUnionpay() {
-
+                this.uplshopaccountForm.id ="";
                 this.uplshopaccountForm.shopid = "";
                 this.uplshopaccountForm.shopcode = "";
                 this.uplshopaccountForm.shopname = "";

@@ -214,7 +214,7 @@ export default {
           this.$message.success('操作成功')
           this.addCompVisible = false
           // 刷新列表
-          this.queryStationList()
+          await this.queryStationList()
         })
         .catch(() => {})
     },

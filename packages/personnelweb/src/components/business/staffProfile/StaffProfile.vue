@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:18:09
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-06 16:23:23
+ * @LastEditTime: 2022-07-07 10:49:30
  * @FilePath: \personnelweb\src\components\business\staffProfile\StaffProfile.vue
  * @Description: 员工资料
 -->
@@ -11,7 +11,7 @@
   <div>
     <el-form ref="form" :model="info" :rules="rules" label-width="110px">
       <title-header title="岗位信息" />
-      <el-row class="mg-t-12">
+      <el-row class="mg-t-12" v-if="from === STAFF_PROFILE_TYPE.ENTRY">
         <el-col :span="8">
           <el-form-item label="组织架构" prop="regionName">
             <el-input disabled v-model="info.regionName"></el-input>
@@ -28,6 +28,35 @@
             icon="el-icon-search"
             circle
             @click="chooseStationVisible = true"></el-button>
+        </el-col>
+      </el-row>
+      <el-row class="mg-t-12" v-else>
+        <el-col :span="8">
+          <el-form-item label="机构编码">
+            {{ info.regionCode }}
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="机构名称">
+            {{ info.regionName }}
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="职务">
+            {{ info.psname }}
+          </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="级别1"> {{ info.psname }} </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="级别2"> {{ info.psname }} </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="连续工龄"> {{ info.psname }} </el-form-item>
+        </el-col>
+        <el-col :span="8">
+          <el-form-item label="延续工龄"> {{ info.psname }} </el-form-item>
         </el-col>
       </el-row>
       <title-header title="基本信息" />
@@ -412,6 +441,9 @@ import TitleHeader from '@src/components/base/TitleHeader'
 import ChooseStation from '@src/components/business/ChooseStation'
 import ImgItem from './ImgItem'
 import { getAge } from '@src/library/helper/util'
+import { STAFF_PROFILE_TYPE } from '@src/type'
+import { scrollToError } from '@src/library/helper/business'
+
 export default {
   components: { TitleHeader, ImgItem, ChooseStation },
   props: {
@@ -419,6 +451,12 @@ export default {
       type: Object,
       default: function () {
         return {}
+      }
+    },
+    from: {
+      type: String,
+      default: function () {
+        return STAFF_PROFILE_TYPE.ENTRY
       }
     },
     operateType: {
@@ -448,7 +486,20 @@ export default {
         callback()
       }
     }
+    const validateMobile = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请输入手机号'))
+      } else {
+        const reg = new RegExp(/^1[3456789]\d{9}$/)
+        if (reg.test(value)) {
+          callback()
+        } else {
+          callback(new Error('请输入11位手机号'))
+        }
+      }
+    }
     return {
+      STAFF_PROFILE_TYPE,
       chooseStationVisible: false,
       info: {},
       station: {}, // 岗位相关
@@ -466,9 +517,13 @@ export default {
         ],
         cardTermValidity: [{ required: true, message: '请选择证件有效期' }],
         address: [{ required: true, message: '请输入家庭地址' }],
-        mobile: [{ required: true, message: '请输入手机号' }],
+        mobile: [
+          { required: true, validator: validateMobile, trigger: 'blur' }
+        ],
         educode: [{ required: true, message: '请选择学历' }],
-        graduated: [{ required: true, message: '请输入毕业院校' }]
+        graduated: [{ required: true, message: '请输入毕业院校' }],
+        shareholder: [{ required: true, message: '请选择' }],
+        entrydate: [{ required: true, message: '请选择入职日期' }]
       },
       cardTypeOptions: [
         { label: '身份证', value: 1 },
@@ -499,9 +554,9 @@ export default {
       }
     },
     async getData() {
-      const result = await this.$refs.form
-        .validate()
-        .catch(err => console.error(err))
+      const result = await this.$refs.form.validate().catch(err => {
+        scrollToError()
+      })
       if (result) {
         return {
           ...this.info

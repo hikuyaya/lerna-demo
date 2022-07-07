@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:17:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-06 16:15:58
+ * @LastEditTime: 2022-07-07 10:56:30
  * @FilePath: \personnelweb\src\views\staff\entry\entry.vue
  * @Description: 门店入职审核
 -->
@@ -261,7 +261,7 @@ export default {
           await service.staff.entry.remove(row.id)
           this.$message.success('操作成功')
           // 刷新列表
-          this.queryList()
+          await this.queryList()
         })
         .catch(() => {})
     },
@@ -277,7 +277,7 @@ export default {
           await service.staff.entry.approve(row.id)
           this.$message.success('操作成功')
           // 刷新列表
-          this.queryList()
+          await this.queryList()
         })
         .catch(() => {})
     },
@@ -288,6 +288,7 @@ export default {
     },
     async onSubmit() {
       const result = await this.$refs.addCompRef.getData()
+      console.log(result)
       if (!result) {
         return
       }
@@ -299,7 +300,7 @@ export default {
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表
-      this.queryList()
+      await this.queryList()
     },
     onCancel(row) {
       this.addCompVisible = false

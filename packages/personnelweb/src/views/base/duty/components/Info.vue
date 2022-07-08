@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:40:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 15:54:53
+ * @LastEditTime: 2022-07-07 14:00:58
  * @FilePath: \personnelweb\src\views\base\duty\components\Info.vue
  * @Description: 
 -->
@@ -35,7 +35,7 @@
                 ? '正常'
                 : scope.row.status === '2'
                 ? '停用'
-                : '未知'
+                : '其他'
             }}
           </template>
         </yid-table-column>

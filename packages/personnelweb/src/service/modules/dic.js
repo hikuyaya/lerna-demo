@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 16:20:58
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-05 16:22:06
+ * @LastEditTime: 2022-07-07 14:28:21
  * @FilePath: \personnelweb\src\service\modules\dic.js
  * @Description:
  */
@@ -18,8 +18,13 @@ export function getEducationList() {
 export function getBankList() {
   return yid.http.get(`${prefix}/getBackList`, null)
 }
+// 入职渠道
+export function getInductionwayList() {
+  return yid.http.get(`${prefix}/getInductionwayList`, null)
+}
 
 export default {
   getEducationList,
-  getBankList
+  getBankList,
+  getInductionwayList
 }

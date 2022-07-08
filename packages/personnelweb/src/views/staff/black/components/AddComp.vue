@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import ChooseStaff from '@src/components/business/ChooseStaff'
+import ChooseStaff from '@src/components/business/ChooseSingleStaff'
 
 export default {
   props: {

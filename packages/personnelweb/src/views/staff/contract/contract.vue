@@ -8,60 +8,84 @@
             <el-button type="primary" @click="onAdd">新增</el-button>
             <el-button type="primary" @click="onImport">导入</el-button>
             <el-button type="primary" @click="onApprove">审核</el-button>
-            <el-button type="primary" @click="onDelete">删除</el-button>
+            <el-button type="primary" @click="onRemove">删除</el-button>
           </div>
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="单号" prop="eeName" fixed></yid-table-column>
-        <yid-table-column label="员工姓名" prop="eeName" width="100px" fixed>
+        <yid-table-column
+          label="单号"
+          prop="billNo"
+          width="130px"
+          fixed></yid-table-column>
+        <yid-table-column label="员工姓名" prop="eeName" width="80px" fixed>
         </yid-table-column>
         <yid-table-column
           label="员工编码"
           prop="eeCode"
           width="80px"
           fixed></yid-table-column>
-        <yid-table-column
-          label="原状态"
-          prop="idCard"
-          width="150px"
-          fixed></yid-table-column>
-        <yid-table-column
-          label="新状态"
-          prop="idCard"
-          width="150px"
-          fixed></yid-table-column>
-        <yid-table-column
-          label="批次号"
-          prop="idCard"
-          width="150px"
-          fixed></yid-table-column>
-        <yid-table-column label="状态" prop="status" width="70px" fixed>
+        <yid-table-column label="原状态" prop="beStatus" width="80px" fixed>
           <template slot-scope="scope">
             {{
-              scope.row.status == 1
+              scope.row.beStatus == 1
                 ? '有效'
-                : scope.row.status == 2
+                : scope.row.beStatus == 2
                 ? '无效'
-                : '未知'
+                : scope.row.beStatus == 3
+                ? '到期'
+                : scope.row.beStatus == 4
+                ? '其他'
+                : '其他'
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column label="新状态" prop="status2" width="80px" fixed>
+          <template slot-scope="scope">
+            {{
+              scope.row.status2 == 1
+                ? '有效'
+                : scope.row.status2 == 2
+                ? '无效'
+                : scope.row.status2 == 3
+                ? '到期'
+                : scope.row.status2 == 4
+                ? '其他'
+                : '其他'
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column
+          label="批次号"
+          prop="batchNo"
+          width="80px"
+          fixed></yid-table-column>
+        <yid-table-column label="状态" prop="approvalStatus" width="80px" fixed>
+          <template slot-scope="scope">
+            {{
+              scope.row.approvalStatus == 1
+                ? '未审核'
+                : scope.row.approvalStatus == 2
+                ? '已审核'
+                : ''
             }}
           </template>
         </yid-table-column>
         <yid-table-column
           label="合同生效日"
-          prop="createdBy"
+          prop="contdatestart"
           width="100px"></yid-table-column>
         <yid-table-column
           label="合同结束日"
-          prop="createdBy"
+          prop="contdateend"
           width="100px"></yid-table-column>
         <yid-table-column
           label="机构编码"
-          prop="createdBy"
+          prop="regionCode"
           width="100px"></yid-table-column>
         <yid-table-column
           label="机构名称"
-          prop="createdBy"
+          prop="regionName"
           width="100px"></yid-table-column>
 
         <yid-table-column
@@ -74,13 +98,13 @@
           width="150px"></yid-table-column>
         <yid-table-column
           label="审批人"
-          prop="removeBy"
+          prop="approvalEename"
           width="100px"></yid-table-column>
         <yid-table-column
           label="审批时间"
-          prop="removeDate"
+          prop="approvalTime"
           width="150px"></yid-table-column>
-        <yid-table-column label="报备原因" prop="addRemark"></yid-table-column>
+        <yid-table-column label="报备原因" prop="remark"></yid-table-column>
       </yid-table>
     </div>
     <el-dialog
@@ -88,7 +112,7 @@
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="1200px">
+      width="1300px">
       <add-comp
         v-if="addCompVisible"
         ref="addCompRef"
@@ -100,15 +124,33 @@
       </span>
     </el-dialog>
     <el-dialog
-      title="移除黑名单确认"
+      :title="`批量${type === 'approve' ? '审核' : '删除'}`"
       :visible.sync="removeCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="380px">
-      <!-- <remove-comp v-if="removeCompVisible" ref="removeCompRef" /> -->
+      width="420px">
+      <remove-comp
+        v-if="removeCompVisible"
+        ref="removeCompRef"
+        :type="type"
+        @refresh="handleRemoveSuccess" />
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onRemoveSubmit">确 定</el-button>
         <el-button @click="removeCompVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      title="批量导入"
+      :visible.sync="importCompVisible"
+      :close-on-click-modal="false"
+      append-to-body
+      width="800px">
+      <import-comp
+        v-if="importCompVisible"
+        ref="importCompRef"
+        :type="type"
+        @refresh="handleImportSuccess" />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="importCompVisible = false">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -116,15 +158,18 @@
 <script>
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
-// import RemoveComp from './components/RemoveComp.vue'
+import RemoveComp from './components/RemoveComp.vue'
+import ImportComp from './components/ImportComp.vue'
 import service from '@src/service'
 export default {
-  components: { SearchTop, AddComp },
+  components: { SearchTop, AddComp, RemoveComp, ImportComp },
   data() {
     return {
       addCompVisible: false,
       removeCompVisible: false,
+      importCompVisible: false,
       operateType: 'add',
+      type: '', // approve 或者 remove
       selectRow: {},
       conditions: [
         {
@@ -144,25 +189,24 @@ export default {
         },
         {
           label: '批次号',
-          prop: 'idCard',
+          prop: 'batchNo',
           type: 'input',
           width: '15%'
         },
         {
           label: '机构编码',
-          prop: 'e',
+          prop: 'bbCode',
           type: 'input',
           width: '15%'
         },
         {
           label: '状态',
-          prop: 'status',
+          prop: 'approvalStatus',
           type: 'select',
           labelWidth: '0.8rem',
           options: [
-            { label: '所有', value: '' },
-            { label: '有效', value: '1' },
-            { label: '无效', value: '2' }
+            { label: '未审核', value: '1' },
+            { label: '已审核', value: '2' }
           ],
           width: '12%'
         }
@@ -171,28 +215,30 @@ export default {
     }
   },
   mounted() {
-    this.queryBlackList()
+    this.queryContractList()
   },
   methods: {
-    queryBlackList() {
+    queryContractList() {
       this.onSearch()
     },
-    onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
       this.selectRow = {}
       this.addCompVisible = true
     },
-    onImport() {},
-    onApprove() {},
+    onImport() {
+      this.importCompVisible = true
+    },
+    onApprove() {
+      this.type = 'approve'
+      this.removeCompVisible = true
+    },
     onDelete() {},
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      // 身份证号转大写
-      params.idCard = params.idCard?.toUpperCase()
-      params.isDel = 0
+      params.isDel = '0'
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.black.list
+      const fetch = service.staff.contract.list
       this.$refs.table.reloadData({
         fetch,
         params
@@ -209,19 +255,31 @@ export default {
       this.addCompVisible = true
     },
     async onSubmit() {
-      const result = await this.$refs.addCompRef.getData()
-      if (!result) {
+      const result = this.$refs.addCompRef.getData()
+      console.log(result)
+      if (!result.length) {
+        this.$message.error('请选择员工')
         return
       }
-      await service.staff.black.save(result)
+      await service.staff.contract.save({
+        employeeContractMaintenances: result
+      })
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表
-      this.queryBlackList()
+      await this.queryContractList()
     },
-    onRemove(row) {
-      this.selectRow = row
+    onRemove() {
+      this.type = 'remove'
       this.removeCompVisible = true
+    },
+    handleImportSuccess() {
+      this.importCompVisible = false
+      this.queryContractList()
+    },
+    handleRemoveSuccess() {
+      this.removeCompVisible = false
+      this.queryContractList()
     },
     // 移除确定
     async onRemoveSubmit() {
@@ -236,7 +294,7 @@ export default {
       this.$message.success('操作成功')
       this.removeCompVisible = false
       // 刷新列表
-      this.queryBlackList()
+      this.queryContractList()
     }
   }
 }

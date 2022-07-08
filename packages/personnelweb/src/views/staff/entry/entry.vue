@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:17:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-07 10:56:30
+ * @LastEditTime: 2022-07-07 15:40:36
  * @FilePath: \personnelweb\src\views\staff\entry\entry.vue
  * @Description: 门店入职审核
 -->
@@ -30,7 +30,7 @@
         <yid-table-column label="性别" prop="name" width="50px" fixed>
           <template slot-scope="scope">
             {{
-              scope.row.sex === 1 ? '男' : scope.row.sex === 2 ? '女' : '未知'
+              scope.row.sex === 1 ? '男' : scope.row.sex === 2 ? '女' : '其他'
             }}
           </template>
         </yid-table-column>
@@ -55,7 +55,7 @@
                 ? '门店'
                 : scope.row.otype === 2
                 ? '总部'
-                : '未知'
+                : '其他'
             }}
           </template>
         </yid-table-column>
@@ -118,7 +118,7 @@
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="1040px">
+      width="1050px">
       <staff-profile
         v-if="addCompVisible"
         ref="addCompRef"

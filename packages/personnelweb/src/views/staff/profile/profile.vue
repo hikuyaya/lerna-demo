@@ -2,35 +2,37 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:38:46
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-07 10:56:51
+ * @LastEditTime: 2022-07-07 15:13:10
  * @FilePath: \personnelweb\src\views\staff\profile\profile.vue
  * @Description: 员工资料维护
 -->
 <template>
   <div class="container">
     <div class="content">
-      <search-top ref="searchTop" :options="conditions">
+      <search-top
+        ref="searchTop"
+        :options="conditions"
+        :advanceOptions="advanceConditions">
         <template #inlineBtn>
           <div class="flex flex-alignitems__center mg-l-12">
             <el-button type="primary" @click="onSearch">查询</el-button>
-            <el-button type="primary" @click="onAdd">新增</el-button>
           </div>
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="单号" prop="billcode" width="80px" fixed>
-        </yid-table-column>
-        <yid-table-column label="姓名" prop="userName" width="100px" fixed>
+        <yid-table-column label="员工姓名" prop="eeName" width="80px" fixed>
           <template slot-scope="scope">
             <el-link type="primary" @click="onShowDetail(scope.row)">{{
-              scope.row.userName
+              scope.row.eeName
             }}</el-link>
           </template>
+        </yid-table-column>
+        <yid-table-column label="员工编码" prop="eeCode" width="100px" fixed>
         </yid-table-column>
         <yid-table-column label="性别" prop="name" width="50px" fixed>
           <template slot-scope="scope">
             {{
-              scope.row.sex === 1 ? '男' : scope.row.sex === 2 ? '女' : '未知'
+              scope.row.sex === 1 ? '男' : scope.row.sex === 2 ? '女' : '其他'
             }}
           </template>
         </yid-table-column>
@@ -39,69 +41,77 @@
           prop="age"
           width="50px"
           fixed></yid-table-column>
-        <yid-table-column label="职务" prop="psname" fixed></yid-table-column>
-        <yid-table-column label="手机号" prop="mobile" fixed></yid-table-column>
+        <yid-table-column
+          label="职务"
+          prop="positionName"
+          fixed></yid-table-column>
+        <yid-table-column
+          label="手机号"
+          prop="mobile"
+          width="100px"
+          fixed></yid-table-column>
         <yid-table-column
           label="证件号"
           prop="cardNumber"
           width="150px"
           fixed></yid-table-column>
-        <yid-table-column label="机构编码" prop="regionCode"></yid-table-column>
-        <yid-table-column label="机构名称" prop="regionName"></yid-table-column>
-        <yid-table-column label="来源" prop="otype">
+        <yid-table-column label="机构编码" prop="bbCode"></yid-table-column>
+        <yid-table-column label="机构名称" prop="bbName"></yid-table-column>
+        <yid-table-column
+          label="入职时间"
+          prop="entrydate"
+          width="150px"></yid-table-column>
+        <yid-table-column
+          label="转正时间"
+          prop=""
+          width="150px"></yid-table-column>
+        <yid-table-column label="状态" prop="approvalStatus">
           <template slot-scope="scope">
             {{
-              scope.row.otype === 1
-                ? '门店'
-                : scope.row.otype === 2
-                ? '总部'
-                : '未知'
+              scope.row.status === 1
+                ? '在职'
+                : scope.row.status === 2
+                ? '离职'
+                : scope.row.status === 2
+                ? '长假'
+                : '其他'
             }}
           </template>
         </yid-table-column>
-        <yid-table-column label="状态" prop="approvalStatus">
+        <yid-table-column label="是否股东" prop="shareholder">
           <template slot-scope="scope">
-            <el-tag
-              :type="scope.row.approvalStatus === 1 ? 'primary' : 'success'"
-              >{{
-                scope.row.approvalStatus === 1 ? '待审核' : '已审核'
-              }}</el-tag
-            >
+            {{ scope.row.shareholder === 1 ? '是' : '否' }}
+          </template>
+        </yid-table-column>
+        <yid-table-column label="合同状态" prop="contractStatus">
+          <template slot-scope="scope">
+            {{
+              scope.row.contractStatus == 1
+                ? '有效'
+                : scope.row.contractStatus == 2
+                ? '无效'
+                : scope.row.contractStatus == 3
+                ? '到期'
+                : scope.row.contractStatus == 4
+                ? '其他'
+                : '其他'
+            }}
           </template>
         </yid-table-column>
         <yid-table-column
-          label="创建人"
-          prop="createdBy"
-          width="100px"></yid-table-column>
+          label="连续工龄"
+          prop="servyear"
+          width="80px"></yid-table-column>
         <yid-table-column
-          label="创建时间"
-          prop="createdTime"
-          width="150px"></yid-table-column>
-        <yid-table-column
-          label="审核人"
-          prop="approvalEeName"
-          width="100px"></yid-table-column>
-        <yid-table-column
-          label="审核时间"
-          prop="approvalTime"
-          width="150px"></yid-table-column>
-        <yid-table-column label="操作" min-width="100" fixed="right">
-          <!-- <template slot-scope="scope"> -->
-          <template v-if="scope.row.approvalStatus === 1" slot-scope="scope">
+          label="延续工龄"
+          prop="curservyear"
+          width="80px"></yid-table-column>
+        <yid-table-column label="操作" width="80" fixed="right">
+          <template slot-scope="scope">
             <el-tooltip effect="dark" content="编辑" placement="top">
               <i
                 class="el-icon-edit c-pointer font-size-16rem mg-r-8"
                 @click="onEdit(scope.row)"></i>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="删除" placement="top">
-              <i
-                class="el-icon-delete c-pointer font-size-16rem mg-r-8"
-                @click="onDelete(scope.row)"></i>
-            </el-tooltip>
-            <el-tooltip effect="dark" content="审核" placement="top">
-              <i
-                class="el-icon-s-check c-pointer font-size-16rem"
-                @click="onApprove(scope.row)"></i>
             </el-tooltip>
           </template>
         </yid-table-column>
@@ -118,7 +128,7 @@
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="1040px">
+      width="1050px">
       <staff-profile
         v-if="addCompVisible"
         ref="addCompRef"
@@ -126,6 +136,7 @@
         :treeData="treeData"
         :educationData="educationData"
         :bankData="bankData"
+        :inductionwayData="inductionwayData"
         :operateType="operateType"
         :from="STAFF_PROFILE_TYPE.PROFILE"
         @cancel="addCompVisible = false" />
@@ -143,7 +154,6 @@
 import SearchTop from '@src/components/base/SearchTop'
 import StaffProfile from '@src/components/business/staffProfile/StaffProfile.vue'
 import { STAFF_PROFILE_TYPE } from '@src/type'
-// import AddComp from './components/test.vue'
 import service from '@src/service'
 export default {
   components: { SearchTop, StaffProfile },
@@ -156,61 +166,103 @@ export default {
       conditions: [
         {
           label: '员工姓名', // 标签
-          prop: 'userName', // 绑定的字段
+          prop: 'eeName', // 绑定的字段
           // label宽度
           type: 'input',
-          width: '15%' // 整个组件占的宽度
+          width: '20%' // 整个组件占的宽度
           // widgetWidth: '200px', // 控件的宽度
           // required: true // 是否必填
         },
         {
-          label: '来源',
-          prop: 'otype',
-          type: 'select', // 搜索类型
-          width: '12%',
-          options: [
-            { label: '不限', value: null },
-            { label: '总部', value: 2 },
-            { label: '门店', value: 1 }
-          ]
+          label: '员工编码',
+          prop: 'eeCode',
+          width: '20%'
+        }
+      ],
+      advanceConditions: [
+        {
+          label: '机构编码',
+          prop: 'bbCode',
+          type: 'input', // 搜索类型
+          width: '20%'
+        },
+        {
+          label: '机构名称',
+          prop: 'bbName',
+          type: 'input', // 搜索类型
+          width: '20%'
         },
         {
           label: '手机号',
           prop: 'mobile',
-          width: '15%'
+          type: 'input', // 搜索类型
+          width: '20%'
         },
         {
-          label: '身份证',
+          label: '身份证号',
           prop: 'cardNumber',
-          width: '15%'
+          type: 'input', // 搜索类型
+          width: '20%'
         },
         {
-          label: '机构编码',
-          prop: 'regionCode',
-          width: '15%'
-        },
-        {
-          label: '审核状态',
-          prop: 'approvalStatus',
+          label: '状态',
+          prop: 'status',
           type: 'select', // 搜索类型
-          width: '15%',
+          options: [
+            { label: '所有', value: undefined },
+            { label: '在职', value: 1 },
+            { label: '离职', value: 2 },
+            { label: '长假', value: 3 }
+          ],
+          width: '20%'
+        },
+        {
+          label: '连续工龄>',
+          prop: 'servyear',
+          type: 'number',
+          width: '20%'
+        },
+        {
+          label: '延续工龄>',
+          prop: 'curservyear',
+          type: 'number',
+          width: '20%'
+        },
+        {
+          label: '是否股东',
+          prop: 'shareholder',
+          type: 'select',
+          width: '20%',
           options: [
             { label: '所有', value: '' },
-            { label: '待审核', value: 1 },
-            { label: '已审核', value: 3 }
+            { label: '是', value: 1 },
+            { label: '否', value: 0 }
+          ]
+        },
+        {
+          label: '合同状态',
+          prop: 'contractStatus',
+          type: 'select',
+          width: '20%',
+          options: [
+            { label: '所有', value: '' },
+            { label: '有效', value: 1 },
+            { label: '无效', value: 0 }
           ]
         }
       ],
       tableData: [],
       treeData: [],
       educationData: [],
-      bankData: []
+      bankData: [],
+      inductionwayData: []
     }
   },
   created() {
     this.queryGroup()
     this.queryEducationDic()
     this.queryBankDic()
+    this.queryInductionwayList()
   },
   mounted() {
     this.queryList()
@@ -228,12 +280,11 @@ export default {
       const { data } = await service.dic.getBankList()
       this.bankData = data
     },
-    onOpenAdvance() {},
-    onAdd() {
-      this.operateType = 'add'
-      this.selectRow = {}
-      this.addCompVisible = true
+    async queryInductionwayList() {
+      const { data } = await service.dic.getInductionwayList()
+      this.inductionwayData = data
     },
+    onOpenAdvance() {},
     queryList() {
       this.onSearch()
     },
@@ -242,7 +293,7 @@ export default {
       params.limit = this.$refs.table.Pagination.internalPageSize
       // 身份证号转大写
       params.cardNumber = params.cardNumber?.toUpperCase()
-      const fetch = service.staff.entry.list
+      const fetch = service.staff.profile.list
       this.$refs.table.reloadData({
         fetch,
         params
@@ -291,18 +342,16 @@ export default {
     },
     async onSubmit() {
       const result = await this.$refs.addCompRef.getData()
+      console.log(result)
       if (!result) {
         return
       }
-      if (this.operateType === 'add') {
-        await service.staff.entry.save(result)
-      } else {
-        await service.staff.entry.update(result)
-      }
+      // 只有修改
+      await service.staff.profile.update(result)
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表
-      this.queryList()
+      await this.queryList()
     },
     onCancel(row) {
       this.addCompVisible = false

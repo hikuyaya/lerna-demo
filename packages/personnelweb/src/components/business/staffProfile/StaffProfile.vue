@@ -2,14 +2,14 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:18:09
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-07 10:49:30
+ * @LastEditTime: 2022-07-08 16:31:11
  * @FilePath: \personnelweb\src\components\business\staffProfile\StaffProfile.vue
  * @Description: 员工资料
 -->
 
 <template>
   <div>
-    <el-form ref="form" :model="info" :rules="rules" label-width="110px">
+    <el-form ref="form" :model="info" :rules="rules" label-width="100px">
       <title-header title="岗位信息" />
       <el-row class="mg-t-12" v-if="from === STAFF_PROFILE_TYPE.ENTRY">
         <el-col :span="8">
@@ -33,38 +33,53 @@
       <el-row class="mg-t-12" v-else>
         <el-col :span="8">
           <el-form-item label="机构编码">
-            {{ info.regionCode }}
+            {{ info.bbCode }}
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="机构名称">
-            {{ info.regionName }}
+            {{ info.bbName }}
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="职务">
-            {{ info.psname }}
+            {{ info.positionName }}
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="级别1"> {{ info.psname }} </el-form-item>
+          <el-form-item label="级别1">
+            {{ info.positionLevelName }}
+          </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="级别2"> {{ info.psname }} </el-form-item>
+          <el-form-item label="级别2">
+            {{ info.levelClevel1Name }}
+          </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="连续工龄"> {{ info.psname }} </el-form-item>
+          <el-form-item label="连续工龄"> {{ info.servyear }} </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="延续工龄"> {{ info.psname }} </el-form-item>
+          <el-form-item label="延续工龄"> {{ info.curservyear }} </el-form-item>
         </el-col>
       </el-row>
       <title-header title="基本信息" />
       <el-row class="mg-t-12">
         <el-col :span="8">
-          <el-form-item label="姓名" prop="userName">
+          <el-form-item
+            label="姓名"
+            prop="userName"
+            v-if="from === STAFF_PROFILE_TYPE.ENTRY">
             <el-input
               v-model="info.userName"
+              :disabled="operateType === 'detail'"></el-input>
+          </el-form-item>
+          <el-form-item
+            label="姓名"
+            prop="eeName"
+            v-else-if="from === STAFF_PROFILE_TYPE.PROFILE">
+            <el-input
+              v-model="info.eeName"
               :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
@@ -209,6 +224,23 @@
             <el-input
               v-model="info.emtel"
               :disabled="operateType === 'detail'"></el-input>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-if="from === STAFF_PROFILE_TYPE.PROFILE">
+        <el-col :span="8">
+          <el-form-item label="标签">
+            <el-select
+              v-model="info.inductionwayCode"
+              filterable
+              :disabled="operateType === 'detail'">
+              <el-option
+                v-for="item in inductionwayData"
+                :key="item.code"
+                :label="item.name"
+                :value="item.code">
+              </el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -391,36 +423,41 @@
       <title-header title="附件信息" />
       <div class="flex mg-t-12">
         <!-- <img-item title="大头照" :url.sync="url"></img-item> -->
-        <img-item
-          title="大头照"
-          v-if="!(operateType === 'detail' && !info.photo)"
-          :operateType="operateType"
-          :url.sync="info.photo"></img-item>
-        <img-item
-          title="身份证正面"
-          v-if="!(operateType === 'detail' && !info.idphoto1)"
-          :operateType="operateType"
-          :url.sync="info.idphoto1"></img-item>
-        <img-item
-          title="身份证反面"
-          v-if="!(operateType === 'detail' && !info.idphoto2)"
-          :operateType="operateType"
-          :url.sync="info.idphoto2"></img-item>
-        <img-item
-          title="银行卡正面"
-          v-if="!(operateType === 'detail' && !info.idphoto3)"
-          :operateType="operateType"
-          :url.sync="info.idphoto3"></img-item>
-        <img-item
-          title="健康证"
-          v-if="!(operateType === 'detail' && !info.idphoto4)"
-          :operateType="operateType"
-          :url.sync="info.idphoto4"></img-item>
-        <img-item
-          title="毕业证"
-          v-if="!(operateType === 'detail' && !info.idphoto5)"
-          :operateType="operateType"
-          :url.sync="info.idphoto5"></img-item>
+        <template v-if="!hasPhoto && operateType === 'detail'">
+          未上传附件
+        </template>
+        <template v-else>
+          <img-item
+            title="大头照"
+            v-if="!(operateType === 'detail' && !info.photo)"
+            :operateType="operateType"
+            :url.sync="info.photo"></img-item>
+          <img-item
+            title="身份证正面"
+            v-if="!(operateType === 'detail' && !info.idphoto1)"
+            :operateType="operateType"
+            :url.sync="info.idphoto1"></img-item>
+          <img-item
+            title="身份证反面"
+            v-if="!(operateType === 'detail' && !info.idphoto2)"
+            :operateType="operateType"
+            :url.sync="info.idphoto2"></img-item>
+          <img-item
+            title="银行卡正面"
+            v-if="!(operateType === 'detail' && !info.idphoto3)"
+            :operateType="operateType"
+            :url.sync="info.idphoto3"></img-item>
+          <img-item
+            title="健康证"
+            v-if="!(operateType === 'detail' && !info.idphoto4)"
+            :operateType="operateType"
+            :url.sync="info.idphoto4"></img-item>
+          <img-item
+            title="毕业证"
+            v-if="!(operateType === 'detail' && !info.idphoto5)"
+            :operateType="operateType"
+            :url.sync="info.idphoto5"></img-item>
+        </template>
       </div>
     </el-form>
     <el-dialog
@@ -438,7 +475,7 @@
 
 <script>
 import TitleHeader from '@src/components/base/TitleHeader'
-import ChooseStation from '@src/components/business/ChooseStation'
+import ChooseStation from '@src/components/business/ChooseSingleStation'
 import ImgItem from './ImgItem'
 import { getAge } from '@src/library/helper/util'
 import { STAFF_PROFILE_TYPE } from '@src/type'
@@ -470,6 +507,21 @@ export default {
     },
     bankData: {
       type: Array
+    },
+    inductionwayData: {
+      type: Array
+    }
+  },
+  computed: {
+    hasPhoto: function () {
+      return (
+        this.info.photo ||
+        this.info.idphoto1 ||
+        this.info.idphoto2 ||
+        this.info.idphoto3 ||
+        this.info.idphoto4 ||
+        this.info.idphoto5
+      )
     }
   },
   data() {
@@ -507,6 +559,7 @@ export default {
         regionName: [{ required: true, message: '请选择岗位信息' }],
         psname: [{ required: true, message: '请选择岗位信息' }],
         userName: [{ required: true, message: '请输入姓名' }],
+        eeName: [{ required: true, message: '请输入姓名' }],
         sex: [{ required: true, message: '请选择性别' }],
         origin: [{ required: true, message: '请输入籍贯' }],
         birthday: [{ required: true, message: '请选择出生日期' }],
@@ -528,7 +581,7 @@ export default {
       cardTypeOptions: [
         { label: '身份证', value: 1 },
         { label: '护照', value: 2 },
-        { label: '其他', value: 99 }
+        { label: '其他', value: 3 }
       ],
       sexOptions: [
         { label: '男', value: 1 },
@@ -539,7 +592,6 @@ export default {
   },
   methods: {
     handleSelectStation(selectRow) {
-      console.log(selectRow)
       this.chooseStationVisible = false
       this.station = Object.assign({}, selectRow)
       this.info = {

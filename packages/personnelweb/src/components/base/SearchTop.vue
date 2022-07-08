@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-30 14:23:34
+ * @LastEditTime: 2022-07-07 15:19:30
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -168,12 +168,6 @@ export default {
     options: {
       type: Array
     },
-    advance: {
-      type: Boolean,
-      default: function () {
-        return false
-      }
-    },
     advanceOptions: {
       type: Array,
       default: function () {
@@ -193,6 +187,7 @@ export default {
         limit: 10
       },
       params: {},
+      advance: false,
       showAdvance: false,
       defaultProps: {
         children: 'children',
@@ -219,6 +214,14 @@ export default {
           return
         }
         this.params = deepClone(val)
+      }
+    },
+    advanceOptions: {
+      immediate: true,
+      handler: function (val) {
+        if (val?.length) {
+          this.advance = true
+        }
       }
     }
   }

@@ -44,7 +44,7 @@
                   ? '正常'
                   : scope.row.status === '2'
                   ? '停用'
-                  : '未知'
+                  : '其他'
               }}
             </template>
           </yid-table-column>
@@ -55,7 +55,7 @@
                   ? '是'
                   : scope.row.isCompany === 0
                   ? '否'
-                  : '未知'
+                  : '其他'
               }}
             </template>
           </yid-table-column>

@@ -1,10 +1,10 @@
 <!--
  * @Author: wqy
- * @Date: 2022-06-24 13:46:47
+ * @Date: 2022-07-04 14:30:12
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-05 16:05:38
- * @FilePath: \personnelweb\src\components\business\ChooseStation.vue
- * @Description: 业务相关——选择岗位
+ * @LastEditTime: 2022-07-07 17:05:49
+ * @FilePath: \personnelweb\src\components\business\ChooseSingleStaff.vue
+ * @Description: 业务相关——选择人员
 -->
 <template>
   <div>
@@ -22,15 +22,25 @@
       pagination
       ref="table"
       class="mg-t-12">
-      <yid-table-column label="岗位名称" prop="postName"></yid-table-column>
+      <yid-table-column label="员工姓名" prop="eename"></yid-table-column>
       <yid-table-column
-        label="岗位编码"
-        prop="postCode"
-        width="80px"></yid-table-column>
-      <yid-table-column label="机构编码" prop="bbCode"></yid-table-column>
-      <yid-table-column label="机构名称" prop="bbName"></yid-table-column>
-      <yid-table-column label="职务名称" prop="positionName"></yid-table-column>
-      <yid-table-column label="职务编码" prop="positionCode"></yid-table-column>
+        label="员工编码"
+        prop="eecode"
+        width="90px"></yid-table-column>
+      <yid-table-column label="职务" prop="psname"></yid-table-column>
+      <yid-table-column label="身份证号" prop="idno"></yid-table-column>
+      <yid-table-column label="状态" prop="status" width="60px">
+        <template slot-scope="scope">
+          {{
+            scope.row.status == '1'
+              ? '在职'
+              : scope.row.status == '2'
+              ? '离职'
+              : '其他'
+          }}
+        </template>
+      </yid-table-column>
+      <yid-table-column label="离职原因" prop="quitReason"></yid-table-column>
     </yid-table>
   </div>
 </template>
@@ -55,8 +65,8 @@ export default {
       selectRow: null,
       conditions: [
         {
-          label: '机构编码', // 标签
-          prop: 'reginCode', // 绑定的字段
+          label: '员工姓名', // 标签
+          prop: 'eename', // 绑定的字段
           // label宽度
           type: 'input',
           width: '30%' // 整个组件占的宽度
@@ -64,14 +74,14 @@ export default {
           // required: true // 是否必填
         },
         {
-          label: '机构名称',
-          prop: 'reginName',
+          label: '员工编码',
+          prop: 'eecode',
           type: 'input', // 搜索类型
           width: '30%'
         },
         {
-          label: '岗位名称',
-          prop: 'postName',
+          label: '身份证号',
+          prop: 'idno',
           type: 'input',
           width: '30%'
         }
@@ -80,10 +90,10 @@ export default {
     }
   },
   mounted() {
-    this.queryStationList()
+    this.queryStaffList()
   },
   methods: {
-    queryStationList() {
+    queryStaffList() {
       this.onSearch()
     },
     handleCurrentChange(val) {
@@ -93,8 +103,12 @@ export default {
     onOpenAdvance() {},
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
+      // 身份证号转大写
+      params.idno = params.idCard?.toUpperCase()
+      params.status = '2'
+      params.isDel = 0
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.base.station.list
+      const fetch = service.chain.employee.list
       this.$refs.table.reloadData({
         fetch,
         params

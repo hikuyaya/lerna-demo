@@ -37,7 +37,7 @@
                 ? '有效'
                 : scope.row.status == 2
                 ? '无效'
-                : '未知'
+                : '其他'
             }}
           </template>
         </yid-table-column>

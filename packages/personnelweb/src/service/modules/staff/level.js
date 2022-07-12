@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-11 09:29:51
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 16:52:23
+ * @LastEditTime: 2022-07-12 19:09:22
  * @FilePath: \personnelweb\src\service\modules\staff\level.js
  * @Description:
  */
@@ -38,6 +38,10 @@ export function downExcel() {
 export function importData(params) {
   return yid.http.post(`${prefix}/import`, params)
 }
+// 校验
+export function validate(params) {
+  return yid.http.get(`${prefix}/validate`, params)
+}
 // 根据员工编码查询员工岗位信息
 export function getByEeCode(params) {
   return yid.http.get(`api-pers/userPost`, { params })
@@ -51,5 +55,6 @@ export default {
   approval,
   downExcel,
   importData,
-  getByEeCode
+  getByEeCode,
+  validate
 }

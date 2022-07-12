@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 16:30:39
+ * @LastEditTime: 2022-07-12 18:53:25
  * @FilePath: \personnelweb\src\views\staff\level\components\AddComp.vue
  * @Description: 
 -->
@@ -29,18 +29,21 @@
         width="100px"></yid-table-column>
       <yid-table-column label="姓名" prop="eeName" width="100px">
       </yid-table-column>
-      <yid-table-column label="岗位" prop="contractStatus" width="80px">
+      <yid-table-column label="岗位" prop="postName" width="80px">
       </yid-table-column>
-      <yid-table-column label="原职务级别1" prop="status2" width="100px">
+      <yid-table-column
+        label="原职务级别1"
+        prop="positionLevelClevel"
+        width="100px">
       </yid-table-column>
       <yid-table-column label="新职务级别1" prop="afPslName" width="176px">
         <template slot-scope="scope">
           <el-input
             :value="scope.row.afPslName"
-            @focus="handleShowLevel(scope.row, scope.$index)" />
+            @click.native="handleShowLevel(scope.row, scope.$index)" />
         </template>
       </yid-table-column>
-      <yid-table-column label="原职务级别2" prop="contdatestart" width="176px">
+      <yid-table-column label="原职务级别2" prop="levelClevel1" width="176px">
       </yid-table-column>
       <yid-table-column
         label="新职务级别2"
@@ -49,7 +52,7 @@
         <template slot-scope="scope">
           <el-input
             :value="scope.row.afPsllevel1Name"
-            @focus="handleShowLevel1(scope.row, scope.$index)" />
+            @click.native="handleShowLevel1(scope.row, scope.$index)" />
         </template>
       </yid-table-column>
       <yid-table-column label="备注" prop="remark">
@@ -130,26 +133,7 @@ export default {
       info: {},
       selectLevel: {},
       selectLevel1: {},
-      tableData: [
-        {
-          bbid: 1,
-          bbids: '1,2',
-          bbnames: '美发组,美容组',
-          bname: '美发组',
-          btype: '1',
-          createdBy: '大系统',
-          createdTime: '2020-11-11 13:20:00',
-          id: '13103',
-          isDel: '0',
-          pscode: '0024',
-          psname: '老师',
-          revision: 3,
-          status: '1',
-          tenantId: '765432',
-          updatedBy: '王庆媛',
-          updatedTime: '2022-07-04 09:37:04'
-        }
-      ],
+      tableData: [],
       levels: [],
       levelIndex: -1,
       treeSelectNode: null,
@@ -171,43 +155,40 @@ export default {
     },
     getData() {
       return this.tableData?.map(d => {
-        // return {
-        //   eeCode: d.eeCode,
-        //   regionCode: d.bbCode,
-        //   eeName: d.eeName,
-        //   beStatus: d.contractStatus + '',
-        //   status2: d.status2,
-        //   contdatesigned: d.contdatesigned,
-        //   contdatestart: d.contdatestart,
-        //   contdateend: d.contdateend,
-        //   htdate: d.htdate,
-        //   remark: d.remark
-        // }
         return {
-          ...d,
-          isApproval: 0
+          eeCode: d.eeCode,
+          afPslcode: d.afPslcode,
+          afPslLevel: d.afPslLevel,
+          positionCode: d.positionCode,
+          postType: d.type,
+          isApproval: 0,
+          remark: d.remark,
+          afPsllevel1: d.afPsllevel1,
+          afPslcode1: d.afPslcode1
         }
       })
     },
     async handleShowLevel(row, index) {
+      console.log('handleShowLevel')
       this.chooseLevelVisible = true
-      this.selectLevel = {}
+      this.selectLevel = row
       this.type = 'level'
       this.levelIndex = index
       const { data } = await service.base.duty.positionLevelList({
-        pscode: row.pscode,
+        pscode: row.positionCode,
         page: 1,
         limit: 100
       })
       this.levels = data?.sort((a, b) => a.clevel - b.clevel)
     },
     async handleShowLevel1(row, index) {
+      console.log('handleShowLevel1')
       this.chooseLevelVisible = true
-      this.selectLevel1 = {}
+      this.selectLevel1 = row
       this.type = 'level1'
       this.levelIndex = index
       const { data } = await service.base.duty.positionLevel1List({
-        psCode: row.pscode,
+        pscode: row.positionCode,
         page: 1,
         limit: 100
       })

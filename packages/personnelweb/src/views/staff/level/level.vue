@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:39:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 16:32:11
+ * @LastEditTime: 2022-07-12 19:08:50
  * @FilePath: \personnelweb\src\views\staff\level\level.vue
  * @Description: 员工级别维护
 -->
@@ -125,7 +125,7 @@
       <import-comp
         v-if="importCompVisible"
         ref="importCompRef"
-        :type="type"
+        :columns="importColumns"
         @refresh="handleImportSuccess" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="importCompVisible = false">取 消</el-button>
@@ -138,12 +138,13 @@ import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
 import RemoveComp from './components/RemoveComp.vue'
 import ImportComp from './components/ImportComp.vue'
+// import ImportComp from '@src/components/business/ImportComp.vue'
 import service from '@src/service'
 export default {
   components: { SearchTop, AddComp, RemoveComp, ImportComp },
   data() {
     return {
-      addCompVisible: true,
+      addCompVisible: false,
       removeCompVisible: false,
       importCompVisible: false,
       operateType: 'add',
@@ -189,14 +190,31 @@ export default {
           width: '12%'
         }
       ],
+      importColumns: [
+        {
+          label: '审核状态',
+          prop: 'status',
+          render: row => {
+            if (row.status == 0) {
+              return '未审核'
+            } else if (row.status == 1) {
+              return '审核通过'
+            } else if (row.status == 2) {
+              return '审核不通过'
+            } else {
+              return '禁用'
+            }
+          }
+        }
+      ],
       tableData: []
     }
   },
   mounted() {
-    this.queryContractList()
+    this.queryLevelList()
   },
   methods: {
-    queryContractList() {
+    queryLevelList() {
       this.onSearch()
     },
     onAdd() {
@@ -245,7 +263,7 @@ export default {
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表
-      await this.queryContractList()
+      await this.queryLevelList()
     },
     onRemove() {
       this.type = 'remove'
@@ -253,11 +271,11 @@ export default {
     },
     handleImportSuccess() {
       this.importCompVisible = false
-      this.queryContractList()
+      this.queryLevelList()
     },
     handleRemoveSuccess() {
       this.removeCompVisible = false
-      this.queryContractList()
+      this.queryLevelList()
     },
     // 移除确定
     async onRemoveSubmit() {
@@ -272,7 +290,7 @@ export default {
       this.$message.success('操作成功')
       this.removeCompVisible = false
       // 刷新列表
-      this.queryContractList()
+      this.queryLevelList()
     }
   }
 }

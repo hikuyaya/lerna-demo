@@ -1,9 +1,9 @@
 <!--
  * @Author: wqy
- * @Date: 2022-07-11 09:23:45
+ * @Date: 2022-07-12 17:34:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 19:10:23
- * @FilePath: \personnelweb\src\views\staff\level\components\ImportComp.vue
+ * @LastEditTime: 2022-07-12 18:11:31
+ * @FilePath: \personnelweb\src\components\business\ImportComp.vue
  * @Description: 
 -->
 
@@ -22,7 +22,7 @@
             accept=".xls, .xlsx"
             :show-file-list="false"
             :headers="authHeader"
-            :action="`${$yid.config.API.BASE}api-pers/employeeLevelMaintenance/validate`"
+            :action="`${$yid.config.API.BASE}api-pers/employeeLevelMaintenance/import`"
             :before-upload="handleBeforeUpload"
             :on-success="handleUploadSuccess">
             <i class="el-icon-upload c-pointer"></i>
@@ -104,44 +104,20 @@
         <yid-table-column label="员工姓名" prop="eeName" width="80px">
         </yid-table-column>
         <yid-table-column
-          label="员工编码"
-          prop="eeCode"
-          width="80px"></yid-table-column>
-        <yid-table-column label="原状态" prop="beStatus" width="80px">
+          v-for="column in columns"
+          :key="column.prop"
+          :label="column.label"
+          :width="column.width"
+          :prop="column.prop">
           <template slot-scope="scope">
-            {{
-              scope.row.beStatus == 1
-                ? '有效'
-                : scope.row.beStatus == 2
-                ? '无效'
-                : scope.row.beStatus == 3
-                ? '到期'
-                : scope.row.beStatus == 4
-                ? '其他'
-                : '其他'
-            }}
+            <span v-if="column.render">
+              {{ column.render(scope.row) }}
+            </span>
+            <span v-else>
+              {{ scope.row[column.prop] }}
+            </span>
           </template>
         </yid-table-column>
-        <yid-table-column label="新状态" prop="status2" width="80px">
-          <template slot-scope="scope">
-            {{
-              scope.row.status2 == 1
-                ? '有效'
-                : scope.row.status2 == 2
-                ? '无效'
-                : scope.row.status2 == 3
-                ? '到期'
-                : scope.row.status2 == 4
-                ? '其他'
-                : '其他'
-            }}
-          </template>
-        </yid-table-column>
-        <yid-table-column label="备注" prop="remark"></yid-table-column>
-        <yid-table-column
-          label="合同结束日期"
-          prop="contdateend"
-          width="100px"></yid-table-column>
       </yid-table>
     </el-dialog>
   </div>
@@ -152,9 +128,15 @@ import service from '@src/service'
 import download from '@src/library/http/download'
 
 export default {
+  props: {
+    columns: {
+      type: Array
+    },
+    importAction: String
+  },
   data() {
     return {
-      uploaded: false, // 是否上传过
+      uploaded: true, // 是否上传过
       failVisible: false,
       authHeader: {
         authorization:
@@ -164,7 +146,8 @@ export default {
       successNum: -1,
       failNum: -1,
       successData: [],
-      failData: []
+      failData: [{ status: 1 }]
+      //   failData: []
     }
   },
   computed: {
@@ -175,7 +158,7 @@ export default {
   methods: {
     onDownload() {
       download(this.$yid.config.API.BASE + 'api-pers/template/downExcel', {
-        templateName: '员工级别维护模板.xls'
+        templateName: '级别维护模板.xls'
       })
     },
     async handleSave(type) {

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-11 13:36:56
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 16:53:45
+ * @LastEditTime: 2022-07-12 18:29:42
  * @FilePath: \personnelweb\src\views\staff\level\components\ChooseMultipleStaff.vue
  * @Description: 
 -->
@@ -25,35 +25,17 @@
       @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="48"> </el-table-column>
       <yid-table-column label="员工姓名" prop="eeName"></yid-table-column>
-      <yid-table-column label="员工编码" prop="eeCode"></yid-table-column>
+      <yid-table-column label="岗位" prop="postName"></yid-table-column>
+      <yid-table-column label="编码" prop="postCode"></yid-table-column>
+      <yid-table-column label="机构编码" prop="bbCode"></yid-table-column>
+      <yid-table-column label="机构名称" prop="bbName"></yid-table-column>
       <yid-table-column label="职务" prop="positionName"></yid-table-column>
-      <yid-table-column label="身份证号" prop="cardNumber"></yid-table-column>
-      <yid-table-column label="状态" prop="status">
-        <template slot-scope="scope">
-          {{
-            scope.row.status == '1'
-              ? '在职'
-              : scope.row.status == '2'
-              ? '离职'
-              : '其他'
-          }}
-        </template>
-      </yid-table-column>
-      <yid-table-column label="合同状态" prop="contractStatus">
-        <template slot-scope="scope">
-          {{
-            scope.row.contractStatus == 1
-              ? '有效'
-              : scope.row.contractStatus == 2
-              ? '无效'
-              : scope.row.contractStatus == 3
-              ? '到期'
-              : scope.row.contractStatus == 4
-              ? '其他'
-              : '其他'
-          }}
-        </template>
-      </yid-table-column>
+      <yid-table-column
+        label="职务级别1"
+        prop="positionLevelClevel"></yid-table-column>
+      <yid-table-column
+        label="职务级别2"
+        prop="levelClevel1"></yid-table-column>
     </yid-table>
   </div>
 </template>

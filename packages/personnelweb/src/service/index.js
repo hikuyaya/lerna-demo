@@ -6,6 +6,9 @@ import icdriver from './modules/icdriver'
 import index from './modules/index'
 import dept from './modules/dept'
 
+// 报表
+import report from './modules/report'
+
 // 字典
 import dic from './modules/dic'
 
@@ -24,5 +27,6 @@ export default {
   chain,
   dept,
   dic,
-  staff
+  staff,
+  report
 }

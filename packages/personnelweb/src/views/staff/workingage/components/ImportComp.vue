@@ -1,11 +1,12 @@
 <!--
  * @Author: wqy
- * @Date: 2022-07-08 14:07:34
+ * @Date: 2022-07-11 09:23:45
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 13:59:20
- * @FilePath: \personnelweb\src\views\staff\contract\components\ImportComp.vue
+ * @LastEditTime: 2022-07-11 14:00:00
+ * @FilePath: \personnelweb\src\views\staff\level\components\ImportComp.vue
  * @Description: 
 -->
+
 <template>
   <div>
     <div class="operate-row">
@@ -21,7 +22,7 @@
             accept=".xls, .xlsx"
             :show-file-list="false"
             :headers="authHeader"
-            :action="`${$yid.config.API.BASE}api-pers/employeecontractmaintenance/convertSystem`"
+            :action="`${$yid.config.API.BASE}api-pers/employeeLevelMaintenance/import`"
             :before-upload="handleBeforeUpload"
             :on-success="handleUploadSuccess">
             <i class="el-icon-upload c-pointer"></i>
@@ -173,31 +174,15 @@ export default {
   },
   methods: {
     onDownload() {
-      download(
-        this.$yid.config.API.BASE +
-          'api-pers/employeecontractmaintenance/downSysTemplate',
-        {}
-      )
+      download(this.$yid.config.API.BASE + 'api-pers/template/downExcel', {
+        templateName: '级别维护模板.xls'
+      })
     },
     async handleSave(type) {
       if (!this.successData.length) {
         this.$message.error('没有能保存的数据，请重新上传')
         return
       }
-      // const params = this.successData.map(v => {
-      //   return {
-      //     eeCode: v.eeCode,
-      //     eeName: v.eeName,
-      //     regionCode: v.regionCode,
-      //     beStatus: v.beStatus,
-      //     status2: v.status2,
-      //     contdatesigned: v.contdatesigned,
-      //     contdatestart: v.contdatestart,
-      //     contdateend: v.contdateend,
-      //     htdate: v.htdate,
-      //     remark: v.remark
-      //   }
-      // })
       const params = this.successData.map(v => {
         return {
           ...v,

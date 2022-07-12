@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-07-07 16:08:53
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 09:43:16
- * @FilePath: \personnelweb\src\views\staff\contract\components\RemoveComp.vue
+ * @LastEditTime: 2022-07-12 14:36:06
+ * @FilePath: \personnelweb\src\views\staff\workingage\components\RemoveComp.vue
  * @Description: 批量审批、删除
 -->
 <template>
@@ -67,7 +67,7 @@ export default {
         this.$message.error('请输入批次号')
         return
       }
-      const { data } = await service.staff.contract.getBillsByBatchNo({
+      const { data } = await service.staff.level.countByBatchNo({
         batchNo: this.batchNo
       })
       this.num = data
@@ -86,7 +86,7 @@ export default {
           }
         )
           .then(async () => {
-            await service.staff.contract.censorBillByBatchNo({
+            await service.staff.workingage.censorBill({
               batchNo: this.batchNo
             })
             this.$message.success('操作成功')
@@ -101,7 +101,7 @@ export default {
           type: 'warning'
         })
           .then(async () => {
-            await service.staff.contract.deleteBillByBatchNo({
+            await service.staff.workingage.deleteBill({
               batchNo: this.batchNo
             })
             this.$message.success('操作成功')

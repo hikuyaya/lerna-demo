@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:38:46
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-07 15:13:10
+ * @LastEditTime: 2022-07-11 09:59:23
  * @FilePath: \personnelweb\src\views\staff\profile\profile.vue
  * @Description: 员工资料维护
 -->
@@ -65,7 +65,7 @@
           label="转正时间"
           prop=""
           width="150px"></yid-table-column>
-        <yid-table-column label="状态" prop="approvalStatus">
+        <yid-table-column label="状态" prop="status">
           <template slot-scope="scope">
             {{
               scope.row.status === 1
@@ -209,7 +209,6 @@ export default {
           prop: 'status',
           type: 'select', // 搜索类型
           options: [
-            { label: '所有', value: undefined },
             { label: '在职', value: 1 },
             { label: '离职', value: 2 },
             { label: '长假', value: 3 }
@@ -234,7 +233,6 @@ export default {
           type: 'select',
           width: '20%',
           options: [
-            { label: '所有', value: '' },
             { label: '是', value: 1 },
             { label: '否', value: 0 }
           ]
@@ -245,9 +243,10 @@ export default {
           type: 'select',
           width: '20%',
           options: [
-            { label: '所有', value: '' },
             { label: '有效', value: 1 },
-            { label: '无效', value: 0 }
+            { label: '无效', value: 2 },
+            { label: '到期', value: 3 },
+            { label: '其他', value: 4 }
           ]
         }
       ],

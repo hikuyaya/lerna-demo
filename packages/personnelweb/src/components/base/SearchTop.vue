@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-07 15:19:30
+ * @LastEditTime: 2022-07-11 10:56:02
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -197,6 +197,14 @@ export default {
   },
   methods: {
     getSearchParams() {
+      const params = {}
+      for (const key in this.params) {
+        if (Object.hasOwnProperty.call(this.params, key)) {
+          if (!(typeof key === 'string' && key)) {
+            params[key] = this.params[key]
+          }
+        }
+      }
       return { ...this.params, ...this.page }
     },
     reset() {

@@ -1,3 +1,11 @@
+<!--
+ * @Author: wqy
+ * @Date: 2022-07-05 14:44:45
+ * @LastEditors: wqy
+ * @LastEditTime: 2022-07-11 09:18:53
+ * @FilePath: \personnelweb\src\views\staff\contract\contract.vue
+ * @Description: 合同状态维护
+-->
 <template>
   <div class="container">
     <div class="content">

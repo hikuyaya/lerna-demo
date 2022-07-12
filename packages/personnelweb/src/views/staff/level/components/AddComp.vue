@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 13:43:59
+ * @LastEditTime: 2022-07-12 16:30:39
  * @FilePath: \personnelweb\src\views\staff\level\components\AddComp.vue
  * @Description: 
 -->
@@ -33,28 +33,23 @@
       </yid-table-column>
       <yid-table-column label="原职务级别1" prop="status2" width="100px">
       </yid-table-column>
-      <yid-table-column label="新职务级别1" prop="contdatesigned" width="176px">
+      <yid-table-column label="新职务级别1" prop="afPslName" width="176px">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.remark" />
+          <el-input
+            :value="scope.row.afPslName"
+            @focus="handleShowLevel(scope.row, scope.$index)" />
         </template>
       </yid-table-column>
       <yid-table-column label="原职务级别2" prop="contdatestart" width="176px">
       </yid-table-column>
-      <yid-table-column label="新职务级别2" prop="contdateend" width="176px">
+      <yid-table-column
+        label="新职务级别2"
+        prop="afPsllevel1Name"
+        width="176px">
         <template slot-scope="scope">
-          <el-input v-model="scope.row.remark" />
-        </template>
-      </yid-table-column>
-      <yid-table-column label="合同有效期" prop="htdate" width="176px">
-        <template slot-scope="scope">
-          <el-date-picker
-            v-model="scope.row.htdate"
-            type="date"
-            format="yyyy年MM月dd日"
-            placement="bottom"
-            value-format="yyyy-MM-dd"
-            style="width: 154px">
-          </el-date-picker>
+          <el-input
+            :value="scope.row.afPsllevel1Name"
+            @focus="handleShowLevel1(scope.row, scope.$index)" />
         </template>
       </yid-table-column>
       <yid-table-column label="备注" prop="remark">
@@ -84,12 +79,40 @@
         v-if="chooseStaffVisible"
         @select="handleSelectStaff"></choose-multiple-staff>
     </el-dialog>
+    <el-dialog
+      title="选择新职务级别"
+      :visible.sync="chooseLevelVisible"
+      :close-on-click-modal="false"
+      append-to-body
+      width="600px">
+      <yid-table
+        :data="levels"
+        class="mg-t-12"
+        @row-click="handleCurrentChange">
+        <yid-table-column label="职务编码" prop="pscode"></yid-table-column>
+        <yid-table-column label="职务名称" prop="psname"> </yid-table-column>
+        <yid-table-column label="级别" prop="clevel" v-if="type === 'level'">
+        </yid-table-column>
+        <yid-table-column
+          label="级别名称"
+          prop="pslname"
+          v-if="type === 'level'">
+        </yid-table-column>
+        <yid-table-column label="级别1" prop="clevel" v-if="type === 'level1'">
+        </yid-table-column>
+        <yid-table-column
+          label="级别名称1"
+          prop="pslname"
+          v-if="type === 'level1'">
+        </yid-table-column>
+      </yid-table>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import ChooseMultipleStaff from './ChooseMultipleStaff'
-
+import service from '@src/service'
 export default {
   props: {
     value: {
@@ -97,17 +120,7 @@ export default {
       default: function () {
         return {}
       }
-    },
-    operateType: {
-      type: String
-    },
-    positionList: {
-      type: Array,
-      default: function () {
-        return []
-      }
-    },
-    treeData: Array
+    }
   },
   components: {
     ChooseMultipleStaff
@@ -115,16 +128,34 @@ export default {
   data() {
     return {
       info: {},
-      selectStaff: {},
-      tableData: [],
+      selectLevel: {},
+      selectLevel1: {},
+      tableData: [
+        {
+          bbid: 1,
+          bbids: '1,2',
+          bbnames: '美发组,美容组',
+          bname: '美发组',
+          btype: '1',
+          createdBy: '大系统',
+          createdTime: '2020-11-11 13:20:00',
+          id: '13103',
+          isDel: '0',
+          pscode: '0024',
+          psname: '老师',
+          revision: 3,
+          status: '1',
+          tenantId: '765432',
+          updatedBy: '王庆媛',
+          updatedTime: '2022-07-04 09:37:04'
+        }
+      ],
+      levels: [],
+      levelIndex: -1,
       treeSelectNode: null,
       chooseStaffVisible: false,
-      contractStatusOptions: [
-        { label: '有效', value: '1' },
-        { label: '无效', value: '2' },
-        { label: '到期', value: '3' },
-        { label: '其他', value: '4' }
-      ]
+      chooseLevelVisible: false,
+      type: 'level' // level or level1
     }
   },
   methods: {
@@ -154,9 +185,53 @@ export default {
         // }
         return {
           ...d,
-          regionCode: d.bbCode
+          isApproval: 0
         }
       })
+    },
+    async handleShowLevel(row, index) {
+      this.chooseLevelVisible = true
+      this.selectLevel = {}
+      this.type = 'level'
+      this.levelIndex = index
+      const { data } = await service.base.duty.positionLevelList({
+        pscode: row.pscode,
+        page: 1,
+        limit: 100
+      })
+      this.levels = data?.sort((a, b) => a.clevel - b.clevel)
+    },
+    async handleShowLevel1(row, index) {
+      this.chooseLevelVisible = true
+      this.selectLevel1 = {}
+      this.type = 'level1'
+      this.levelIndex = index
+      const { data } = await service.base.duty.positionLevel1List({
+        psCode: row.pscode,
+        page: 1,
+        limit: 100
+      })
+      this.levels = data?.sort((a, b) => a.clevel - b.clevel)
+    },
+    handleCurrentChange(row, column, event) {
+      const copyTableData = [...this.tableData]
+      if (this.type === 'level') {
+        copyTableData[this.levelIndex] = {
+          ...copyTableData[this.levelIndex],
+          afPslName: row.pslname,
+          afPslcode: row.pslcode,
+          afPslLevel: row.clevel
+        }
+      } else {
+        copyTableData[this.levelIndex] = {
+          ...copyTableData[this.levelIndex],
+          afPsllevel1Name: row.pslname,
+          afPslcode1: row.pslcode,
+          afPsllevel1: row.clevel
+        }
+      }
+      this.tableData = copyTableData
+      this.chooseLevelVisible = false
     }
   },
 
@@ -165,24 +240,6 @@ export default {
       immediate: true,
       handler: function (val) {
         this.info = JSON.parse(JSON.stringify(val))
-      }
-    },
-    'info.bbCode': {
-      handler: function (val) {
-        console.log(val, this.treeSelectNode)
-        const postName = `${this.treeSelectNode.oname}${
-          this.info.positionName || ''
-        }`
-        this.$set(this.info, 'postName', postName)
-      }
-    },
-    'info.positionCode': {
-      handler: function (val) {
-        const positionItem = this.positionList.find(p => p.pscode === val)
-        const postName = `${this.treeSelectNode.oname || ''}${
-          positionItem.psname
-        }`
-        this.$set(this.info, 'postName', postName)
       }
     }
   }

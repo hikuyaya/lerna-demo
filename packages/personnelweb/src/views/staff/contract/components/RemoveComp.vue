@@ -2,13 +2,13 @@
  * @Author: wqy
  * @Date: 2022-07-07 16:08:53
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 09:43:16
+ * @LastEditTime: 2022-07-12 14:48:11
  * @FilePath: \personnelweb\src\views\staff\contract\components\RemoveComp.vue
  * @Description: 批量审批、删除
 -->
 <template>
   <div class="remove-wrapper">
-    <form-item label="批次号" prefix="：" labelWidth="0.6rem">
+    <form-item label="批次号" prefix="：" labelWidth="60px">
       <el-input
         v-model="batchNo"
         placeholder="请输入批次号"

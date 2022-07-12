@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-11 13:36:56
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 13:56:05
+ * @LastEditTime: 2022-07-12 16:53:45
  * @FilePath: \personnelweb\src\views\staff\level\components\ChooseMultipleStaff.vue
  * @Description: 
 -->
@@ -99,8 +99,8 @@ export default {
           width: '20%'
         },
         {
-          label: '机构名称',
-          prop: 'bbName',
+          label: '岗位名称',
+          prop: 'postName',
           type: 'input',
           width: '20%'
         }
@@ -122,8 +122,6 @@ export default {
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
-      // 身份证号转大写
-      params.cardNumber = params.cardNumber?.toUpperCase()
       const fetch = service.staff.level.getByEeCode
       this.$refs.table.reloadData({
         fetch,

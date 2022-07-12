@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-11 09:29:51
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 13:57:07
+ * @LastEditTime: 2022-07-12 16:52:23
  * @FilePath: \personnelweb\src\service\modules\staff\level.js
  * @Description:
  */
@@ -40,7 +40,7 @@ export function importData(params) {
 }
 // 根据员工编码查询员工岗位信息
 export function getByEeCode(params) {
-  return yid.http.get(`api-pers/userPost/getByEeCode`, { params })
+  return yid.http.get(`api-pers/userPost`, { params })
 }
 
 export default {

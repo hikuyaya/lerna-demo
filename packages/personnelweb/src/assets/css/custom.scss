@@ -106,7 +106,10 @@
 
 // width
 .w80 {
-  width: 80%;
+  width: 80% !important;
+}
+.w100 {
+  width: 100% !important;
 }
 
 // font-size

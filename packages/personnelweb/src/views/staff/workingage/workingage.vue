@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:46:22
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 14:37:26
+ * @LastEditTime: 2022-07-12 14:46:19
  * @FilePath: \personnelweb\src\views\staff\workingage\workingage.vue
  * @Description: 
 -->
@@ -72,7 +72,7 @@
         <yid-table-column
           label="创建时间"
           prop="createdTime"
-          width="100px"></yid-table-column>
+          width="150px"></yid-table-column>
         <yid-table-column
           label="修改人"
           prop="updatedBy"
@@ -80,7 +80,7 @@
         <yid-table-column
           label="修改时间"
           prop="updatedTime"
-          width="100px"></yid-table-column>
+          width="150px"></yid-table-column>
         <yid-table-column
           label="审批人"
           prop="approvalEename"
@@ -126,10 +126,9 @@
 <script>
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
-import RemoveComp from './components/RemoveComp.vue'
 import service from '@src/service'
 export default {
-  components: { SearchTop, AddComp, RemoveComp },
+  components: { SearchTop, AddComp },
   data() {
     return {
       addCompVisible: false,

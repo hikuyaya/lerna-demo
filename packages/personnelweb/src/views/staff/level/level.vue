@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:39:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 13:38:08
+ * @LastEditTime: 2022-07-12 16:32:11
  * @FilePath: \personnelweb\src\views\staff\level\level.vue
  * @Description: 员工级别维护
 -->
@@ -95,11 +95,7 @@
       :close-on-click-modal="false"
       append-to-body
       width="1300px">
-      <add-comp
-        v-if="addCompVisible"
-        ref="addCompRef"
-        :value="selectRow"
-        :operateType="operateType" />
+      <add-comp v-if="addCompVisible" ref="addCompRef" :value="selectRow" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
         <el-button @click="addCompVisible = false">取 消</el-button>
@@ -242,8 +238,9 @@ export default {
         this.$message.error('请选择员工')
         return
       }
-      await service.staff.contract.save({
-        employeeContractMaintenances: result
+      await service.staff.level.save({
+        isApproval: 0,
+        employeeLevelMaintenanceList: result
       })
       this.$message.success('操作成功')
       this.addCompVisible = false

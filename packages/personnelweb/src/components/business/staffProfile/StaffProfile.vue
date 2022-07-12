@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:18:09
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-08 16:31:11
+ * @LastEditTime: 2022-07-12 17:18:31
  * @FilePath: \personnelweb\src\components\business\staffProfile\StaffProfile.vue
  * @Description: 员工资料
 -->
@@ -92,7 +92,10 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="性别" prop="sex">
-            <el-select v-model="info.sex" :disabled="operateType === 'detail'">
+            <el-select
+              v-model="info.sex"
+              :disabled="operateType === 'detail'"
+              class="w100">
               <el-option
                 v-for="(item, index) in sexOptions"
                 :key="index"
@@ -146,7 +149,8 @@
             <el-select
               v-model="info.cardType"
               filterable
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
               <el-option
                 v-for="item in cardTypeOptions"
                 :key="item.value"
@@ -171,7 +175,8 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -215,7 +220,8 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -233,7 +239,8 @@
             <el-select
               v-model="info.inductionwayCode"
               filterable
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
               <el-option
                 v-for="item in inductionwayData"
                 :key="item.code"
@@ -251,7 +258,8 @@
             <el-select
               v-model="info.bankCode"
               filterable
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
               <el-option
                 v-for="item in bankData"
                 :key="item.code"
@@ -309,7 +317,8 @@
             <el-select
               v-model="info.educode"
               filterable
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
               <el-option
                 v-for="item in educationData"
                 :key="item.code"
@@ -353,7 +362,8 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -365,7 +375,8 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -377,7 +388,8 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -391,7 +403,8 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -403,7 +416,8 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -415,7 +429,8 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -556,27 +571,43 @@ export default {
       info: {},
       station: {}, // 岗位相关
       rules: {
-        regionName: [{ required: true, message: '请选择岗位信息' }],
-        psname: [{ required: true, message: '请选择岗位信息' }],
-        userName: [{ required: true, message: '请输入姓名' }],
-        eeName: [{ required: true, message: '请输入姓名' }],
-        sex: [{ required: true, message: '请选择性别' }],
-        origin: [{ required: true, message: '请输入籍贯' }],
-        birthday: [{ required: true, message: '请选择出生日期' }],
-        ethnic: [{ required: true, message: '请输入名族' }],
-        cardType: [{ required: true, message: '请选择证件类型' }],
+        regionName: [
+          { required: true, message: '请选择岗位信息', trigger: 'blur' }
+        ],
+        psname: [
+          { required: true, message: '请选择岗位信息', trigger: 'blur' }
+        ],
+        userName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+        eeName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+        sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
+        origin: [{ required: true, message: '请输入籍贯', trigger: 'blur' }],
+        birthday: [
+          { required: true, message: '请选择出生日期', trigger: 'blur' }
+        ],
+        ethnic: [{ required: true, message: '请输入名族', trigger: 'blur' }],
+        cardType: [
+          { required: true, message: '请选择证件类型', trigger: 'blur' }
+        ],
         cardNumber: [
           { required: true, validator: validateIdCard, trigger: 'blur' }
         ],
-        cardTermValidity: [{ required: true, message: '请选择证件有效期' }],
-        address: [{ required: true, message: '请输入家庭地址' }],
+        cardTermValidity: [
+          { required: true, message: '请选择证件有效期', trigger: 'blur' }
+        ],
+        address: [
+          { required: true, message: '请输入家庭地址', trigger: 'blur' }
+        ],
         mobile: [
           { required: true, validator: validateMobile, trigger: 'blur' }
         ],
-        educode: [{ required: true, message: '请选择学历' }],
-        graduated: [{ required: true, message: '请输入毕业院校' }],
-        shareholder: [{ required: true, message: '请选择' }],
-        entrydate: [{ required: true, message: '请选择入职日期' }]
+        educode: [{ required: true, message: '请选择学历', trigger: 'blur' }],
+        graduated: [
+          { required: true, message: '请输入毕业院校', trigger: 'blur' }
+        ],
+        shareholder: [{ required: true, message: '请选择', trigger: 'blur' }],
+        entrydate: [
+          { required: true, message: '请选择入职日期', trigger: 'blur' }
+        ]
       },
       cardTypeOptions: [
         { label: '身份证', value: 1 },
@@ -614,6 +645,20 @@ export default {
           ...this.info
         }
       }
+    },
+    bankValidate() {
+      if (!this.rules.hasOwnProperty('bankAccount')) {
+        const bankAccount = [
+          { required: true, message: '请输入银行卡号', trigger: 'blur' }
+        ]
+        this.$set(this.rules, 'bankAccount', bankAccount)
+      }
+      if (!this.rules.hasOwnProperty('bankCode')) {
+        const bankCode = [
+          { required: true, message: '请选择开户银行', trigger: 'blur' }
+        ]
+        this.$set(this.rules, 'bankCode', bankCode)
+      }
     }
   },
   watch: {
@@ -634,6 +679,22 @@ export default {
           console.log(birth)
           const age = getAge(birth)?.[0]
           this.$set(this.info, 'age', age)
+        }
+      }
+    },
+    'info.bankCode': {
+      immediate: true,
+      handler: function (val) {
+        if (val) {
+          this.bankValidate()
+        }
+      }
+    },
+    'info.bankAccount': {
+      immediate: true,
+      handler: function (val) {
+        if (val) {
+          this.bankValidate()
         }
       }
     }

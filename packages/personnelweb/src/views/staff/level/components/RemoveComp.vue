@@ -2,13 +2,13 @@
  * @Author: wqy
  * @Date: 2022-07-07 16:08:53
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 10:44:25
+ * @LastEditTime: 2022-07-12 16:41:18
  * @FilePath: \personnelweb\src\views\staff\level\components\RemoveComp.vue
  * @Description: 批量审批、删除
 -->
 <template>
   <div class="remove-wrapper">
-    <form-item label="批次号" prefix="：" labelWidth="0.6rem">
+    <form-item label="批次号" prefix="：" labelWidth="60px">
       <el-input
         v-model="batchNo"
         placeholder="请输入批次号"
@@ -67,9 +67,7 @@ export default {
         this.$message.error('请输入批次号')
         return
       }
-      const { data } = await service.staff.level.countByBatchNo({
-        batchNo: this.batchNo
-      })
+      const { data } = await service.staff.level.countByBatchNo(this.batchNo)
       this.num = data
       this.show = true
     },
@@ -101,9 +99,7 @@ export default {
           type: 'warning'
         })
           .then(async () => {
-            await service.staff.level.deleteByBatchNo({
-              batchNo: this.batchNo
-            })
+            await service.staff.level.deleteByBatchNo(this.batchNo)
             this.$message.success('操作成功')
             this.$emit('refresh')
           })

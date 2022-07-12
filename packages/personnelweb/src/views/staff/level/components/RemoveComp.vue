@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-07 16:08:53
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 16:41:18
+ * @LastEditTime: 2022-07-12 19:27:51
  * @FilePath: \personnelweb\src\views\staff\level\components\RemoveComp.vue
  * @Description: 批量审批、删除
 -->
@@ -84,9 +84,7 @@ export default {
           }
         )
           .then(async () => {
-            await service.staff.level.approval({
-              batchNo: this.batchNo
-            })
+            await service.staff.level.approval(this.batchNo)
             this.$message.success('操作成功')
             this.$emit('refresh')
           })

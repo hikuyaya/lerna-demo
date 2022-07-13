@@ -2,14 +2,17 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:41:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 14:45:46
+ * @LastEditTime: 2022-07-13 15:10:52
  * @FilePath: \personnelweb\src\views\staff\transferPosition\transferPosition.vue
  * @Description: 员工调岗
 -->
 <template>
   <div class="container">
     <div class="content">
-      <search-top ref="searchTop" :options="conditions">
+      <search-top
+        ref="searchTop"
+        :options="conditions"
+        :defaultParams="defaultParams">
         <template #inlineBtn>
           <div class="flex flex-alignitems__center mg-l-12">
             <el-button type="primary" @click="onSearch">查询</el-button>
@@ -156,12 +159,15 @@ export default {
           ]
         }
       ],
+      defaultParams: {
+        approvalStatus: 1
+      },
       tableData: []
     }
   },
   created() {},
   mounted() {
-    this.queryList()
+    // this.queryList()
   },
   methods: {
     onOpenAdvance() {},
@@ -174,10 +180,11 @@ export default {
       this.onSearch()
     },
     onSearch() {
-      const params = this.$refs.searchTop.getSearchParams()
+      let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
-      // 身份证号转大写
-      params.cardNumber = params.cardNumber?.toUpperCase()
+      params = {
+        ...params
+      }
       const fetch = service.staff.transferPosition.list
       this.$refs.table.reloadData({
         fetch,

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 10:56:02
+ * @LastEditTime: 2022-07-13 15:02:47
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -173,6 +173,12 @@ export default {
       default: function () {
         return []
       }
+    },
+    defaultParams: {
+      type: Object,
+      default: function () {
+        return null
+      }
     }
   },
   components: {
@@ -229,6 +235,16 @@ export default {
       handler: function (val) {
         if (val?.length) {
           this.advance = true
+        }
+      }
+    },
+    defaultParams: {
+      immediate: true,
+      handler: function (val) {
+        if (val) {
+          this.params = {
+            ...val
+          }
         }
       }
     }

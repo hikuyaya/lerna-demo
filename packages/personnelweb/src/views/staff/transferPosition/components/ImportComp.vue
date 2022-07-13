@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-11 09:23:45
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 14:51:48
+ * @LastEditTime: 2022-07-12 19:38:19
  * @FilePath: \personnelweb\src\views\staff\level\components\ImportComp.vue
  * @Description: 
 -->
@@ -218,7 +218,7 @@ export default {
       //
       console.log(res, file)
       const {
-        data: { errorList, successList },
+        data: { errorList, errorTotal },
         resp_code,
         resp_msg
       } = res
@@ -227,7 +227,7 @@ export default {
         return
       }
       this.uploaded = true
-      this.successData = successList
+      // this.successData = employeeContractMaintenances
       this.failData = errorList
     },
     onShowFail() {

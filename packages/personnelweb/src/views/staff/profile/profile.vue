@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:38:46
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 09:59:23
+ * @LastEditTime: 2022-07-13 10:21:11
  * @FilePath: \personnelweb\src\views\staff\profile\profile.vue
  * @Description: 员工资料维护
 -->
@@ -264,7 +264,7 @@ export default {
     this.queryInductionwayList()
   },
   mounted() {
-    this.queryList()
+    // this.queryList()
   },
   methods: {
     async queryGroup() {

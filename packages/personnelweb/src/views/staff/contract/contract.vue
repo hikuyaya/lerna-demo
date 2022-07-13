@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:44:45
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-11 09:18:53
+ * @LastEditTime: 2022-07-13 16:24:40
  * @FilePath: \personnelweb\src\views\staff\contract\contract.vue
  * @Description: 合同状态维护
 -->
@@ -155,8 +155,11 @@
       <import-comp
         v-if="importCompVisible"
         ref="importCompRef"
-        :type="type"
-        @refresh="handleImportSuccess" />
+        :columns="importCompColumns"
+        :importAction="`${$yid.config.API.BASE}api-pers/employeecontractmaintenance/convertSystem`"
+        :downloadUrl="`${$yid.config.API.BASE}api-pers/employeecontractmaintenance/downSysTemplate`"
+        @save="handleImportSave"
+        @approve="handleImportApprove" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="importCompVisible = false">取 消</el-button>
       </span>
@@ -167,7 +170,8 @@
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
 import RemoveComp from './components/RemoveComp.vue'
-import ImportComp from './components/ImportComp.vue'
+// import ImportComp from './components/ImportComp.vue'
+import ImportComp from '@src/components/business/ImportComp.vue'
 import service from '@src/service'
 export default {
   components: { SearchTop, AddComp, RemoveComp, ImportComp },
@@ -219,7 +223,49 @@ export default {
           width: '12%'
         }
       ],
-      tableData: []
+      tableData: [],
+      importCompColumns: [
+        { prop: 'eeName', label: '员工姓名' },
+        { prop: 'eeCode', label: '员工编码' },
+        {
+          prop: 'beStatus',
+          label: '原状态',
+          render: row => {
+            if (row.beStatus == 1) {
+              return '有效'
+            } else if (row.beStatus == 2) {
+              return '无效'
+            } else if (row.beStatus == 3) {
+              return '到期'
+            } else {
+              return '其他'
+            }
+          }
+        },
+        {
+          prop: 'status2',
+          label: '新状态',
+          render: row => {
+            if (row.status2 == 1) {
+              return '有效'
+            } else if (row.status2 == 2) {
+              return '无效'
+            } else if (row.status2 == 3) {
+              return '到期'
+            } else {
+              return '其他'
+            }
+          }
+        },
+        {
+          prop: 'failwhy',
+          label: '备注'
+        },
+        {
+          prop: 'htdate',
+          label: '合同结束日期'
+        }
+      ]
     }
   },
   mounted() {
@@ -284,6 +330,30 @@ export default {
     handleImportSuccess() {
       this.importCompVisible = false
       this.queryContractList()
+    },
+    async handleImportSave(successData) {
+      const params = successData.map(v => {
+        return {
+          ...v,
+          regionCode: v.regionCode
+        }
+      })
+      await service.staff.contract.saveBillsAndCensor({
+        employeeContractMaintenances: params
+      })
+      this.handleImportSuccess()
+    },
+    async handleImportApprove(successData) {
+      const params = successData.map(v => {
+        return {
+          ...v,
+          regionCode: v.regionCode
+        }
+      })
+      await service.staff.contract.save({
+        employeeContractMaintenances: params
+      })
+      this.handleImportSuccess()
     },
     handleRemoveSuccess() {
       this.removeCompVisible = false

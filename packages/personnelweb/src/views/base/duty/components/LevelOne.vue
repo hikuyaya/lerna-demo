@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:41:18
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-01 15:21:14
+ * @LastEditTime: 2022-07-13 15:21:32
  * @FilePath: \personnelweb\src\views\base\duty\components\LevelOne.vue
  * @Description: 
 -->
@@ -17,7 +17,8 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="级别编码" prop="pslcode"></yid-table-column>
+        <!-- <yid-table-column label="级别编码" prop="pslcode"></yid-table-column> -->
+        <yid-table-column label="级别等级" prop="clevel"></yid-table-column>
         <yid-table-column label="级别名称" prop="pslname"></yid-table-column>
         <yid-table-column label="所属职务" prop="psname"></yid-table-column>
         <yid-table-column label="职务编码" prop="pscode"></yid-table-column>

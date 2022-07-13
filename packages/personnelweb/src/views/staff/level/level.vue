@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:39:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 19:08:50
+ * @LastEditTime: 2022-07-13 17:40:49
  * @FilePath: \personnelweb\src\views\staff\level\level.vue
  * @Description: 员工级别维护
 -->
@@ -125,8 +125,14 @@
       <import-comp
         v-if="importCompVisible"
         ref="importCompRef"
-        :columns="importColumns"
-        @refresh="handleImportSuccess" />
+        :columns="importCompColumns"
+        :importAction="`${$yid.config.API.BASE}api-pers/employeeLevelMaintenance/validate`"
+        :downloadUrl="`${$yid.config.API.BASE}api-pers/template/downExcel`"
+        :downloadParams="{
+          templateName: '员工级别维护模板.xls'
+        }"
+        @save="handleImportSave"
+        @approve="handleImportApprove" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="importCompVisible = false">取 消</el-button>
       </span>
@@ -137,8 +143,8 @@
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
 import RemoveComp from './components/RemoveComp.vue'
-import ImportComp from './components/ImportComp.vue'
-// import ImportComp from '@src/components/business/ImportComp.vue'
+// import ImportComp from './components/ImportComp.vue'
+import ImportComp from '@src/components/business/ImportComp.vue'
 import service from '@src/service'
 export default {
   components: { SearchTop, AddComp, RemoveComp, ImportComp },
@@ -190,22 +196,14 @@ export default {
           width: '12%'
         }
       ],
-      importColumns: [
-        {
-          label: '审核状态',
-          prop: 'status',
-          render: row => {
-            if (row.status == 0) {
-              return '未审核'
-            } else if (row.status == 1) {
-              return '审核通过'
-            } else if (row.status == 2) {
-              return '审核不通过'
-            } else {
-              return '禁用'
-            }
-          }
-        }
+      importCompColumns: [
+        { label: '员工编码', prop: 'eeCode' },
+        { label: '员工姓名', prop: 'eeName' },
+        { label: '组织编码', prop: 'regionCode' },
+        { label: '职务编码', prop: 'positionCode' },
+        { label: '新级别1等级', prop: 'afPslLevel' },
+        { label: '新级别2等级', prop: 'afPsllevel1' },
+        { label: '失败原因', prop: 'errorMessageList' }
       ],
       tableData: []
     }
@@ -272,6 +270,20 @@ export default {
     handleImportSuccess() {
       this.importCompVisible = false
       this.queryLevelList()
+    },
+    async handleImportSave(successData, file) {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('isApproval', 0)
+      await service.staff.level.importData(formData)
+      this.handleImportSuccess()
+    },
+    async handleImportApprove(successData, file) {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('isApproval', 1)
+      await service.staff.level.importData(formData)
+      this.handleImportSuccess()
     },
     handleRemoveSuccess() {
       this.removeCompVisible = false

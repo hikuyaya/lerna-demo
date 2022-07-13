@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-12 17:34:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 16:36:13
+ * @LastEditTime: 2022-07-13 17:14:44
  * @FilePath: \personnelweb\src\components\business\ImportComp.vue
  * @Description: 
 -->
@@ -24,7 +24,8 @@
             :headers="authHeader"
             :action="importAction"
             :before-upload="handleBeforeUpload"
-            :on-success="handleUploadSuccess">
+            :on-success="handleUploadSuccess"
+            :on-change="handleChange">
             <i class="el-icon-upload c-pointer"></i>
             <p>上传数据</p>
           </el-upload>
@@ -130,7 +131,8 @@ export default {
       successNum: -1,
       failNum: -1,
       successData: [],
-      failData: []
+      failData: [],
+      file: null
       //   failData: []
     }
   },
@@ -154,9 +156,9 @@ export default {
         return
       }
       if (type) {
-        this.$emit('save', this.successData)
+        this.$emit('save', this.successData, this.file)
       } else {
-        this.$emit('approve', this.successData)
+        this.$emit('approve', this.successData, this.file)
       }
     },
     handleBeforeUpload(file) {
@@ -175,6 +177,7 @@ export default {
     handleUploadSuccess(res, file) {
       //
       console.log(res, file)
+      this.file = file.raw
       const {
         data: {
           employeeContractMaintenances,
@@ -192,6 +195,9 @@ export default {
       this.uploaded = true
       this.successData = employeeContractMaintenances || successList
       this.failData = failureList || errorList
+    },
+    handleChange(file) {
+      console.log(198, file)
     },
     onShowFail() {
       this.fromSave = false

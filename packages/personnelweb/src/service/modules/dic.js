@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 16:20:58
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-07 14:28:21
+ * @LastEditTime: 2022-07-14 15:00:32
  * @FilePath: \personnelweb\src\service\modules\dic.js
  * @Description:
  */
@@ -22,9 +22,14 @@ export function getBankList() {
 export function getInductionwayList() {
   return yid.http.get(`${prefix}/getInductionwayList`, null)
 }
+// 离职原因
+export function getStatusReasonList() {
+  return yid.http.get(`${prefix}/getStatusReasonList`, null)
+}
 
 export default {
   getEducationList,
   getBankList,
-  getInductionwayList
+  getInductionwayList,
+  getStatusReasonList
 }

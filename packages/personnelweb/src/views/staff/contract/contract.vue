@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:44:45
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 09:36:12
+ * @LastEditTime: 2022-07-14 16:32:58
  * @FilePath: \personnelweb\src\views\staff\contract\contract.vue
  * @Description: 合同状态维护
 -->
@@ -326,11 +326,11 @@ export default {
       this.type = 'remove'
       this.removeCompVisible = true
     },
-    handleImportSuccess() {
+    async handleImportSuccess() {
       this.importCompVisible = false
-      this.queryContractList()
+      await this.queryContractList()
     },
-    async handleImportSave(successData) {
+    async handleImportApprove(successData) {
       const params = successData.map(v => {
         return {
           ...v,
@@ -342,7 +342,7 @@ export default {
       })
       this.handleImportSuccess()
     },
-    async handleImportApprove(successData) {
+    async handleImportSave(successData) {
       const params = successData.map(v => {
         return {
           ...v,

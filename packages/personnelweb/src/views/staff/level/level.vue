@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:39:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 09:36:20
+ * @LastEditTime: 2022-07-14 16:33:10
  * @FilePath: \personnelweb\src\views\staff\level\level.vue
  * @Description: 员工级别维护
 -->
@@ -266,9 +266,9 @@ export default {
       this.type = 'remove'
       this.removeCompVisible = true
     },
-    handleImportSuccess() {
+    async handleImportSuccess() {
       this.importCompVisible = false
-      this.queryLevelList()
+      await this.queryLevelList()
     },
     async handleImportSave(successData, file) {
       const formData = new FormData()

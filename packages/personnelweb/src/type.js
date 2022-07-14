@@ -44,7 +44,7 @@ export const OPERATE_TYPE = {
 // StaffProfile组件入参语义化
 export const STAFF_PROFILE_TYPE = {
   ENTRY: 'entry', // 入职申请
-  PROFILE: 'profile' // 资料
+  PROFILE: 'profile' // 员工资料维护
 }
 
 export default {

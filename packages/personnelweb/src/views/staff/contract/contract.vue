@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:44:45
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 16:24:40
+ * @LastEditTime: 2022-07-14 09:36:12
  * @FilePath: \personnelweb\src\views\staff\contract\contract.vue
  * @Description: 合同状态维护
 -->
@@ -170,7 +170,6 @@
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
 import RemoveComp from './components/RemoveComp.vue'
-// import ImportComp from './components/ImportComp.vue'
 import ImportComp from '@src/components/business/ImportComp.vue'
 import service from '@src/service'
 export default {

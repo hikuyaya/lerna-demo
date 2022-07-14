@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:39:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 17:40:49
+ * @LastEditTime: 2022-07-14 09:36:20
  * @FilePath: \personnelweb\src\views\staff\level\level.vue
  * @Description: 员工级别维护
 -->
@@ -143,7 +143,6 @@
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
 import RemoveComp from './components/RemoveComp.vue'
-// import ImportComp from './components/ImportComp.vue'
 import ImportComp from '@src/components/business/ImportComp.vue'
 import service from '@src/service'
 export default {

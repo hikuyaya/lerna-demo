@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-12 17:34:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 17:14:44
+ * @LastEditTime: 2022-07-14 11:42:21
  * @FilePath: \personnelweb\src\components\business\ImportComp.vue
  * @Description: 
 -->
@@ -177,6 +177,10 @@ export default {
     handleUploadSuccess(res, file) {
       //
       console.log(res, file)
+      if (res.resp_code === 500) {
+        this.$message.error(res.resp_msg)
+        return
+      }
       this.file = file.raw
       const {
         data: {

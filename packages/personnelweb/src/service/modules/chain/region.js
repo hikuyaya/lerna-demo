@@ -1,3 +1,11 @@
+/*
+ * @Author: wqy
+ * @Date: 2022-06-15 14:05:18
+ * @LastEditors: wqy
+ * @LastEditTime: 2022-07-14 09:22:52
+ * @FilePath: \personnelweb\src\service\modules\chain\region.js
+ * @Description:
+ */
 import yid from '@src/library'
 
 const prefix = 'api-chain/dictregion'
@@ -23,7 +31,7 @@ export function treeTwo(params) {
 }
 
 export function saveRegion(params) {
-  const url = `${prefix}/saveRegion`
+  const url = `${prefix}/saveRegionNew`
   return yid.http.post(url, params)
 }
 

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:09:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-01 15:20:44
+ * @LastEditTime: 2022-07-14 09:32:25
  * @FilePath: \personnelweb\src\views\base\group\group.vue
  * @Description: 
 -->
@@ -106,7 +106,9 @@ export default {
     return {
       addCompVisible: false,
       operateType: 'add',
-      selectRow: {},
+      selectRow: {
+        isCompany: 0
+      },
       conditions: [
         {
           label: '机构编码', // 标签
@@ -171,7 +173,9 @@ export default {
     onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
-      this.selectRow = {}
+      this.selectRow = {
+        isCompany: 0
+      }
       this.addCompVisible = true
     },
     onSearch() {

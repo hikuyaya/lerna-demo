@@ -135,10 +135,7 @@
       <el-carousel trigger="click" height="260px">
         <el-carousel-item v-for="item in shop.shopImages" :key="item">
           <h3 class="small">
-            <el-image
-              style="width: 450px; height: 450px"
-              :src="item.photoPath"
-              :fit="fit">
+            <el-image style="width: 450px; height: 450px" :src="item.photoPath">
             </el-image>
           </h3>
         </el-carousel-item>
@@ -397,10 +394,7 @@
       @close="shopQCode.visible = false"
       width="500px"
       height="500px">
-      <el-image
-        style="width: 400px; height: 400px"
-        :src="shopQCode.qrPath"
-        :fit="fit">
+      <el-image style="width: 400px; height: 400px" :src="shopQCode.qrPath">
       </el-image>
     </el-dialog>
   </div>

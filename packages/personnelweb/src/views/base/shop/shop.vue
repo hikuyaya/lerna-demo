@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-19 11:29:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-19 11:31:10
+ * @LastEditTime: 2022-07-19 17:31:12
  * @FilePath: \personnelweb\src\views\base\shop\shop.vue
  * @Description: 门店信息管理
 -->
@@ -10,12 +10,7 @@
   <div>
     <el-collapse-transition>
       <div v-show="listShow">
-        <!--<el-button @click="addShop" type="primary">新增</el-button>-->
-        <el-form
-          inline
-          style="margin-top: 15px"
-          ref="searchForm"
-          :model="searchForm">
+        <el-form inline ref="searchForm" :model="searchForm" class="mg-t-12">
           <el-form-item label="门店：" prop="pcodename">
             <el-input
               clearable
@@ -78,19 +73,21 @@
           </el-form-item>
           <el-form-item>
             <el-button @click="search()" type="primary">查询</el-button>
+            <el-button @click="addShop" type="primary">新增</el-button>
           </el-form-item>
         </el-form>
 
         <yid-table pagination ref="table" :data="tableData">
-          <yid-table-column label="门店logo" min-width="140" prop="logo">
+          <yid-table-column label="门店编码" min-width="140" prop="shopcode">
             <template slot-scope="scope">
-              <img :src="scope.row.logo" min-width="25" height="25" />
+              <el-link
+                type="primary"
+                style="margin: 0 10px 0 10px"
+                @click="showDetailPage(scope.row)"
+                >{{ scope.row.shopcode }}</el-link
+              >
             </template>
           </yid-table-column>
-          <yid-table-column
-            label="门店编码"
-            min-width="140"
-            prop="shopcode"></yid-table-column>
           <yid-table-column
             label="门店名称"
             min-width="140"
@@ -99,15 +96,15 @@
             label="门店品牌"
             min-width="140"
             prop="brandName"></yid-table-column>
-          <yid-table-column
-            label="所属组织机构"
-            min-width="140"
-            prop="regionName"></yid-table-column>
           <yid-table-column label="业务类型" min-width="140" prop="type">
             <template slot-scope="scope">
               {{ getTypeName(scope.row.type) }}
             </template>
           </yid-table-column>
+          <yid-table-column
+            label="所属机构"
+            min-width="140"
+            prop="regionName"></yid-table-column>
           <yid-table-column
             label="门店电话"
             min-width="140"
@@ -116,14 +113,6 @@
             label="门店地址"
             min-width="140"
             prop="address"></yid-table-column>
-          <yid-table-column
-            label="付款模板"
-            min-width="140"
-            prop="paytName"></yid-table-column>
-          <yid-table-column
-            label="创建时间"
-            min-width="140"
-            prop="createdTime"></yid-table-column>
           <yid-table-column label="是否显示门店" min-width="140" prop="isShow">
             <template slot-scope="scope">
               {{ scope.row.isShow == '1' ? '显示' : '隐藏' }}
@@ -134,32 +123,9 @@
               {{ scope.row.status == '1' ? '开店' : '关店' }}
             </template>
           </yid-table-column>
-          <yid-table-column label="项目价格体系" min-width="140">
+          <yid-table-column label="咨询公司" min-width="140" prop="isCompany">
             <template slot-scope="scope">
-              <span v-for="servicePt in scope.row.servicePtshops"
-                >{{ servicePt.stempName }}<br
-              /></span>
-            </template>
-          </yid-table-column>
-          <yid-table-column label="产品价格体系" min-width="140">
-            <template slot-scope="scope">
-              <span v-for="productPt in scope.row.productPtshops"
-                >{{ productPt.ptempName }}<br
-              /></span>
-            </template>
-          </yid-table-column>
-          <yid-table-column label="门店提成方案" min-width="140">
-            <template slot-scope="scope">
-              <span v-for="royaltyPt in scope.row.royaltyShops"
-                >{{ royaltyPt.rtempName }}<br
-              /></span>
-            </template>
-          </yid-table-column>
-          <yid-table-column label="会员卡体系" min-width="140">
-            <template slot-scope="scope">
-              <span v-for="cardPt in scope.row.cardTshops"
-                >{{ cardPt.ctempName }}<br
-              /></span>
+              {{ scope.row.isCompany == '1' ? '是' : '否' }}
             </template>
           </yid-table-column>
           <yid-table-column label="操作" min-width="60" prop="oper">
@@ -167,8 +133,8 @@
               <el-link
                 type="primary"
                 style="margin: 0 10px 0 10px"
-                @click="showDetailPage(scope.row)"
-                >查看</el-link
+                @click="onEdit(scope.row)"
+                >修改</el-link
               >
             </template>
           </yid-table-column>
@@ -185,7 +151,6 @@
         <el-form
           ref="shopForm"
           :model="shopForm"
-          style="margin-top: 16px"
           label-width="150px"
           label-position="right">
           <el-button @click="closeDetailPage" type="primary">返回</el-button>
@@ -198,7 +163,8 @@
             <el-input
               v-model="shopForm.shopcode"
               style="width: 350px"
-              @change="checkShopcode"></el-input>
+              @change="checkShopcode"
+              :disabled="['detail', 'edit'].includes(operateType)"></el-input>
           </el-form-item>
           <el-form-item
             label="门店名称："
@@ -207,13 +173,8 @@
             <el-input
               v-model="shopForm.shopname"
               style="width: 350px"
-              placeholder="请输入" />
-          </el-form-item>
-          <el-form-item label="预约名称：" prop="yyshopname">
-            <el-input
-              v-model="shopForm.yyshopname"
-              style="width: 350px"
-              placeholder="请输入" />
+              placeholder="请输入"
+              :disabled="['detail'].includes(operateType)" />
           </el-form-item>
           <el-form-item
             label="门店品牌："
@@ -223,7 +184,8 @@
               clearable
               v-model.trim="shopForm.brandId"
               placeholder="请选择"
-              style="width: 200px">
+              style="width: 200px"
+              :disabled="['detail'].includes(operateType)">
               <el-option
                 :key="item.id"
                 :label="item.name"
@@ -240,7 +202,8 @@
               clearable
               v-model.trim="shopForm.type"
               placeholder="请选择"
-              style="width: 160px">
+              style="width: 160px"
+              :disabled="['detail', 'edit'].includes(operateType)">
               <el-option
                 :key="item.id"
                 :label="item.name"
@@ -260,11 +223,12 @@
               multiple
               collapse-tags
               @change="selectRegion1"
-              style="width: 180px">
+              style="width: 180px"
+              :disabled="['detail'].includes(operateType)">
               <el-option :value="shopForm.regionObjValue" style="height: auto">
                 <el-tree
                   size="small"
-                  accordion="true"
+                  :accordion="true"
                   show-checkbox
                   :default-expand-all="true"
                   :data="regionData"
@@ -277,55 +241,16 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="门店logo：" prop="logo">
-            <el-upload
-              class="avatar-uploader"
-              :action="upload"
-              :headers="myheaders"
-              :show-file-list="false"
-              :on-success="handleShopLogo"
-              :before-upload="beforerUpload">
-              <img
-                v-if="shopForm.logo"
-                :src="shopForm.logo"
-                class="avatar el-upload"
-                style="width: 200px; height: 200px" />
-              <i v-else class="el-icon-plus avatar-uploader-icon el-upload"></i>
-              <div class="el-upload__tip" slot="tip">
-                仅支持jpg，png格式的图片上传 图片尺寸：200px*200px
-              </div>
-            </el-upload>
-          </el-form-item>
-          <el-form-item label="门店电话：" prop="moblie">
-            <el-input
-              v-model="shopForm.moblie"
-              style="width: 350px"
-              placeholder="请输入" />
-          </el-form-item>
-          <el-form-item label="联系人：" prop="contacts">
-            <el-input
-              v-model="shopForm.contacts"
-              style="width: 350px"
-              placeholder="请输入" />
-          </el-form-item>
-          <el-form-item label="营业时间：" prop="openTime">
-            <el-input
-              v-model="shopForm.openTime"
-              style="width: 350px"
-              placeholder="请输入" />
-            <!--<el-time-select
-                    :clearable = true
-                    style="width: 350px"
-                    v-model="shopForm.openTime"
-                    :picker-options="{
-                    start: '00:00',
-                    step: '00:01',
-                    end: '23:59'
-                 }"
-                    format='HH:mm'
-                    value-format="HH:mm"
-                    placeholder="请选中">
-            </el-time-select>-->
+          <el-form-item
+            label="是否咨询公司："
+            prop="isCompany"
+            :rules="[{ required: true, message: '请选择' }]">
+            <el-radio-group
+              v-model="shopForm.isCompany"
+              :disabled="['detail'].includes(operateType)">
+              <el-radio :label="0">否</el-radio>
+              <el-radio :label="1">是</el-radio>
+            </el-radio-group>
           </el-form-item>
           <el-form-item
             label="门店地址："
@@ -335,53 +260,30 @@
               v-model="shopForm.pca"
               :options="proCityArea"
               :props="{ value: 'code', label: 'name' }"
-              style="width: 300px"></el-cascader
+              style="width: 300px"
+              :disabled="['detail'].includes(operateType)"></el-cascader
             >&nbsp;&nbsp;&nbsp;&nbsp;
             <el-input
               v-model="shopForm.address"
               style="width: 300px"
-              placeholder="请输入详情地址" />
+              placeholder="请输入详情地址"
+              :disabled="['detail'].includes(operateType)" />
           </el-form-item>
-          <el-form-item label="经纬度：" class="formItemClass">
-            <el-col>
-              <el-row>
-                <el-input
-                  v-model="shopForm.lat"
-                  placeholder="经度"
-                  style="width: 100px" />
-                ,
-                <el-input
-                  v-model="shopForm.lng"
-                  placeholder="纬度"
-                  style="width: 100px" />
-                <el-link
-                  type="primary"
-                  @click="shopmap.visible = true"
-                  style="margin-left: 8px"
-                  >经纬度查询</el-link
-                >
-              </el-row>
-            </el-col>
+          <el-form-item label="门店电话：" prop="moblie">
+            <el-input
+              v-model="shopForm.moblie"
+              style="width: 350px"
+              placeholder="请输入"
+              :disabled="['detail'].includes(operateType)" />
           </el-form-item>
-          <el-form-item label="付款模板：" prop="paytId">
-            <el-select
-              clearable
-              v-model.trim="shopForm.paytId"
-              placeholder="请选择"
-              style="width: 160px">
-              <el-option
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-                v-for="item in payTemplateList">
-              </el-option>
-            </el-select>
-            &nbsp;&nbsp;<label>是否咨询公司：</label>
-            <el-radio-group v-model="shopForm.isCompany">
-              <el-radio label="0">否</el-radio>
-              <el-radio label="1">是</el-radio>
-            </el-radio-group>
+          <el-form-item label="联系人：" prop="contacts">
+            <el-input
+              v-model="shopForm.contacts"
+              style="width: 350px"
+              placeholder="请输入"
+              :disabled="['detail'].includes(operateType)" />
           </el-form-item>
+
           <el-form-item
             label="门店状态"
             prop="status"
@@ -391,7 +293,8 @@
               active-value="1"
               inactive-value="2"
               active-text="开"
-              inactive-text="关">
+              inactive-text="关"
+              :disabled="['detail'].includes(operateType)">
             </el-switch>
           </el-form-item>
           <el-form-item
@@ -403,29 +306,10 @@
               active-value="1"
               inactive-value="0"
               active-text="显示"
-              inactive-text="隐藏">
+              inactive-text="隐藏"
+              :disabled="['detail'].includes(operateType)">
             </el-switch>
             <yid-ask>控制门店信息是否在小程序中显示</yid-ask>
-          </el-form-item>
-          <el-tag>宣传图</el-tag>
-          <br />
-          <el-form-item label="门店宣传图">
-            <el-upload
-              action="yid.config.API.UPLOAD"
-              :headers="myheaders"
-              :on-success="uploadSuccess"
-              :before-upload="beforerUpload"
-              :on-remove="handleRemove"
-              :file-list="shopForm.shopImages"
-              list-type="picture-card">
-              <i slot="default" class="el-icon-plus"></i>
-            </el-upload>
-            <div style="margin-bottom: 10px">
-              <lebal
-                >建议上传图片分辨率为233px
-                *455px；支持图片格式：jpg、png最多仅支持上传6张</lebal
-              >
-            </div>
           </el-form-item>
         </el-form>
         <el-row style="text-align: center; margin-top: 20px">
@@ -434,79 +318,6 @@
           <!-- <el-button @click="nextConfig">下一步</el-button>&nbsp;&nbsp;-->
           <el-button @click="closeDetailPage">取消</el-button>&nbsp;&nbsp;
         </el-row>
-      </div>
-    </el-collapse-transition>
-
-    <el-collapse-transition>
-      <div v-if="addConfigShow">
-        <el-form
-          ref="shopConfigForm"
-          :model="shopConfigForm"
-          style="margin-top: 16px"
-          label-width="150px"
-          label-position="right">
-          <el-tag>门店配置</el-tag>
-          <br />
-          <el-form-item label="项目价格体系：" prop="brandId">
-            <el-select
-              clearable
-              v-model.trim="shopConfigForm.sptid"
-              placeholder="请选择"
-              style="width: 200px">
-              <el-option
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-                v-for="item in servicePricetemps">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="产品价格体系：" prop="brandId">
-            <el-select
-              clearable
-              v-model.trim="shopConfigForm.pptid"
-              placeholder="请选择"
-              style="width: 200px">
-              <el-option
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-                v-for="item in productPricetemps">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="会员卡体系：" prop="brandId">
-            <el-select
-              clearable
-              v-model.trim="shopConfigForm.cptid"
-              placeholder="请选择"
-              style="width: 200px">
-              <el-option
-                :key="item.id"
-                :label="item.name"
-                :value="item.id"
-                v-for="item in cardTemps">
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item label="门店提成方案：" prop="brandId">
-            <el-select
-              clearable
-              v-model.trim="shopConfigForm.rptid"
-              placeholder="请选择"
-              style="width: 200px">
-              <el-option
-                :key="item.id"
-                :label="item.prmname"
-                :value="item.id"
-                v-for="item in royaltyManages">
-              </el-option>
-            </el-select>
-          </el-form-item>
-        </el-form>
-        <el-button type="primary" @click="saveShop">保存</el-button>&nbsp;&nbsp;
-        <el-button @click="qianConfig">上一步</el-button>&nbsp;&nbsp;
-        <el-button @click="closeDetailPage">取消</el-button>&nbsp;&nbsp;
       </div>
     </el-collapse-transition>
 
@@ -584,7 +395,6 @@ export default {
         id: '',
         shopcode: '',
         shopname: '',
-        yyshopname: '',
         brandId: '',
         brandCode: '',
         brandName: '',
@@ -618,7 +428,8 @@ export default {
         rptid: '',
         cptid: ''
       },
-      shopImages: []
+      shopImages: [],
+      operateType: ''
     }
   },
   mounted() {
@@ -888,11 +699,30 @@ export default {
       return result
     },
     showDetailPage(row) {
-      this.$refs.detailPage.init(row)
+      let copyShopForm = JSON.parse(JSON.stringify(this.shopForm))
+      const pca = [row.province + '', row.city + '', row.area + '']
+
+      copyShopForm = {
+        ...copyShopForm,
+        ...row,
+        pca,
+        regionObj: [row.regionName],
+        regionObjValue: [
+          {
+            id: row.regionId,
+            code: row.regionCode,
+            showname: row.regionName
+          }
+        ]
+      }
+
+      this.shopForm = copyShopForm
+
       this.listShow = false
-      this.addShow = false
+      this.addShow = true
       this.addConfigShow = false
-      this.infoShow = true
+      this.infoShow = false
+      this.operateType = 'detail'
     },
     closeDetailPage() {
       this.listShow = true
@@ -903,6 +733,7 @@ export default {
     },
     addShop() {
       this.$refs['shopForm'].resetFields()
+      this.operateType = 'add'
       this.shopForm.id = ''
       this.shopForm.address = ''
       this.shopForm.lat = ''
@@ -977,27 +808,25 @@ export default {
       })
     },
     saveShop() {
-      this.$refs['shopForm'].validate(valid => {
+      this.$refs['shopForm'].validate(async valid => {
+        console.log(784)
         if (valid) {
           const params = { ...this.shopForm }
-          if (
-            !this.shopForm.shopImages &&
-            this.shopForm.shopImages.length == 0
-          ) {
-            $yid.util.error('请上传门店宣传图!')
-            return
-          }
-          if (this.shopForm.shopImages.length > 6) {
+          // if (!this.shopForm.shopImages?.length) {
+          //   $yid.util.error('请上传门店宣传图!')
+          //   return
+          // }
+          if (this.shopForm.shopImages?.length > 6) {
             $yid.util.error('最多上传6张图片!')
             return
           }
-          if (
-            (!this.shopForm.lat && this.shopForm.lat.length == 0) ||
-            (!this.shopForm.lng && this.shopForm.lng.length == 0)
-          ) {
-            $yid.util.error('请选择经纬度!')
-            return
-          }
+          // if (
+          //   (!this.shopForm.lat && this.shopForm.lat.length == 0) ||
+          //   (!this.shopForm.lng && this.shopForm.lng.length == 0)
+          // ) {
+          //   $yid.util.error('请选择经纬度!')
+          //   return
+          // }
           if (this.shopForm.pca && this.shopForm.pca.length == 3) {
             params.province = this.shopForm.pca[0]
             params.city = this.shopForm.pca[1]
@@ -1045,7 +874,7 @@ export default {
           params.imageFlag = '1'
           params.shopImages = []
 
-          this.shopForm.shopImages.map((m, index) => {
+          this.shopForm.shopImages?.map((m, index) => {
             params.shopImages.push({
               photoPath: m.url,
               showOrder: index + 1
@@ -1060,14 +889,13 @@ export default {
 
           console.log(params)
 
-          service.chain.shop.addShop(params).then(res => {
-            if (res.resp_code == '200') {
-              $yid.util.success(res.resp_msg)
-              this.closeDetailPage()
-            } else {
-              $yid.util.error(res.resp_msg)
-            }
-          })
+          if (this.operateType === 'add') {
+            await service.chain.shop.addShop(params)
+          } else {
+            await service.chain.shop.saveShop(params)
+          }
+          this.$message.success('操作成功')
+          this.closeDetailPage()
         } else {
           if (this.addConfigShow) {
             $yid.util.alert('请检查上一步的必填项目是否填写')
@@ -1086,6 +914,32 @@ export default {
       this.addShow = true
       this.addConfigShow = false
       this.infoShow = false
+    },
+    onEdit(row) {
+      let copyShopForm = JSON.parse(JSON.stringify(this.shopForm))
+      const pca = [row.province + '', row.city + '', row.area + '']
+
+      copyShopForm = {
+        ...copyShopForm,
+        ...row,
+        pca,
+        regionObj: [row.regionName],
+        regionObjValue: [
+          {
+            id: row.regionId,
+            code: row.regionCode,
+            showname: row.regionName
+          }
+        ]
+      }
+
+      this.shopForm = copyShopForm
+
+      this.listShow = false
+      this.addShow = true
+      this.addConfigShow = false
+      this.infoShow = false
+      this.operateType = 'edit'
     }
   }
 }

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:41:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 15:10:52
+ * @LastEditTime: 2022-07-19 17:36:44
  * @FilePath: \personnelweb\src\views\staff\transferPosition\transferPosition.vue
  * @Description: 员工调岗
 -->
@@ -30,8 +30,20 @@
         <yid-table-column label="状态" prop="approvalStatus">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.approvalStatus == 1 ? 'primary' : 'success'"
-              >{{ scope.row.approvalStatus == 1 ? '待审核' : '已审核' }}</el-tag
+              :type="
+                scope.row.approvalStatus === 2
+                  ? 'primary'
+                  : scope.row.approvalStatus === 3
+                  ? 'success'
+                  : 'info'
+              "
+              >{{
+                scope.row.approvalStatus === 2
+                  ? '待审核'
+                  : scope.row.approvalStatus == 3
+                  ? '已审核'
+                  : '其他'
+              }}</el-tag
             >
           </template>
         </yid-table-column>
@@ -154,7 +166,7 @@ export default {
           width: '15%',
           options: [
             { label: '所有', value: '' },
-            { label: '待审核', value: 1 },
+            { label: '待审核', value: 2 },
             { label: '已审核', value: 3 }
           ]
         }

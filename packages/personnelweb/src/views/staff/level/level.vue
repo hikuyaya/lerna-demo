@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:39:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 16:33:10
+ * @LastEditTime: 2022-07-19 17:37:07
  * @FilePath: \personnelweb\src\views\staff\level\level.vue
  * @Description: 员工级别维护
 -->
@@ -51,7 +51,22 @@
           fixed></yid-table-column>
         <yid-table-column label="状态" prop="approvalStatus" width="80px" fixed>
           <template slot-scope="scope">
-            {{ scope.row.approvalStatus == 1 ? '未审核' : '已审核' }}
+            <el-tag
+              :type="
+                scope.row.approvalStatus === 2
+                  ? 'primary'
+                  : scope.row.approvalStatus === 3
+                  ? 'success'
+                  : 'info'
+              "
+              >{{
+                scope.row.approvalStatus === 2
+                  ? '待审核'
+                  : scope.row.approvalStatus == 3
+                  ? '已审核'
+                  : '其他'
+              }}</el-tag
+            >
           </template>
         </yid-table-column>
         <yid-table-column
@@ -189,8 +204,9 @@ export default {
           type: 'select',
           labelWidth: '0.8rem',
           options: [
-            { label: '未审核', value: '1' },
-            { label: '已审核', value: '2' }
+            { label: '所有', value: '' },
+            { label: '待审核', value: 2 },
+            { label: '已审核', value: 3 }
           ],
           width: '12%'
         }

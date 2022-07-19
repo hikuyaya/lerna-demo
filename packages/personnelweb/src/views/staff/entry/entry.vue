@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:17:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-19 16:25:26
+ * @LastEditTime: 2022-07-19 17:01:29
  * @FilePath: \personnelweb\src\views\staff\entry\entry.vue
  * @Description: 门店入职审核
 -->
@@ -62,9 +62,19 @@
         <yid-table-column label="状态" prop="approvalStatus">
           <template slot-scope="scope">
             <el-tag
-              :type="scope.row.approvalStatus === 1 ? 'primary' : 'success'"
+              :type="
+                scope.row.approvalStatus === 2
+                  ? 'primary'
+                  : scope.row.approvalStatus === 3
+                  ? 'success'
+                  : 'info'
+              "
               >{{
-                scope.row.approvalStatus === 1 ? '待审核' : '已审核'
+                scope.row.approvalStatus === 2
+                  ? '待审核'
+                  : scope.row.approvalStatus == 3
+                  ? '已审核'
+                  : '其他'
               }}</el-tag
             >
           </template>

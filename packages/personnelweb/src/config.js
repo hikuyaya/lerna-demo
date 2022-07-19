@@ -88,6 +88,15 @@ export const MENU = {
       icon: null
     },
     {
+      id: 16,
+      pid: 1,
+      name: '门店信息',
+      title: '门店信息',
+      path: '/base/shop',
+      component: 'base/shop/shop',
+      icon: null
+    },
+    {
       id: 2,
       pid: null,
       name: '员工管理',

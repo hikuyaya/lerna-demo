@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:43:56
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-19 10:41:24
+ * @LastEditTime: 2022-07-19 10:45:39
  * @FilePath: \personnelweb\src\views\staff\profileReviewShop\profileReviewShop.vue
  * @Description: 门店员工资料审核
 -->
@@ -168,7 +168,6 @@ export default {
       })
     },
     async onApprove() {
-      const that = this
       if (!this.multipleSelection.length) {
         this.$message.error('请从列表中勾选需要操作的记录')
         return

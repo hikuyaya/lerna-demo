@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:17:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-07 15:40:36
+ * @LastEditTime: 2022-07-19 16:25:26
  * @FilePath: \personnelweb\src\views\staff\entry\entry.vue
  * @Description: 门店入职审核
 -->
@@ -193,7 +193,7 @@ export default {
           width: '15%',
           options: [
             { label: '所有', value: '' },
-            { label: '待审核', value: 1 },
+            { label: '待审核', value: 2 },
             { label: '已审核', value: 3 }
           ]
         }

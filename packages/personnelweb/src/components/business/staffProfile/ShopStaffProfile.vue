@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-14 17:34:04
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 17:48:21
+ * @LastEditTime: 2022-07-19 09:22:09
  * @FilePath: \personnelweb\src\components\business\staffProfile\ShopStaffProfile.vue
  * @Description: 门店员工资料维护新增、修改
 -->
@@ -11,8 +11,8 @@
     <el-form ref="form" :model="info" :rules="rules" label-width="100px">
       <el-row class="mg-t-12">
         <el-col :span="8">
-          <el-form-item label="选择员工" prop="regionName">
-            <el-input disabled v-model="info.regionName"></el-input>
+          <el-form-item label="选择员工" prop="staffInfo">
+            <el-input disabled v-model="staffInfo"></el-input>
           </el-form-item>
         </el-col>
         <el-col v-if="operateType !== 'detail'" :span="4" class="mg-l-16">
@@ -20,31 +20,24 @@
             type="primary"
             icon="el-icon-search"
             circle
-            @click="chooseStationVisible = true"></el-button>
+            @click="chooseStaffVisible = true"></el-button>
         </el-col>
       </el-row>
       <title-header title="基本信息" />
       <el-row class="mg-t-12">
         <el-col :span="8">
           <el-form-item label="姓名" prop="eeName">
-            <el-input
-              v-model="info.eeName"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.eeName" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="别名" prop="aliasName">
-            <el-input
-              v-model="info.aliasName"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.aliasName" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="性别" prop="sex">
-            <el-select
-              v-model="info.sex"
-              :disabled="operateType === 'detail'"
-              class="w100">
+            <el-select v-model="info.sex" disabled class="w100">
               <el-option
                 v-for="(item, index) in sexOptions"
                 :key="index"
@@ -58,9 +51,7 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="籍贯" prop="origin">
-            <el-input
-              v-model="info.origin"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.origin" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -72,7 +63,7 @@
               placement="bottom"
               value-format="yyyy-MM-dd"
               style="width: calc(100% - 80px)"
-              :disabled="operateType === 'detail'">
+              disabled>
             </el-date-picker>
             <el-input-number
               v-model="info.age"
@@ -80,26 +71,20 @@
               :min="1"
               :max="120"
               style="width: 50px; margin-left: 4px"
-              :disabled="operateType === 'detail'"></el-input-number
+              disabled></el-input-number
             >&nbsp;岁
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="民族" prop="ethnic">
-            <el-input
-              v-model="info.ethnic"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.ethnic" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8">
           <el-form-item label="证件类型" prop="cardType">
-            <el-select
-              v-model="info.cardType"
-              filterable
-              :disabled="operateType === 'detail'"
-              class="w100">
+            <el-select v-model="info.cardType" filterable disabled class="w100">
               <el-option
                 v-for="item in cardTypeOptions"
                 :key="item.value"
@@ -111,9 +96,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="证件号" prop="cardNumber">
-            <el-input
-              v-model="info.cardNumber"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.cardNumber" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -124,7 +107,6 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              :disabled="operateType === 'detail'"
               class="w100">
             </el-date-picker>
           </el-form-item>
@@ -133,32 +115,24 @@
       <el-row>
         <el-col :span="8">
           <el-form-item label="家庭地址" prop="address">
-            <el-input
-              v-model="info.address"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.address" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="手机" prop="mobile">
-            <el-input
-              v-model="info.mobile"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.mobile"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="紧急联系人" prop="emcontacts">
-            <el-input
-              v-model="info.emcontacts"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.emcontacts"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8">
           <el-form-item label="常用邮箱" prop="email">
-            <el-input
-              v-model="info.email"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.email" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -169,16 +143,13 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              :disabled="operateType === 'detail'"
               class="w100">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="紧急人电话" prop="emtel">
-            <el-input
-              v-model="info.emtel"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.emtel"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -187,11 +158,7 @@
       <el-row class="mg-t-12">
         <el-col :span="8">
           <el-form-item label="开户银行" prop="bankCode">
-            <el-select
-              v-model="info.bankCode"
-              filterable
-              :disabled="operateType === 'detail'"
-              class="w100">
+            <el-select v-model="info.bankCode" filterable class="w100">
               <el-option
                 v-for="item in bankData"
                 :key="item.code"
@@ -203,32 +170,24 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="银行卡号" prop="bankAccount">
-            <el-input
-              v-model="info.bankAccount"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.bankAccount"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="开户人" prop="accountname">
-            <el-input
-              v-model="info.accountname"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.accountname" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8">
           <el-form-item label="社保卡号" prop="ssaccount">
-            <el-input
-              v-model="info.ssaccount"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.ssaccount" disabled></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="是否股东" prop="shareholder">
-            <el-radio-group
-              v-model="info.shareholder"
-              :disabled="operateType === 'detail'">
+            <el-radio-group v-model="info.shareholder">
               <el-radio :label="1">是</el-radio>
               <el-radio :label="0">否</el-radio>
             </el-radio-group>
@@ -236,9 +195,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="分红帐号" prop="fhaccount">
-            <el-input
-              v-model="info.fhaccount"
-              :disabled="operateType === 'detail'"></el-input>
+            <el-input v-model="info.fhaccount" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -283,27 +240,31 @@
       </div>
     </el-form>
     <el-dialog
-      title="选择岗位"
-      :visible.sync="chooseStationVisible"
+      title="选择人员"
+      :visible.sync="chooseStaffVisible"
       :close-on-click-modal="false"
       append-to-body
       width="800px">
-      <choose-station
-        v-if="chooseStationVisible"
-        @select="handleSelectStation"></choose-station>
+      <choose-single-staff
+        v-if="chooseStaffVisible"
+        :columns="chooseStaffColumns"
+        :actionUrl="chooseSingleStaffActionUrl"
+        :conditions="chooseStaffConditions"
+        @select="handleSelectStaff"></choose-single-staff>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import TitleHeader from '@src/components/base/TitleHeader'
-import ChooseStation from '@src/components/business/ChooseSingleStation'
+import ChooseSingleStaff from '@src/components/business/ChooseSingleStaff2.vue'
 import ImgItem from './ImgItem'
 import { getAge } from '@src/library/helper/util'
 import { scrollToError } from '@src/library/helper/business'
+import service from '@src/service'
 
 export default {
-  components: { TitleHeader, ImgItem, ChooseStation },
+  components: { TitleHeader, ImgItem, ChooseSingleStaff },
   props: {
     value: {
       type: Object,
@@ -337,6 +298,15 @@ export default {
         this.info.idphoto4 ||
         this.info.idphoto5
       )
+    },
+    staffInfo: function () {
+      console.log(346, this.info.eeCode)
+      if (this.info.eeCode) {
+        const name = this.info.eeName + '-' + this.info.eeCode
+        this.$set(this.info, 'staffInfo', name)
+        return name
+      }
+      return ''
     }
   },
   data() {
@@ -366,16 +336,12 @@ export default {
       }
     }
     return {
-      chooseStationVisible: false,
+      chooseStaffVisible: false,
       info: {},
-      station: {}, // 岗位相关
+      staff: {}, // 选择人员相关
       rules: {
-        regionName: [
-          { required: true, message: '请选择岗位信息', trigger: 'blur' }
-        ],
-        psname: [
-          { required: true, message: '请选择岗位信息', trigger: 'blur' }
-        ],
+        staffInfo: [{ required: true, message: '请选择人员', trigger: 'blur' }],
+        psname: [{ required: true, message: '请选择人员', trigger: 'blur' }],
         userName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
         eeName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
         sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
@@ -417,22 +383,55 @@ export default {
         { label: '男', value: 1 },
         { label: '女', value: 2 }
       ],
-      url: 'http://file.yidmall.com//group1/M00/00/0C/eHdu-2K1LgOASHIHAABfDv2ET_Y837.png'
+      chooseSingleStaffActionUrl: service.staff.shop.getListByLoginUser,
+      chooseStaffColumns: [
+        { prop: 'eename', label: '员工姓名' },
+        { prop: 'eecode', label: '编码' },
+        { prop: 'shopcode', label: '机构编码' },
+        { prop: 'shopname', label: '机构名称' },
+        { prop: 'psname', label: '职务' },
+        {
+          prop: 'status',
+          label: '状态',
+          render: row => {
+            if (row.status == 1) {
+              return '在职'
+            } else if (row.status == 2) {
+              return '离职'
+            } else {
+              return '其他'
+            }
+          }
+        }
+      ],
+      chooseStaffConditions: [
+        {
+          label: '员工姓名', // 标签
+          prop: 'eeName', // 绑定的字段
+          // label宽度
+          type: 'input',
+          width: '30%' // 整个组件占的宽度
+          // widgetWidth: '200px', // 控件的宽度
+          // required: true // 是否必填
+        },
+        {
+          label: '员工编码',
+          prop: 'eeCode',
+          type: 'input', // 搜索类型
+          width: '30%'
+        }
+      ]
     }
   },
   methods: {
-    handleSelectStation(selectRow) {
-      this.chooseStationVisible = false
-      this.station = Object.assign({}, selectRow)
+    async handleSelectStaff(selectRow) {
+      console.log(selectRow)
+      const { data } = await service.staff.profile.detail(selectRow.eecode)
+      this.chooseStaffVisible = false
+      this.staff = Object.assign({}, selectRow)
       this.info = {
         ...this.info,
-        regionCode: selectRow.bbCode,
-        regionName: selectRow.bbName,
-        psname: selectRow.positionName,
-        pscode: selectRow.positionCode,
-        postcode: selectRow.postCode,
-        postname: selectRow.postName,
-        otype: selectRow.otype
+        ...data
       }
     },
     async getData() {

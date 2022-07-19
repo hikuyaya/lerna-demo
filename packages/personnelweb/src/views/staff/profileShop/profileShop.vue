@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:42:46
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 17:35:15
+ * @LastEditTime: 2022-07-19 09:38:22
  * @FilePath: \personnelweb\src\views\staff\profileShop\profileShop.vue
  * @Description: 门店员工资料维护
 -->
@@ -110,7 +110,8 @@
         <el-button @click="onCancel">关 闭</el-button>
       </span>
       <span v-else slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button type="primary" @click="onSubmit('save')">保 存</el-button>
+        <el-button type="primary" @click="onSubmit('approve')">提 交</el-button>
         <el-button @click="onCancel">取 消</el-button>
       </span>
     </el-dialog>
@@ -213,14 +214,14 @@ export default {
       this.addCompVisible = true
     },
     async onDelete(row) {
-      this.$confirm(`确认要删除 ${row.userName} 入职申请信息吗？`, `删除确认`, {
+      this.$confirm(`确认要删除此条申请信息吗？`, `删除确认`, {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         cancelButtonClass: 'btn-custom-cancel',
         type: 'warning'
       })
         .then(async () => {
-          await service.staff.entry.remove(row.id)
+          await service.staff.shop.remove(row.id)
           this.$message.success('操作成功')
           // 刷新列表
           await this.queryList()
@@ -232,16 +233,21 @@ export default {
       this.operateType = 'detail'
       this.addCompVisible = true
     },
-    async onSubmit() {
+    async onSubmit(type) {
       const result = await this.$refs.addCompRef.getData()
       console.log(result)
       if (!result) {
         return
       }
-      if (this.operateType === 'add') {
-        await service.staff.entry.save(result)
+      const approvalStatus = type === 'save' ? 1 : 2
+      const params = {
+        ...result,
+        approvalStatus
+      }
+      if (type === 'save') {
+        await service.staff.shop.save(params)
       } else {
-        await service.staff.entry.update(result)
+        await service.staff.shop.update(params)
       }
       this.$message.success('操作成功')
       this.addCompVisible = false

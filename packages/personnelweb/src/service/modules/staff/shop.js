@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-14 16:49:58
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 16:55:52
+ * @LastEditTime: 2022-07-19 09:25:15
  * @FilePath: \personnelweb\src\service\modules\staff\shop.js
  * @Description: 门店员工资料维护、审核
  */
@@ -16,19 +16,19 @@ export function list(params) {
 }
 // 列表
 export function getListByLoginUser(params) {
-  return yid.http.get(`api-pers/employee/getListByLoginUser`, { params })
+  return yid.http.get(`api-chain/employee/getListByLoginUser`, { params })
 }
 // 新增
 export function save(params) {
-  return yid.http.post(`${prefix}/inductionEmployee`, params)
+  return yid.http.post(`${prefix}`, params)
 }
 // 修改
 export function update(params) {
-  return yid.http.put(`${prefix}/inductionEmployee`, params)
+  return yid.http.put(`${prefix}`, params)
 }
 // 删除
 export function remove(id) {
-  return yid.http.delete(`${prefix}/inductionEmployee/${id}`, null)
+  return yid.http.delete(`${prefix}/${id}`, null)
 }
 // 详情
 export function detail(id) {

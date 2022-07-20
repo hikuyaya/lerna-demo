@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-23 16:55:05
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-06 14:50:57
+ * @LastEditTime: 2022-07-20 16:22:35
  * @FilePath: \personnelweb\src\components\business\staffProfile\ImgItem.vue
  * @Description: 
 -->
@@ -37,12 +37,13 @@
       width="440px"
       append-to-body>
       <el-upload
+        ref="upload"
         class="tac mg-center"
         drag
-        :action="action"
-        :limit="1"
-        :file-list="fileList"
         list-type="picture"
+        :action="action"
+        :auto-upload="false"
+        :on-change="handleAvatarChange"
         :on-success="handleAvatarSuccess"
         :before-upload="beforeAvatarUpload">
         <i class="el-icon-upload"></i>
@@ -75,7 +76,6 @@ export default {
       disabled: false,
       reloadVisible: false,
       action: `${this.$yid.config.API.BASE}api-file/files-anon`,
-      fileList: [],
       imageUrl: '',
       newImageUrl: ''
     }
@@ -84,6 +84,15 @@ export default {
   methods: {
     onShowUpload() {
       this.dialog.upload = true
+    },
+    // 限制只能传1张 后面上传的替换前面的
+    handleAvatarChange(file, fileList) {
+      if (file.status === 'ready') {
+        if (fileList.length === 2) {
+          fileList.shift()
+        }
+      }
+      this.$refs['upload'].submit()
     },
     handleAvatarSuccess(res, file) {
       this.newImageUrl = res?.data?.url
@@ -121,7 +130,6 @@ export default {
     url: {
       immediate: true,
       handler: function (val) {
-        console.log('url', val)
         if (!val) {
           return
         }

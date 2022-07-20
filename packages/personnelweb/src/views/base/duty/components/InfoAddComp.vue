@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:45:13
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 10:26:08
+ * @LastEditTime: 2022-07-20 10:45:40
  * @FilePath: \personnelweb\src\views\base\duty\components\InfoAddComp.vue
  * @Description: 
 -->
@@ -15,7 +15,7 @@
             <el-input
               clearable
               v-model="info.pscode"
-              :disabled="operateType === 'detail'"></el-input>
+              :disabled="['detail', 'edit'].includes(operateType)"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -33,7 +33,7 @@
             <el-select
               v-model="info.bbids"
               multiple
-              :disabled="operateType === 'detail'"
+              :disabled="['detail', 'edit'].includes(operateType)"
               @change="onBbidsChange">
               <el-option
                 v-for="item in deptDataOptions"
@@ -81,10 +81,25 @@ export default {
     this.getDeptDataOptions()
   },
   data() {
+    const validatePscode = (rule, value, callback) => {
+      // 只能输入
+      if (!value) {
+        callback(new Error('请输入职务编码'))
+      } else if (value.length > 10) {
+        callback(new Error('职务编码最大输入10位'))
+      } else {
+        const reg = new RegExp(/^(MF|MR|\d*)\d*$/)
+        if (!reg.test(value)) {
+          callback(new Error('以MF或MR或数字开头'))
+        } else {
+          callback()
+        }
+      }
+    }
     return {
       info: {},
       rules: {
-        pscode: [{ required: true, message: '请输入职务编码' }],
+        pscode: [{ required: true, validator: validatePscode }],
         psname: [{ required: true, message: '请输入职务名称' }]
       },
       statusOptions: [

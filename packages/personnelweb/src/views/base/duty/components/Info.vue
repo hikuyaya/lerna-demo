@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:40:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-07 14:00:58
+ * @LastEditTime: 2022-07-20 10:50:51
  * @FilePath: \personnelweb\src\views\base\duty\components\Info.vue
  * @Description: 
 -->
@@ -26,9 +26,9 @@
             }}</el-link>
           </template>
         </yid-table-column>
-        <yid-table-column label="组织名称" prop="bname"></yid-table-column>
+        <!-- <yid-table-column label="组织名称" prop="bname"></yid-table-column> -->
         <yid-table-column label="同步业务组" prop="bbnames"></yid-table-column>
-        <yid-table-column label="状态" prop="status">
+        <!-- <yid-table-column label="状态" prop="status">
           <template slot-scope="scope">
             {{
               scope.row.status === '1'
@@ -38,7 +38,7 @@
                 : '其他'
             }}
           </template>
-        </yid-table-column>
+        </yid-table-column> -->
         <yid-table-column label="级别操作" prop="name">
           <template slot-scope="scope">
             <el-link
@@ -54,10 +54,8 @@
         </yid-table-column>
         <yid-table-column label="操作" min-width="100">
           <template slot-scope="scope">
-            <el-link type="primary" class="mg-r-16" @click="onEdit(scope.row)"
-              >编辑</el-link
-            >
-            <el-link
+            <el-link type="primary" @click="onEdit(scope.row)">编辑</el-link>
+            <!-- <el-link
               v-if="scope.row.status === '2'"
               type="primary"
               @click="onUpdateStatus(scope.row, 1)"
@@ -68,7 +66,7 @@
               type="primary"
               @click="onUpdateStatus(scope.row, 2)"
               >禁用</el-link
-            >
+            > -->
           </template>
         </yid-table-column>
       </yid-table>

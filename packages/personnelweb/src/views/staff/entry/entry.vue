@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:17:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-19 17:01:29
+ * @LastEditTime: 2022-07-20 09:13:02
  * @FilePath: \personnelweb\src\views\staff\entry\entry.vue
  * @Description: 门店入职审核
 -->
@@ -97,7 +97,7 @@
           width="150px"></yid-table-column>
         <yid-table-column label="操作" min-width="100" fixed="right">
           <!-- <template slot-scope="scope"> -->
-          <template v-if="scope.row.approvalStatus === 1" slot-scope="scope">
+          <template v-if="scope.row.approvalStatus === 2" slot-scope="scope">
             <el-tooltip effect="dark" content="编辑" placement="top">
               <i
                 class="el-icon-edit c-pointer font-size-16rem mg-r-8"

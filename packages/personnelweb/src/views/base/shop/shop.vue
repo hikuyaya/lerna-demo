@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-19 11:29:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-19 17:31:12
+ * @LastEditTime: 2022-07-20 16:23:33
  * @FilePath: \personnelweb\src\views\base\shop\shop.vue
  * @Description: 门店信息管理
 -->
@@ -244,7 +244,7 @@
           <el-form-item
             label="是否咨询公司："
             prop="isCompany"
-            :rules="[{ required: true, message: '请选择' }]">
+            :rules="[{ required: true, message: '请选择', trigger: 'blur' }]">
             <el-radio-group
               v-model="shopForm.isCompany"
               :disabled="['detail'].includes(operateType)">
@@ -312,7 +312,9 @@
             <yid-ask>控制门店信息是否在小程序中显示</yid-ask>
           </el-form-item>
         </el-form>
-        <el-row style="text-align: center; margin-top: 20px">
+        <el-row
+          style="text-align: center; margin-top: 20px"
+          v-if="operateType !== 'detail'">
           <el-button type="primary" @click="saveShop">保存</el-button
           >&nbsp;&nbsp;
           <!-- <el-button @click="nextConfig">下一步</el-button>&nbsp;&nbsp;-->
@@ -699,6 +701,7 @@ export default {
       return result
     },
     showDetailPage(row) {
+      console.log('this.brandData', this.brandData, row)
       let copyShopForm = JSON.parse(JSON.stringify(this.shopForm))
       const pca = [row.province + '', row.city + '', row.area + '']
 
@@ -706,6 +709,7 @@ export default {
         ...copyShopForm,
         ...row,
         pca,
+        brandId: row.brandId + '',
         regionObj: [row.regionName],
         regionObjValue: [
           {
@@ -923,6 +927,7 @@ export default {
         ...copyShopForm,
         ...row,
         pca,
+        brandId: row.brandId + '',
         regionObj: [row.regionName],
         regionObjValue: [
           {

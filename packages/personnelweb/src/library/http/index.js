@@ -9,12 +9,29 @@ import retry from './retry'
 
 import router from '@src/router'
 
-import nprogress from 'nprogress'
-import 'nprogress/nprogress.css'
+// import nprogress from 'nprogress'
+// import 'nprogress/nprogress.css'
 import de from 'element-ui/src/locale/lang/de'
+import { Loading } from 'element-ui'
 
 // 记录 http 请求次数
-let httpCount = 0
+// let httpCount = 0
+
+//加loading动画
+let loading
+
+function startLoading() {
+  loading = Loading.service({
+    lock: true,
+    // text: '加载中……',
+    background: 'rgba(0, 0, 0, 0)'
+  })
+}
+
+function endLoading() {
+  loading.close()
+}
+let needLoadingRequestCount = 0
 
 // 挂载实例方法
 axios.download = download
@@ -22,8 +39,14 @@ axios.download = download
 // 定义 http request 拦截器
 axios.interceptors.request.use(
   function (request) {
-    httpCount++
-    nprogress.start()
+    // httpCount++
+    // nprogress.start()
+    //打开loading
+    if (needLoadingRequestCount === 0) {
+      startLoading()
+    }
+    needLoadingRequestCount++
+
     // 基于 mock , 直接发送请求
     if (request.url.indexOf('http://mock.eolinker.com/') !== -1) {
       return request
@@ -67,10 +90,10 @@ axios.interceptors.request.use(
   },
 
   function (error) {
-    httpCount--
-    if (httpCount === 0) {
-      nprogress.done(false)
-    }
+    // httpCount--
+    // if (httpCount === 0) {
+    //   // nprogress.done(false)
+    // }
     console.log('reject')
     return Promise.reject(error)
   }
@@ -79,9 +102,19 @@ axios.interceptors.request.use(
 // 定义 http response 拦截器
 axios.interceptors.response.use(
   function (response) {
-    httpCount--
-    if (httpCount === 0) {
-      nprogress.done(false)
+    // httpCount--
+    // if (httpCount === 0) {
+    //   // nprogress.done(false)
+    // }
+    //关闭loading
+
+    if (needLoadingRequestCount <= 0) {
+      endLoading()
+      return
+    }
+    needLoadingRequestCount--
+    if (needLoadingRequestCount === 0) {
+      endLoading()
     }
 
     // 基于 mock , 直接返回数据
@@ -135,11 +168,20 @@ axios.interceptors.response.use(
   },
 
   function (error) {
-    httpCount--
-    if (httpCount === 0) {
-      nprogress.done(false)
+    // httpCount--
+    // if (httpCount === 0) {
+    //   // nprogress.done(false)
+    //     endLoading();
+    // }
+    //关闭loading
+    if (needLoadingRequestCount <= 0) {
+      endLoading()
+      return
     }
-
+    needLoadingRequestCount--
+    if (needLoadingRequestCount === 0) {
+      endLoading()
+    }
     // 超时处理
     if (error.code === 'ECONNABORTED') {
       if (!error.config.__isRetryComplete) {

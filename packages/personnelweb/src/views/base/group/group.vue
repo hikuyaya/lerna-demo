@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:09:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 09:32:25
+ * @LastEditTime: 2022-07-20 11:05:22
  * @FilePath: \personnelweb\src\views\base\group\group.vue
  * @Description: 
 -->
@@ -78,7 +78,7 @@
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="800px">
+      width="1200px">
       <add-comp
         ref="addCompRef"
         v-if="addCompVisible"

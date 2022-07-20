@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-22 14:26:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 11:41:07
+ * @LastEditTime: 2022-07-20 09:22:51
  * @FilePath: \personnelweb\src\views\base\station\components\AddComp.vue
  * @Description: 
 -->
@@ -126,7 +126,7 @@ export default {
         { label: '正常', value: 1 },
         { label: '停用', value: 2 }
       ],
-      treeSelectNode: null,
+      treeSelectNode: {},
       normalizer(node) {
         return {
           id: node.code,
@@ -153,7 +153,11 @@ export default {
         .validate()
         .catch(err => console.error(err))
       if (result) {
-        return this.info
+        const otype = this.treeSelectNode.type === '0' ? 2 : 1
+        return {
+          ...this.info,
+          otype
+        }
       }
     }
   },

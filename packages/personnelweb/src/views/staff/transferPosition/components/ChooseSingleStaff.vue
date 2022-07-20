@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-11 13:36:56
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 11:24:14
+ * @LastEditTime: 2022-07-20 09:57:27
  * @FilePath: \personnelweb\src\views\staff\transferPosition\components\ChooseSingleStaff.vue
  * @Description: 
 -->
@@ -23,8 +23,15 @@
       ref="table"
       class="mg-t-12">
       <yid-table-column label="员工姓名" prop="eeName"></yid-table-column>
-      <yid-table-column label="岗位" prop="postName"></yid-table-column>
       <yid-table-column label="编码" prop="postCode"></yid-table-column>
+      <yid-table-column label="岗位名称" prop="postName"></yid-table-column>
+      <yid-table-column label="类型" prop="type">
+        <template slot-scope="scope">
+          {{
+            scope.row.type == 1 ? '正式' : scope.row.type == 2 ? '兼职' : '未知'
+          }}
+        </template>
+      </yid-table-column>
       <yid-table-column label="机构编码" prop="bbCode"></yid-table-column>
       <yid-table-column label="机构名称" prop="bbName"></yid-table-column>
       <yid-table-column label="职务" prop="positionName"></yid-table-column>
@@ -79,8 +86,8 @@ export default {
           width: '20%'
         },
         {
-          label: '岗位名称',
-          prop: 'postName',
+          label: '机构名称',
+          prop: 'bbName',
           type: 'input',
           width: '20%'
         }

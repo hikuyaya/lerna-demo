@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 14:36:55
+ * @LastEditTime: 2022-07-21 15:40:20
  * @FilePath: \personnelweb\src\views\staff\transferPosition\components\AddComp.vue
  * @Description: 
 -->
@@ -19,6 +19,7 @@
               style="width: calc(100% - 100px)"
               class="mg-r-12" />
             <el-button
+              v-if="operateType !== 'edit'"
               type="primary"
               icon="el-icon-search"
               circle
@@ -172,12 +173,16 @@ export default {
   methods: {
     handleSelectStaff(staff) {
       console.log(staff)
-      this.sourceTableData = [staff]
+      const tempStaff = Object.assign({}, staff)
+      tempStaff.sourceModifyDate = new Date().formatDate('yyyy-MM-dd')
+      this.sourceTableData = [tempStaff]
       this.chooseStaffVisible = false
     },
     handleSelectPosition(position) {
       console.log(position)
-      this.targetTableData = [position]
+      const tempPosition = Object.assign({}, position)
+      tempPosition.targetModifyDate = new Date().formatDate('yyyy-MM-dd')
+      this.targetTableData = [tempPosition]
       this.choosePositionVisible = false
     },
     getData() {

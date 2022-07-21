@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:02:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 16:01:00
+ * @LastEditTime: 2022-07-21 17:27:38
  * @FilePath: \personnelweb\src\views\salary-setting\composition\composition.vue
  * @Description: 
 -->
@@ -49,11 +49,6 @@
             }}
           </template>
         </yid-table-column>
-        <yid-table-column label="操作" width="100" fixed="right">
-          <template slot-scope="scope">
-            <el-link type="primary" @click="onRemove(scope.row)">移除</el-link>
-          </template>
-        </yid-table-column>
       </yid-table>
     </div>
     <el-dialog
@@ -72,31 +67,17 @@
         <el-button @click="addCompVisible = false">取 消</el-button>
       </span>
     </el-dialog>
-    <el-dialog
-      title="移除黑名单确认"
-      :visible.sync="removeCompVisible"
-      :close-on-click-modal="false"
-      append-to-body
-      width="380px">
-      <remove-comp v-if="removeCompVisible" ref="removeCompRef" />
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onRemoveSubmit">确 定</el-button>
-        <el-button @click="removeCompVisible = false">取 消</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
-import RemoveComp from './components/RemoveComp.vue'
 import service from '@src/service'
 export default {
-  components: { SearchTop, AddComp, RemoveComp },
+  components: { SearchTop, AddComp },
   data() {
     return {
       addCompVisible: true,
-      removeCompVisible: false,
       operateType: 'add',
       selectRow: {},
       conditions: [
@@ -219,25 +200,6 @@ export default {
       await service.staff.black.save(result)
       this.$message.success('操作成功')
       this.addCompVisible = false
-      // 刷新列表
-      this.queryList()
-    },
-    onRemove(row) {
-      this.selectRow = row
-      this.removeCompVisible = true
-    },
-    // 移除确定
-    async onRemoveSubmit() {
-      const result = await this.$refs.removeCompRef.getData()
-      if (!result) {
-        return
-      }
-      await service.staff.black.remove({
-        removeRemark: result.reason,
-        id: this.selectRow.id
-      })
-      this.$message.success('操作成功')
-      this.removeCompVisible = false
       // 刷新列表
       this.queryList()
     }

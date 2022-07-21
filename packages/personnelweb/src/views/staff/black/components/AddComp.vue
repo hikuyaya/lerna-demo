@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 11:12:52
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-05 11:36:21
+ * @LastEditTime: 2022-07-21 10:31:13
  * @FilePath: \personnelweb\src\views\staff\black\components\AddComp.vue
  * @Description: 
 -->
@@ -50,15 +50,19 @@
       :close-on-click-modal="false"
       append-to-body
       width="800px">
-      <choose-staff
+      <choose-single-staff
         v-if="chooseStaffVisible"
-        @select="handleSelectStaff"></choose-staff>
+        :columns="chooseStaffColumns"
+        :actionUrl="chooseSingleStaffActionUrl"
+        :conditions="chooseStaffConditions"
+        @select="handleSelectStaff"></choose-single-staff>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import ChooseStaff from '@src/components/business/ChooseSingleStaff'
+import ChooseSingleStaff from '@src/components/business/ChooseSingleStaff'
+import service from '@src/service'
 
 export default {
   props: {
@@ -80,7 +84,7 @@ export default {
     treeData: Array
   },
   components: {
-    ChooseStaff
+    ChooseSingleStaff
   },
   data() {
     return {
@@ -106,7 +110,51 @@ export default {
         eename: [{ required: true, message: '请输入姓名' }]
       },
       treeSelectNode: null,
-      chooseStaffVisible: false
+      chooseStaffVisible: false,
+      chooseSingleStaffActionUrl: service.chain.employee.list,
+      chooseStaffColumns: [
+        { prop: 'eename', label: '员工姓名' },
+        { prop: 'eecode', label: '员工编码' },
+        { prop: 'psname', label: '职务' },
+        { prop: 'idno', label: '身份证号' },
+        {
+          prop: 'status',
+          label: '状态',
+          render: row => {
+            if (row.status == 1) {
+              return '在职'
+            } else if (row.status == 2) {
+              return '离职'
+            } else {
+              return '其他'
+            }
+          }
+        },
+        { prop: 'quitReason', label: '离职原因' }
+      ],
+      chooseStaffConditions: [
+        {
+          label: '员工姓名', // 标签
+          prop: 'eename', // 绑定的字段
+          // label宽度
+          type: 'input',
+          width: '30%' // 整个组件占的宽度
+          // widgetWidth: '200px', // 控件的宽度
+          // required: true // 是否必填
+        },
+        {
+          label: '员工编码',
+          prop: 'eecode',
+          type: 'input', // 搜索类型
+          width: '30%'
+        },
+        {
+          label: '身份证号',
+          prop: 'idno',
+          type: 'input',
+          width: '30%'
+        }
+      ]
     }
   },
   methods: {

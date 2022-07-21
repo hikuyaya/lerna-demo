@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:38:46
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 10:21:11
+ * @LastEditTime: 2022-07-21 11:09:18
  * @FilePath: \personnelweb\src\views\staff\profile\profile.vue
  * @Description: 员工资料维护
 -->
@@ -345,12 +345,25 @@ export default {
       if (!result) {
         return
       }
-      // 只有修改
-      await service.staff.profile.update(result)
-      this.$message.success('操作成功')
-      this.addCompVisible = false
-      // 刷新列表
-      await this.queryList()
+      this.$confirm(
+        `您确认需要保存信息吗？保存后页面信息会立即生效`,
+        `确认修改`,
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          cancelButtonClass: 'btn-custom-cancel',
+          type: 'warning'
+        }
+      )
+        .then(async () => {
+          // 只有修改
+          await service.staff.profile.update(result)
+          this.$message.success('操作成功')
+          this.addCompVisible = false
+          // 刷新列表
+          await this.queryList()
+        })
+        .catch(() => {})
     },
     onCancel(row) {
       this.addCompVisible = false

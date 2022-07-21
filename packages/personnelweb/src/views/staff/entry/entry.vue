@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:17:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-20 09:13:02
+ * @LastEditTime: 2022-07-21 11:02:58
  * @FilePath: \personnelweb\src\views\staff\entry\entry.vue
  * @Description: 门店入职审核
 -->
@@ -298,19 +298,27 @@ export default {
     },
     async onSubmit() {
       const result = await this.$refs.addCompRef.getData()
-      console.log(result)
       if (!result) {
         return
       }
-      if (this.operateType === 'add') {
-        await service.staff.entry.save(result)
-      } else {
-        await service.staff.entry.update(result)
-      }
-      this.$message.success('操作成功')
-      this.addCompVisible = false
-      // 刷新列表
-      await this.queryList()
+      this.$confirm(`您确认需要保存信息吗？`, `确认修改`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'btn-custom-cancel',
+        type: 'warning'
+      })
+        .then(async () => {
+          if (this.operateType === 'add') {
+            await service.staff.entry.save(result)
+          } else {
+            await service.staff.entry.update(result)
+          }
+          this.$message.success('操作成功')
+          this.addCompVisible = false
+          // 刷新列表
+          await this.queryList()
+        })
+        .catch(() => {})
     },
     onCancel(row) {
       this.addCompVisible = false

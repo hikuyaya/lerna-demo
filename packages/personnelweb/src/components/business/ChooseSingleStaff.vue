@@ -1,10 +1,10 @@
 <!--
  * @Author: wqy
- * @Date: 2022-07-04 14:30:12
+ * @Date: 2022-07-18 09:45:59
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-07 17:05:49
+ * @LastEditTime: 2022-07-21 10:30:30
  * @FilePath: \personnelweb\src\components\business\ChooseSingleStaff.vue
- * @Description: 业务相关——选择人员
+ * @Description: 
 -->
 <template>
   <div>
@@ -22,32 +22,27 @@
       pagination
       ref="table"
       class="mg-t-12">
-      <yid-table-column label="员工姓名" prop="eename"></yid-table-column>
       <yid-table-column
-        label="员工编码"
-        prop="eecode"
-        width="90px"></yid-table-column>
-      <yid-table-column label="职务" prop="psname"></yid-table-column>
-      <yid-table-column label="身份证号" prop="idno"></yid-table-column>
-      <yid-table-column label="状态" prop="status" width="60px">
+        v-for="column in columns"
+        :key="column.prop"
+        :label="column.label"
+        :width="column.width"
+        :prop="column.prop">
         <template slot-scope="scope">
-          {{
-            scope.row.status == '1'
-              ? '在职'
-              : scope.row.status == '2'
-              ? '离职'
-              : '其他'
-          }}
+          <span v-if="column.render">
+            {{ column.render(scope.row) }}
+          </span>
+          <span v-else>
+            {{ scope.row[column.prop] }}
+          </span>
         </template>
       </yid-table-column>
-      <yid-table-column label="离职原因" prop="quitReason"></yid-table-column>
     </yid-table>
   </div>
 </template>
 
 <script>
 import SearchTop from '@src/components/base/SearchTop.vue'
-import service from '@src/service'
 
 export default {
   components: { SearchTop },
@@ -57,35 +52,19 @@ export default {
       default: function () {
         return {}
       }
+    },
+    actionUrl: Function,
+    columns: {
+      type: Array
+    },
+    conditions: {
+      type: Array
     }
   },
   data() {
     return {
       info: {},
       selectRow: null,
-      conditions: [
-        {
-          label: '员工姓名', // 标签
-          prop: 'eename', // 绑定的字段
-          // label宽度
-          type: 'input',
-          width: '30%' // 整个组件占的宽度
-          // widgetWidth: '200px', // 控件的宽度
-          // required: true // 是否必填
-        },
-        {
-          label: '员工编码',
-          prop: 'eecode',
-          type: 'input', // 搜索类型
-          width: '30%'
-        },
-        {
-          label: '身份证号',
-          prop: 'idno',
-          type: 'input',
-          width: '30%'
-        }
-      ],
       tableData: []
     }
   },
@@ -103,12 +82,8 @@ export default {
     onOpenAdvance() {},
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      // 身份证号转大写
-      params.idno = params.idCard?.toUpperCase()
-      params.status = '2'
-      params.isDel = 0
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.chain.employee.list
+      const fetch = this.actionUrl
       this.$refs.table.reloadData({
         fetch,
         params

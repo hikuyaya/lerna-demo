@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:18:09
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 17:18:31
+ * @LastEditTime: 2022-07-21 11:05:05
  * @FilePath: \personnelweb\src\components\business\staffProfile\StaffProfile.vue
  * @Description: 员工资料
 -->
@@ -571,43 +571,23 @@ export default {
       info: {},
       station: {}, // 岗位相关
       rules: {
-        regionName: [
-          { required: true, message: '请选择岗位信息', trigger: 'blur' }
-        ],
-        psname: [
-          { required: true, message: '请选择岗位信息', trigger: 'blur' }
-        ],
-        userName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-        eeName: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
-        sex: [{ required: true, message: '请选择性别', trigger: 'blur' }],
-        origin: [{ required: true, message: '请输入籍贯', trigger: 'blur' }],
-        birthday: [
-          { required: true, message: '请选择出生日期', trigger: 'blur' }
-        ],
-        ethnic: [{ required: true, message: '请输入名族', trigger: 'blur' }],
-        cardType: [
-          { required: true, message: '请选择证件类型', trigger: 'blur' }
-        ],
-        cardNumber: [
-          { required: true, validator: validateIdCard, trigger: 'blur' }
-        ],
-        cardTermValidity: [
-          { required: true, message: '请选择证件有效期', trigger: 'blur' }
-        ],
-        address: [
-          { required: true, message: '请输入家庭地址', trigger: 'blur' }
-        ],
-        mobile: [
-          { required: true, validator: validateMobile, trigger: 'blur' }
-        ],
-        educode: [{ required: true, message: '请选择学历', trigger: 'blur' }],
-        graduated: [
-          { required: true, message: '请输入毕业院校', trigger: 'blur' }
-        ],
-        shareholder: [{ required: true, message: '请选择', trigger: 'blur' }],
-        entrydate: [
-          { required: true, message: '请选择入职日期', trigger: 'blur' }
-        ]
+        regionName: [{ required: true, message: '请选择岗位信息' }],
+        psname: [{ required: true, message: '请选择岗位信息' }],
+        userName: [{ required: true, message: '请输入姓名' }],
+        eeName: [{ required: true, message: '请输入姓名' }],
+        sex: [{ required: true, message: '请选择性别' }],
+        origin: [{ required: true, message: '请输入籍贯' }],
+        birthday: [{ required: true, message: '请选择出生日期' }],
+        ethnic: [{ required: true, message: '请输入名族' }],
+        cardType: [{ required: true, message: '请选择证件类型' }],
+        cardNumber: [{ required: true, validator: validateIdCard }],
+        cardTermValidity: [{ required: true, message: '请选择证件有效期' }],
+        address: [{ required: true, message: '请输入家庭地址' }],
+        mobile: [{ required: true, validator: validateMobile }],
+        educode: [{ required: true, message: '请选择学历' }],
+        graduated: [{ required: true, message: '请输入毕业院校' }],
+        shareholder: [{ required: true, message: '请选择' }],
+        entrydate: [{ required: true, message: '请选择入职日期' }]
       },
       cardTypeOptions: [
         { label: '身份证', value: 1 },
@@ -648,15 +628,11 @@ export default {
     },
     bankValidate() {
       if (!this.rules.hasOwnProperty('bankAccount')) {
-        const bankAccount = [
-          { required: true, message: '请输入银行卡号', trigger: 'blur' }
-        ]
+        const bankAccount = [{ required: true, message: '请输入银行卡号' }]
         this.$set(this.rules, 'bankAccount', bankAccount)
       }
       if (!this.rules.hasOwnProperty('bankCode')) {
-        const bankCode = [
-          { required: true, message: '请选择开户银行', trigger: 'blur' }
-        ]
+        const bankCode = [{ required: true, message: '请选择开户银行' }]
         this.$set(this.rules, 'bankCode', bankCode)
       }
     }

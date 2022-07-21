@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:02:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 14:03:31
+ * @LastEditTime: 2022-07-21 16:01:00
  * @FilePath: \personnelweb\src\views\salary-setting\composition\composition.vue
  * @Description: 
 -->
@@ -18,53 +18,37 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="姓名" prop="eeName" width="100px" fixed>
+        <yid-table-column label="编码" prop="eeName" width="100px" fixed>
         </yid-table-column>
         <yid-table-column
-          label="身份证号"
+          label="名称"
           prop="idCard"
           width="150px"
           fixed></yid-table-column>
         <yid-table-column
-          label="员工编码"
+          label="输入类型"
           prop="eeCode"
-          width="80px"
           fixed></yid-table-column>
+        <yid-table-column
+          label="计算类型"
+          prop="eeCode"
+          fixed></yid-table-column>
+        <yid-table-column
+          label="薪酬分组"
+          prop="eeCode"
+          fixed></yid-table-column>
+        <yid-table-column label="备注" prop="eeCode" fixed></yid-table-column>
         <yid-table-column label="状态" prop="status" width="70px" fixed>
           <template slot-scope="scope">
             {{
               scope.row.status == 1
-                ? '有效'
+                ? '正常'
                 : scope.row.status == 2
-                ? '无效'
+                ? '停用'
                 : '其他'
             }}
           </template>
         </yid-table-column>
-        <yid-table-column
-          label="创建人"
-          prop="createdBy"
-          width="100px"></yid-table-column>
-        <yid-table-column
-          label="创建时间"
-          prop="createdTime"
-          width="150px"></yid-table-column>
-        <yid-table-column
-          label="移除人"
-          prop="removeBy"
-          width="100px"></yid-table-column>
-        <yid-table-column
-          label="移除时间"
-          prop="removeDate"
-          width="150px"></yid-table-column>
-        <yid-table-column
-          label="报备原因"
-          prop="addRemark"
-          width="340px"></yid-table-column>
-        <yid-table-column
-          label="移除原因"
-          prop="removeRemark"
-          width="340px"></yid-table-column>
         <yid-table-column label="操作" width="100" fixed="right">
           <template slot-scope="scope">
             <el-link type="primary" @click="onRemove(scope.row)">移除</el-link>
@@ -73,7 +57,7 @@
       </yid-table>
     </div>
     <el-dialog
-      title="新增人员"
+      title="新增"
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
@@ -111,53 +95,92 @@ export default {
   components: { SearchTop, AddComp, RemoveComp },
   data() {
     return {
-      addCompVisible: false,
+      addCompVisible: true,
       removeCompVisible: false,
       operateType: 'add',
       selectRow: {},
       conditions: [
         {
-          label: '员工姓名', // 标签
+          label: '编码', // 标签
           prop: 'eeName', // 绑定的字段
           // label宽度
           type: 'input',
-          width: '20%' // 整个组件占的宽度
+          labelWidth: '0.8rem',
+          width: '15%' // 整个组件占的宽度
           // widgetWidth: '200px', // 控件的宽度
           // required: true // 是否必填
         },
         {
-          label: '员工编码',
+          label: '名称',
           prop: 'eeCode',
           type: 'input', // 搜索类型
-          width: '20%'
-        },
-        {
-          label: '身份证号',
-          prop: 'idCard',
-          type: 'input',
-          width: '20%'
+          width: '15%',
+          labelWidth: '0.8rem'
         },
         {
           label: '状态',
-          prop: 'status',
+          prop: 'type3',
           type: 'select',
           labelWidth: '0.8rem',
           options: [
             { label: '所有', value: '' },
-            { label: '有效', value: '1' },
-            { label: '无效', value: '2' }
+            { label: '正常', value: '1' },
+            { label: '停用', value: '2' }
           ],
-          width: '20%'
+          width: '10%'
+        },
+        {
+          label: '输入类型',
+          prop: 'type',
+          type: 'select',
+          labelWidth: '1rem',
+          options: [
+            { label: '所有', value: '' },
+            { label: '固定项', value: '1' },
+            { label: '输入项', value: '2' },
+            { label: '提成项', value: '3' }
+          ],
+          width: '12%'
+        },
+        {
+          label: '计算类型',
+          prop: 'type1',
+          type: 'select',
+          labelWidth: '1rem',
+          options: [
+            { label: '所有', value: '' },
+            { label: '增项', value: '1' },
+            { label: '减项', value: '2' },
+            { label: '非计算项', value: '3' }
+          ],
+          width: '12%'
+        },
+        {
+          label: '薪酬分组',
+          prop: 'type2',
+          type: 'select',
+          labelWidth: '1rem',
+          options: [
+            { label: '所有', value: '' },
+            { label: '基本工资', value: '1' },
+            { label: '奖金', value: '2' },
+            { label: '提成', value: '3' },
+            { label: '工服补款', value: '4' },
+            { label: '个人扣税', value: '5' },
+            { label: '工资罚款', value: '6' },
+            { label: '工资扣款', value: '7' }
+          ],
+          width: '12%'
         }
       ],
       tableData: []
     }
   },
   mounted() {
-    this.queryBlackList()
+    // this.queryList()
   },
   methods: {
-    queryBlackList() {
+    queryList() {
       this.onSearch()
     },
     onOpenAdvance() {},
@@ -197,7 +220,7 @@ export default {
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表
-      this.queryBlackList()
+      this.queryList()
     },
     onRemove(row) {
       this.selectRow = row
@@ -216,7 +239,7 @@ export default {
       this.$message.success('操作成功')
       this.removeCompVisible = false
       // 刷新列表
-      this.queryBlackList()
+      this.queryList()
     }
   }
 }

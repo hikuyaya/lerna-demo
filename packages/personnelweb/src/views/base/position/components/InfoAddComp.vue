@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:45:13
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-20 10:45:40
- * @FilePath: \personnelweb\src\views\base\duty\components\InfoAddComp.vue
+ * @LastEditTime: 2022-07-21 13:58:05
+ * @FilePath: \personnelweb\src\views\base\position\components\InfoAddComp.vue
  * @Description: 
 -->
 <template>

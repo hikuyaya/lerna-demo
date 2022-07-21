@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-06-30 16:18:59
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-06 16:35:03
- * @FilePath: \personnelweb\src\views\base\duty\components\LevelOperate.vue
+ * @LastEditTime: 2022-07-21 13:58:18
+ * @FilePath: \personnelweb\src\views\base\position\components\LevelOperate.vue
  * @Description: 
 -->
 <template>

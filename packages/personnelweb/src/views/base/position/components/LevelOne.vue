@@ -1,9 +1,9 @@
 <!--
  * @Author: wqy
- * @Date: 2022-06-22 17:41:05
+ * @Date: 2022-06-22 17:41:18
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 15:20:55
- * @FilePath: \personnelweb\src\views\base\duty\components\Level.vue
+ * @LastEditTime: 2022-07-21 13:58:16
+ * @FilePath: \personnelweb\src\views\base\position\components\LevelOne.vue
  * @Description: 
 -->
 <template>
@@ -39,7 +39,7 @@ export default {
       conditions: [
         {
           label: '职务编码', // 标签
-          prop: 'pscode', // 绑定的字段
+          prop: 'psCode', // 绑定的字段
           // label宽度
           type: 'input',
           width: '16%' // 整个组件占的宽度
@@ -48,13 +48,13 @@ export default {
         },
         {
           label: '职务名称',
-          prop: 'psname',
+          prop: 'psName',
           type: 'input', // 搜索类型
           width: '16%'
         },
         {
           label: '级别名称',
-          prop: 'pslname',
+          prop: 'pslName',
           type: 'input', // 搜索类型
           width: '16%'
         }
@@ -72,7 +72,7 @@ export default {
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.base.duty.positionLevelList
+      const fetch = service.base.duty.positionLevel1List
       this.$refs.table.reloadData({
         fetch,
         params

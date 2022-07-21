@@ -1,11 +1,12 @@
 <!--
  * @Author: wqy
- * @Date: 2022-06-22 17:11:54
+ * @Date: 2022-07-21 13:56:55
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-22 17:42:14
- * @FilePath: \personnelweb\src\views\base\duty\duty.vue
+ * @LastEditTime: 2022-07-21 13:57:39
+ * @FilePath: \personnelweb\src\views\base\position\position.vue
  * @Description: 职务管理
 -->
+
 <template>
   <div>
     <el-tabs v-model="activeName">

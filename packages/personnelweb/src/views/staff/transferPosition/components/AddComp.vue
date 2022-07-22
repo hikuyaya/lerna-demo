@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 15:40:20
+ * @LastEditTime: 2022-07-22 10:30:58
  * @FilePath: \personnelweb\src\views\staff\transferPosition\components\AddComp.vue
  * @Description: 
 -->
@@ -44,10 +44,14 @@
       </yid-table-column>
       <yid-table-column label="职务名称" prop="positionName" width="176px">
       </yid-table-column>
-      <yid-table-column label="类型" prop="type">
+      <yid-table-column label="类型" prop="sourceType">
         <template slot-scope="scope">
           {{
-            scope.row.type == 1 ? '正式' : scope.row.type == 2 ? '兼职' : '未知'
+            scope.row.sourceType == 1
+              ? '正式'
+              : scope.row.sourceType == 2
+              ? '兼职'
+              : '未知'
           }}
         </template>
       </yid-table-column>
@@ -175,6 +179,8 @@ export default {
       console.log(staff)
       const tempStaff = Object.assign({}, staff)
       tempStaff.sourceModifyDate = new Date().formatDate('yyyy-MM-dd')
+      tempStaff.sourceType = staff.type
+      tempStaff.sourceUserPostId = staff.id
       this.sourceTableData = [tempStaff]
       this.chooseStaffVisible = false
     },
@@ -197,16 +203,20 @@ export default {
       const source = this.sourceTableData[0]
       const target = this.targetTableData[0]
       console.log(source, target)
-      return {
+
+      let params = {
         eeCode: source.eeCode,
         sourceFlag: source.sourceFlag,
-        sourceUserPostId: source.id,
+        sourceType: source.sourceType,
+        sourceUserPostId: source.sourceUserPostId,
         targetPostCode: target.postCode || target.targetPostCode,
         targetFlag: 3,
         targetType: target.targetType,
         targetModifyDate: target.targetModifyDate,
         sourceModifyDate: source.sourceModifyDate
       }
+
+      return this.operateType === 'add' ? params : { ...params, id: source.id }
     }
   },
   computed: {
@@ -234,14 +244,15 @@ export default {
         }
         this.info = JSON.parse(JSON.stringify(val))
         const source = {
-          id: val.sourceUserPostId,
+          id: val.id,
+          sourceUserPostId: val.sourceUserPostId,
           sourceFlag: val.sourceFlag,
           postName: val.sourcePostName,
           bbCode: val.sourceRegionCode,
           bbName: val.sourceRegionName,
           eeName: val.eeName,
           eeCode: val.eeCode,
-          type: val.type,
+          sourceType: val.sourceType,
           sourceModifyDate: val.sourceModifyDate,
           positionName: val.sourcePositionName
         }

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:09:38
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 14:38:28
+ * @LastEditTime: 2022-07-22 15:41:33
  * @FilePath: \personnelweb\src\views\salary-setting\special\special.vue
  * @Description: 
 -->
@@ -18,15 +18,14 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="职务编码" prop="eeName" width="100px">
+        <yid-table-column label="编码" prop="eeName" width="100px">
         </yid-table-column>
         <yid-table-column
-          label="职务名称"
+          label="名称"
           prop="idCard"
           width="150px"></yid-table-column>
-        <yid-table-column label="工资账套" prop="eeCode"></yid-table-column>
-        <yid-table-column label="学习金额度" prop="eeCode"></yid-table-column>
-        <yid-table-column label="每月扣除额度" prop="eeCode"></yid-table-column>
+        <yid-table-column label="适用门店" prop="eeCode"></yid-table-column>
+        <yid-table-column label="备注" prop="eeCode"></yid-table-column>
         <yid-table-column label="状态" prop="status" width="70px">
           <template slot-scope="scope">
             {{

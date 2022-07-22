@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 09:25:54
+ * @LastEditTime: 2022-07-22 16:18:23
  * @FilePath: \personnelweb\src\views\staff\status\components\AddComp.vue
  * @Description: 
 -->
@@ -44,7 +44,9 @@
       </yid-table-column>
       <yid-table-column label="新状态" prop="afStatus" width="176px">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.afStatus">
+          <el-select
+            v-model="scope.row.afStatus"
+            @change="handleAfStatusChange">
             <el-option
               label="在职"
               :value="1"
@@ -62,7 +64,10 @@
       </yid-table-column>
       <yid-table-column label="离职原因" prop="maintenanceLeave" width="176px">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.maintenanceLeave" clearable>
+          <el-select
+            v-model="scope.row.maintenanceLeave"
+            clearable
+            :disabled="[1, 3].includes(tableData[0].afStatus)">
             <el-option
               v-for="status in statusReasonList"
               :key="status.name"
@@ -71,10 +76,10 @@
           </el-select>
         </template>
       </yid-table-column>
-      <yid-table-column label="变动日期" prop="contdateend" width="176px">
+      <yid-table-column label="变动日期" prop="changeDate" width="176px">
         <template slot-scope="scope">
           <el-date-picker
-            v-model="scope.row.contdateend"
+            v-model="scope.row.changeDate"
             type="date"
             format="yyyy年MM月dd日"
             placement="bottom"
@@ -139,8 +144,18 @@ export default {
         newAfStatus = 1
       }
       copyStaff.afStatus = newAfStatus
+      // 自动填充变更日期字段
+      copyStaff.changeDate = new Date().formatDate('yyyy-MM-dd')
       this.tableData = [copyStaff]
       this.chooseStaffVisible = false
+    },
+    handleAfStatusChange(val) {
+      const copy = this.tableData[0]
+      if ([1, 3].includes(val)) {
+        // 在职、长假 清空离职原因
+        copy.maintenanceLeave = ''
+      }
+      this.tableData = [copy]
     },
     getData() {
       return this.tableData

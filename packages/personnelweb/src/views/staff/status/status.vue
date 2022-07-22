@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:41:52
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 14:06:26
+ * @LastEditTime: 2022-07-22 16:12:29
  * @FilePath: \personnelweb\src\views\staff\status\status.vue
  * @Description: 员工状态维护
 -->
@@ -73,7 +73,7 @@
                 ? '无业绩离职'
                 : scope.row.maintenanceLeave == '03'
                 ? '分店报离'
-                : '其他'
+                : ''
             }}
           </template>
         </yid-table-column>

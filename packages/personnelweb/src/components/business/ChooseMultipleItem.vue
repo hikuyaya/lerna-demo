@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 17:06:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 17:16:36
+ * @LastEditTime: 2022-07-22 09:17:31
  * @FilePath: \personnelweb\src\components\business\ChooseMultipleItem.vue
  * @Description: 
 -->
@@ -87,7 +87,7 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      params.limit = this.$refs.table.Pagination.internalPageSize
+      params.limit = this.$refs.table.Pagination?.internalPageSize
       const fetch = this.actionUrl
       this.$refs.table.reloadData({
         fetch,

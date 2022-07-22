@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:02:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 17:27:38
+ * @LastEditTime: 2022-07-21 17:34:47
  * @FilePath: \personnelweb\src\views\salary-setting\composition\composition.vue
  * @Description: 
 -->
@@ -18,27 +18,17 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="编码" prop="eeName" width="100px" fixed>
+        <yid-table-column label="编码" prop="eeName" width="100px">
         </yid-table-column>
         <yid-table-column
           label="名称"
           prop="idCard"
-          width="150px"
-          fixed></yid-table-column>
-        <yid-table-column
-          label="输入类型"
-          prop="eeCode"
-          fixed></yid-table-column>
-        <yid-table-column
-          label="计算类型"
-          prop="eeCode"
-          fixed></yid-table-column>
-        <yid-table-column
-          label="薪酬分组"
-          prop="eeCode"
-          fixed></yid-table-column>
-        <yid-table-column label="备注" prop="eeCode" fixed></yid-table-column>
-        <yid-table-column label="状态" prop="status" width="70px" fixed>
+          width="150px"></yid-table-column>
+        <yid-table-column label="输入类型" prop="eeCode"></yid-table-column>
+        <yid-table-column label="计算类型" prop="eeCode"></yid-table-column>
+        <yid-table-column label="薪酬分组" prop="eeCode"></yid-table-column>
+        <yid-table-column label="备注" prop="eeCode"></yid-table-column>
+        <yid-table-column label="状态" prop="status" width="70px">
           <template slot-scope="scope">
             {{
               scope.row.status == 1
@@ -47,6 +37,11 @@
                 ? '停用'
                 : '其他'
             }}
+          </template>
+        </yid-table-column>
+        <yid-table-column label="操作">
+          <template slot-scope="scope">
+            <el-link type="primary" @click="onEdit(scope.row)">编辑</el-link>
           </template>
         </yid-table-column>
       </yid-table>
@@ -77,7 +72,7 @@ export default {
   components: { SearchTop, AddComp },
   data() {
     return {
-      addCompVisible: true,
+      addCompVisible: false,
       operateType: 'add',
       selectRow: {},
       conditions: [

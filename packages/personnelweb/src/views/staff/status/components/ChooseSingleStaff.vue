@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-11 13:36:56
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 11:18:54
+ * @LastEditTime: 2022-07-22 09:25:48
  * @FilePath: \personnelweb\src\views\staff\status\components\ChooseSingleStaff.vue
  * @Description: 
 -->
@@ -27,7 +27,19 @@
       <yid-table-column label="机构编码" prop="bbCode"></yid-table-column>
       <yid-table-column label="机构名称" prop="bbName"></yid-table-column>
       <yid-table-column label="职务" prop="positionName"></yid-table-column>
-      <yid-table-column label="状态" prop="positionName"></yid-table-column>
+      <yid-table-column label="状态" prop="status">
+        <template slot-scope="scope">
+          {{
+            scope.row.status === 1
+              ? '在职'
+              : scope.row.status === 2
+              ? '离职'
+              : scope.row.status === 2
+              ? '长假'
+              : '其他'
+          }}
+        </template>
+      </yid-table-column>
     </yid-table>
   </div>
 </template>

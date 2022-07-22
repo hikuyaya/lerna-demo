@@ -1,9 +1,9 @@
 <!--
  * @Author: wqy
- * @Date: 2022-07-21 14:03:00
+ * @Date: 2022-07-21 17:30:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 17:34:55
- * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
+ * @LastEditTime: 2022-07-22 09:19:03
+ * @FilePath: \personnelweb\src\views\salary-setting\asetofbooks\components\AddComp.vue
  * @Description: 
 -->
 
@@ -22,47 +22,56 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="输入类型" prop="type1">
+          <el-form-item label="适用门店" prop="type1">
             <el-select v-model="info.type1">
-              <el-option label="固定项" value="1"></el-option>
-              <el-option label="输入项" value="2"></el-option>
-              <el-option label="提成项" value="3"></el-option>
+              <el-option label="美发门店" value="1"></el-option>
+              <el-option label="美容门店" value="2"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="8">
-          <el-form-item label="计算类型" prop="type2">
-            <el-select v-model="info.type2">
-              <el-option label="增项" value="1"></el-option>
-              <el-option label="减项" value="2"></el-option>
-              <el-option label="非计算项" value="3"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="薪酬分组" prop="type3">
-            <el-select v-model="info.type3">
-              <el-option label="增项" value="1"></el-option>
-              <el-option label="减项" value="2"></el-option>
-              <el-option label="非计算项" value="3"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
+        <el-col :span="16">
           <el-form-item label="备注" prop="remark">
             <el-input v-model="info.remark"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
     </el-form>
-    <div class="mg-t-12">
-      <el-button type="primary" @click="">添加显示菜单</el-button>
-    </div>
+    <el-row justify="space-between">
+      <el-col :span="12">薪酬组成明细项</el-col>
+      <el-col :span="12" class="tar"
+        ><el-button type="primary" @click="chooseMultipleVisible = true"
+          >添加</el-button
+        ></el-col
+      >
+    </el-row>
+
     <yid-table :data="tableData" ref="table" class="mg-t-12">
-      <yid-table-column label="显示菜单" prop="eeName"> </yid-table-column>
-      <yid-table-column label="适用门店类型" prop="idCard"></yid-table-column>
+      <yid-table-column label="排序" prop="sort">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.sort"></el-input>
+        </template>
+      </yid-table-column>
+      <yid-table-column label="编码" prop="eeName"> </yid-table-column>
+      <yid-table-column label="名称" prop="idCard"></yid-table-column>
+      <yid-table-column label="输入类型" prop="idCard"></yid-table-column>
+      <yid-table-column label="计算类型" prop="idCard"></yid-table-column>
+      <yid-table-column label="薪酬分组" prop="idCard"></yid-table-column>
+      <yid-table-column label="最大金额" prop="account">
+        <template slot-scope="scope">
+          <el-input-number
+            controls-position="right"
+            v-model="scope.row.account"
+            :min="0"
+            :controls="false" />
+        </template>
+      </yid-table-column>
+      <yid-table-column label="备注" prop="remark">
+        <template slot-scope="scope">
+          <el-input v-model="scope.row.remark"></el-input>
+        </template>
+      </yid-table-column>
       <yid-table-column label="操作">
         <template slot-scope="scope">
           <el-popconfirm
@@ -76,16 +85,17 @@
       </yid-table-column>
     </yid-table>
     <el-dialog
-      title="选择显示菜单"
-      :visible.sync="chooseMenuVisible"
+      title="选择组成明细"
+      :visible.sync="chooseMultipleVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="500px">
+      width="800px">
       <choose-multiple-item
-        :conditions="chooseMenuConditions"
+        :conditions="chooseMultipleConditions"
         :pagination="false"
         actionUrl=""
-        :columns="chooseMenuColumns"></choose-multiple-item>
+        :columns="chooseMultipleColumns"
+        @select="handleMultipleSelect"></choose-multiple-item>
     </el-dialog>
   </div>
 </template>
@@ -119,7 +129,7 @@ export default {
   data() {
     return {
       info: {},
-      chooseMenuVisible: false,
+      chooseMultipleVisible: false,
       rules: {
         addRemark: [{ required: true, message: '请输入报备原因' }],
         idno: [
@@ -140,26 +150,57 @@ export default {
         eename: [{ required: true, message: '请输入姓名' }]
       },
       tableData: [],
-      chooseMenuConditions: [
+      chooseMultipleConditions: [
         {
-          label: '菜单名', // 标签
+          label: '名称', // 标签
           prop: 'eeName', // 绑定的字段
           // label宽度
           type: 'input',
           labelWidth: '0.8rem',
-          width: '50%' // 整个组件占的宽度
+          width: '30%' // 整个组件占的宽度
+          // widgetWidth: '200px', // 控件的宽度
+          // required: true // 是否必填
+        },
+        {
+          label: '计算类型', // 标签
+          prop: 'eeName', // 绑定的字段
+          // label宽度
+          type: 'select',
+          width: '30%', // 整个组件占的宽度
+          options: [
+            { label: '所有', value: '' },
+            { label: '增项', value: '1' },
+            { label: '减项', value: '2' },
+            { label: '非计算项', value: '3' }
+          ]
           // widgetWidth: '200px', // 控件的宽度
           // required: true // 是否必填
         }
       ],
-      chooseMenuColumns: [
+      chooseMultipleColumns: [
         {
           type: 'selection',
           width: '48'
         },
         {
           prop: '',
-          label: '菜单名'
+          label: '编码'
+        },
+        {
+          prop: '',
+          label: '名称'
+        },
+        {
+          prop: '',
+          label: '输入类型'
+        },
+        {
+          prop: '',
+          label: '计算类型'
+        },
+        {
+          prop: '',
+          label: '薪酬分组'
         }
       ]
     }
@@ -169,6 +210,9 @@ export default {
       const copyTableData = [...this.tableData]
       copyTableData.splice(index, 1)
       this.tableData = copyTableData
+    },
+    handleMultipleSelect(items) {
+      this.tableData = items
     },
     async getData() {
       const result = await this.$refs.form

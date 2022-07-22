@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:39:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 14:11:16
+ * @LastEditTime: 2022-07-22 17:42:24
  * @FilePath: \personnelweb\src\views\staff\level\level.vue
  * @Description: 员工级别维护
 -->
@@ -70,19 +70,19 @@
           </template>
         </yid-table-column>
         <yid-table-column
-          label="原职务级别1"
+          label="原职务级别"
           prop="bePslName"
           width="100px"></yid-table-column>
         <yid-table-column
-          label="新职务级别1"
+          label="新职务级别"
           prop="afPslName"
           width="100px"></yid-table-column>
         <yid-table-column
-          label="原职务级别2"
+          label="原职务级别1"
           prop="bePslcode1Name"
           width="100px"></yid-table-column>
         <yid-table-column
-          label="新职务级别2"
+          label="新职务级别1"
           prop="afPslcode1Name"
           width="100px"></yid-table-column>
 
@@ -217,8 +217,8 @@ export default {
         { label: '员工姓名', prop: 'eeName' },
         { label: '组织编码', prop: 'regionCode' },
         { label: '职务编码', prop: 'positionCode' },
-        { label: '新级别1等级', prop: 'afPslLevel' },
-        { label: '新级别2等级', prop: 'afPsllevel1' }
+        { label: '新级别等级', prop: 'afPslLevel' },
+        { label: '新级别1等级', prop: 'afPsllevel1' }
       ],
       tableData: []
     }

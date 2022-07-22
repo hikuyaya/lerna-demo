@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 18:53:25
+ * @LastEditTime: 2022-07-22 17:42:09
  * @FilePath: \personnelweb\src\views\staff\level\components\AddComp.vue
  * @Description: 
 -->
@@ -32,21 +32,21 @@
       <yid-table-column label="岗位" prop="postName" width="80px">
       </yid-table-column>
       <yid-table-column
-        label="原职务级别1"
+        label="原职务级别"
         prop="positionLevelClevel"
         width="100px">
       </yid-table-column>
-      <yid-table-column label="新职务级别1" prop="afPslName" width="176px">
+      <yid-table-column label="新职务级别" prop="afPslName" width="176px">
         <template slot-scope="scope">
           <el-input
             :value="scope.row.afPslName"
             @click.native="handleShowLevel(scope.row, scope.$index)" />
         </template>
       </yid-table-column>
-      <yid-table-column label="原职务级别2" prop="levelClevel1" width="176px">
+      <yid-table-column label="原职务级别1" prop="levelClevel1" width="176px">
       </yid-table-column>
       <yid-table-column
-        label="新职务级别2"
+        label="新职务级别1"
         prop="afPsllevel1Name"
         width="176px">
         <template slot-scope="scope">

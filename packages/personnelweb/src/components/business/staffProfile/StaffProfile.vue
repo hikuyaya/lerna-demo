@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:18:09
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 14:28:24
+ * @LastEditTime: 2022-07-22 17:42:54
  * @FilePath: \personnelweb\src\components\business\staffProfile\StaffProfile.vue
  * @Description: 员工资料
 -->
@@ -47,12 +47,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="级别1">
+          <el-form-item label="级别">
             {{ info.positionLevelName }}
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="级别2">
+          <el-form-item label="级别1">
             {{ info.levelClevel1Name }}
           </el-form-item>
         </el-col>

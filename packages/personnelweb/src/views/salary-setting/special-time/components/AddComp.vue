@@ -2,39 +2,35 @@
  * @Author: wqy
  * @Date: 2022-07-22 15:47:26
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 15:47:38
+ * @LastEditTime: 2022-07-22 16:37:56
  * @FilePath: \personnelweb\src\views\salary-setting\special-time\components\AddComp.vue
  * @Description: 
 -->
 
 <template>
   <div>
-    <el-form ref="form" :model="info" :rules="rules" label-width="120px">
+    <el-form ref="form" :model="info" :rules="rules" label-width="90px">
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="编码" prop="type2">
-            <el-input v-model="info.type2" class="w100" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="名称" prop="type1">
-            <el-input v-model="info.type1" class="w100" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="适用门店" prop="type3">
-            <el-select v-model="info.type3" class="w100">
+        <el-col :span="24">
+          <el-form-item label="门店类型" prop="type2">
+            <el-select v-model="info.type2" class="w100">
               <el-option label="美发工资账套" value="1"></el-option>
               <el-option label="美容工资账套" value="2"></el-option>
               <el-option label="不限门店" value="3"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="备注" prop="type4">
-            <el-input v-model="info.type4" class="w100" />
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="限定申请日" prop="type3">
+            <el-input-number
+              controls-position="right"
+              v-model="info.type3"
+              :min="1"
+              :max="31"
+              :controls="false" />
+            &nbsp;&nbsp;<span class="orange">*如不做限制设置为空即可*</span>
           </el-form-item>
         </el-col>
       </el-row>

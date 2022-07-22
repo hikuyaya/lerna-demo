@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:14:58
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 16:00:00
+ * @LastEditTime: 2022-07-22 16:32:26
  * @FilePath: \personnelweb\src\views\salary-setting\special-time\specialTime.vue
  * @Description: 
 -->
@@ -13,7 +13,7 @@
         <template #inlineBtn>
           <div class="flex flex-alignitems__center mg-l-12">
             <el-button type="primary" @click="onSearch">查询</el-button>
-            <el-button type="primary" @click="onAdd">新增</el-button>
+            <el-button type="primary" @click="onAdd">批量维护</el-button>
           </div>
         </template>
       </search-top>
@@ -34,11 +34,11 @@
       </yid-table>
     </div>
     <el-dialog
-      title="新增"
+      title="批量维护限定申请日"
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="800px">
+      width="500px">
       <add-comp
         v-if="addCompVisible"
         ref="addCompRef"
@@ -64,31 +64,13 @@ export default {
       selectRow: {},
       conditions: [
         {
-          label: '职务编码', // 标签
+          label: '门店编码', // 标签
           prop: 'eeName', // 绑定的字段
           // label宽度
           type: 'input',
           width: '20%' // 整个组件占的宽度
           // widgetWidth: '200px', // 控件的宽度
           // required: true // 是否必填
-        },
-        {
-          label: '职务名称',
-          prop: 'eeCode',
-          type: 'input', // 搜索类型
-          width: '20%'
-        },
-        {
-          label: '状态',
-          prop: 'type3',
-          type: 'select',
-          labelWidth: '0.8rem',
-          options: [
-            { label: '所有', value: '' },
-            { label: '正常', value: '1' },
-            { label: '停用', value: '2' }
-          ],
-          width: '15%'
         }
       ],
       tableData: []

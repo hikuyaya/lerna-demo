@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-11 13:36:56
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 18:29:42
+ * @LastEditTime: 2022-07-22 15:05:33
  * @FilePath: \personnelweb\src\views\staff\level\components\ChooseMultipleStaff.vue
  * @Description: 
 -->
@@ -32,10 +32,8 @@
       <yid-table-column label="职务" prop="positionName"></yid-table-column>
       <yid-table-column
         label="职务级别1"
-        prop="positionLevelClevel"></yid-table-column>
-      <yid-table-column
-        label="职务级别2"
-        prop="levelClevel1"></yid-table-column>
+        prop="positionLevelName"></yid-table-column>
+      <yid-table-column label="职务级别2" prop="level1Name"></yid-table-column>
     </yid-table>
   </div>
 </template>

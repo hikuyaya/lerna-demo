@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:18:09
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 11:05:05
+ * @LastEditTime: 2022-07-22 14:28:24
  * @FilePath: \personnelweb\src\components\business\staffProfile\StaffProfile.vue
  * @Description: 员工资料
 -->
@@ -254,10 +254,11 @@
       <title-header title="账户信息" />
       <el-row class="mg-t-12">
         <el-col :span="8">
-          <el-form-item label="开户银行" prop="bankCode">
+          <el-form-item label="开户银行" ref="bankCode" prop="bankCode">
             <el-select
               v-model="info.bankCode"
               filterable
+              clearable
               :disabled="operateType === 'detail'"
               class="w100">
               <el-option
@@ -270,7 +271,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="银行卡号" prop="bankAccount">
+          <el-form-item label="银行卡号" ref="bankAccount" prop="bankAccount">
             <el-input
               v-model="info.bankAccount"
               :disabled="operateType === 'detail'"></el-input>
@@ -621,6 +622,11 @@ export default {
         scrollToError()
       })
       if (result) {
+        // 签订日期不能晚于合同生效日期
+        if (this.info.contdatesigned > this.info.contdatestart) {
+          this.$message.error('合同签订日期不能晚于合同生效日期！')
+          return false
+        }
         return {
           ...this.info
         }
@@ -628,11 +634,15 @@ export default {
     },
     bankValidate() {
       if (!this.rules.hasOwnProperty('bankAccount')) {
-        const bankAccount = [{ required: true, message: '请输入银行卡号' }]
+        const bankAccount = [
+          { required: true, message: '请输入银行卡号', trigger: 'change' }
+        ]
         this.$set(this.rules, 'bankAccount', bankAccount)
       }
       if (!this.rules.hasOwnProperty('bankCode')) {
-        const bankCode = [{ required: true, message: '请选择开户银行' }]
+        const bankCode = [
+          { required: true, message: '请选择开户银行', trigger: 'change' }
+        ]
         this.$set(this.rules, 'bankCode', bankCode)
       }
     }
@@ -659,18 +669,32 @@ export default {
       }
     },
     'info.bankCode': {
-      immediate: true,
       handler: function (val) {
-        if (val) {
+        if (
+          (val && !this.info.bankAccount) ||
+          (!val && this.info.bankAccount) ||
+          (val && this.info.bankAccount)
+        ) {
           this.bankValidate()
+        } else {
+          this.$delete(this.rules, 'bankAccount')
+          this.$delete(this.rules, 'bankCode')
+          this.$refs.bankAccount.clearValidate()
         }
       }
     },
     'info.bankAccount': {
-      immediate: true,
       handler: function (val) {
-        if (val) {
+        if (
+          (val && !this.info.bankCode) ||
+          (!val && this.info.bankCode) ||
+          (val && this.info.bankCode)
+        ) {
           this.bankValidate()
+        } else {
+          this.$delete(this.rules, 'bankAccount')
+          this.$delete(this.rules, 'bankCode')
+          this.$refs.bankCode.clearValidate()
         }
       }
     }

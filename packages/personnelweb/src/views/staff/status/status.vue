@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:41:52
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 16:41:39
+ * @LastEditTime: 2022-07-22 14:06:26
  * @FilePath: \personnelweb\src\views\staff\status\status.vue
  * @Description: 员工状态维护
 -->
@@ -154,6 +154,7 @@
         v-if="importCompVisible"
         ref="importCompRef"
         :columns="importCompColumns"
+        :failColumns="importCompFailColumns"
         :importAction="`${$yid.config.API.BASE}api-pers/employeestatemaintenance/convertSystem`"
         :downloadUrl="`${$yid.config.API.BASE}api-pers/employeestatemaintenance/downSysTemplate`"
         @save="handleImportSave"
@@ -230,8 +231,61 @@ export default {
       importCompColumns: [
         { label: '员工编码', prop: 'eeCode' },
         { label: '员工姓名', prop: 'eeName' },
-        { label: '原状态', prop: 'beStatus' },
-        { label: '新状态', prop: 'afStatus' },
+        {
+          label: '原状态',
+          prop: 'beStatus',
+          render: row => {
+            if (row.beStatus == 1) {
+              return '在职'
+            } else if (row.beStatus == 2) {
+              return '离职'
+            } else if (row.beStatus == 3) {
+              return '长假'
+            } else {
+              return '其他'
+            }
+          }
+        },
+        {
+          label: '新状态',
+          prop: 'afStatus',
+          render: row => {
+            if (row.afStatus == 1) {
+              return '在职'
+            } else if (row.afStatus == 2) {
+              return '离职'
+            } else if (row.afStatus == 3) {
+              return '长假'
+            } else {
+              return '其他'
+            }
+          }
+        },
+        {
+          label: '离职原因',
+          prop: 'maintenanceLeave',
+          render: row => {
+            if (row.maintenanceLeave == '01') {
+              return '正常离职'
+            } else if (row.maintenanceLeave == '02') {
+              return '无业绩离职'
+            } else if (row.maintenanceLeave == '03') {
+              return '分店报离'
+            }
+          }
+        }
+      ],
+      importCompFailColumns: [
+        { label: '员工编码', prop: 'eeCode' },
+        { label: '员工姓名', prop: 'eeName' },
+        {
+          label: '原状态',
+          prop: 'beStatus'
+        },
+        {
+          label: '新状态',
+          prop: 'afStatus'
+        },
         {
           label: '离职原因',
           prop: 'maintenanceLeave',

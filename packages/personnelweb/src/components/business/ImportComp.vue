@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-12 17:34:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 11:42:21
+ * @LastEditTime: 2022-07-22 13:46:35
  * @FilePath: \personnelweb\src\components\business\ImportComp.vue
  * @Description: 
 -->
@@ -81,7 +81,7 @@
       </div>
       <yid-table :data="failData">
         <yid-table-column
-          v-for="column in columns"
+          v-for="column in failColumns"
           :key="column.prop"
           :label="column.label"
           :width="column.width"
@@ -107,6 +107,9 @@ import download from '@src/library/http/download'
 export default {
   props: {
     columns: {
+      type: Array
+    },
+    failColumns: {
       type: Array
     },
     importAction: String,
@@ -138,7 +141,7 @@ export default {
   },
   computed: {
     tableData: function () {
-      return [...this.successData, ...this.failData]
+      return [...this.successData]
     }
   },
   methods: {

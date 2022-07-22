@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:39:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-19 17:37:07
+ * @LastEditTime: 2022-07-22 14:11:16
  * @FilePath: \personnelweb\src\views\staff\level\level.vue
  * @Description: 员工级别维护
 -->
@@ -141,6 +141,7 @@
         v-if="importCompVisible"
         ref="importCompRef"
         :columns="importCompColumns"
+        :failColumns="importCompFailColumns"
         :importAction="`${$yid.config.API.BASE}api-pers/employeeLevelMaintenance/validate`"
         :downloadUrl="`${$yid.config.API.BASE}api-pers/template/downExcel`"
         :downloadParams="{
@@ -217,10 +218,16 @@ export default {
         { label: '组织编码', prop: 'regionCode' },
         { label: '职务编码', prop: 'positionCode' },
         { label: '新级别1等级', prop: 'afPslLevel' },
-        { label: '新级别2等级', prop: 'afPsllevel1' },
-        { label: '失败原因', prop: 'errorMessageList' }
+        { label: '新级别2等级', prop: 'afPsllevel1' }
       ],
       tableData: []
+    }
+  },
+  computed: {
+    importCompFailColumns: function () {
+      return this.importCompColumns.concat([
+        { label: '失败原因', prop: 'errorMessageList' }
+      ])
     }
   },
   mounted() {

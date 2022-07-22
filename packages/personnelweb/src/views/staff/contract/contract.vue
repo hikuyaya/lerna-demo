@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:44:45
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 16:32:58
+ * @LastEditTime: 2022-07-22 14:20:46
  * @FilePath: \personnelweb\src\views\staff\contract\contract.vue
  * @Description: 合同状态维护
 -->
@@ -156,6 +156,7 @@
         v-if="importCompVisible"
         ref="importCompRef"
         :columns="importCompColumns"
+        :failColumns="importCompFailColumns"
         :importAction="`${$yid.config.API.BASE}api-pers/employeecontractmaintenance/convertSystem`"
         :downloadUrl="`${$yid.config.API.BASE}api-pers/employeecontractmaintenance/downSysTemplate`"
         @save="handleImportSave"
@@ -257,13 +258,34 @@ export default {
           }
         },
         {
-          prop: 'failwhy',
+          prop: 'remark',
           label: '备注'
         },
         {
           prop: 'htdate',
           label: '合同结束日期'
         }
+      ],
+      importCompFailColumns: [
+        { prop: 'eeName', label: '员工姓名' },
+        { prop: 'eeCode', label: '员工编码' },
+        {
+          prop: 'beStatus',
+          label: '原状态'
+        },
+        {
+          prop: 'status2',
+          label: '新状态'
+        },
+        {
+          prop: 'remark',
+          label: '备注'
+        },
+        {
+          prop: 'htdate',
+          label: '合同结束日期'
+        },
+        { label: '失败原因', prop: 'failwhy' }
       ]
     }
   },

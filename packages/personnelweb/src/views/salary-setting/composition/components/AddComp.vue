@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 17:34:55
+ * @LastEditTime: 2022-07-25 14:59:00
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -58,11 +58,19 @@
       </el-row>
     </el-form>
     <div class="mg-t-12">
-      <el-button type="primary" @click="">添加显示菜单</el-button>
+      <el-button type="primary" @click="onShowMenu">添加显示菜单</el-button>
     </div>
     <yid-table :data="tableData" ref="table" class="mg-t-12">
-      <yid-table-column label="显示菜单" prop="eeName"> </yid-table-column>
-      <yid-table-column label="适用门店类型" prop="idCard"></yid-table-column>
+      <yid-table-column label="显示菜单" prop="eeName"></yid-table-column>
+      <yid-table-column label="适用门店类型" prop="idCard">
+        <template slot-scope="scope">
+          <el-select v-model="scope.row.status2">
+            <el-option label="美发门店" value="1"></el-option>
+            <el-option label="美容门店" value="2"></el-option>
+            <el-option label="不限门店" value=""></el-option>
+          </el-select>
+        </template>
+      </yid-table-column>
       <yid-table-column label="操作">
         <template slot-scope="scope">
           <el-popconfirm
@@ -169,6 +177,9 @@ export default {
       const copyTableData = [...this.tableData]
       copyTableData.splice(index, 1)
       this.tableData = copyTableData
+    },
+    onShowMenu() {
+      this.chooseMenuVisible = true
     },
     async getData() {
       const result = await this.$refs.form

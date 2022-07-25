@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:22:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 10:20:45
+ * @LastEditTime: 2022-07-25 11:11:11
  * @FilePath: \personnelweb\src\views\salary-plan\shop-limit\shopLimit.vue
  * @Description: 门店对公额度
 -->
@@ -58,11 +58,7 @@
       :close-on-click-modal="false"
       append-to-body
       width="800px">
-      <add-comp
-        v-if="addCompVisible"
-        ref="addCompRef"
-        :value="selectRow"
-        :statusReasonList="statusReasonList" />
+      <add-comp v-if="addCompVisible" ref="addCompRef" :value="selectRow" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
         <el-button @click="addCompVisible = false">取 消</el-button>
@@ -211,21 +207,14 @@ export default {
         },
         { label: '失败原因', prop: 'failwhy' }
       ],
-      tableData: [],
-      statusReasonList: []
+      tableData: []
     }
   },
-  created() {
-    this.queryStatusReasonList()
-  },
+  created() {},
   mounted() {
     this.queryList()
   },
   methods: {
-    async queryStatusReasonList() {
-      const { data } = await service.dic.getStatusReasonList()
-      this.statusReasonList = data
-    },
     queryList() {
       this.onSearch()
     },

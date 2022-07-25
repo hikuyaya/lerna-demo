@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 10:30:58
+ * @LastEditTime: 2022-07-25 13:54:08
  * @FilePath: \personnelweb\src\views\staff\transferPosition\components\AddComp.vue
  * @Description: 
 -->
@@ -29,7 +29,7 @@
       </el-row>
     </el-form>
     <yid-table :data="sourceTableData">
-      <yid-table-column label="标志" prop="sourceFlag" width="100px">
+      <yid-table-column label="标志" prop="sourceFlag" width="120px">
         <template slot-scope="scope">
           <el-select v-model="scope.row.sourceFlag">
             <el-option label="在岗" :value="1"> </el-option>
@@ -37,14 +37,13 @@
           </el-select>
         </template>
       </yid-table-column>
-      <yid-table-column label="岗位" prop="postName"> </yid-table-column>
-      <yid-table-column label="机构编码" prop="bbCode" width="176px">
+      <yid-table-column label="岗位" prop="postName"></yid-table-column>
+      <yid-table-column label="机构编码" prop="bbCode" width="100px">
       </yid-table-column>
-      <yid-table-column label="机构名称" prop="bbName" width="176px">
-      </yid-table-column>
+      <yid-table-column label="机构名称" prop="bbName"> </yid-table-column>
       <yid-table-column label="职务名称" prop="positionName" width="176px">
       </yid-table-column>
-      <yid-table-column label="类型" prop="sourceType">
+      <yid-table-column label="类型" prop="sourceType" width="100px">
         <template slot-scope="scope">
           {{
             scope.row.sourceType == 1
@@ -90,17 +89,16 @@
       </el-row>
     </el-form>
     <yid-table :data="targetTableData">
-      <yid-table-column label="标志" prop="targetFlag" width="100px">
+      <yid-table-column label="标志" prop="targetFlag" width="120px">
         <template slot-scope="scope"> 增岗 </template>
       </yid-table-column>
       <yid-table-column label="岗位" prop="postName"> </yid-table-column>
-      <yid-table-column label="机构编码" prop="bbCode" width="176px">
+      <yid-table-column label="机构编码" prop="bbCode" width="100px">
       </yid-table-column>
-      <yid-table-column label="机构名称" prop="bbName" width="176px">
-      </yid-table-column>
+      <yid-table-column label="机构名称" prop="bbName"> </yid-table-column>
       <yid-table-column label="职务名称" prop="positionName" width="176px">
       </yid-table-column>
-      <yid-table-column label="类型" prop="targetType">
+      <yid-table-column label="类型" prop="targetType" width="100px">
         <template slot-scope="scope">
           <el-select v-model="scope.row.targetType">
             <el-option label="正式" :value="1"> </el-option>

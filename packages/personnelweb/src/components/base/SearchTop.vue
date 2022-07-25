@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 09:43:14
+ * @LastEditTime: 2022-07-25 13:42:46
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -52,6 +52,19 @@
             width: option.widgetWidth ? option.widgetWidth : '100%'
           }">
         </el-date-picker>
+
+        <el-date-picker
+          v-else-if="option.type === 'date'"
+          v-model="params[option.prop]"
+          :type="option.dateType"
+          :format="option.format || 'yyyy年MM月dd日'"
+          placement="bottom"
+          :value-format="option.valueFormat || 'yyyy-MM-dd'"
+          :style="{
+            width: option.widgetWidth ? option.widgetWidth : '100%'
+          }">
+          ></el-date-picker
+        >
 
         <el-input-number
           v-else-if="option.type === 'input-number'"

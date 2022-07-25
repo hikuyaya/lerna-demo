@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:22:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 11:11:11
+ * @LastEditTime: 2022-07-25 17:35:14
  * @FilePath: \personnelweb\src\views\salary-plan\shop-limit\shopLimit.vue
  * @Description: 门店对公额度
 -->
@@ -116,8 +116,11 @@ export default {
         {
           label: '年',
           prop: 'year',
-          type: 'input',
+          type: 'input-number',
           labelWidth: '0.6rem',
+          controls: false,
+          min: 1970,
+          max: new Date().getFullYear(),
           width: '12%'
         },
         {

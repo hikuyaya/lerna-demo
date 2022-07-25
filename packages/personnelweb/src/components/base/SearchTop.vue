@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 13:42:46
+ * @LastEditTime: 2022-07-25 17:28:18
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -59,7 +59,7 @@
           :type="option.dateType"
           :format="option.format || 'yyyy年MM月dd日'"
           placement="bottom"
-          :value-format="option.valueFormat || 'yyyy-MM-dd'"
+          :value-format="option['value-format'] || 'yyyy-MM-dd'"
           :style="{
             width: option.widgetWidth ? option.widgetWidth : '100%'
           }">

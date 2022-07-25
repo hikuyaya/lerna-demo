@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:27:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 13:42:48
+ * @LastEditTime: 2022-07-25 17:53:32
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\payslip.vue
  * @Description: 
 -->
@@ -10,7 +10,7 @@
 <template>
   <div class="container">
     <el-collapse-transition>
-      <div v-show="!addCompVisible" class="content">
+      <div v-if="!addCompVisible" class="content">
         <search-top
           ref="searchTop"
           :options="conditions"
@@ -62,7 +62,7 @@
     </el-collapse-transition>
     <el-collapse-transition>
       <add-comp
-        v-show="addCompVisible"
+        v-if="addCompVisible"
         ref="addCompRef"
         :value="selectRow"
         @back="addCompVisible = false" />
@@ -77,7 +77,7 @@ export default {
   components: { SearchTop, AddComp },
   data() {
     return {
-      addCompVisible: false,
+      addCompVisible: true,
       importCompVisible: false,
       operateType: 'add',
       type: '', // approve 或者 remove
@@ -102,7 +102,7 @@ export default {
           dateType: 'month',
           width: '15%',
           format: 'yyyy年MM月',
-          'value-format': 'yyyy-MM-dd'
+          'value-format': 'yyyy-MM'
         }
       ],
       defaultParams: {

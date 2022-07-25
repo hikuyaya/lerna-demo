@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 14:59:00
+ * @LastEditTime: 2022-07-25 17:21:20
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -36,8 +36,8 @@
           <el-form-item label="计算类型" prop="type2">
             <el-select v-model="info.type2">
               <el-option label="增项" value="1"></el-option>
-              <el-option label="减项" value="2"></el-option>
-              <el-option label="非计算项" value="3"></el-option>
+              <el-option label="减项" value="-1"></el-option>
+              <el-option label="非计算项" value="0"></el-option>
             </el-select>
           </el-form-item>
         </el-col>

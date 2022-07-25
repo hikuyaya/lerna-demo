@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 16:59:30
  * @LastEditors: wqy
- * @LastEditTime: 2022-06-20 17:16:32
+ * @LastEditTime: 2022-07-25 18:05:29
  * @FilePath: \personnelweb\src\components\base\FormItem.vue
  * @Description: 
 -->
@@ -47,9 +47,6 @@ export default {
       }
     },
     width: {
-      type: String
-    },
-    widgetWidth: {
       type: String
     },
     align: {

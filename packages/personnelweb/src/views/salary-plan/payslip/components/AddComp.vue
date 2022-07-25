@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 11:27:28
+ * @LastEditTime: 2022-07-25 18:13:06
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
@@ -12,49 +12,47 @@
     <el-button type="primary" @click="$emit('back')" class="mg-b-24"
       >返回</el-button
     >
-    <el-form ref="form" :model="info" label-width="90px">
+    <el-form ref="form" :model="info" :rules="rules" label-width="90px">
       <el-row>
-        <el-col :span="11">
-          <el-form-item label="员工姓名" prop="staffInfo">
-            <el-input disabled v-model="staffInfo"></el-input>
+        <el-col :span="4">
+          <el-form-item label="门店编码" prop="bbCode">
+            <el-input v-model="info.bbCode" class="w100"></el-input>
           </el-form-item>
         </el-col>
-        <el-col v-if="operateType !== 'detail'" :span="1" class="pd-l-16">
-          <el-button
-            type="primary"
-            icon="el-icon-search"
-            circle
-            @click="chooseStaffVisible = true"></el-button>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="员工编码" prop="eeCode">
-            <el-input disabled v-model="info.eeCode" class="w90"></el-input>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="12">
-          <el-form-item label="选择年月" prop="date">
-            <el-date-picker
-              v-model="info.date"
-              type="month"
-              format="yyyy年MM月"
-              placement="bottom"
-              value-format="yyyy-MM"
-              class="w90">
-            </el-date-picker>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="对公打款" prop="dgdk">
+        <el-col :span="3">
+          <el-form-item label="年" prop="year">
             <el-input-number
-              v-model="info.dgdk"
+              v-model="info.year"
               :controls="false"
-              :min="0"
-              class="w90" />
+              :min="1970"
+              :max="new Date().getFullYear()"
+              class="w100">
+            </el-input-number>
           </el-form-item>
         </el-col>
+        <el-col :span="3">
+          <el-form-item label="月" prop="month">
+            <el-input-number
+              v-model="info.year"
+              :controls="false"
+              :min="1"
+              :max="12"
+              class="w100">
+            </el-input-number>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
+          <el-button type="primary" class="mg-l-12" @click="onQueryStaff"
+            >获取员工</el-button
+          >
+        </el-col>
       </el-row>
+      <div class="flex info-row">
+        <div>门店：西宁1店</div>
+        <div>编码：西宁1店</div>
+        <div>工资月份：西宁1店</div>
+        <div>合计人员：<span class="red">10</span></div>
+      </div>
     </el-form>
 
     <el-dialog
@@ -75,6 +73,7 @@
 
 <script>
 import ChooseSingleItem from '@src/components/business/ChooseSingleItem.vue'
+import FormItem from '@src/components/base/FormItem.vue'
 import service from '@src/service'
 export default {
   props: {
@@ -89,6 +88,7 @@ export default {
     }
   },
   components: {
+    FormItem,
     ChooseSingleItem
   },
   computed: {
@@ -105,6 +105,9 @@ export default {
     return {
       info: {},
       tableData: [],
+      rules: {
+        bbCode: [{ required: true, message: '请输入门店编码' }]
+      },
       chooseStaffVisible: false,
       chooseStaffColumns: [
         { label: '员工姓名', prop: 'eeName' },
@@ -165,29 +168,9 @@ export default {
       this.tableData = [copyStaff]
       this.chooseStaffVisible = false
     },
-    handleAfStatusChange(val) {
-      const copy = this.tableData[0]
-      if ([1, 3].includes(val)) {
-        // 在职、长假 清空离职原因
-        copy.maintenanceLeave = ''
-      }
-      this.tableData = [copy]
-    },
+    onQueryStaff() {},
     getData() {
       return this.tableData
-      // return this.tableData?.map(d => {
-      //   return {
-      //     eeCode: d.eeCode,
-      //     afPslcode: d.afPslcode,
-      //     afPslLevel: d.afPslLevel,
-      //     positionCode: d.positionCode,
-      //     postType: d.type,
-      //     isApproval: 0,
-      //     remark: d.remark,
-      //     afPsllevel1: d.afPsllevel1,
-      //     afPslcode1: d.afPslcode1
-      //   }
-      // })
     }
   },
 
@@ -212,5 +195,12 @@ export default {
 <style lang="scss" scoped>
 .font-size-22px {
   font-size: 22px;
+}
+.info-row {
+  display: flex;
+  margin: 12px 24px;
+  & > div {
+    margin-right: 48px;
+  }
 }
 </style>

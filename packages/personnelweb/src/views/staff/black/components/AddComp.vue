@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 11:12:52
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 10:31:13
+ * @LastEditTime: 2022-07-25 09:26:57
  * @FilePath: \personnelweb\src\views\staff\black\components\AddComp.vue
  * @Description: 
 -->
@@ -50,18 +50,18 @@
       :close-on-click-modal="false"
       append-to-body
       width="800px">
-      <choose-single-staff
+      <choose-single-item
         v-if="chooseStaffVisible"
         :columns="chooseStaffColumns"
         :actionUrl="chooseSingleStaffActionUrl"
         :conditions="chooseStaffConditions"
-        @select="handleSelectStaff"></choose-single-staff>
+        @select="handleSelectStaff"></choose-single-item>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import ChooseSingleStaff from '@src/components/business/ChooseSingleStaff'
+import ChooseSingleItem from '@src/components/business/ChooseSingleItem'
 import service from '@src/service'
 
 export default {
@@ -84,7 +84,7 @@ export default {
     treeData: Array
   },
   components: {
-    ChooseSingleStaff
+    ChooseSingleItem
   },
   data() {
     return {

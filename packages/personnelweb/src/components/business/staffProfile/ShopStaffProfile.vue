@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-14 17:34:04
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 11:12:39
+ * @LastEditTime: 2022-07-25 09:27:22
  * @FilePath: \personnelweb\src\components\business\staffProfile\ShopStaffProfile.vue
  * @Description: 门店员工资料维护新增、修改
 -->
@@ -245,26 +245,26 @@
       :close-on-click-modal="false"
       append-to-body
       width="800px">
-      <choose-single-staff
+      <choose-single-item
         v-if="chooseStaffVisible"
         :columns="chooseStaffColumns"
         :actionUrl="chooseSingleStaffActionUrl"
         :conditions="chooseStaffConditions"
-        @select="handleSelectStaff"></choose-single-staff>
+        @select="handleSelectStaff"></choose-single-item>
     </el-dialog>
   </div>
 </template>
 
 <script>
 import TitleHeader from '@src/components/base/TitleHeader'
-import ChooseSingleStaff from '@src/components/business/ChooseSingleStaff.vue'
+import ChooseSingleItem from '@src/components/business/ChooseSingleItem.vue'
 import ImgItem from './ImgItem'
 import { getAge } from '@src/library/helper/util'
 import { scrollToError } from '@src/library/helper/business'
 import service from '@src/service'
 
 export default {
-  components: { TitleHeader, ImgItem, ChooseSingleStaff },
+  components: { TitleHeader, ImgItem, ChooseSingleItem },
   props: {
     value: {
       type: Object,

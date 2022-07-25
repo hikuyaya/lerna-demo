@@ -296,7 +296,7 @@ export const MENU = {
       name: '咨询公司额度',
       title: '咨询公司额度',
       path: '/salary-plan/company-limit',
-      component: '/salary-plan/company-limit/companyLimit',
+      component: 'salary-plan/company-limit/companyLimit',
       icon: null,
       canShow: true
     },

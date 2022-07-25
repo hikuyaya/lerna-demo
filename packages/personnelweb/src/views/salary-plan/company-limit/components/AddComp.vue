@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 09:27:39
- * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\AddComp.vue
+ * @LastEditTime: 2022-07-25 10:49:04
+ * @FilePath: \personnelweb\src\views\salary-plan\company-limit\components\AddComp.vue
  * @Description: 
 -->
 
@@ -11,8 +11,8 @@
   <div>
     <el-form ref="form" :model="info" label-width="90px">
       <el-row>
-        <el-col :span="7">
-          <el-form-item label="选择员工" prop="staffInfo">
+        <el-col :span="11">
+          <el-form-item label="员工姓名" prop="staffInfo">
             <el-input disabled v-model="staffInfo"></el-input>
           </el-form-item>
         </el-col>
@@ -23,94 +23,32 @@
             circle
             @click="chooseStaffVisible = true"></el-button>
         </el-col>
-        <el-col :span="8">
+        <el-col :span="12">
           <el-form-item label="员工编码" prop="eeCode">
             <el-input disabled v-model="info.eeCode" class="w90"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
-      <title-header title="账套学习金" class="mg-b-16" />
       <el-row>
-        <el-col :span="8">
-          <el-form-item label="工资账套" prop="zt">
-            <el-select v-model="info.zt" class="w90">
-              <el-option label="美发工资账套" value="1"></el-option>
-              <el-option label="美容工资账套" value="2"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="学习金金额" prop="xxjje">
-            <el-input-number
-              v-model="info.xxjje"
-              :controls="false"
-              :min="0"
-              class="w90" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="已缴纳学习金" prop="yjnxxj">
-            <el-input-number
-              v-model="info.yjnxxj"
-              :controls="false"
-              :min="0"
-              class="w90" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <title-header title="固定项" class="mg-b-16" />
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="固定项" prop="gdx">
-            <el-select v-model="info.gdx" class="w90">
-              <el-option label="基本工资" value="1"></el-option>
-              <el-option label="保底差额" value="2"></el-option>
-              <el-option label="新入职底薪" value="3"></el-option>
-              <el-option label="岗位底薪" value="4"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="固定项金额" prop="gdxje">
-            <el-input-number
-              v-model="info.gdxje"
-              :controls="false"
-              :min="0"
-              class="w90" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="8">
-          <el-form-item label="时效" prop="sx">
-            <el-radio-group v-model="info.sx">
-              <el-radio :label="1">临时</el-radio>
-              <el-radio :label="0">长期</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item v-show="info.sx == 1" label="执行开始" prop="zxks">
+        <el-col :span="12">
+          <el-form-item label="选择年月" prop="date">
             <el-date-picker
-              v-model="info.zxks"
-              type="date"
-              format="yyyy年MM月dd日"
+              v-model="info.date"
+              type="month"
+              format="yyyy年MM月"
               placement="bottom"
-              value-format="yyyy-MM-dd"
+              value-format="yyyy-MM"
               class="w90">
             </el-date-picker>
           </el-form-item>
         </el-col>
-        <el-col :span="8">
-          <el-form-item v-show="info.sx == 1" label="执行结束" prop="zxjs">
-            <el-date-picker
-              v-model="info.zxjs"
-              type="date"
-              format="yyyy年MM月dd日"
-              placement="bottom"
-              value-format="yyyy-MM-dd"
-              class="w90">
-            </el-date-picker>
+        <el-col :span="12">
+          <el-form-item label="对公打款" prop="dgdk">
+            <el-input-number
+              v-model="info.dgdk"
+              :controls="false"
+              :min="0"
+              class="w90" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -134,7 +72,6 @@
 
 <script>
 import ChooseSingleItem from '@src/components/business/ChooseSingleItem.vue'
-import TitleHeader from '@src/components/base/TitleHeader.vue'
 import service from '@src/service'
 export default {
   props: {
@@ -149,8 +86,7 @@ export default {
     }
   },
   components: {
-    ChooseSingleItem,
-    TitleHeader
+    ChooseSingleItem
   },
   computed: {
     staffInfo: function () {

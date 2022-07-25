@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-13 15:02:47
+ * @LastEditTime: 2022-07-25 09:43:14
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -52,6 +52,22 @@
             width: option.widgetWidth ? option.widgetWidth : '100%'
           }">
         </el-date-picker>
+
+        <el-input-number
+          v-else-if="option.type === 'input-number'"
+          v-model="params[option.prop]"
+          :placeholder="
+            option.placeholder
+              ? `请输入${option.placeholder}`
+              : `请输入${option.label}`
+          "
+          :controls="option.controls"
+          :min="option.min"
+          :max="option.max"
+          :style="{
+            width: option.widgetWidth ? option.widgetWidth : '100%'
+          }">
+        </el-input-number>
 
         <el-input
           v-else

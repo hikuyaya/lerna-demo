@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-14 17:34:04
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 09:27:22
+ * @LastEditTime: 2022-07-25 10:59:14
  * @FilePath: \personnelweb\src\components\business\staffProfile\ShopStaffProfile.vue
  * @Description: 门店员工资料维护新增、修改
 -->
@@ -157,8 +157,12 @@
       <title-header title="账户信息" />
       <el-row class="mg-t-12">
         <el-col :span="8">
-          <el-form-item label="开户银行" prop="bankCode">
-            <el-select v-model="info.bankCode" filterable class="w100">
+          <el-form-item label="开户银行" ref="bankCode" prop="bankCode">
+            <el-select
+              v-model="info.bankCode"
+              filterable
+              clearable
+              class="w100">
               <el-option
                 v-for="item in bankData"
                 :key="item.code"
@@ -169,7 +173,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="银行卡号" prop="bankAccount">
+          <el-form-item label="银行卡号" ref="bankAccount" prop="bankAccount">
             <el-input v-model="info.bankAccount"></el-input>
           </el-form-item>
         </el-col>
@@ -430,11 +434,15 @@ export default {
     },
     bankValidate() {
       if (!this.rules.hasOwnProperty('bankAccount')) {
-        const bankAccount = [{ required: true, message: '请输入银行卡号' }]
+        const bankAccount = [
+          { required: true, message: '请输入银行卡号', trigger: 'change' }
+        ]
         this.$set(this.rules, 'bankAccount', bankAccount)
       }
       if (!this.rules.hasOwnProperty('bankCode')) {
-        const bankCode = [{ required: true, message: '请选择开户银行' }]
+        const bankCode = [
+          { required: true, message: '请选择开户银行', trigger: 'change' }
+        ]
         this.$set(this.rules, 'bankCode', bankCode)
       }
     }
@@ -461,18 +469,32 @@ export default {
       }
     },
     'info.bankCode': {
-      immediate: true,
       handler: function (val) {
-        if (val) {
+        if (
+          (val && !this.info.bankAccount) ||
+          (!val && this.info.bankAccount) ||
+          (val && this.info.bankAccount)
+        ) {
           this.bankValidate()
+        } else {
+          this.$delete(this.rules, 'bankAccount')
+          this.$delete(this.rules, 'bankCode')
+          this.$refs.bankAccount.clearValidate()
         }
       }
     },
     'info.bankAccount': {
-      immediate: true,
       handler: function (val) {
-        if (val) {
+        if (
+          (val && !this.info.bankCode) ||
+          (!val && this.info.bankCode) ||
+          (val && this.info.bankCode)
+        ) {
           this.bankValidate()
+        } else {
+          this.$delete(this.rules, 'bankAccount')
+          this.$delete(this.rules, 'bankCode')
+          this.$refs.bankCode.clearValidate()
         }
       }
     }

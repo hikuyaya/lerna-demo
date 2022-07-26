@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:27:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 17:53:32
+ * @LastEditTime: 2022-07-26 16:39:58
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\payslip.vue
  * @Description: 
 -->
@@ -65,6 +65,7 @@
         v-if="addCompVisible"
         ref="addCompRef"
         :value="selectRow"
+        :operateType="operateType"
         @back="addCompVisible = false" />
     </el-collapse-transition>
   </div>

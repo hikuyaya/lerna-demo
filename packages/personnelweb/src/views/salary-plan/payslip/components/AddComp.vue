@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 18:13:06
+ * @LastEditTime: 2022-07-26 16:42:34
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
@@ -12,14 +12,14 @@
     <el-button type="primary" @click="$emit('back')" class="mg-b-24"
       >返回</el-button
     >
-    <el-form ref="form" :model="info" :rules="rules" label-width="90px">
+    <el-form ref="form" :model="info" :rules="rules" label-width="80px">
       <el-row>
         <el-col :span="4">
           <el-form-item label="门店编码" prop="bbCode">
             <el-input v-model="info.bbCode" class="w100"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           <el-form-item label="年" prop="year">
             <el-input-number
               v-model="info.year"
@@ -30,10 +30,10 @@
             </el-input-number>
           </el-form-item>
         </el-col>
-        <el-col :span="3">
+        <el-col :span="4">
           <el-form-item label="月" prop="month">
             <el-input-number
-              v-model="info.year"
+              v-model="info.month"
               :controls="false"
               :min="1"
               :max="12"
@@ -47,13 +47,50 @@
           >
         </el-col>
       </el-row>
+    </el-form>
+    <template v-if="tableData.length">
       <div class="flex info-row">
         <div>门店：西宁1店</div>
         <div>编码：西宁1店</div>
         <div>工资月份：西宁1店</div>
         <div>合计人员：<span class="red">10</span></div>
       </div>
-    </el-form>
+      <div class="mg-t-24 mg-b-12">
+        <el-button type="primary" @click="onAdd">添加员工</el-button>
+      </div>
+      <yid-table :data="tableData" ref="table" class="mg-t-12">
+        <yid-table-column label="门店编码" prop="bbCode"></yid-table-column>
+        <yid-table-column label="门店名称" prop="bbName"></yid-table-column>
+        <yid-table-column
+          label="员工姓名"
+          prop="eeName"
+          width="100px"></yid-table-column>
+        <yid-table-column label="员工编码" prop="eeCode"></yid-table-column>
+        <yid-table-column label="职务" prop="positionName"></yid-table-column>
+        <yid-table-column label="员工状态" prop="status"></yid-table-column>
+        <yid-table-column label="岗位类型" prop="type">
+          <template slot-scope="scope">
+            <template v-if="!!scope.row.add">{{ scope.row.type }}</template>
+            <el-select v-else v-model="scope.row.type">
+              <el-option label="主岗位" :value="1"></el-option>
+              <el-option label="兼职岗" :value="2"></el-option>
+            </el-select>
+          </template>
+        </yid-table-column>
+        <yid-table-column label="备注" prop="remark"></yid-table-column>
+        <yid-table-column label="操作">
+          <template slot-scope="scope">
+            <el-popconfirm
+              title="确定删除吗？"
+              @confirm="onDeleteRow(scope.$index)">
+              <i
+                slot="reference"
+                class="el-icon-remove-outline c-pointer font-size-22px"></i>
+            </el-popconfirm>
+          </template>
+        </yid-table-column>
+      </yid-table>
+    </template>
 
     <el-dialog
       title="选择人员"
@@ -61,19 +98,18 @@
       :close-on-click-modal="false"
       append-to-body
       width="1200px">
-      <choose-single-item
+      <choose-multiple-item
         v-if="chooseStaffVisible"
         :columns="chooseStaffColumns"
-        :actionUrl="chooseSingleStaffActionUrl"
+        :actionUrl="chooseStaffActionUrl"
         :conditions="chooseStaffConditions"
-        @select="handleSelectStaff"></choose-single-item>
+        @select="handleSelectStaffs"></choose-multiple-item>
     </el-dialog>
   </div>
 </template>
 
 <script>
-import ChooseSingleItem from '@src/components/business/ChooseSingleItem.vue'
-import FormItem from '@src/components/base/FormItem.vue'
+import ChooseMultipleItem from '@src/components/business/ChooseMultipleItem.vue'
 import service from '@src/service'
 export default {
   props: {
@@ -88,8 +124,7 @@ export default {
     }
   },
   components: {
-    FormItem,
-    ChooseSingleItem
+    ChooseMultipleItem
   },
   computed: {
     staffInfo: function () {
@@ -99,14 +134,23 @@ export default {
         return name
       }
       return ''
+    },
+    tableData: function () {
+      return [...this.datas, ...this.adds]
     }
   },
   data() {
     return {
-      info: {},
-      tableData: [],
+      info: {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth()
+      },
+      datas: [{}], // 查出的本店人员数据
+      adds: [], // 添加进来的其他店人员数据
       rules: {
-        bbCode: [{ required: true, message: '请输入门店编码' }]
+        bbCode: [{ required: true, message: '请输入门店编码' }],
+        year: [{ required: true, message: '请输入' }],
+        month: [{ required: true, message: '请输入' }]
       },
       chooseStaffVisible: false,
       chooseStaffColumns: [
@@ -119,7 +163,7 @@ export default {
         { label: '级别', prop: 'positionLevelName' },
         { label: '级别1', prop: 'level1Name' }
       ],
-      chooseSingleStaffActionUrl: service.staff.level.getByEeCode,
+      chooseStaffActionUrl: service.staff.level.getByEeCode,
       chooseStaffConditions: [
         {
           label: '员工姓名', // 标签
@@ -152,23 +196,28 @@ export default {
     }
   },
   methods: {
-    handleSelectStaff(staff) {
-      console.log(staff)
-      const copyStaff = { ...staff, beStatus: staff.status }
-      let newAfStatus = 0
-      // 新状态根据原状态计算得到默认值：原状态为离职时，新状态默认选中在职，原状态为在职时，默认选中离职
-      if (copyStaff.status == 1) {
-        newAfStatus = 2
-      } else if (copyStaff.status == 2) {
-        newAfStatus = 1
-      }
-      copyStaff.afStatus = newAfStatus
-      // 自动填充变更日期字段
-      copyStaff.changeDate = new Date().formatDate('yyyy-MM-dd')
-      this.tableData = [copyStaff]
+    handleSelectStaffs(staffs) {
+      console.log(staffs)
+      const addStaffs = staffs.map(v => {
+        return {
+          ...v,
+          add: true
+        }
+      })
+      this.adds = [...addStaffs]
       this.chooseStaffVisible = false
     },
-    onQueryStaff() {},
+    onQueryStaff() {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.onSearch()
+        }
+      })
+    },
+    async onSearch() {},
+    onAdd() {
+      this.chooseStaffVisible = true
+    },
     getData() {
       return this.tableData
     }
@@ -178,6 +227,9 @@ export default {
     value: {
       immediate: true,
       handler: function (val) {
+        if (this.operateType === 'add') {
+          return
+        }
         this.info = JSON.parse(JSON.stringify(val))
       }
     },
@@ -193,9 +245,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.font-size-22px {
-  font-size: 22px;
-}
 .info-row {
   display: flex;
   margin: 12px 24px;

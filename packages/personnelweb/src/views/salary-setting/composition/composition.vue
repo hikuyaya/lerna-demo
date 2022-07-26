@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:02:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 17:34:47
+ * @LastEditTime: 2022-07-26 15:03:35
  * @FilePath: \personnelweb\src\views\salary-setting\composition\composition.vue
  * @Description: 
 -->
@@ -18,16 +18,40 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="编码" prop="eeName" width="100px">
+        <yid-table-column label="编码" prop="scCode" width="100px">
         </yid-table-column>
         <yid-table-column
           label="名称"
-          prop="idCard"
+          prop="scName"
           width="150px"></yid-table-column>
-        <yid-table-column label="输入类型" prop="eeCode"></yid-table-column>
-        <yid-table-column label="计算类型" prop="eeCode"></yid-table-column>
-        <yid-table-column label="薪酬分组" prop="eeCode"></yid-table-column>
-        <yid-table-column label="备注" prop="eeCode"></yid-table-column>
+        <yid-table-column label="输入类型" prop="inputType">
+          <template slot-scope="scope">
+            {{
+              scope.row.inputType == 1
+                ? '固定项'
+                : scope.row.inputType == 2
+                ? '输入项'
+                : scope.row.inputType == 3
+                ? '提成项'
+                : ''
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column label="计算类型" prop="signType">
+          <template slot-scope="scope">
+            {{
+              scope.row.signType == 1
+                ? '增项'
+                : scope.row.signType == -1
+                ? '减项'
+                : scope.row.signType == 0
+                ? '非计算项'
+                : ''
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column label="薪酬分组" prop="csgCode"></yid-table-column>
+        <yid-table-column label="备注" prop="remark"></yid-table-column>
         <yid-table-column label="状态" prop="status" width="70px">
           <template slot-scope="scope">
             {{
@@ -72,13 +96,13 @@ export default {
   components: { SearchTop, AddComp },
   data() {
     return {
-      addCompVisible: false,
+      addCompVisible: true,
       operateType: 'add',
       selectRow: {},
       conditions: [
         {
           label: '编码', // 标签
-          prop: 'eeName', // 绑定的字段
+          prop: 'scCode', // 绑定的字段
           // label宽度
           type: 'input',
           labelWidth: '0.8rem',
@@ -88,14 +112,14 @@ export default {
         },
         {
           label: '名称',
-          prop: 'eeCode',
+          prop: 'scName',
           type: 'input', // 搜索类型
           width: '15%',
           labelWidth: '0.8rem'
         },
         {
           label: '状态',
-          prop: 'type3',
+          prop: 'status',
           type: 'select',
           labelWidth: '0.8rem',
           options: [
@@ -103,11 +127,11 @@ export default {
             { label: '正常', value: '1' },
             { label: '停用', value: '2' }
           ],
-          width: '10%'
+          width: '12%'
         },
         {
           label: '输入类型',
-          prop: 'type',
+          prop: 'inputType',
           type: 'select',
           labelWidth: '1rem',
           options: [
@@ -116,11 +140,11 @@ export default {
             { label: '输入项', value: '2' },
             { label: '提成项', value: '3' }
           ],
-          width: '12%'
+          width: '14%'
         },
         {
           label: '计算类型',
-          prop: 'type1',
+          prop: 'signType',
           type: 'select',
           labelWidth: '1rem',
           options: [
@@ -129,11 +153,11 @@ export default {
             { label: '减项', value: '2' },
             { label: '非计算项', value: '3' }
           ],
-          width: '12%'
+          width: '14%'
         },
         {
           label: '薪酬分组',
-          prop: 'type2',
+          prop: 'csgCode',
           type: 'select',
           labelWidth: '1rem',
           options: [
@@ -146,7 +170,7 @@ export default {
             { label: '工资罚款', value: '6' },
             { label: '工资扣款', value: '7' }
           ],
-          width: '12%'
+          width: '14%'
         }
       ],
       tableData: []
@@ -167,11 +191,8 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      // 身份证号转大写
-      params.idCard = params.idCard?.toUpperCase()
-      params.isDel = 0
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.black.list
+      const fetch = service.salarySetting.composition.list
       this.$refs.table.reloadData({
         fetch,
         params

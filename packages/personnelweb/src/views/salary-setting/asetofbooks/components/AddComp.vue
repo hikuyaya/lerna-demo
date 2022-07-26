@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 17:30:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 09:19:03
+ * @LastEditTime: 2022-07-26 15:37:50
  * @FilePath: \personnelweb\src\views\salary-setting\asetofbooks\components\AddComp.vue
  * @Description: 
 -->
@@ -93,7 +93,7 @@
       <choose-multiple-item
         :conditions="chooseMultipleConditions"
         :pagination="false"
-        actionUrl=""
+        :actionUrl="chooseMenuActionUrl"
         :columns="chooseMultipleColumns"
         @select="handleMultipleSelect"></choose-multiple-item>
     </el-dialog>
@@ -130,6 +130,7 @@ export default {
     return {
       info: {},
       chooseMultipleVisible: false,
+      chooseMenuActionUrl: service.staff.shop.getListByLoginUser,
       rules: {
         addRemark: [{ required: true, message: '请输入报备原因' }],
         idno: [
@@ -178,10 +179,6 @@ export default {
         }
       ],
       chooseMultipleColumns: [
-        {
-          type: 'selection',
-          width: '48'
-        },
         {
           prop: '',
           label: '编码'

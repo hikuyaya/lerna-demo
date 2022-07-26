@@ -1,3 +1,11 @@
+/*
+ * @Author: wqy
+ * @Date: 2022-07-05 16:15:01
+ * @LastEditors: wqy
+ * @LastEditTime: 2022-07-26 09:03:27
+ * @FilePath: \personnelweb\src\service\index.js
+ * @Description:
+ */
 // 系统、权限等
 import IM from './IM'
 import auth from './modules/auth'
@@ -16,6 +24,7 @@ import dic from './modules/dic'
 import base from './modules/base'
 import chain from './modules/chain'
 import staff from './modules/staff'
+import salarySetting from './modules/salarySetting'
 
 export default {
   IM,
@@ -28,5 +37,6 @@ export default {
   dept,
   dic,
   staff,
+  salarySetting,
   report
 }

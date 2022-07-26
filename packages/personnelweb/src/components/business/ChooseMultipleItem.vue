@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 17:06:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 14:29:07
+ * @LastEditTime: 2022-07-26 15:34:09
  * @FilePath: \personnelweb\src\components\business\ChooseMultipleItem.vue
  * @Description: 
 -->
@@ -24,6 +24,7 @@
       :pagination="pagination ? true : false"
       ref="table"
       class="mg-t-12">
+      <yid-table-column type="selection" width="48px"></yid-table-column>
       <yid-table-column
         v-for="column in columns"
         :key="column.prop"

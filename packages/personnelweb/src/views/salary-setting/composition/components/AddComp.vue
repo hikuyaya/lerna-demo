@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 17:21:20
+ * @LastEditTime: 2022-07-26 15:36:20
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -12,35 +12,30 @@
     <el-form ref="form" :model="info" :rules="rules" label-width="90px">
       <el-row>
         <el-col :span="8">
-          <el-form-item label="编码" prop="eename">
-            <el-input v-model="info.eename"></el-input>
+          <el-form-item label="名称" prop="scName">
+            <el-input v-model="info.scName"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="名称" prop="idno">
-            <el-input v-model="info.idno"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item label="输入类型" prop="type1">
-            <el-select v-model="info.type1">
+          <el-form-item label="输入类型" prop="inputType">
+            <el-select v-model="info.inputType">
               <el-option label="固定项" value="1"></el-option>
               <el-option label="输入项" value="2"></el-option>
               <el-option label="提成项" value="3"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
         <el-col :span="8">
-          <el-form-item label="计算类型" prop="type2">
-            <el-select v-model="info.type2">
+          <el-form-item label="计算类型" prop="signType">
+            <el-select v-model="info.signType">
               <el-option label="增项" value="1"></el-option>
               <el-option label="减项" value="-1"></el-option>
               <el-option label="非计算项" value="0"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row>
         <el-col :span="8">
           <el-form-item label="薪酬分组" prop="type3">
             <el-select v-model="info.type3">
@@ -55,13 +50,24 @@
             <el-input v-model="info.remark"></el-input>
           </el-form-item>
         </el-col>
+        <el-col :span="8">
+          <el-form-item
+            label="状态"
+            prop="status"
+            v-if="operateType === 'edit'">
+            <el-select v-model="info.status">
+              <el-option label="正常" value="1"></el-option>
+              <el-option label="停用" value="2"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
       </el-row>
     </el-form>
     <div class="mg-t-12">
       <el-button type="primary" @click="onShowMenu">添加显示菜单</el-button>
     </div>
     <yid-table :data="tableData" ref="table" class="mg-t-12">
-      <yid-table-column label="显示菜单" prop="eeName"></yid-table-column>
+      <yid-table-column label="显示菜单" prop="name"></yid-table-column>
       <yid-table-column label="适用门店类型" prop="idCard">
         <template slot-scope="scope">
           <el-select v-model="scope.row.status2">
@@ -93,13 +99,19 @@
         :conditions="chooseMenuConditions"
         :pagination="false"
         actionUrl=""
-        :columns="chooseMenuColumns"></choose-multiple-item>
+        :columns="chooseMenuColumns"
+        @select="handleSelect"></choose-multiple-item>
+      <!-- <choose-menu
+        v-if="chooseMenuVisible"
+        @select="handleSelect"
+        :initData="tableData.map(v => v.name)"></choose-menu> -->
     </el-dialog>
   </div>
 </template>
 
 <script>
 import ChooseMultipleItem from '@src/components/business/ChooseMultipleItem.vue'
+import ChooseMenu from './ChooseMenu.vue'
 import service from '@src/service'
 
 export default {
@@ -122,7 +134,8 @@ export default {
     treeData: Array
   },
   components: {
-    ChooseMultipleItem
+    ChooseMultipleItem,
+    ChooseMenu
   },
   data() {
     return {
@@ -130,22 +143,9 @@ export default {
       chooseMenuVisible: false,
       rules: {
         addRemark: [{ required: true, message: '请输入报备原因' }],
-        idno: [
-          { required: true, message: '请输入身份证号', trigger: 'blur' },
-          {
-            min: 15,
-            max: 18,
-            message: '请输入正确的身份证号码',
-            trigger: 'blur'
-          },
-          {
-            required: true,
-            pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
-            message: '请输入正确的身份证号码',
-            trigger: 'blur'
-          }
-        ],
-        eename: [{ required: true, message: '请输入姓名' }]
+        scName: [{ required: true, message: '请输入名称' }],
+        inputType: [{ required: true, message: '请选择输入类型' }],
+        signType: [{ required: true, message: '请选择计算类型' }]
       },
       tableData: [],
       chooseMenuConditions: [
@@ -162,10 +162,6 @@ export default {
       ],
       chooseMenuColumns: [
         {
-          type: 'selection',
-          width: '48'
-        },
-        {
           prop: '',
           label: '菜单名'
         }
@@ -180,6 +176,10 @@ export default {
     },
     onShowMenu() {
       this.chooseMenuVisible = true
+    },
+    handleSelect(menus) {
+      this.chooseMenuVisible = false
+      this.tableData = menus
     },
     async getData() {
       const result = await this.$refs.form

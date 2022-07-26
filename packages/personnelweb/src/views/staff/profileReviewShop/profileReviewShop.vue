@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:43:56
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-19 10:45:39
+ * @LastEditTime: 2022-07-26 17:04:38
  * @FilePath: \personnelweb\src\views\staff\profileReviewShop\profileReviewShop.vue
  * @Description: 门店员工资料审核
 -->
@@ -98,7 +98,7 @@
 </template>
 <script>
 import SearchTop from '@src/components/base/SearchTop'
-import RejectComp from './components/RejectComp.vue'
+import RejectComp from '@src/components/business/RejectComp'
 
 import service from '@src/service'
 export default {

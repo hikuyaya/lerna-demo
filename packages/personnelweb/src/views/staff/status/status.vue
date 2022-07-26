@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:41:52
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 16:12:29
+ * @LastEditTime: 2022-07-26 15:24:52
  * @FilePath: \personnelweb\src\views\staff\status\status.vue
  * @Description: 员工状态维护
 -->
@@ -187,7 +187,7 @@ export default {
           prop: 'eeName', // 绑定的字段
           // label宽度
           type: 'input',
-          width: '15%' // 整个组件占的宽度
+          width: '14%' // 整个组件占的宽度
           // widgetWidth: '200px', // 控件的宽度
           // required: true // 是否必填
         },
@@ -212,7 +212,7 @@ export default {
             { label: '无业绩离职', value: '02' },
             { label: '分店报离', value: '03' }
           ],
-          width: '12%'
+          width: '14%'
         },
         {
           label: '审核状态',
@@ -222,7 +222,7 @@ export default {
             { label: '未审核', value: 1 },
             { label: '已审核', value: 2 }
           ],
-          width: '12%'
+          width: '13%'
         }
       ],
       defaultParams: {

@@ -1,20 +1,18 @@
 <!--
  * @Author: wqy
- * @Date: 2022-07-19 10:22:19
+ * @Date: 2022-07-26 17:33:33
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-19 10:39:48
- * @FilePath: \personnelweb\src\views\staff\profileReviewShop\components\RejectComp.vue
- * @Description: 驳回
+ * @LastEditTime: 2022-07-26 17:33:36
+ * @FilePath: \personnelweb\src\components\business\RemoveComp.vue
+ * @Description: 
 -->
+
 <template>
   <el-form ref="form" :model="info" :rules="rules" label-width="80px">
-    <el-row class="mg-b-12">
-      <el-col :span="24">您确定要对选择项进行驳回吗？</el-col>
-    </el-row>
     <el-row>
       <el-col :span="24">
-        <el-form-item label="驳回原因" prop="message">
-          <el-input v-model="info.message"></el-input>
+        <el-form-item :label="label" prop="reason">
+          <el-input v-model="info.reason"></el-input>
         </el-form-item>
       </el-col>
     </el-row>
@@ -23,13 +21,16 @@
 
 <script>
 export default {
+  props: {
+    label: String
+  },
   data() {
     return {
       info: {
-        message: ''
+        reason: ''
       },
       rules: {
-        message: [{ required: true, message: '请输入驳回原因' }]
+        reason: [{ required: true, message: '请输入' }]
       }
     }
   },

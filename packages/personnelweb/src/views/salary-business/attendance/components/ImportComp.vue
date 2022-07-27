@@ -1,12 +1,11 @@
 <!--
  * @Author: wqy
- * @Date: 2022-07-12 17:34:11
+ * @Date: 2022-07-27 10:32:38
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 13:44:41
- * @FilePath: \personnelweb\src\components\business\ImportComp.vue
+ * @LastEditTime: 2022-07-27 10:54:16
+ * @FilePath: \personnelweb\src\views\salary-business\attendance\components\ImportComp.vue
  * @Description: 
 -->
-
 <template>
   <div>
     <div class="operate-row">
@@ -45,11 +44,7 @@
       >条数据 效验成功<span class="red">{{ successData.length }}</span
       >条数据 效验失败<span class="red">{{ failData.length }}</span
       >条数据
-      <el-button
-        v-if="failData.length"
-        type="text"
-        class="red"
-        @click="onShowFail"
+      <el-button type="text" class="red" @click="onShowFail"
         >查看上传失败数据>></el-button
       >
     </p>

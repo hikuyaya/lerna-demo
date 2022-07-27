@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 17:28:18
+ * @LastEditTime: 2022-07-27 12:19:05
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -89,7 +89,7 @@
           clearable
           :placeholder="
             option.placeholder
-              ? `请输入${option.placeholder}`
+              ? `${option.placeholder}`
               : `请输入${option.label}`
           "
           :style="{

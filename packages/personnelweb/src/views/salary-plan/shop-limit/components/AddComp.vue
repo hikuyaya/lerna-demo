@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 10:47:27
+ * @LastEditTime: 2022-07-27 12:42:00
  * @FilePath: \personnelweb\src\views\salary-plan\shop-limit\components\AddComp.vue
  * @Description: 
 -->
@@ -12,8 +12,8 @@
     <el-form ref="form" :model="info" label-width="90px">
       <el-row>
         <el-col :span="11">
-          <el-form-item label="选择门店" prop="staffInfo">
-            <el-input disabled v-model="staffInfo"></el-input>
+          <el-form-item label="选择门店" prop="shopName">
+            <el-input disabled v-model="info.shopName"></el-input>
           </el-form-item>
         </el-col>
         <el-col v-if="operateType !== 'detail'" :span="1" class="pd-l-16">
@@ -21,11 +21,11 @@
             type="primary"
             icon="el-icon-search"
             circle
-            @click="chooseStaffVisible = true"></el-button>
+            @click="chooseShopVisible = true"></el-button>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="门店编码" prop="eeCode">
-            <el-input disabled v-model="info.eeCode" class="w90"></el-input>
+          <el-form-item label="门店编码" prop="shopCode">
+            <el-input disabled v-model="info.shopCode" class="w90"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -43,9 +43,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="对公打款" prop="dgdk">
+          <el-form-item label="对公打款" prop="money">
             <el-input-number
-              v-model="info.dgdk"
+              v-model="info.money"
               :controls="false"
               :min="0"
               class="w90" />
@@ -62,17 +62,17 @@
     </el-form>
 
     <el-dialog
-      title="选择人员"
-      :visible.sync="chooseStaffVisible"
+      title="选择门店"
+      :visible.sync="chooseShopVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="1200px">
+      width="600px">
       <choose-single-item
-        v-if="chooseStaffVisible"
-        :columns="chooseStaffColumns"
-        :actionUrl="chooseSingleStaffActionUrl"
-        :conditions="chooseStaffConditions"
-        @select="handleSelectStaff"></choose-single-item>
+        v-if="chooseShopVisible"
+        :columns="chooseShopColumns"
+        :actionUrl="chooseSingleShopActionUrl"
+        :conditions="chooseShopConditions"
+        @select="handleSelectShop"></choose-single-item>
     </el-dialog>
   </div>
 </template>
@@ -95,103 +95,52 @@ export default {
   components: {
     ChooseSingleItem
   },
-  computed: {
-    staffInfo: function () {
-      if (this.info.eeCode) {
-        const name = this.info.eeName + '-' + this.info.eeCode
-        this.$set(this.info, 'staffInfo', name)
-        return name
-      }
-      return ''
-    }
-  },
   data() {
     return {
       info: {},
       tableData: [],
-      chooseStaffVisible: false,
-      chooseStaffColumns: [
-        { label: '员工姓名', prop: 'eeName' },
-        { label: '员工编码', prop: 'eeCode' },
-        { label: '岗位名称', prop: 'postName' },
-        { label: '门店编码', prop: 'bbCode' },
-        { label: '门店名称', prop: 'bbName' },
-        { label: '职务', prop: 'positionName' },
-        { label: '级别', prop: 'positionLevelName' },
-        { label: '级别1', prop: 'level1Name' }
+      chooseShopVisible: false,
+      chooseShopColumns: [
+        { label: '门店编码', prop: 'shopcode' },
+        { label: '门店名称', prop: 'shopname' }
       ],
-      chooseSingleStaffActionUrl: service.staff.level.getByEeCode,
-      chooseStaffConditions: [
+      chooseSingleShopActionUrl: service.chain.shop.shopListWithPage,
+      chooseShopConditions: [
         {
-          label: '员工姓名', // 标签
-          prop: 'eeName', // 绑定的字段
+          label: '门店编码', // 标签
+          prop: 'pcodename', // 绑定的字段
           // label宽度
           type: 'input',
-          width: '20%' // 整个组件占的宽度
+          width: '50%', // 整个组件占的宽度
+          placeholder: '门店编码/门店名称'
           // widgetWidth: '200px', // 控件的宽度
           // required: true // 是否必填
-        },
-        {
-          label: '员工编码',
-          prop: 'eeCode',
-          type: 'input', // 搜索类型
-          width: '20%'
-        },
-        {
-          label: '机构编码',
-          prop: 'bbCode',
-          type: 'input',
-          width: '20%'
-        },
-        {
-          label: '机构名称',
-          prop: 'bbName',
-          type: 'input',
-          width: '20%'
         }
       ]
     }
   },
   methods: {
-    handleSelectStaff(staff) {
-      console.log(staff)
-      const copyStaff = { ...staff, beStatus: staff.status }
-      let newAfStatus = 0
-      // 新状态根据原状态计算得到默认值：原状态为离职时，新状态默认选中在职，原状态为在职时，默认选中离职
-      if (copyStaff.status == 1) {
-        newAfStatus = 2
-      } else if (copyStaff.status == 2) {
-        newAfStatus = 1
+    handleSelectShop(shop) {
+      console.log(shop)
+      this.info = {
+        shopName: shop.shopname,
+        shopCode: shop.shopcode
       }
-      copyStaff.afStatus = newAfStatus
-      // 自动填充变更日期字段
-      copyStaff.changeDate = new Date().formatDate('yyyy-MM-dd')
-      this.tableData = [copyStaff]
-      this.chooseStaffVisible = false
+      this.chooseShopVisible = false
     },
-    handleAfStatusChange(val) {
-      const copy = this.tableData[0]
-      if ([1, 3].includes(val)) {
-        // 在职、长假 清空离职原因
-        copy.maintenanceLeave = ''
+    async getData() {
+      const result = await this.$refs.form
+        .validate()
+        .catch(err => console.error(err))
+      if (result) {
+        const [effectYear, effectMonth] = this.info.date.split('-')
+        debugger
+        return {
+          ...this.info,
+          effectYear,
+          effectMonth
+        }
       }
-      this.tableData = [copy]
-    },
-    getData() {
-      return this.tableData
-      // return this.tableData?.map(d => {
-      //   return {
-      //     eeCode: d.eeCode,
-      //     afPslcode: d.afPslcode,
-      //     afPslLevel: d.afPslLevel,
-      //     positionCode: d.positionCode,
-      //     postType: d.type,
-      //     isApproval: 0,
-      //     remark: d.remark,
-      //     afPsllevel1: d.afPsllevel1,
-      //     afPslcode1: d.afPslcode1
-      //   }
-      // })
     }
   },
 

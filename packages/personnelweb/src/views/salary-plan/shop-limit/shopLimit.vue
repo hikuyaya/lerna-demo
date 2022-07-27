@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:22:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 14:02:57
+ * @LastEditTime: 2022-07-27 14:08:51
  * @FilePath: \personnelweb\src\views\salary-plan\shop-limit\shopLimit.vue
  * @Description: 门店对公额度
 -->
@@ -194,25 +194,8 @@ export default {
     },
     async handleImportSuccess() {
       this.importCompVisible = false
+      this.$message.success('操作成功')
       await this.queryList()
-    },
-    async handleImportApprove(successData) {
-      const params = successData.map(v => {
-        return {
-          eeCode: v.eeCode,
-          bbCode: v.bbCode,
-          eeName: v.eeName,
-          beStatus: v.beStatus,
-          afStatus: v.afStatus,
-          maintenanceLeave: v.maintenanceLeave,
-          changeDate: v.changeDate,
-          remark: v.remark
-        }
-      })
-      await service.staff.status.saveBillsAndCensor({
-        employeeStateMaintenanceVOS: params
-      })
-      this.handleImportSuccess()
     },
     async handleImportSave() {
       const params = new FormData()

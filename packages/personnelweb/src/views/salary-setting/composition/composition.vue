@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:02:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-26 15:03:35
+ * @LastEditTime: 2022-07-27 18:25:39
  * @FilePath: \personnelweb\src\views\salary-setting\composition\composition.vue
  * @Description: 
 -->
@@ -50,7 +50,11 @@
             }}
           </template>
         </yid-table-column>
-        <yid-table-column label="薪酬分组" prop="csgCode"></yid-table-column>
+        <yid-table-column label="薪酬分组" prop="csgCode">
+          <template slot-scope="scope">
+            {{ transCsgCode(scope.row.csgCode) }}
+          </template>
+        </yid-table-column>
         <yid-table-column label="备注" prop="remark"></yid-table-column>
         <yid-table-column label="状态" prop="status" width="70px">
           <template slot-scope="scope">
@@ -80,7 +84,8 @@
         v-if="addCompVisible"
         ref="addCompRef"
         :value="selectRow"
-        :operateType="operateType" />
+        :operateType="operateType"
+        :salcompData="salcompData" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
         <el-button @click="addCompVisible = false">取 消</el-button>
@@ -96,7 +101,7 @@ export default {
   components: { SearchTop, AddComp },
   data() {
     return {
-      addCompVisible: true,
+      addCompVisible: false,
       operateType: 'add',
       selectRow: {},
       conditions: [
@@ -160,26 +165,40 @@ export default {
           prop: 'csgCode',
           type: 'select',
           labelWidth: '1rem',
-          options: [
-            { label: '所有', value: '' },
-            { label: '基本工资', value: '1' },
-            { label: '奖金', value: '2' },
-            { label: '提成', value: '3' },
-            { label: '工服补款', value: '4' },
-            { label: '个人扣税', value: '5' },
-            { label: '工资罚款', value: '6' },
-            { label: '工资扣款', value: '7' }
-          ],
+          options: [],
           width: '14%'
         }
       ],
-      tableData: []
+      tableData: [],
+      salcompData: []
     }
   },
-  mounted() {
-    // this.queryList()
+  async mounted() {
+    await this.salcompGroup()
+    await this.queryList()
   },
   methods: {
+    async salcompGroup() {
+      const { data } = await service.salarySetting.composition.salcompGroup()
+      const salCompData = data.map(v => {
+        return {
+          label: v.csgName,
+          value: v.csgCode
+        }
+      })
+      this.salcompData = salCompData
+      const csgCondition = this.conditions.find(v => v.prop === 'csgCode')
+      const csgIndex = this.conditions.findIndex(v => v.prop === 'csgCode')
+      this.$set(this.conditions, csgIndex, {
+        ...csgCondition,
+        options: salCompData
+      })
+      await this.$nextTick()
+      console.log(this.conditions)
+    },
+    transCsgCode(csgCode) {
+      return this.salcompData.find(v => csgCode == v.value)?.label || ''
+    },
     queryList() {
       this.onSearch()
     },
@@ -213,7 +232,7 @@ export default {
       if (!result) {
         return
       }
-      await service.staff.black.save(result)
+      await service.salarySetting.composition.save(result)
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表

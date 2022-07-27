@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-26 15:36:20
+ * @LastEditTime: 2022-07-27 18:04:34
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -37,11 +37,13 @@
       </el-row>
       <el-row>
         <el-col :span="8">
-          <el-form-item label="薪酬分组" prop="type3">
-            <el-select v-model="info.type3">
-              <el-option label="增项" value="1"></el-option>
-              <el-option label="减项" value="2"></el-option>
-              <el-option label="非计算项" value="3"></el-option>
+          <el-form-item label="薪酬分组" prop="csgCode">
+            <el-select v-model="info.csgCode">
+              <el-option
+                v-for="item in salcompData"
+                :key="item.label"
+                :label="item.label"
+                :value="item.value"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -68,12 +70,12 @@
     </div>
     <yid-table :data="tableData" ref="table" class="mg-t-12">
       <yid-table-column label="显示菜单" prop="name"></yid-table-column>
-      <yid-table-column label="适用门店类型" prop="idCard">
+      <yid-table-column label="适用门店类型" prop="shopType">
         <template slot-scope="scope">
-          <el-select v-model="scope.row.status2">
+          <el-select v-model="scope.row.shopType">
             <el-option label="美发门店" value="1"></el-option>
             <el-option label="美容门店" value="2"></el-option>
-            <el-option label="不限门店" value=""></el-option>
+            <el-option label="不限门店" value="3"></el-option>
           </el-select>
         </template>
       </yid-table-column>
@@ -98,7 +100,7 @@
       <choose-multiple-item
         :conditions="chooseMenuConditions"
         :pagination="false"
-        actionUrl=""
+        :actionUrl="actionUrl"
         :columns="chooseMenuColumns"
         @select="handleSelect"></choose-multiple-item>
       <!-- <choose-menu
@@ -131,7 +133,7 @@ export default {
         return []
       }
     },
-    treeData: Array
+    salcompData: Array
   },
   components: {
     ChooseMultipleItem,
@@ -147,11 +149,94 @@ export default {
         inputType: [{ required: true, message: '请选择输入类型' }],
         signType: [{ required: true, message: '请选择计算类型' }]
       },
-      tableData: [],
+      tableData: [
+        {
+          id: '2021',
+          createdTime: '2022-07-21 14:58:49',
+          updatedTime: '2022-07-21 14:58:49',
+          revision: 1,
+          tenantId: '765432',
+          updatedBy: '王庆媛',
+          createdBy: '王庆媛',
+          parentId: 2020,
+          name: '出勤天数录入',
+          css: '',
+          url: '/salary-business/attendance',
+          path: '',
+          sort: 1,
+          type: 1,
+          hidden: 0,
+          appId: 'personnel',
+          client: '1',
+          senauth: '0',
+          pathMethod: '',
+          headId: '',
+          parentName: null,
+          subMenus: null,
+          checked: true,
+          roleId: null,
+          menuIds: null
+        },
+        {
+          id: '2022',
+          createdTime: '2022-07-21 14:59:03',
+          updatedTime: '2022-07-21 14:59:03',
+          revision: 1,
+          tenantId: '765432',
+          updatedBy: '王庆媛',
+          createdBy: '王庆媛',
+          parentId: 2020,
+          name: '薪酬申报单',
+          css: '',
+          url: '/salary-business/salary-request',
+          path: '',
+          sort: 2,
+          type: 1,
+          hidden: 0,
+          appId: 'personnel',
+          client: '1',
+          senauth: '0',
+          pathMethod: '',
+          headId: '',
+          parentName: null,
+          subMenus: null,
+          checked: true,
+          roleId: null,
+          menuIds: null
+        },
+        {
+          id: '2023',
+          createdTime: '2022-07-21 14:59:16',
+          updatedTime: '2022-07-21 14:59:16',
+          revision: 1,
+          tenantId: '765432',
+          updatedBy: '王庆媛',
+          createdBy: '王庆媛',
+          parentId: 2020,
+          name: '薪酬审核单',
+          css: '',
+          url: '/salary-business/salary-approve',
+          path: '',
+          sort: 3,
+          type: 1,
+          hidden: 0,
+          appId: 'personnel',
+          client: '1',
+          senauth: '0',
+          pathMethod: '',
+          headId: '',
+          parentName: null,
+          subMenus: null,
+          checked: true,
+          roleId: null,
+          menuIds: null
+        }
+      ],
+      actionUrl: service.salarySetting.composition.menuList,
       chooseMenuConditions: [
         {
           label: '菜单名', // 标签
-          prop: 'eeName', // 绑定的字段
+          prop: 'name', // 绑定的字段
           // label宽度
           type: 'input',
           labelWidth: '0.8rem',
@@ -186,10 +271,17 @@ export default {
         .validate()
         .catch(err => console.error(err))
       if (result) {
+        const menus = this.tableData.map(v => {
+          return {
+            menuId: v.id,
+            menuName: v.name,
+            type: v.shopType
+          }
+        })
         return {
-          eeName: this.info.eename,
-          idCard: this.info.idno,
-          addRemark: this.info.addRemark
+          ...this.info,
+          status: 1,
+          menus
         }
       }
     }

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-08 17:52:40
+ * @LastEditTime: 2022-07-27 16:51:25
  * @FilePath: \personnelweb\src\views\staff\contract\components\AddComp.vue
  * @Description: 
 -->
@@ -182,6 +182,7 @@ export default {
     onDeleteRow(index) {
       const copyTableData = [...this.tableData]
       copyTableData.splice(index, 1)
+
       this.tableData = copyTableData
     },
     getData() {

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 12:19:05
+ * @LastEditTime: 2022-07-27 18:25:14
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -253,7 +253,7 @@ export default {
   watch: {
     options: {
       handler: function (val) {
-        if (!val) {
+        if (!val || val instanceof Array) {
           return
         }
         this.params = deepClone(val)

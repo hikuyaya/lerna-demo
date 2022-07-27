@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:27:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-26 16:39:58
+ * @LastEditTime: 2022-07-27 16:32:46
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\payslip.vue
  * @Description: 
 -->
@@ -11,10 +11,7 @@
   <div class="container">
     <el-collapse-transition>
       <div v-if="!addCompVisible" class="content">
-        <search-top
-          ref="searchTop"
-          :options="conditions"
-          :defaultParams="defaultParams">
+        <search-top ref="searchTop" :options="conditions">
           <template #inlineBtn>
             <div class="flex flex-alignitems__center mg-l-12">
               <el-button type="primary" @click="onSearch">查询</el-button>
@@ -106,9 +103,6 @@ export default {
           'value-format': 'yyyy-MM'
         }
       ],
-      defaultParams: {
-        approvalStatus: 1
-      },
       importCompColumns: [
         { label: '员工编码', prop: 'eeCode' },
         { label: '员工姓名', prop: 'eeName' },

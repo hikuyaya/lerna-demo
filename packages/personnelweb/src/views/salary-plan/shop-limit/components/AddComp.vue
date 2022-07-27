@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 12:42:00
+ * @LastEditTime: 2022-07-27 18:26:33
  * @FilePath: \personnelweb\src\views\salary-plan\shop-limit\components\AddComp.vue
  * @Description: 
 -->
@@ -134,7 +134,6 @@ export default {
         .catch(err => console.error(err))
       if (result) {
         const [effectYear, effectMonth] = this.info.date.split('-')
-        debugger
         return {
           ...this.info,
           effectYear,

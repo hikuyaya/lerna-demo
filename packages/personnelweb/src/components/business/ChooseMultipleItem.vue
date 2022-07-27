@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 17:06:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-26 15:34:09
+ * @LastEditTime: 2022-07-27 14:20:41
  * @FilePath: \personnelweb\src\components\business\ChooseMultipleItem.vue
  * @Description: 
 -->
@@ -68,13 +68,21 @@ export default {
       default: () => {
         return true
       }
+    },
+    queryImmedicatly: {
+      type: Boolean,
+      default: () => {
+        return true
+      }
     }
   },
   components: {
     SearchTop
   },
   mounted() {
-    this.queryList()
+    if (this.queryImmedicatly) {
+      this.queryList()
+    }
   },
   data() {
     return {
@@ -88,7 +96,7 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      params.limit = this.$refs.table.Pagination?.internalPageSize
+      params.limit = this.$refs.table.Pagination?.internalPageSize || 1000
       const fetch = this.actionUrl
       this.$refs.table.reloadData({
         fetch,

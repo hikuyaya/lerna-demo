@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:42:46
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-19 09:38:22
+ * @LastEditTime: 2022-07-27 15:12:06
  * @FilePath: \personnelweb\src\views\staff\profileShop\profileShop.vue
  * @Description: 门店员工资料维护
 -->
@@ -21,13 +21,17 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="单号" prop="billCode" width="80px" fixed>
+        <yid-table-column label="单号" prop="billCode" width="120px" fixed>
         </yid-table-column>
         <yid-table-column label="员工姓名" prop="eeName" width="100px" fixed>
         </yid-table-column>
-        <yid-table-column label="员工编码" prop="eeCode" width="50px" fixed>
+        <yid-table-column label="员工编码" prop="eeCode" width="80px" fixed>
         </yid-table-column>
-        <yid-table-column label="手机号" prop="mobile" fixed></yid-table-column>
+        <yid-table-column
+          label="手机号"
+          prop="mobile"
+          width="100px"
+          fixed></yid-table-column>
         <yid-table-column label="职务" prop="psName" fixed></yid-table-column>
         <yid-table-column label="状态" prop="approvalStatus">
           <template slot-scope="scope">
@@ -244,7 +248,7 @@ export default {
         ...result,
         approvalStatus
       }
-      if (type === 'save') {
+      if (this.operateType === 'add') {
         await service.staff.shop.save(params)
       } else {
         await service.staff.shop.update(params)

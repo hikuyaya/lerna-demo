@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 18:04:34
+ * @LastEditTime: 2022-07-27 18:40:54
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -19,18 +19,18 @@
         <el-col :span="8">
           <el-form-item label="输入类型" prop="inputType">
             <el-select v-model="info.inputType">
-              <el-option label="固定项" value="1"></el-option>
-              <el-option label="输入项" value="2"></el-option>
-              <el-option label="提成项" value="3"></el-option>
+              <el-option label="固定项" :value="1"></el-option>
+              <el-option label="输入项" :value="2"></el-option>
+              <el-option label="提成项" :value="3"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="计算类型" prop="signType">
             <el-select v-model="info.signType">
-              <el-option label="增项" value="1"></el-option>
-              <el-option label="减项" value="-1"></el-option>
-              <el-option label="非计算项" value="0"></el-option>
+              <el-option label="增项" :value="1"></el-option>
+              <el-option label="减项" :value="-1"></el-option>
+              <el-option label="非计算项" :value="0"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -50,17 +50,6 @@
         <el-col :span="8">
           <el-form-item label="备注" prop="remark">
             <el-input v-model="info.remark"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="8">
-          <el-form-item
-            label="状态"
-            prop="status"
-            v-if="operateType === 'edit'">
-            <el-select v-model="info.status">
-              <el-option label="正常" value="1"></el-option>
-              <el-option label="停用" value="2"></el-option>
-            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -290,6 +279,9 @@ export default {
     value: {
       immediate: true,
       handler: function (val) {
+        if (this.operateType === 'edit') {
+          this.tableData = this.info.menus
+        }
         this.info = JSON.parse(JSON.stringify(val))
       }
     }

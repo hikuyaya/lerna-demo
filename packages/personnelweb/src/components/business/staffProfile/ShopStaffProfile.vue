@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-14 17:34:04
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 14:44:04
+ * @LastEditTime: 2022-07-27 14:55:10
  * @FilePath: \personnelweb\src\components\business\staffProfile\ShopStaffProfile.vue
  * @Description: 门店员工资料维护新增、修改
 -->
@@ -107,7 +107,8 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              class="w100">
+              class="w100"
+              :disabled="operateType === 'detail'">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -120,12 +121,12 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="手机" prop="mobile">
-            <el-input v-model="info.mobile"></el-input>
+            <el-input v-model="info.mobile" :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="紧急联系人" prop="emcontacts">
-            <el-input v-model="info.emcontacts"></el-input>
+            <el-input v-model="info.emcontacts" :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -143,13 +144,14 @@
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              class="w100">
+              class="w100"
+              :disabled="operateType === 'detail'">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
           <el-form-item label="紧急人电话" prop="emtel">
-            <el-input v-model="info.emtel"></el-input>
+            <el-input v-model="info.emtel" :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -162,7 +164,8 @@
               v-model="info.bankCode"
               filterable
               clearable
-              class="w100">
+              class="w100"
+              :disabled="operateType === 'detail'">
               <el-option
                 v-for="item in bankData"
                 :key="item.code"
@@ -174,7 +177,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="银行卡号" ref="bankAccount" prop="bankAccount">
-            <el-input v-model="info.bankAccount"></el-input>
+            <el-input v-model="info.bankAccount" :disabled="operateType === 'detail'"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -191,7 +194,7 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="是否股东" prop="shareholder">
-            <el-radio-group v-model="info.shareholder">
+            <el-radio-group v-model="info.shareholder" :disabled="operateType === 'detail'">
               <el-radio :label="1">是</el-radio>
               <el-radio :label="0">否</el-radio>
             </el-radio-group>

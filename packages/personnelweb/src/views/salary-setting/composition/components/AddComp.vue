@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 18:40:54
+ * @LastEditTime: 2022-07-27 18:47:04
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -260,7 +260,7 @@ export default {
         .validate()
         .catch(err => console.error(err))
       if (result) {
-        const menus = this.tableData.map(v => {
+        const menus = (this.tableData || []).map(v => {
           return {
             menuId: v.id,
             menuName: v.name,

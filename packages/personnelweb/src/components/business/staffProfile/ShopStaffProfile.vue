@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-14 17:34:04
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 10:59:14
+ * @LastEditTime: 2022-07-27 14:44:04
  * @FilePath: \personnelweb\src\components\business\staffProfile\ShopStaffProfile.vue
  * @Description: 门店员工资料维护新增、修改
 -->
@@ -214,6 +214,7 @@
             title="大头照"
             v-if="!(operateType === 'detail' && !info.photo)"
             :operateType="operateType"
+            :allowReupload="false"
             :url.sync="info.photo"></img-item>
           <img-item
             title="身份证正面"

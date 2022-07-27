@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:38:46
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 11:09:18
+ * @LastEditTime: 2022-07-27 14:37:19
  * @FilePath: \personnelweb\src\views\staff\profile\profile.vue
  * @Description: 员工资料维护
 -->
@@ -72,7 +72,7 @@
                 ? '在职'
                 : scope.row.status === 2
                 ? '离职'
-                : scope.row.status === 2
+                : scope.row.status === 3
                 ? '长假'
                 : '其他'
             }}

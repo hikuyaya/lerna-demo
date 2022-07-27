@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-23 16:55:05
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-20 16:22:35
+ * @LastEditTime: 2022-07-27 14:43:50
  * @FilePath: \personnelweb\src\components\business\staffProfile\ImgItem.vue
  * @Description: 
 -->
@@ -23,7 +23,7 @@
     <p class="tac mg-t-4">{{ title }}</p>
     <el-button
       type="text"
-      v-if="reloadVisible"
+      v-if="allowReupload && reloadVisible"
       class="mg-center block"
       @click="onShowUpload"
       >重新上传</el-button
@@ -65,7 +65,13 @@ export default {
   props: {
     title: String,
     url: String,
-    operateType: String
+    operateType: String,
+    allowReupload: {
+      type: Boolean,
+      default: () => {
+        return true
+      }
+    }
   },
   data() {
     return {

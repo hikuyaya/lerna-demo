@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:06:30
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 17:37:41
+ * @LastEditTime: 2022-07-28 16:03:09
  * @FilePath: \personnelweb\src\views\salary-setting\asetofbooks\asetofbooks.vue
  * @Description: 
 -->
@@ -18,15 +18,25 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="编码" prop="eeName" width="100px">
+        <yid-table-column label="编码" prop="ssCode" width="100px">
         </yid-table-column>
         <yid-table-column
           label="名称"
-          prop="idCard"
-          width="150px"></yid-table-column>
-        <yid-table-column label="适用门店" prop="eeCode"></yid-table-column>
+          prop="ssName"
+          width="200px"></yid-table-column>
+        <yid-table-column label="适用门店" prop="shoptype">
+          <template slot-scope="scope">
+            {{
+              scope.row.shoptype == '1'
+                ? '美发'
+                : scope.row.shoptype == '2'
+                ? '美容'
+                : ''
+            }}
+          </template>
+        </yid-table-column>
         <yid-table-column label="备注" prop="eeCode"></yid-table-column>
-        <yid-table-column label="状态" prop="status" width="70px">
+        <yid-table-column label="状态" prop="status" width="100px">
           <template slot-scope="scope">
             {{
               scope.row.status == 1
@@ -37,7 +47,7 @@
             }}
           </template>
         </yid-table-column>
-        <yid-table-column label="操作">
+        <yid-table-column label="操作" width="100px">
           <template slot-scope="scope">
             <el-link type="primary" @click="onEdit(scope.row)">编辑</el-link>
           </template>
@@ -76,7 +86,7 @@ export default {
       conditions: [
         {
           label: '编码', // 标签
-          prop: 'eeName', // 绑定的字段
+          prop: 'ssCode', // 绑定的字段
           // label宽度
           type: 'input',
           labelWidth: '0.8rem',
@@ -86,18 +96,17 @@ export default {
         },
         {
           label: '名称',
-          prop: 'eeCode',
+          prop: 'ssName',
           type: 'input', // 搜索类型
           width: '15%',
           labelWidth: '0.8rem'
         },
         {
           label: '适用门店',
-          prop: 'type1',
+          prop: 'shoptype',
           type: 'select',
           labelWidth: '1rem',
           options: [
-            { label: '所有', value: '' },
             { label: '美发门店', value: '1' },
             { label: '美容门店', value: '2' }
           ],
@@ -105,11 +114,10 @@ export default {
         },
         {
           label: '状态',
-          prop: 'type3',
+          prop: 'status',
           type: 'select',
           labelWidth: '0.8rem',
           options: [
-            { label: '所有', value: '' },
             { label: '正常', value: '1' },
             { label: '停用', value: '2' }
           ],
@@ -120,13 +128,12 @@ export default {
     }
   },
   mounted() {
-    // this.queryList()
+    this.queryList()
   },
   methods: {
     queryList() {
       this.onSearch()
     },
-    onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
       this.selectRow = {}
@@ -134,11 +141,8 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      // 身份证号转大写
-      params.idCard = params.idCard?.toUpperCase()
-      params.isDel = 0
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.black.list
+      const fetch = service.salarySetting.asetofbooks.list
       this.$refs.table.reloadData({
         fetch,
         params
@@ -156,10 +160,11 @@ export default {
     },
     async onSubmit() {
       const result = await this.$refs.addCompRef.getData()
+      console.log(result)
       if (!result) {
         return
       }
-      await service.staff.black.save(result)
+      await service.salarySetting.asetofbooks.save(result)
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表

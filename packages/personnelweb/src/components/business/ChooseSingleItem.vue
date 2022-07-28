@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-18 09:45:59
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 10:19:45
+ * @LastEditTime: 2022-07-28 15:52:38
  * @FilePath: \personnelweb\src\components\business\ChooseSingleItem.vue
  * @Description: 
 -->
@@ -88,7 +88,7 @@ export default {
     onOpenAdvance() {},
     onSearch() {
       let params = this.$refs.searchTop.getSearchParams()
-      params.limit = this.$refs.table.Pagination.internalPageSize || 1000
+      params.limit = this.$refs.table.Pagination.internalPageSize
       params = {
         ...params,
         ...this.defaultParams

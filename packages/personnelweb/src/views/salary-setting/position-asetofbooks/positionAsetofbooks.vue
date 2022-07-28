@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:08:25
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 09:39:59
+ * @LastEditTime: 2022-07-28 16:58:57
  * @FilePath: \personnelweb\src\views\salary-setting\position-asetofbooks\positionAsetofbooks.vue
  * @Description: 
 -->
@@ -19,15 +19,17 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="职务编码" prop="eeName" width="100px">
+        <yid-table-column label="职务编码" prop="psCode" width="100px">
         </yid-table-column>
         <yid-table-column
           label="职务名称"
-          prop="idCard"
+          prop="psName"
           width="150px"></yid-table-column>
-        <yid-table-column label="工资账套" prop="eeCode"></yid-table-column>
-        <yid-table-column label="学习金额度" prop="eeCode"></yid-table-column>
-        <yid-table-column label="每月扣除额度" prop="eeCode"></yid-table-column>
+        <yid-table-column label="工资账套" prop="ssName"></yid-table-column>
+        <yid-table-column label="学习金额度" prop="tutje"></yid-table-column>
+        <yid-table-column
+          label="每月扣除额度"
+          prop="tutjeMon"></yid-table-column>
         <yid-table-column label="状态" prop="status" width="70px">
           <template slot-scope="scope">
             {{
@@ -35,11 +37,11 @@
                 ? '正常'
                 : scope.row.status == 2
                 ? '停用'
-                : '其他'
+                : scope.row.status
             }}
           </template>
         </yid-table-column>
-        <yid-table-column label="操作">
+        <yid-table-column label="操作" width="80px">
           <template slot-scope="scope">
             <el-link type="primary" @click="onEdit(scope.row)">修改</el-link>
           </template>
@@ -56,6 +58,8 @@
         v-if="addCompVisible"
         ref="addCompRef"
         :value="selectRow"
+        :positionAll="positionAll"
+        :salaryCompAll="salaryCompAll"
         :operateType="operateType" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
@@ -78,7 +82,7 @@ export default {
       conditions: [
         {
           label: '职务编码', // 标签
-          prop: 'eeName', // 绑定的字段
+          prop: 'psCode', // 绑定的字段
           // label宽度
           type: 'input',
           width: '20%' // 整个组件占的宽度
@@ -87,34 +91,49 @@ export default {
         },
         {
           label: '职务名称',
-          prop: 'eeCode',
+          prop: 'psName',
           type: 'input', // 搜索类型
           width: '20%'
         },
         {
           label: '状态',
-          prop: 'type3',
+          prop: 'status',
           type: 'select',
           labelWidth: '0.8rem',
           options: [
-            { label: '所有', value: '' },
             { label: '正常', value: '1' },
             { label: '停用', value: '2' }
           ],
           width: '15%'
         }
       ],
-      tableData: []
+      tableData: [],
+      positionAll: [],
+      salaryCompAll: []
     }
   },
+  created() {
+    this.queryPostionAll()
+    this.querySalaryCompAll()
+  },
   mounted() {
-    // this.queryList()
+    this.queryList()
   },
   methods: {
+    async queryPostionAll() {
+      const { data } = await service.chain.position.all()
+      this.positionAll = data
+    },
+    async querySalaryCompAll() {
+      const { data } = await service.salarySetting.asetofbooks.list({
+        page: 1,
+        limit: 1000
+      })
+      this.salaryCompAll = data
+    },
     queryList() {
       this.onSearch()
     },
-    onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
       this.selectRow = {}
@@ -122,11 +141,8 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      // 身份证号转大写
-      params.idCard = params.idCard?.toUpperCase()
-      params.isDel = 0
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.black.list
+      const fetch = service.salarySetting.positionAsetofbooks.list
       this.$refs.table.reloadData({
         fetch,
         params
@@ -147,7 +163,7 @@ export default {
       if (!result) {
         return
       }
-      await service.staff.black.save(result)
+      await service.salarySetting.positionAsetofbooks.save(result)
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表

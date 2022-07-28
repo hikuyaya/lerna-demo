@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 17:30:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 16:10:27
+ * @LastEditTime: 2022-07-28 16:36:07
  * @FilePath: \personnelweb\src\views\salary-setting\asetofbooks\components\AddComp.vue
  * @Description: 
 -->
@@ -215,11 +215,31 @@ export default {
         },
         {
           prop: 'inputType',
-          label: '输入类型'
+          label: '输入类型',
+          render: row => {
+            if (row.inputType == '1') {
+              return '固定项'
+            } else if (row.inputType == '2') {
+              return '输入项'
+            } else if (row.inputType == '3') {
+              return row.inputType
+            }
+          }
         },
         {
           prop: 'signType',
-          label: '计算类型'
+          label: '计算类型',
+          render: row => {
+            if (row.signType == '1') {
+              return '增项'
+            } else if (row.signType == '-1') {
+              return '减项'
+            } else if (row.signType == '0') {
+              return '非计算项'
+            } else {
+              return row.signType
+            }
+          }
         },
         {
           prop: 'csgName',
@@ -258,7 +278,8 @@ export default {
             scId: v.id,
             scCode: v.scCode,
             money: v.money,
-            rowindex: v.rowindex
+            rowindex: v.rowindex,
+            remark: v.remark
           }
         })
         return {

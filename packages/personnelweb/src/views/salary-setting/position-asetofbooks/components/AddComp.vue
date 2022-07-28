@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-22 09:38:12
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 09:52:55
+ * @LastEditTime: 2022-07-28 17:55:19
  * @FilePath: \personnelweb\src\views\salary-setting\position-asetofbooks\components\AddComp.vue
  * @Description: 
 -->
@@ -12,41 +12,65 @@
     <el-form ref="form" :model="info" :rules="rules" label-width="120px">
       <el-row>
         <el-col :span="12">
-          <el-form-item label="职务" prop="eename">
-            <el-select v-model="info.type1" class="w100">
-              <el-option label="美发门店" value="1"></el-option>
-              <el-option label="美容门店" value="2"></el-option>
+          <el-form-item label="职务" prop="psCode">
+            <el-select
+              v-model="info.psCode"
+              class="w100"
+              filterable
+              clearable
+              @change="handlePsChange">
+              <el-option
+                v-for="position in positionAll"
+                :key="position.pscode"
+                :label="position.psname"
+                :value="position.pscode"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="工资账套" prop="type2">
-            <el-select v-model="info.type2" class="w100">
-              <el-option label="美发工资账套" value="1"></el-option>
-              <el-option label="美容工资账套" value="2"></el-option>
+          <el-form-item label="工资账套" prop="ssCode">
+            <el-select
+              v-model="info.ssCode"
+              filterable
+              clearable
+              class="w100"
+              @change="handleSsChange">
+              <el-option
+                v-for="salary in salaryCompAll"
+                :key="salary.ssCode"
+                :label="salary.ssName"
+                :value="salary.ssCode"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="学习金额度" prop="type3">
+          <el-form-item label="学习金额度" prop="tutje">
             <el-input-number
-              v-model="info.type3"
+              v-model="info.tutje"
               :controls="false"
               :min="1"
-              :max="30000"
               class="w100"></el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="每月扣除额度" prop="type4">
+          <el-form-item label="每月扣除额度" prop="tutjeMon">
             <el-input-number
-              v-model="info.type4"
+              v-model="info.tutjeMon"
               :controls="false"
               :min="1"
-              :max="30000"
               class="w100"></el-input-number>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-if="operateType === 'edit'">
+        <el-col :span="12">
+          <el-form-item label="状态" prop="status">
+            <el-select v-model="info.status">
+              <el-option label="正常" value="1"></el-option>
+              <el-option label="停用" value="2"></el-option>
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -68,7 +92,13 @@ export default {
     operateType: {
       type: String
     },
-    positionList: {
+    positionAll: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    salaryCompAll: {
       type: Array,
       default: function () {
         return []
@@ -81,23 +111,10 @@ export default {
       info: {},
       chooseMultipleVisible: false,
       rules: {
-        addRemark: [{ required: true, message: '请输入报备原因' }],
-        idno: [
-          { required: true, message: '请输入身份证号', trigger: 'blur' },
-          {
-            min: 15,
-            max: 18,
-            message: '请输入正确的身份证号码',
-            trigger: 'blur'
-          },
-          {
-            required: true,
-            pattern: /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/,
-            message: '请输入正确的身份证号码',
-            trigger: 'blur'
-          }
-        ],
-        eename: [{ required: true, message: '请输入姓名' }]
+        psCode: [{ required: true, message: '请选择职务' }],
+        ssCode: [{ required: true, message: '请选择工资套账' }],
+        tutje: [{ required: true, message: '请输入学习金额度' }],
+        tutjeMon: [{ required: true, message: '请输入每月扣除额度' }]
       },
       tableData: [],
       chooseMultipleConditions: [
@@ -156,6 +173,13 @@ export default {
     }
   },
   methods: {
+    handleSsChange(item) {
+      console.log(item)
+      this.$set(this.info, 'ssName', item.ssName)
+    },
+    handlePsChange(item) {
+      this.$set(this.info, 'psName', item.psName)
+    },
     onDeleteRow(index) {
       const copyTableData = [...this.tableData]
       copyTableData.splice(index, 1)
@@ -169,10 +193,19 @@ export default {
         .validate()
         .catch(err => console.error(err))
       if (result) {
+        const { psname: psName } = this.positionAll.find(
+          v => v.pscode === this.info.psCode
+        )
+        const { ssName, ssId } = this.salaryCompAll.find(
+          v => v.ssCode === this.info.ssCode
+        )
+        const status = this.info.status ? this.info.status : 1
         return {
-          eeName: this.info.eename,
-          idCard: this.info.idno,
-          addRemark: this.info.addRemark
+          ...this.info,
+          psName,
+          ssName,
+          ssId,
+          status
         }
       }
     }

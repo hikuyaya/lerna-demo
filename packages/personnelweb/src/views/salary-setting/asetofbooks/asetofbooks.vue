@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:06:30
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 16:03:09
+ * @LastEditTime: 2022-07-28 16:14:40
  * @FilePath: \personnelweb\src\views\salary-setting\asetofbooks\asetofbooks.vue
  * @Description: 
 -->
@@ -80,7 +80,7 @@ export default {
   components: { SearchTop, AddComp },
   data() {
     return {
-      addCompVisible: true,
+      addCompVisible: false,
       operateType: 'add',
       selectRow: {},
       conditions: [

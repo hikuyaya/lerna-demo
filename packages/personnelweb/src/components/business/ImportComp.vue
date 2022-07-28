@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-12 17:34:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 11:02:07
+ * @LastEditTime: 2022-07-28 12:22:23
  * @FilePath: \personnelweb\src\components\business\ImportComp.vue
  * @Description: 
 -->
@@ -171,7 +171,7 @@ export default {
       if (!flag) {
         return
       }
-      if (type) {
+      if (!type) {
         this.$emit('save', this.successData, this.file)
       } else {
         this.$emit('approve', this.successData, this.file)

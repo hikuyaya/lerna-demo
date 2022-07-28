@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:43:56
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 14:51:47
+ * @LastEditTime: 2022-07-28 14:09:06
  * @FilePath: \personnelweb\src\views\staff\profileReviewShop\profileReviewShop.vue
  * @Description: 门店员工资料审核
 -->
@@ -31,7 +31,7 @@
           type="selection"
           width="48"
           :selectable="checkboxSelect"></el-table-column>
-        <yid-table-column label="单号" prop="billCode" width="80px" fixed>
+        <yid-table-column label="单号" prop="billCode" width="120px" fixed>
         </yid-table-column>
         <yid-table-column label="员工姓名" prop="eeName" width="100px" fixed>
           <template slot-scope="scope">
@@ -42,9 +42,13 @@
         </yid-table-column>
         <yid-table-column label="员工编码" prop="eeCode" width="80px" fixed>
         </yid-table-column>
-        <yid-table-column label="手机号" prop="mobile" fixed></yid-table-column>
+        <yid-table-column
+          label="手机号"
+          prop="mobile"
+          width="100px"
+          fixed></yid-table-column>
         <yid-table-column label="职务" prop="psName" fixed></yid-table-column>
-        <yid-table-column label="状态" prop="approvalStatus">
+        <yid-table-column label="状态" width="80px" prop="approvalStatus">
           <template slot-scope="scope">
             {{
               scope.row.approvalStatus == 1
@@ -61,7 +65,8 @@
         </yid-table-column>
         <yid-table-column label="驳回原因" prop="backRemark">
         </yid-table-column>
-        <yid-table-column label="门店编码" prop="shopCode"> </yid-table-column>
+        <yid-table-column label="门店编码" width="100px" prop="shopCode">
+        </yid-table-column>
         <yid-table-column label="门店名称" prop="shopName"> </yid-table-column>
         <yid-table-column
           label="创建人"
@@ -120,8 +125,20 @@
         :bankData="bankData"
         :operateType="operateType"
         @cancel="addCompVisible = false" />
-      <span v-if="operateType === 'detail'" slot="footer" class="dialog-footer">
-        <el-button @click="addCompVisible = false">关 闭</el-button>
+      <span slot="footer" class="dialog-footer">
+        <el-button
+          v-if="selectRow.approvalStatus == 2"
+          type="primary"
+          @click="onOperate(1)"
+          >通 过</el-button
+        >
+        <el-button
+          v-if="selectRow.approvalStatus == 2"
+          type="primary"
+          @click="onOperate(0)"
+          >驳 回</el-button
+        >
+        <el-button @click="addCompVisible = false">取 消</el-button>
       </span>
     </el-dialog>
   </div>
@@ -202,6 +219,16 @@ export default {
     },
     queryList() {
       this.onSearch()
+    },
+    async onOperate(status) {
+      await service.staff.shop.approve({
+        idList: [this.selectRow.id],
+        status
+      })
+      this.addCompVisible = false
+      this.$message.success('操作成功')
+      // 刷新列表
+      await this.queryList()
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()

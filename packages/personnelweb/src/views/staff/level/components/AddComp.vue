@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 11:02:38
+ * @LastEditTime: 2022-07-28 14:00:30
  * @FilePath: \personnelweb\src\views\staff\level\components\AddComp.vue
  * @Description: 
 -->
@@ -188,7 +188,7 @@ export default {
       this.type = 'level1'
       this.levelIndex = index
       const { data } = await service.base.duty.positionLevel1List({
-        pscode: row.positionCode,
+        psCode: row.positionCode,
         page: 1,
         limit: 100
       })

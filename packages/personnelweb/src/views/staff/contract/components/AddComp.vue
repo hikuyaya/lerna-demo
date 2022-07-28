@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 16:51:25
+ * @LastEditTime: 2022-07-28 11:11:50
  * @FilePath: \personnelweb\src\views\staff\contract\components\AddComp.vue
  * @Description: 
 -->
@@ -187,21 +187,17 @@ export default {
     },
     getData() {
       return this.tableData?.map(d => {
-        // return {
-        //   eeCode: d.eeCode,
-        //   regionCode: d.bbCode,
-        //   eeName: d.eeName,
-        //   beStatus: d.contractStatus + '',
-        //   status2: d.status2,
-        //   contdatesigned: d.contdatesigned,
-        //   contdatestart: d.contdatestart,
-        //   contdateend: d.contdateend,
-        //   htdate: d.htdate,
-        //   remark: d.remark
-        // }
         return {
-          ...d,
-          regionCode: d.bbCode
+          eeCode: d.eeCode,
+          regionCode: d.bbCode,
+          eeName: d.eeName,
+          beStatus: d.contractStatus + '',
+          status2: d.status2,
+          contdatesigned: d.contdatesigned,
+          contdatestart: d.contdatestart,
+          contdateend: d.contdateend,
+          htdate: d.htdate,
+          remark: d.remark
         }
       })
     }

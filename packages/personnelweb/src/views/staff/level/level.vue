@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:39:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 17:42:24
+ * @LastEditTime: 2022-07-28 14:24:39
  * @FilePath: \personnelweb\src\views\staff\level\level.vue
  * @Description: 员工级别维护
 -->
@@ -112,7 +112,8 @@
       width="1300px">
       <add-comp v-if="addCompVisible" ref="addCompRef" :value="selectRow" />
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
+        <el-button type="primary" @click="onSubmit(0)">保 存</el-button>
+        <el-button type="primary" @click="onSubmit(1)">保存并审核</el-button>
         <el-button @click="addCompVisible = false">取 消</el-button>
       </span>
     </el-dialog>
@@ -269,7 +270,7 @@ export default {
       this.operateType = 'detail'
       this.addCompVisible = true
     },
-    async onSubmit() {
+    async onSubmit(isApproval) {
       const result = this.$refs.addCompRef.getData()
       console.log(result)
       if (!result.length) {
@@ -277,7 +278,7 @@ export default {
         return
       }
       await service.staff.level.save({
-        isApproval: 0,
+        isApproval,
         employeeLevelMaintenanceList: result
       })
       this.$message.success('操作成功')

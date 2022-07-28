@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-12 17:34:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 13:44:41
+ * @LastEditTime: 2022-07-28 11:02:07
  * @FilePath: \personnelweb\src\components\business\ImportComp.vue
  * @Description: 
 -->
@@ -154,14 +154,21 @@ export default {
     onDownload() {
       download(this.downloadUrl, this.downloadParams)
     },
-    async handleSave(type) {
+    validateSave() {
       if (this.failData.length) {
         this.fromSave = true
         this.failVisible = true
-        return
+        return false
       }
       if (!this.successData.length) {
         this.$message.error('没有能保存的数据，请重新上传')
+        return false
+      }
+      return true
+    },
+    async handleSave(type) {
+      const flag = this.validateSave()
+      if (!flag) {
         return
       }
       if (type) {

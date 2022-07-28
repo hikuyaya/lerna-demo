@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:44:45
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 14:20:46
+ * @LastEditTime: 2022-07-28 10:11:23
  * @FilePath: \personnelweb\src\views\staff\contract\contract.vue
  * @Description: 合同状态维护
 -->
@@ -44,7 +44,7 @@
                 ? '到期'
                 : scope.row.beStatus == 4
                 ? '其他'
-                : '其他'
+                : ''
             }}
           </template>
         </yid-table-column>
@@ -59,7 +59,7 @@
                 ? '到期'
                 : scope.row.status2 == 4
                 ? '其他'
-                : '其他'
+                : ''
             }}
           </template>
         </yid-table-column>
@@ -238,7 +238,7 @@ export default {
             } else if (row.beStatus == 3) {
               return '到期'
             } else {
-              return '其他'
+              return ''
             }
           }
         },
@@ -253,7 +253,7 @@ export default {
             } else if (row.status2 == 3) {
               return '到期'
             } else {
-              return '其他'
+              return ''
             }
           }
         },

@@ -2,17 +2,14 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:24:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 17:35:49
+ * @LastEditTime: 2022-07-28 11:01:05
  * @FilePath: \personnelweb\src\views\salary-plan\company-limit\companyLimit.vue
  * @Description: 
 -->
 <template>
   <div class="container">
     <div class="content">
-      <search-top
-        ref="searchTop"
-        :options="conditions"
-        :defaultParams="defaultParams">
+      <search-top ref="searchTop" :options="conditions">
         <template #inlineBtn>
           <div class="flex flex-alignitems__center mg-l-12">
             <el-button type="primary" @click="onSearch">查询</el-button>
@@ -30,18 +27,18 @@
 
         <yid-table-column
           label="年"
-          prop="year"
+          prop="effectYear"
           width="60px"></yid-table-column>
         <yid-table-column
           label="月"
-          prop="month"
+          prop="effectMonth"
           width="60px"></yid-table-column>
         <yid-table-column
           label="对公打款额度"
-          prop="month"
+          prop="money"
           width="120px"></yid-table-column>
-        <yid-table-column label="门店编码" prop="bbCode"></yid-table-column>
-        <yid-table-column label="门店名称" prop="bbName"></yid-table-column>
+        <yid-table-column label="门店编码" prop="shopCode"></yid-table-column>
+        <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
 
         <yid-table-column
           label="创建人"
@@ -81,10 +78,13 @@
         ref="importCompRef"
         :columns="importCompColumns"
         :failColumns="importCompFailColumns"
-        :importAction="`${$yid.config.API.BASE}api-pers/employeestatemaintenance/convertSystem`"
-        :downloadUrl="`${$yid.config.API.BASE}api-pers/employeestatemaintenance/downSysTemplate`"
-        @save="handleImportSave"
-        @approve="handleImportApprove" />
+        :importAction="`${$yid.config.API.BASE}api-pers/company_employee_public_salary/validation`"
+        :downloadUrl="`${$yid.config.API.BASE}api-pers/template/downExcel`"
+        :downloadParams="{
+          templateName: '咨询工资员工对公额度模板.xls'
+        }">
+        <el-button type="primary" @click="handleImportSave">保存</el-button>
+      </import-comp>
       <span slot="footer" class="dialog-footer">
         <el-button @click="importCompVisible = false">取 消</el-button>
       </span>
@@ -108,19 +108,19 @@ export default {
       conditions: [
         {
           label: '门店编码',
-          prop: 'bbCode',
+          prop: 'shopCode',
           type: 'input',
           width: '15%'
         },
         {
           label: '门店名称',
-          prop: 'bbCode',
+          prop: 'shopName',
           type: 'input',
           width: '15%'
         },
         {
           label: '年',
-          prop: 'year',
+          prop: 'effectYear',
           type: 'input-number',
           labelWidth: '0.6rem',
           controls: false,
@@ -130,7 +130,7 @@ export default {
         },
         {
           label: '月',
-          prop: 'mouth',
+          prop: 'effectMonth',
           type: 'input-number',
           labelWidth: '0.6rem',
           width: '12%',
@@ -139,97 +139,31 @@ export default {
           max: 12
         }
       ],
-      defaultParams: {
-        approvalStatus: 1
-      },
       importCompColumns: [
-        { label: '员工编码', prop: 'eeCode' },
-        { label: '员工姓名', prop: 'eeName' },
-        {
-          label: '原状态',
-          prop: 'beStatus',
-          render: row => {
-            if (row.beStatus == 1) {
-              return '在职'
-            } else if (row.beStatus == 2) {
-              return '离职'
-            } else if (row.beStatus == 3) {
-              return '长假'
-            } else {
-              return '其他'
-            }
-          }
-        },
-        {
-          label: '新状态',
-          prop: 'afStatus',
-          render: row => {
-            if (row.afStatus == 1) {
-              return '在职'
-            } else if (row.afStatus == 2) {
-              return '离职'
-            } else if (row.afStatus == 3) {
-              return '长假'
-            } else {
-              return '其他'
-            }
-          }
-        },
-        {
-          label: '离职原因',
-          prop: 'maintenanceLeave',
-          render: row => {
-            if (row.maintenanceLeave == '01') {
-              return '正常离职'
-            } else if (row.maintenanceLeave == '02') {
-              return '无业绩离职'
-            } else if (row.maintenanceLeave == '03') {
-              return '分店报离'
-            }
-          }
-        }
-      ],
-      importCompFailColumns: [
-        { label: '员工编码', prop: 'eeCode' },
-        { label: '员工姓名', prop: 'eeName' },
-        {
-          label: '原状态',
-          prop: 'beStatus'
-        },
-        {
-          label: '新状态',
-          prop: 'afStatus'
-        },
-        {
-          label: '离职原因',
-          prop: 'maintenanceLeave',
-          render: row => {
-            if (row.maintenanceLeave == '01') {
-              return '正常离职'
-            } else if (row.maintenanceLeave == '02') {
-              return '无业绩离职'
-            } else if (row.maintenanceLeave == '03') {
-              return '分店报离'
-            }
-          }
-        },
-        { label: '失败原因', prop: 'failwhy' }
+        { label: '门店编码', prop: 'shopCode', width: '80px' },
+        { label: '门店名称', prop: 'shopName', width: '100px' },
+        { label: '员工编码', prop: 'eeCode', width: '80px' },
+        { label: '员工名称', prop: 'eeName', width: '80px' },
+        { label: '年', prop: 'effectYear', width: '80px' },
+        { label: '月', prop: 'effectMonth', width: '80px' },
+        { label: '对公打款额度', prop: 'money' }
       ],
       tableData: [],
       statusReasonList: []
     }
   },
-  created() {
-    this.queryStatusReasonList()
+  computed: {
+    importCompFailColumns: function () {
+      return this.importCompColumns.concat([
+        { label: '失败原因', prop: 'errorMessageList' }
+      ])
+    }
   },
+  created() {},
   mounted() {
     this.queryList()
   },
   methods: {
-    async queryStatusReasonList() {
-      const { data } = await service.dic.getStatusReasonList()
-      this.statusReasonList = data
-    },
     queryList() {
       this.onSearch()
     },
@@ -245,7 +179,7 @@ export default {
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.status.list
+      const fetch = service.salaryPlan.companyLimit.list
       this.$refs.table.reloadData({
         fetch,
         params
@@ -262,58 +196,39 @@ export default {
       this.addCompVisible = true
     },
     async onSubmit() {
-      const result = this.$refs.addCompRef.getData()
+      const result = await this.$refs.addCompRef.getData()
       console.log(result)
-      if (!result.length) {
-        this.$message.error('请选择员工')
+      if (!result) {
         return
       }
-      await service.staff.status.save({
-        employeeStateMaintenanceVOS: result
+      this.$confirm(`您确认保存此信息吗？`, `确认保存`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'btn-custom-cancel',
+        type: 'warning'
       })
-      this.$message.success('操作成功')
-      this.addCompVisible = false
-      // 刷新列表
-      await this.queryList()
+        .then(async () => {
+          await service.salaryPlan.companyLimit.save(result)
+          this.$message.success('操作成功')
+          this.addCompVisible = false
+          // 刷新列表
+          await this.queryList()
+        })
+        .catch(() => {})
     },
     async handleImportSuccess() {
       this.importCompVisible = false
+      this.$message.success('操作成功')
       await this.queryList()
     },
-    async handleImportApprove(successData) {
-      const params = successData.map(v => {
-        return {
-          eeCode: v.eeCode,
-          bbCode: v.bbCode,
-          eeName: v.eeName,
-          beStatus: v.beStatus,
-          afStatus: v.afStatus,
-          maintenanceLeave: v.maintenanceLeave,
-          changeDate: v.changeDate,
-          remark: v.remark
-        }
-      })
-      await service.staff.status.saveBillsAndCensor({
-        employeeStateMaintenanceVOS: params
-      })
-      this.handleImportSuccess()
-    },
-    async handleImportSave(successData) {
-      const params = successData.map(v => {
-        return {
-          eeCode: v.eeCode,
-          bbCode: v.bbCode,
-          eeName: v.eeName,
-          beStatus: v.beStatus,
-          afStatus: v.afStatus,
-          maintenanceLeave: v.maintenanceLeave,
-          changeDate: v.changeDate,
-          remark: v.remark
-        }
-      })
-      await service.staff.status.save({
-        employeeStateMaintenanceVOS: params
-      })
+    async handleImportSave() {
+      const flag = this.$refs.importCompRef.validateSave()
+      if (!flag) {
+        return
+      }
+      const params = new FormData()
+      params.append('file', this.$refs.importCompRef.file)
+      await service.salaryPlan.companyLimit.importExcel(params)
       this.handleImportSuccess()
     }
   }

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-07 17:13:19
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-08 10:12:21
+ * @LastEditTime: 2022-07-28 10:11:45
  * @FilePath: \personnelweb\src\components\business\ChooseMultipleStaff.vue
  * @Description: 
 -->
@@ -35,7 +35,7 @@
               ? '在职'
               : scope.row.status == '2'
               ? '离职'
-              : '其他'
+              : ''
           }}
         </template>
       </yid-table-column>
@@ -50,7 +50,7 @@
               ? '到期'
               : scope.row.contractStatus == 4
               ? '其他'
-              : '其他'
+              : ''
           }}
         </template>
       </yid-table-column>

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:22:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 14:08:51
+ * @LastEditTime: 2022-07-28 11:03:04
  * @FilePath: \personnelweb\src\views\salary-plan\shop-limit\shopLimit.vue
  * @Description: 门店对公额度
 -->
@@ -198,6 +198,10 @@ export default {
       await this.queryList()
     },
     async handleImportSave() {
+      const flag = this.$refs.importCompRef.validateSave()
+      if (!flag) {
+        return
+      }
       const params = new FormData()
       params.append('file', this.$refs.importCompRef.file)
       await service.salaryPlan.shopLimit.importExcel(params)

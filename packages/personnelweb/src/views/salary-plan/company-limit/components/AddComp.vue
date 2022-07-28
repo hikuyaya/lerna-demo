@@ -2,18 +2,18 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 10:49:04
+ * @LastEditTime: 2022-07-28 10:35:10
  * @FilePath: \personnelweb\src\views\salary-plan\company-limit\components\AddComp.vue
  * @Description: 
 -->
 
 <template>
   <div>
-    <el-form ref="form" :model="info" label-width="90px">
+    <el-form ref="form" :model="info" :rules="rules" label-width="90px">
       <el-row>
         <el-col :span="11">
-          <el-form-item label="员工姓名" prop="staffInfo">
-            <el-input disabled v-model="staffInfo"></el-input>
+          <el-form-item label="员工姓名" prop="eeName">
+            <el-input disabled v-model="info.eeName"></el-input>
           </el-form-item>
         </el-col>
         <el-col v-if="operateType !== 'detail'" :span="1" class="pd-l-16">
@@ -43,9 +43,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="对公打款" prop="dgdk">
+          <el-form-item label="对公打款" prop="money">
             <el-input-number
-              v-model="info.dgdk"
+              v-model="info.money"
               :controls="false"
               :min="0"
               class="w90" />
@@ -65,6 +65,7 @@
         :columns="chooseStaffColumns"
         :actionUrl="chooseSingleStaffActionUrl"
         :conditions="chooseStaffConditions"
+        :defaultParams="defaultParams"
         @select="handleSelectStaff"></choose-single-item>
     </el-dialog>
   </div>
@@ -88,21 +89,21 @@ export default {
   components: {
     ChooseSingleItem
   },
-  computed: {
-    staffInfo: function () {
-      if (this.info.eeCode) {
-        const name = this.info.eeName + '-' + this.info.eeCode
-        this.$set(this.info, 'staffInfo', name)
-        return name
-      }
-      return ''
-    }
-  },
+  computed: {},
   data() {
     return {
       info: {},
       tableData: [],
       chooseStaffVisible: false,
+      defaultParams: {
+        searchType: 2
+      },
+      rules: {
+        eeName: [{ required: true, message: '请选择员工' }],
+        eeCode: [{ required: true, message: '请选择员工' }],
+        date: [{ required: true, message: '请选择年月' }],
+        money: [{ required: true, message: '请输入对公款' }]
+      },
       chooseStaffColumns: [
         { label: '员工姓名', prop: 'eeName' },
         { label: '员工编码', prop: 'eeCode' },
@@ -116,50 +117,29 @@ export default {
       chooseSingleStaffActionUrl: service.staff.level.getByEeCode,
       chooseStaffConditions: [
         {
-          label: '员工姓名', // 标签
-          prop: 'eeName', // 绑定的字段
-          // label宽度
-          type: 'input',
-          width: '20%' // 整个组件占的宽度
-          // widgetWidth: '200px', // 控件的宽度
-          // required: true // 是否必填
-        },
-        {
-          label: '员工编码',
-          prop: 'eeCode',
-          type: 'input', // 搜索类型
-          width: '20%'
-        },
-        {
-          label: '机构编码',
+          label: '门店编码',
           prop: 'bbCode',
           type: 'input',
-          width: '20%'
+          width: '30%'
         },
         {
-          label: '机构名称',
+          label: '门店名称',
           prop: 'bbName',
           type: 'input',
-          width: '20%'
+          width: '30%'
         }
       ]
     }
   },
   methods: {
-    handleSelectStaff(staff) {
-      console.log(staff)
-      const copyStaff = { ...staff, beStatus: staff.status }
-      let newAfStatus = 0
-      // 新状态根据原状态计算得到默认值：原状态为离职时，新状态默认选中在职，原状态为在职时，默认选中离职
-      if (copyStaff.status == 1) {
-        newAfStatus = 2
-      } else if (copyStaff.status == 2) {
-        newAfStatus = 1
+    handleSelectStaff(item) {
+      console.log(item)
+      this.info = {
+        shopName: item.bbName,
+        shopCode: item.bbCode,
+        eeName: item.eeName,
+        eeCode: item.eeCode
       }
-      copyStaff.afStatus = newAfStatus
-      // 自动填充变更日期字段
-      copyStaff.changeDate = new Date().formatDate('yyyy-MM-dd')
-      this.tableData = [copyStaff]
       this.chooseStaffVisible = false
     },
     handleAfStatusChange(val) {
@@ -170,21 +150,18 @@ export default {
       }
       this.tableData = [copy]
     },
-    getData() {
-      return this.tableData
-      // return this.tableData?.map(d => {
-      //   return {
-      //     eeCode: d.eeCode,
-      //     afPslcode: d.afPslcode,
-      //     afPslLevel: d.afPslLevel,
-      //     positionCode: d.positionCode,
-      //     postType: d.type,
-      //     isApproval: 0,
-      //     remark: d.remark,
-      //     afPsllevel1: d.afPsllevel1,
-      //     afPslcode1: d.afPslcode1
-      //   }
-      // })
+    async getData() {
+      const result = await this.$refs.form
+        .validate()
+        .catch(err => console.error(err))
+      if (result) {
+        const [effectYear, effectMonth] = this.info.date.split('-')
+        return {
+          ...this.info,
+          effectYear,
+          effectMonth
+        }
+      }
     }
   },
 

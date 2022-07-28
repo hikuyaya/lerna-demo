@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-07-18 09:45:59
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 10:30:30
- * @FilePath: \personnelweb\src\components\business\ChooseSingleStaff.vue
+ * @LastEditTime: 2022-07-28 10:19:45
+ * @FilePath: \personnelweb\src\components\business\ChooseSingleItem.vue
  * @Description: 
 -->
 <template>
@@ -59,6 +59,12 @@ export default {
     },
     conditions: {
       type: Array
+    },
+    defaultParams: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   data() {
@@ -81,8 +87,12 @@ export default {
     },
     onOpenAdvance() {},
     onSearch() {
-      const params = this.$refs.searchTop.getSearchParams()
-      params.limit = this.$refs.table.Pagination.internalPageSize
+      let params = this.$refs.searchTop.getSearchParams()
+      params.limit = this.$refs.table.Pagination.internalPageSize || 1000
+      params = {
+        ...params,
+        ...this.defaultParams
+      }
       const fetch = this.actionUrl
       this.$refs.table.reloadData({
         fetch,

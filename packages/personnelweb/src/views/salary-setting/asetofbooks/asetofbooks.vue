@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:06:30
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 16:14:40
+ * @LastEditTime: 2022-07-29 09:41:33
  * @FilePath: \personnelweb\src\views\salary-setting\asetofbooks\asetofbooks.vue
  * @Description: 
 -->
@@ -55,7 +55,13 @@
       </yid-table>
     </div>
     <el-dialog
-      title="新增"
+      :title="
+        operateType === 'add'
+          ? '新增'
+          : operateType === 'edit'
+          ? '修改'
+          : '详情'
+      "
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
@@ -164,11 +170,21 @@ export default {
       if (!result) {
         return
       }
-      await service.salarySetting.asetofbooks.save(result)
-      this.$message.success('操作成功')
-      this.addCompVisible = false
-      // 刷新列表
-      this.queryList()
+
+      this.$confirm(`您确认要保存此信息吗？`, `确认保存`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'btn-custom-cancel',
+        type: 'warning'
+      })
+        .then(async () => {
+          await service.salarySetting.asetofbooks.save(result)
+          this.$message.success('操作成功')
+          this.addCompVisible = false
+          // 刷新列表
+          this.queryList()
+        })
+        .catch(() => {})
     }
   }
 }

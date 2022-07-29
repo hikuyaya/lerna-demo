@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:24:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 11:01:05
+ * @LastEditTime: 2022-07-29 09:42:01
  * @FilePath: \personnelweb\src\views\salary-plan\company-limit\companyLimit.vue
  * @Description: 
 -->
@@ -51,7 +51,13 @@
       </yid-table>
     </div>
     <el-dialog
-      title="新增"
+      :title="
+        operateType === 'add'
+          ? '新增'
+          : operateType === 'edit'
+          ? '修改'
+          : '详情'
+      "
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body

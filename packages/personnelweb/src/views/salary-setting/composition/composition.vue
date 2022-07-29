@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:02:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 18:25:39
+ * @LastEditTime: 2022-07-29 09:41:27
  * @FilePath: \personnelweb\src\views\salary-setting\composition\composition.vue
  * @Description: 
 -->
@@ -75,7 +75,13 @@
       </yid-table>
     </div>
     <el-dialog
-      title="新增"
+      :title="
+        operateType === 'add'
+          ? '新增'
+          : operateType === 'edit'
+          ? '修改'
+          : '详情'
+      "
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
@@ -202,7 +208,6 @@ export default {
     queryList() {
       this.onSearch()
     },
-    onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
       this.selectRow = {}
@@ -232,11 +237,21 @@ export default {
       if (!result) {
         return
       }
-      await service.salarySetting.composition.save(result)
-      this.$message.success('操作成功')
-      this.addCompVisible = false
-      // 刷新列表
-      this.queryList()
+
+      this.$confirm(`您确认要保存此信息吗？`, `确认保存`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'btn-custom-cancel',
+        type: 'warning'
+      })
+        .then(async () => {
+          await service.salarySetting.composition.save(result)
+          this.$message.success('操作成功')
+          this.addCompVisible = false
+          // 刷新列表
+          this.queryList()
+        })
+        .catch(() => {})
     }
   }
 }

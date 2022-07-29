@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:09:38
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 15:41:33
+ * @LastEditTime: 2022-07-29 09:40:34
  * @FilePath: \personnelweb\src\views\salary-setting\special\special.vue
  * @Description: 
 -->
@@ -18,14 +18,26 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="编码" prop="eeName" width="100px">
+        <yid-table-column label="编码" prop="speCode" width="100px">
         </yid-table-column>
         <yid-table-column
           label="名称"
-          prop="idCard"
+          prop="speName"
           width="150px"></yid-table-column>
-        <yid-table-column label="适用门店" prop="eeCode"></yid-table-column>
-        <yid-table-column label="备注" prop="eeCode"></yid-table-column>
+        <yid-table-column label="适用门店" prop="type">
+          <template slot-scope="scope">
+            {{
+              scope.row.type == '1'
+                ? '美容门店'
+                : scope.row.type == '2'
+                ? '美发门店'
+                : scope.row.type == '3'
+                ? '所有门店'
+                : scope.row.type
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column label="备注" prop="remark"></yid-table-column>
         <yid-table-column label="状态" prop="status" width="70px">
           <template slot-scope="scope">
             {{
@@ -33,11 +45,11 @@
                 ? '正常'
                 : scope.row.status == 2
                 ? '停用'
-                : '其他'
+                : scope.row.status
             }}
           </template>
         </yid-table-column>
-        <yid-table-column label="操作">
+        <yid-table-column label="操作" width="80px">
           <template slot-scope="scope">
             <el-link type="primary" @click="onEdit(scope.row)">修改</el-link>
           </template>
@@ -45,7 +57,13 @@
       </yid-table>
     </div>
     <el-dialog
-      title="新增"
+      :title="
+        operateType === 'add'
+          ? '新增'
+          : operateType === 'edit'
+          ? '修改'
+          : '详情'
+      "
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body
@@ -54,6 +72,8 @@
         v-if="addCompVisible"
         ref="addCompRef"
         :value="selectRow"
+        :positionAll="positionAll"
+        :salaryCompAll="salaryCompAll"
         :operateType="operateType" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>
@@ -70,13 +90,13 @@ export default {
   components: { SearchTop, AddComp },
   data() {
     return {
-      addCompVisible: true,
+      addCompVisible: false,
       operateType: 'add',
       selectRow: {},
       conditions: [
         {
-          label: '职务编码', // 标签
-          prop: 'eeName', // 绑定的字段
+          label: '名称', // 标签
+          prop: 'speName', // 绑定的字段
           // label宽度
           type: 'input',
           width: '20%' // 整个组件占的宽度
@@ -84,35 +104,41 @@ export default {
           // required: true // 是否必填
         },
         {
-          label: '职务名称',
-          prop: 'eeCode',
-          type: 'input', // 搜索类型
-          width: '20%'
+          label: '适用门店',
+          prop: 'type',
+          type: 'select',
+          options: [
+            { label: '美容门店', value: '1' },
+            { label: '美发门店', value: '2' },
+            { label: '所有门店', value: '3' }
+          ],
+          width: '15%'
         },
         {
           label: '状态',
-          prop: 'type3',
+          prop: 'status',
           type: 'select',
           labelWidth: '0.8rem',
           options: [
-            { label: '所有', value: '' },
             { label: '正常', value: '1' },
             { label: '停用', value: '2' }
           ],
           width: '15%'
         }
       ],
-      tableData: []
+      tableData: [],
+      positionAll: [],
+      salaryCompAll: []
     }
   },
+  created() {},
   mounted() {
-    // this.queryList()
+    this.queryList()
   },
   methods: {
     queryList() {
       this.onSearch()
     },
-    onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
       this.selectRow = {}
@@ -120,11 +146,8 @@ export default {
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      // 身份证号转大写
-      params.idCard = params.idCard?.toUpperCase()
-      params.isDel = 0
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.black.list
+      const fetch = service.salarySetting.special.list
       this.$refs.table.reloadData({
         fetch,
         params
@@ -145,11 +168,20 @@ export default {
       if (!result) {
         return
       }
-      await service.staff.black.save(result)
-      this.$message.success('操作成功')
-      this.addCompVisible = false
-      // 刷新列表
-      this.queryList()
+      this.$confirm(`您确认要保存此信息吗？`, `确认保存`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'btn-custom-cancel',
+        type: 'warning'
+      })
+        .then(async () => {
+          await service.salarySetting.special.save(result)
+          this.$message.success('操作成功')
+          this.addCompVisible = false
+          // 刷新列表
+          this.queryList()
+        })
+        .catch(() => {})
     }
   }
 }

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-22 14:38:14
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 09:32:05
+ * @LastEditTime: 2022-07-29 14:40:47
  * @FilePath: \personnelweb\src\views\salary-setting\special\components\AddComp.vue
  * @Description: 
 -->
@@ -19,8 +19,8 @@
         <el-col :span="12">
           <el-form-item label="适用门店" prop="type">
             <el-select v-model="info.type" class="w100">
-              <el-option label="美容门店" :value="1"></el-option>
-              <el-option label="美发门店" :value="2"></el-option>
+              <el-option label="美发门店" :value="1"></el-option>
+              <el-option label="美容门店" :value="2"></el-option>
               <el-option label="所有门店" :value="3"></el-option>
             </el-select>
           </el-form-item>

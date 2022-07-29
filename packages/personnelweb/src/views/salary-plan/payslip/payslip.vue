@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:27:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 16:32:46
+ * @LastEditTime: 2022-07-29 13:58:32
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\payslip.vue
  * @Description: 
 -->
@@ -75,7 +75,7 @@ export default {
   components: { SearchTop, AddComp },
   data() {
     return {
-      addCompVisible: true,
+      addCompVisible: false,
       importCompVisible: false,
       operateType: 'add',
       type: '', // approve 或者 remove
@@ -83,13 +83,13 @@ export default {
       conditions: [
         {
           label: '门店编码',
-          prop: 'bbCode',
+          prop: 'shopCode',
           type: 'input',
           width: '15%'
         },
         {
           label: '门店名称',
-          prop: 'bbCode',
+          prop: 'shopName',
           type: 'input',
           width: '15%'
         },
@@ -196,7 +196,7 @@ export default {
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.status.list
+      const fetch = service.salaryPlan.payslip.list
       this.$refs.table.reloadData({
         fetch,
         params
@@ -219,7 +219,7 @@ export default {
         this.$message.error('请选择员工')
         return
       }
-      await service.staff.status.save({
+      await service.salaryPlan.payslip.save({
         employeeStateMaintenanceVOS: result
       })
       this.$message.success('操作成功')

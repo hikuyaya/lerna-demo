@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:09:38
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 09:40:34
+ * @LastEditTime: 2022-07-29 14:40:26
  * @FilePath: \personnelweb\src\views\salary-setting\special\special.vue
  * @Description: 
 -->
@@ -28,9 +28,9 @@
           <template slot-scope="scope">
             {{
               scope.row.type == '1'
-                ? '美容门店'
-                : scope.row.type == '2'
                 ? '美发门店'
+                : scope.row.type == '2'
+                ? '美容门店'
                 : scope.row.type == '3'
                 ? '所有门店'
                 : scope.row.type
@@ -108,8 +108,8 @@ export default {
           prop: 'type',
           type: 'select',
           options: [
-            { label: '美容门店', value: '1' },
-            { label: '美发门店', value: '2' },
+            { label: '美发门店', value: '1' },
+            { label: '美容门店', value: '2' },
             { label: '所有门店', value: '3' }
           ],
           width: '15%'

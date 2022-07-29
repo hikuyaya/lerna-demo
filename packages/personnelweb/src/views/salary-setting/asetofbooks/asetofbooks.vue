@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:06:30
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 14:23:52
+ * @LastEditTime: 2022-07-29 14:51:28
  * @FilePath: \personnelweb\src\views\salary-setting\asetofbooks\asetofbooks.vue
  * @Description: 
 -->
@@ -35,7 +35,7 @@
             }}
           </template>
         </yid-table-column>
-        <yid-table-column label="备注" prop="eeCode"></yid-table-column>
+        <yid-table-column label="备注" prop="remark"></yid-table-column>
         <!-- <yid-table-column label="状态" prop="status" width="100px">
           <template slot-scope="scope">
             {{

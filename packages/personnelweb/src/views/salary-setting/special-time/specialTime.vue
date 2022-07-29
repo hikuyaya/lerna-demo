@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:14:58
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 13:40:50
+ * @LastEditTime: 2022-07-29 14:41:13
  * @FilePath: \personnelweb\src\views\salary-setting\special-time\specialTime.vue
  * @Description: 
 -->
@@ -28,9 +28,9 @@
           <template slot-scope="scope">
             {{
               scope.row.type == '1'
-                ? '美容门店'
-                : scope.row.type == '2'
                 ? '美发门店'
+                : scope.row.type == '2'
+                ? '美容门店'
                 : scope.row.type == '3'
                 ? '所有门店'
                 : scope.row.type

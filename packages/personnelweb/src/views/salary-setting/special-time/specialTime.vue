@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:14:58
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 09:52:29
+ * @LastEditTime: 2022-07-29 13:40:50
  * @FilePath: \personnelweb\src\views\salary-setting\special-time\specialTime.vue
  * @Description: 
 -->
@@ -126,11 +126,25 @@ export default {
       if (!result) {
         return
       }
-      await service.staff.black.save(result)
-      this.$message.success('操作成功')
-      this.addCompVisible = false
-      // 刷新列表
-      this.queryList()
+
+      this.$confirm(`您确认要保存此修改信息吗？`, `确认保存`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'btn-custom-cancel',
+        type: 'warning'
+      })
+        .then(async () => {
+          if (this.operateType === 'edit') {
+            await service.salarySetting.specialTime.update(result)
+          } else if (this.operateType === 'batch') {
+            await service.salarySetting.specialTime.batchUpdateShop(result)
+          }
+          this.$message.success('操作成功')
+          this.addCompVisible = false
+          // 刷新列表
+          this.queryList()
+        })
+        .catch(() => {})
     }
   }
 }

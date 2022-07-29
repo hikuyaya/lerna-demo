@@ -258,12 +258,12 @@ export default {
       console.log(items)
       let copyItems = [...items]
       // if (this.operateType === 'add') {
-      //   copyItems = copyItems.map((v, index) => {
-      //     return {
-      //       ...v,
-      //       rowindex: index + 1
-      //     }
-      //   })
+      copyItems = copyItems.map((v, index) => {
+        return {
+          ...v,
+          rowindex: index + 1
+        }
+      })
       // }
       this.tableData = copyItems
       this.chooseMultipleVisible = false

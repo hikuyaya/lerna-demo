@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:02:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 09:41:27
+ * @LastEditTime: 2022-07-29 14:23:25
  * @FilePath: \personnelweb\src\views\salary-setting\composition\composition.vue
  * @Description: 
 -->
@@ -56,7 +56,7 @@
           </template>
         </yid-table-column>
         <yid-table-column label="备注" prop="remark"></yid-table-column>
-        <yid-table-column label="状态" prop="status" width="70px">
+        <!-- <yid-table-column label="状态" prop="status" width="70px">
           <template slot-scope="scope">
             {{
               scope.row.status == 1
@@ -66,7 +66,7 @@
                 : '其他'
             }}
           </template>
-        </yid-table-column>
+        </yid-table-column> -->
         <yid-table-column label="操作">
           <template slot-scope="scope">
             <el-link type="primary" @click="onEdit(scope.row)">编辑</el-link>
@@ -128,18 +128,18 @@ export default {
           width: '15%',
           labelWidth: '0.8rem'
         },
-        {
-          label: '状态',
-          prop: 'status',
-          type: 'select',
-          labelWidth: '0.8rem',
-          options: [
-            { label: '所有', value: '' },
-            { label: '正常', value: '1' },
-            { label: '停用', value: '2' }
-          ],
-          width: '12%'
-        },
+        // {
+        //   label: '状态',
+        //   prop: 'status',
+        //   type: 'select',
+        //   labelWidth: '0.8rem',
+        //   options: [
+        //     { label: '所有', value: '' },
+        //     { label: '正常', value: '1' },
+        //     { label: '停用', value: '2' }
+        //   ],
+        //   width: '12%'
+        // },
         {
           label: '输入类型',
           prop: 'inputType',

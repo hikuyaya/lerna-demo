@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:06:30
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 09:41:33
+ * @LastEditTime: 2022-07-29 14:23:52
  * @FilePath: \personnelweb\src\views\salary-setting\asetofbooks\asetofbooks.vue
  * @Description: 
 -->
@@ -36,7 +36,7 @@
           </template>
         </yid-table-column>
         <yid-table-column label="备注" prop="eeCode"></yid-table-column>
-        <yid-table-column label="状态" prop="status" width="100px">
+        <!-- <yid-table-column label="状态" prop="status" width="100px">
           <template slot-scope="scope">
             {{
               scope.row.status == 1
@@ -46,7 +46,7 @@
                 : '其他'
             }}
           </template>
-        </yid-table-column>
+        </yid-table-column> -->
         <yid-table-column label="操作" width="100px">
           <template slot-scope="scope">
             <el-link type="primary" @click="onEdit(scope.row)">编辑</el-link>
@@ -117,18 +117,18 @@ export default {
             { label: '美容门店', value: '2' }
           ],
           width: '15%'
-        },
-        {
-          label: '状态',
-          prop: 'status',
-          type: 'select',
-          labelWidth: '0.8rem',
-          options: [
-            { label: '正常', value: '1' },
-            { label: '停用', value: '2' }
-          ],
-          width: '12%'
         }
+        // {
+        //   label: '状态',
+        //   prop: 'status',
+        //   type: 'select',
+        //   labelWidth: '0.8rem',
+        //   options: [
+        //     { label: '正常', value: '1' },
+        //     { label: '停用', value: '2' }
+        //   ],
+        //   width: '12%'
+        // }
       ],
       tableData: []
     }

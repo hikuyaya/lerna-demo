@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 17:06:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 15:52:39
+ * @LastEditTime: 2022-07-29 11:37:33
  * @FilePath: \personnelweb\src\components\business\ChooseMultipleItem.vue
  * @Description: 
 -->
@@ -74,6 +74,12 @@ export default {
       default: () => {
         return true
       }
+    },
+    defaultParams: {
+      type: Object,
+      default: function () {
+        return {}
+      }
     }
   },
   components: {
@@ -95,8 +101,12 @@ export default {
       this.onSearch()
     },
     onSearch() {
-      const params = this.$refs.searchTop.getSearchParams()
+      let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination?.internalPageSize
+      params = {
+        ...params,
+        ...this.defaultParams
+      }
       const fetch = this.actionUrl
       this.$refs.table.reloadData({
         fetch,

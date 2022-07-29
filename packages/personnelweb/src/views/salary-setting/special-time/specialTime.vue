@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:14:58
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 16:32:26
+ * @LastEditTime: 2022-07-29 09:52:29
  * @FilePath: \personnelweb\src\views\salary-setting\special-time\specialTime.vue
  * @Description: 
 -->
@@ -13,19 +13,33 @@
         <template #inlineBtn>
           <div class="flex flex-alignitems__center mg-l-12">
             <el-button type="primary" @click="onSearch">查询</el-button>
-            <el-button type="primary" @click="onAdd">批量维护</el-button>
+            <el-button type="primary" @click="onBatch">批量维护</el-button>
           </div>
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="门店编码" prop="eeName" width="100px">
+        <yid-table-column label="门店编码" prop="shopCode" width="100px">
         </yid-table-column>
         <yid-table-column
           label="门店名称"
-          prop="idCard"
+          prop="shopName"
           width="150px"></yid-table-column>
-        <yid-table-column label="门店类型" prop="eeCode"></yid-table-column>
-        <yid-table-column label="限定申请日" prop="eeCode"></yid-table-column>
+        <yid-table-column label="门店类型" prop="type">
+          <template slot-scope="scope">
+            {{
+              scope.row.type == '1'
+                ? '美容门店'
+                : scope.row.type == '2'
+                ? '美发门店'
+                : scope.row.type == '3'
+                ? '所有门店'
+                : scope.row.type
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column
+          label="限定申请日"
+          prop="salaryDay"></yid-table-column>
         <yid-table-column label="操作">
           <template slot-scope="scope">
             <el-link type="primary" @click="onEdit(scope.row)">修改</el-link>
@@ -59,7 +73,7 @@ export default {
   components: { SearchTop, AddComp },
   data() {
     return {
-      addCompVisible: true,
+      addCompVisible: false,
       operateType: 'add',
       selectRow: {},
       conditions: [
@@ -77,25 +91,21 @@ export default {
     }
   },
   mounted() {
-    // this.queryList()
+    this.queryList()
   },
   methods: {
     queryList() {
       this.onSearch()
     },
-    onOpenAdvance() {},
-    onAdd() {
-      this.operateType = 'add'
+    onBatch() {
+      this.operateType = 'batch'
       this.selectRow = {}
       this.addCompVisible = true
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
-      // 身份证号转大写
-      params.idCard = params.idCard?.toUpperCase()
-      params.isDel = 0
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.black.list
+      const fetch = service.salarySetting.specialTime.list
       this.$refs.table.reloadData({
         fetch,
         params

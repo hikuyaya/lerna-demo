@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 14:55:21
+ * @LastEditTime: 2022-07-29 12:37:03
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -90,6 +90,7 @@
         :conditions="chooseMenuConditions"
         :pagination="false"
         :actionUrl="actionUrl"
+        :defaultParams="defaultParams"
         :columns="chooseMenuColumns"
         @select="handleSelect"></choose-multiple-item>
       <!-- <choose-menu
@@ -138,89 +139,10 @@ export default {
         inputType: [{ required: true, message: '请选择输入类型' }],
         signType: [{ required: true, message: '请选择计算类型' }]
       },
-      tableData: [
-        {
-          id: '2021',
-          createdTime: '2022-07-21 14:58:49',
-          updatedTime: '2022-07-21 14:58:49',
-          revision: 1,
-          tenantId: '765432',
-          updatedBy: '王庆媛',
-          createdBy: '王庆媛',
-          parentId: 2020,
-          name: '出勤天数录入',
-          css: '',
-          url: '/salary-business/attendance',
-          path: '',
-          sort: 1,
-          type: 1,
-          hidden: 0,
-          appId: 'personnel',
-          client: '1',
-          senauth: '0',
-          pathMethod: '',
-          headId: '',
-          parentName: null,
-          subMenus: null,
-          checked: true,
-          roleId: null,
-          menuIds: null
-        },
-        {
-          id: '2022',
-          createdTime: '2022-07-21 14:59:03',
-          updatedTime: '2022-07-21 14:59:03',
-          revision: 1,
-          tenantId: '765432',
-          updatedBy: '王庆媛',
-          createdBy: '王庆媛',
-          parentId: 2020,
-          name: '薪酬申报单',
-          css: '',
-          url: '/salary-business/salary-request',
-          path: '',
-          sort: 2,
-          type: 1,
-          hidden: 0,
-          appId: 'personnel',
-          client: '1',
-          senauth: '0',
-          pathMethod: '',
-          headId: '',
-          parentName: null,
-          subMenus: null,
-          checked: true,
-          roleId: null,
-          menuIds: null
-        },
-        {
-          id: '2023',
-          createdTime: '2022-07-21 14:59:16',
-          updatedTime: '2022-07-21 14:59:16',
-          revision: 1,
-          tenantId: '765432',
-          updatedBy: '王庆媛',
-          createdBy: '王庆媛',
-          parentId: 2020,
-          name: '薪酬审核单',
-          css: '',
-          url: '/salary-business/salary-approve',
-          path: '',
-          sort: 3,
-          type: 1,
-          hidden: 0,
-          appId: 'personnel',
-          client: '1',
-          senauth: '0',
-          pathMethod: '',
-          headId: '',
-          parentName: null,
-          subMenus: null,
-          checked: true,
-          roleId: null,
-          menuIds: null
-        }
-      ],
+      defaultParams: {
+        pname: '薪酬业务'
+      },
+      tableData: [],
       actionUrl: service.salarySetting.composition.menuList,
       chooseMenuConditions: [
         {
@@ -236,7 +158,7 @@ export default {
       ],
       chooseMenuColumns: [
         {
-          prop: '',
+          prop: 'name',
           label: '菜单名'
         }
       ]

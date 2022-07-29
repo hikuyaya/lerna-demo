@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-22 15:47:26
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 16:37:56
+ * @LastEditTime: 2022-07-29 09:53:38
  * @FilePath: \personnelweb\src\views\salary-setting\special-time\components\AddComp.vue
  * @Description: 
 -->
@@ -10,7 +10,7 @@
 <template>
   <div>
     <el-form ref="form" :model="info" :rules="rules" label-width="90px">
-      <el-row>
+      <el-row v-if="operateType === 'batch'">
         <el-col :span="24">
           <el-form-item label="门店类型" prop="type2">
             <el-select v-model="info.type2" class="w100">
@@ -19,6 +19,14 @@
               <el-option label="不限门店" value="3"></el-option>
             </el-select>
           </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row v-else>
+        <el-col :span="12">
+          <el-form-item label="门店编码" prop="type2"> </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="门店名称" prop="type2"> </el-form-item>
         </el-col>
       </el-row>
       <el-row>
@@ -51,14 +59,7 @@ export default {
     },
     operateType: {
       type: String
-    },
-    positionList: {
-      type: Array,
-      default: function () {
-        return []
-      }
-    },
-    treeData: Array
+    }
   },
   data() {
     return {

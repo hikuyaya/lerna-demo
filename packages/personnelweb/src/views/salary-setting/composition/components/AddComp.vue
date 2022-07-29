@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 12:37:03
+ * @LastEditTime: 2022-07-29 14:17:15
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -62,9 +62,9 @@
       <yid-table-column label="适用门店类型" prop="shopType">
         <template slot-scope="scope">
           <el-select v-model="scope.row.shopType">
-            <el-option label="美发门店" value="1"></el-option>
-            <el-option label="美容门店" value="2"></el-option>
-            <el-option label="不限门店" value="3"></el-option>
+            <el-option label="美发门店" :value="1"></el-option>
+            <el-option label="美容门店" :value="2"></el-option>
+            <el-option label="不限门店" :value="3"></el-option>
           </el-select>
         </template>
       </yid-table-column>
@@ -184,7 +184,7 @@ export default {
       if (result) {
         const menus = (this.tableData || []).map(v => {
           return {
-            menuId: v.id,
+            menuId: this.operateType === 'edit' ? v.menuId : v.id,
             menuName: v.name,
             type: v.shopType
           }
@@ -201,10 +201,17 @@ export default {
     value: {
       immediate: true,
       handler: function (val) {
+        let copyVal = JSON.parse(JSON.stringify(val))
         if (this.operateType === 'edit') {
-          this.tableData = this.info.menus
+          this.tableData = copyVal.menus?.map(v => {
+            return {
+              ...v,
+              name: v.menuName,
+              shopType: v.type
+            }
+          })
         }
-        this.info = JSON.parse(JSON.stringify(val))
+        this.info = copyVal
       }
     }
   }

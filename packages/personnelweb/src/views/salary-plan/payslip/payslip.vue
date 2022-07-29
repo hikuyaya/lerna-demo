@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:27:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 13:58:32
+ * @LastEditTime: 2022-07-29 16:56:57
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\payslip.vue
  * @Description: 
 -->
@@ -10,7 +10,7 @@
 <template>
   <div class="container">
     <el-collapse-transition>
-      <div v-if="!addCompVisible" class="content">
+      <div v-show="!addCompVisible" class="content">
         <search-top ref="searchTop" :options="conditions">
           <template #inlineBtn>
             <div class="flex flex-alignitems__center mg-l-12">
@@ -20,29 +20,49 @@
           </template>
         </search-top>
         <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-          <yid-table-column label="门店编码" prop="bbCode"></yid-table-column>
-          <yid-table-column label="门店名称" prop="bbName"></yid-table-column>
+          <yid-table-column label="门店编码" prop="shopCode"></yid-table-column>
+          <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
           <yid-table-column
             label="员工姓名"
             prop="eeName"
             width="100px"></yid-table-column>
           <yid-table-column label="员工编码" prop="eeCode"></yid-table-column>
 
-          <yid-table-column
-            label="工资年月"
-            prop="year"
-            width="100px"></yid-table-column>
+          <yid-table-column label="工资年月" width="100px">
+            <template slot-scope="scope">
+              {{ scope.row.year }}-{{ scope.row.month }}
+            </template>
+          </yid-table-column>
 
           <yid-table-column
             label="职务"
-            prop="month"
+            prop="psName"
             width="120px"></yid-table-column>
-          <yid-table-column label="员工状态" prop="month" width="120px">
-          </yid-table-column>
           <yid-table-column
-            label="岗位类型"
-            prop="month"
-            width="120px"></yid-table-column>
+            label="员工状态"
+            prop="employeeStatus"
+            width="120px">
+            <template slot-scope="scope">
+              {{
+                scope.row.employeeStatus == 1
+                  ? '正常'
+                  : scope.row.employeeStatus == 2
+                  ? '离职'
+                  : scope.row.employeeStatus
+              }}
+            </template>
+          </yid-table-column>
+          <yid-table-column label="岗位类型" prop="type" width="120px">
+            <template slot-scope="scope">
+              {{
+                scope.row.type == 1
+                  ? '主职'
+                  : scope.row.type == 2
+                  ? '兼职'
+                  : scope.row.type
+              }}
+            </template>
+          </yid-table-column>
 
           <yid-table-column label="备注" prop="remark"></yid-table-column>
 
@@ -63,7 +83,8 @@
         ref="addCompRef"
         :value="selectRow"
         :operateType="operateType"
-        @back="addCompVisible = false" />
+        @back="addCompVisible = false"
+        @success="handleSaveSuccess" />
     </el-collapse-transition>
   </div>
 </template>
@@ -95,7 +116,7 @@ export default {
         },
         {
           label: '工资年月',
-          prop: 'year',
+          prop: 'date',
           type: 'date',
           dateType: 'month',
           width: '15%',
@@ -194,37 +215,31 @@ export default {
     },
     onDelete() {},
     onSearch() {
-      const params = this.$refs.searchTop.getSearchParams()
+      let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
+      let dateParams = {
+        year: null,
+        month: null
+      }
+      if (params.date) {
+        const [year, month] = params.date.split('-')
+        dateParams = {
+          year,
+          month
+        }
+      }
+      params = {
+        ...params,
+        ...dateParams
+      }
       const fetch = service.salaryPlan.payslip.list
       this.$refs.table.reloadData({
         fetch,
         params
       })
     },
-    onEdit(row) {
-      this.selectRow = row
-      this.operateType = 'edit'
-      this.addCompVisible = true
-    },
-    onShowDetail(row) {
-      this.selectRow = row
-      this.operateType = 'detail'
-      this.addCompVisible = true
-    },
-    async onSubmit() {
-      const result = this.$refs.addCompRef.getData()
-      console.log(result)
-      if (!result.length) {
-        this.$message.error('请选择员工')
-        return
-      }
-      await service.salaryPlan.payslip.save({
-        employeeStateMaintenanceVOS: result
-      })
-      this.$message.success('操作成功')
+    async handleSaveSuccess() {
       this.addCompVisible = false
-      // 刷新列表
       await this.queryList()
     }
   }

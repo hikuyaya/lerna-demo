@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:14:58
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 14:41:13
+ * @LastEditTime: 2022-07-29 17:03:10
  * @FilePath: \personnelweb\src\views\salary-setting\special-time\specialTime.vue
  * @Description: 
 -->
@@ -48,7 +48,7 @@
       </yid-table>
     </div>
     <el-dialog
-      title="批量维护限定申请日"
+      :title="operateType === 'batch' ? '批量维护限定申请日' : '修改'"
       :visible.sync="addCompVisible"
       :close-on-click-modal="false"
       append-to-body

@@ -2,21 +2,31 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-26 16:42:34
+ * @LastEditTime: 2022-07-29 17:00:02
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
 
 <template>
   <div>
-    <el-button type="primary" @click="$emit('back')" class="mg-b-24"
-      >返回</el-button
-    >
+    <div>
+      <el-button type="primary" @click="$emit('back')" class="mg-b-24"
+        >返回</el-button
+      >
+      <el-button
+        type="primary"
+        v-if="tableData.length"
+        @click="onSave"
+        class="mg-b-24"
+        >保存</el-button
+      >
+    </div>
+
     <el-form ref="form" :model="info" :rules="rules" label-width="80px">
       <el-row>
         <el-col :span="4">
-          <el-form-item label="门店编码" prop="bbCode">
-            <el-input v-model="info.bbCode" class="w100"></el-input>
+          <el-form-item label="门店编码" prop="shopCode">
+            <el-input v-model="info.shopCode" class="w100"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
@@ -48,41 +58,69 @@
         </el-col>
       </el-row>
     </el-form>
-    <template v-if="tableData.length">
+    <template v-if="shop.shopname">
       <div class="flex info-row">
-        <div>门店：西宁1店</div>
-        <div>编码：西宁1店</div>
-        <div>工资月份：西宁1店</div>
-        <div>合计人员：<span class="red">10</span></div>
+        <div>门店：{{ shop.shopname }}</div>
+        <div>编码：{{ shop.shopcode }}</div>
+        <div>工资月份：{{ info.year }}-{{ info.month }}</div>
+        <div>
+          合计人员：<span class="red">{{ tableData.length }}</span>
+        </div>
       </div>
       <div class="mg-t-24 mg-b-12">
         <el-button type="primary" @click="onAdd">添加员工</el-button>
       </div>
       <yid-table :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="门店编码" prop="bbCode"></yid-table-column>
-        <yid-table-column label="门店名称" prop="bbName"></yid-table-column>
+        <yid-table-column label="门店编码" prop="shopCode"></yid-table-column>
+        <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
         <yid-table-column
           label="员工姓名"
           prop="eeName"
           width="100px"></yid-table-column>
         <yid-table-column label="员工编码" prop="eeCode"></yid-table-column>
-        <yid-table-column label="职务" prop="positionName"></yid-table-column>
-        <yid-table-column label="员工状态" prop="status"></yid-table-column>
-        <yid-table-column label="岗位类型" prop="type">
+        <yid-table-column label="职务" prop="psName"></yid-table-column>
+        <yid-table-column label="员工状态" prop="employeeStatus" width="120px">
           <template slot-scope="scope">
-            <template v-if="!!scope.row.add">{{ scope.row.type }}</template>
-            <el-select v-else v-model="scope.row.type">
-              <el-option label="主岗位" :value="1"></el-option>
-              <el-option label="兼职岗" :value="2"></el-option>
-            </el-select>
+            {{
+              scope.row.employeeStatus == 1
+                ? '正常'
+                : scope.row.employeeStatus == 2
+                ? '离职'
+                : scope.row.employeeStatus
+            }}
           </template>
         </yid-table-column>
-        <yid-table-column label="备注" prop="remark"></yid-table-column>
+        <yid-table-column label="岗位类型" prop="type" width="120px">
+          <template slot-scope="scope">
+            <el-select v-model="scope.row.type" v-if="scope.row.add">
+              <el-option label="主职" :value="1"></el-option>
+              <el-option label="兼职" :value="2"></el-option>
+            </el-select>
+            <span v-else>
+              {{
+                scope.row.type == 1
+                  ? '主职'
+                  : scope.row.type == 2
+                  ? '兼职'
+                  : scope.row.type
+              }}
+            </span>
+          </template>
+        </yid-table-column>
+        <yid-table-column label="备注" prop="remark">
+          <template slot-scope="scope">
+            <el-input v-model="scope.row.remark" v-if="scope.row.add">
+            </el-input>
+            <span v-else>
+              {{ scope.row.remark }}
+            </span>
+          </template>
+        </yid-table-column>
         <yid-table-column label="操作">
           <template slot-scope="scope">
             <el-popconfirm
               title="确定删除吗？"
-              @confirm="onDeleteRow(scope.$index)">
+              @confirm="onDeleteRow(scope.$index, scope.row)">
               <i
                 slot="reference"
                 class="el-icon-remove-outline c-pointer font-size-22px"></i>
@@ -103,6 +141,7 @@
         :columns="chooseStaffColumns"
         :actionUrl="chooseStaffActionUrl"
         :conditions="chooseStaffConditions"
+        :defaultParams="defaultParams"
         @select="handleSelectStaffs"></choose-multiple-item>
     </el-dialog>
   </div>
@@ -127,14 +166,6 @@ export default {
     ChooseMultipleItem
   },
   computed: {
-    staffInfo: function () {
-      if (this.info.eeCode) {
-        const name = this.info.eeName + '-' + this.info.eeCode
-        this.$set(this.info, 'staffInfo', name)
-        return name
-      }
-      return ''
-    },
     tableData: function () {
       return [...this.datas, ...this.adds]
     }
@@ -145,10 +176,14 @@ export default {
         year: new Date().getFullYear(),
         month: new Date().getMonth()
       },
-      datas: [{}], // 查出的本店人员数据
+      shop: {},
+      datas: [], // 查出的本店人员数据
       adds: [], // 添加进来的其他店人员数据
+      defaultParams: {
+        searchType: 1
+      },
       rules: {
-        bbCode: [{ required: true, message: '请输入门店编码' }],
+        shopCode: [{ required: true, message: '请输入门店编码' }],
         year: [{ required: true, message: '请输入' }],
         month: [{ required: true, message: '请输入' }]
       },
@@ -181,13 +216,13 @@ export default {
           width: '20%'
         },
         {
-          label: '机构编码',
+          label: '门店编码',
           prop: 'bbCode',
           type: 'input',
           width: '20%'
         },
         {
-          label: '机构名称',
+          label: '门店名称',
           prop: 'bbName',
           type: 'input',
           width: '20%'
@@ -200,7 +235,18 @@ export default {
       console.log(staffs)
       const addStaffs = staffs.map(v => {
         return {
-          ...v,
+          eeCode: v.eeCode,
+          eeName: v.eeName,
+          shopName: v.bbName,
+          shopCode: v.bbCode,
+          psCode: v.positionCode,
+          psName: v.positionName,
+          psLevelName: v.positionLevelName,
+          psLevelCode: v.positionLevelCode,
+          type: 2, // 1主职 2兼职
+          remark: '',
+          psLevel1Name: v.level1Name,
+          psLevel1Code: v.level1Code,
           add: true
         }
       })
@@ -210,16 +256,65 @@ export default {
     onQueryStaff() {
       this.$refs.form.validate(valid => {
         if (valid) {
+          this.queryShop()
           this.onSearch()
         }
       })
     },
-    async onSearch() {},
+    onDeleteRow(index, row) {
+      const tableDataLength = this.tableData.length
+      if (row.add) {
+        const copyData = [...this.adds]
+        copyData.splice(index - tableDataLength, 1)
+        this.adds = copyData
+      } else {
+        const copyData = [...this.datas]
+        copyData.splice(index, 1)
+        this.datas = copyData
+      }
+    },
+    async queryShop() {
+      const { data } = await service.chain.shop.shopListWithPage({
+        pcodename: this.info.shopCode,
+        page: 1,
+        limit: 10
+      })
+      this.shop = data?.[0]
+    },
+    async onSearch() {
+      let params = {
+        ...this.info,
+        page: 1,
+        limit: 1000
+      }
+      const { data } = await service.salaryPlan.payslip.list(params)
+      this.datas = [...data]
+    },
     onAdd() {
       this.chooseStaffVisible = true
     },
     getData() {
       return this.tableData
+    },
+    async onSave() {
+      this.$confirm(`您确认保存页面信息吗？`, `确认保存`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'btn-custom-cancel',
+        type: 'warning'
+      })
+        .then(async () => {
+          let params = {
+            ...this.info,
+            monthRptHreesalVOList: this.tableData
+          }
+          console.log(params)
+          // return
+          await service.salaryPlan.payslip.save(params)
+          this.$message.success('操作成功')
+          this.$emit('success')
+        })
+        .catch(() => {})
     }
   },
 
@@ -231,13 +326,6 @@ export default {
           return
         }
         this.info = JSON.parse(JSON.stringify(val))
-      }
-    },
-    'info.sx': {
-      handler: function (val) {
-        if (val == 1) {
-          //
-        }
       }
     }
   }

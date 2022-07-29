@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-22 09:38:12
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 17:55:19
+ * @LastEditTime: 2022-07-29 14:26:13
  * @FilePath: \personnelweb\src\views\salary-setting\position-asetofbooks\components\AddComp.vue
  * @Description: 
 -->
@@ -50,7 +50,7 @@
             <el-input-number
               v-model="info.tutje"
               :controls="false"
-              :min="1"
+              :min="0"
               class="w100"></el-input-number>
           </el-form-item>
         </el-col>
@@ -59,7 +59,7 @@
             <el-input-number
               v-model="info.tutjeMon"
               :controls="false"
-              :min="1"
+              :min="0"
               class="w100"></el-input-number>
           </el-form-item>
         </el-col>

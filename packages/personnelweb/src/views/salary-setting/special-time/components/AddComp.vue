@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-22 15:47:26
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 13:43:23
+ * @LastEditTime: 2022-07-29 17:10:57
  * @FilePath: \personnelweb\src\views\salary-setting\special-time\components\AddComp.vue
  * @Description: 
 -->
@@ -14,8 +14,8 @@
         <el-col :span="24">
           <el-form-item label="门店类型" prop="type">
             <el-select v-model="info.type" class="w100">
-              <el-option label="美发工资账套" value="1"></el-option>
-              <el-option label="美容工资账套" value="2"></el-option>
+              <el-option label="美发门店" value="1"></el-option>
+              <el-option label="美容门店" value="2"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -35,12 +35,14 @@
       <el-row>
         <el-col :span="24">
           <el-form-item label="限定申请日" prop="salaryDay">
-            <el-input-number
+            <!-- <el-input-number
               controls-position="right"
               v-model="info.salaryDay"
-              :min="1"
+              :min="0"
               :max="31"
-              :controls="false" />
+              :controls="false" /> -->
+
+            <el-input v-model="info.salaryDay" />
             &nbsp;&nbsp;<span class="orange">*如不做限制设置为空即可*</span>
           </el-form-item>
         </el-col>
@@ -65,10 +67,31 @@ export default {
     }
   },
   data() {
+    const validateSalaryDay = (rule, value, callback) => {
+      // if (!value) {
+      //   callback(new Error('请输入手机号'))
+      // } else {
+      //   const reg = new RegExp(/^1[3456789]\d{9}$/)
+      //   if (reg.test(value)) {
+      //     callback()
+      //   } else {
+      //     callback(new Error('请输入11位手机号'))
+      //   }
+      // }
+      if ('' === value || undefined === value || null === value) {
+        callback()
+      } else if (value > 0 && value <= 31) {
+        callback()
+      } else {
+        callback(new Error('请输入合法限定申请日'))
+      }
+    }
     return {
       info: {},
       chooseMultipleVisible: false,
-      rules: {},
+      rules: {
+        salaryDay: [{ validator: validateSalaryDay }]
+      },
       tableData: [],
       chooseMultipleConditions: [
         {

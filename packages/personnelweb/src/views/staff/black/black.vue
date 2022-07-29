@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 11:10:06
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 17:02:04
+ * @LastEditTime: 2022-07-29 17:14:14
  * @FilePath: \personnelweb\src\views\staff\black\black.vue
  * @Description: 黑名单管理
 -->
@@ -62,7 +62,7 @@
           label="移除原因"
           prop="removeRemark"></yid-table-column>
         <yid-table-column label="操作" width="100" fixed="right">
-          <template slot-scope="scope">
+          <template slot-scope="scope" v-if="scope.row.status !== 2">
             <el-link type="primary" @click="onRemove(scope.row)">移除</el-link>
           </template>
         </yid-table-column>

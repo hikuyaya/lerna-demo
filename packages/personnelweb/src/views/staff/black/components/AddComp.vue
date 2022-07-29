@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 11:12:52
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 09:26:57
+ * @LastEditTime: 2022-07-29 11:26:44
  * @FilePath: \personnelweb\src\views\staff\black\components\AddComp.vue
  * @Description: 
 -->
@@ -53,6 +53,7 @@
       <choose-single-item
         v-if="chooseStaffVisible"
         :columns="chooseStaffColumns"
+        :defaultParams="defaultParams"
         :actionUrl="chooseSingleStaffActionUrl"
         :conditions="chooseStaffConditions"
         @select="handleSelectStaff"></choose-single-item>
@@ -90,6 +91,9 @@ export default {
     return {
       info: {},
       selectStaff: {},
+      defaultParams: {
+        status: '2'
+      },
       rules: {
         addRemark: [{ required: true, message: '请输入报备原因' }],
         idno: [

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-11 13:36:56
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 13:48:47
+ * @LastEditTime: 2022-08-01 10:24:59
  * @FilePath: \personnelweb\src\views\staff\workingage\components\ChooseMultipleStaff.vue
  * @Description: 
 -->
@@ -29,10 +29,8 @@
       <yid-table-column label="机构编码" prop="bbCode"></yid-table-column>
       <yid-table-column label="机构名称" prop="bbName"></yid-table-column>
       <yid-table-column label="职务" prop="positionName"></yid-table-column>
-      <yid-table-column label="延续工龄" prop="servyear"></yid-table-column>
-      <yid-table-column
-        label="延续工龄备注"
-        prop="curservyear"></yid-table-column>
+      <yid-table-column label="延续工龄" prop="curservyear"></yid-table-column>
+      <yid-table-column label="延续工龄备注" prop="csmemo"></yid-table-column>
     </yid-table>
   </div>
 </template>

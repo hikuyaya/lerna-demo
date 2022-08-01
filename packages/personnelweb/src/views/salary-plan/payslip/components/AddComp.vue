@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-01 11:25:35
+ * @LastEditTime: 2022-08-01 14:07:38
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
@@ -92,10 +92,11 @@
         </yid-table-column>
         <yid-table-column label="岗位类型" prop="type" width="120px">
           <template slot-scope="scope">
-            <el-select v-model="scope.row.type" v-if="scope.row.add">
+            <!-- <el-select v-model="scope.row.type" v-if="scope.row.add">
               <el-option label="主职" :value="1"></el-option>
               <el-option label="兼职" :value="2"></el-option>
-            </el-select>
+            </el-select> -->
+            <span v-if="scope.row.add">兼职</span>
             <span v-else>
               {{
                 scope.row.type == 1
@@ -243,6 +244,7 @@ export default {
           psName: v.positionName,
           psLevelName: v.positionLevelName,
           psLevelCode: v.positionLevelCode,
+          employeeStatus: v.type,
           type: 2, // 1主职 2兼职
           remark: '',
           psLevel1Name: v.level1Name,

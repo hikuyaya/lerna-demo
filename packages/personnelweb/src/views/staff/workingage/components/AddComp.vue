@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-01 13:53:09
+ * @LastEditTime: 2022-08-01 14:14:23
  * @FilePath: \personnelweb\src\views\staff\workingage\components\AddComp.vue
  * @Description: 
 -->
@@ -122,8 +122,8 @@ export default {
           eeCode: d.eeCode,
           bbCode: d.bbCode,
           eeName: d.eeName,
-          beServyear: d.servyear,
-          beCurservyear: d.curservyear,
+          beServyear: d.curservyear,
+          beCurservyear: d.csmemo,
           afServyear: d.afServyear,
           afCurservyear: d.afCurservyear
         }

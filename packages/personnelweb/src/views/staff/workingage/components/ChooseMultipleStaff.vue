@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-11 13:36:56
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-01 10:24:59
+ * @LastEditTime: 2022-08-01 14:12:54
  * @FilePath: \personnelweb\src\views\staff\workingage\components\ChooseMultipleStaff.vue
  * @Description: 
 -->
@@ -99,6 +99,7 @@ export default {
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
+      params.status = 1
       const fetch = service.staff.profile.list
       this.$refs.table.reloadData({
         fetch,

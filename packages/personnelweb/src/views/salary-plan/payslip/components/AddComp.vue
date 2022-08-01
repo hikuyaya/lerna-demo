@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 17:00:02
+ * @LastEditTime: 2022-08-01 11:25:35
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
@@ -237,8 +237,8 @@ export default {
         return {
           eeCode: v.eeCode,
           eeName: v.eeName,
-          shopName: v.bbName,
-          shopCode: v.bbCode,
+          shopName: this.shop.shopname,
+          shopCode: this.shop.shopcode,
           psCode: v.positionCode,
           psName: v.positionName,
           psLevelName: v.positionLevelName,

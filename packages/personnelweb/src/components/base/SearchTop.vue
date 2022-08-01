@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 18:25:14
+ * @LastEditTime: 2022-08-01 16:33:50
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -243,7 +243,11 @@ export default {
       return { ...this.params, ...this.page }
     },
     reset() {
-      this.params = {}
+      for (const key in this.params) {
+        if (Object.hasOwnProperty.call(this.params, key)) {
+          this.$set(this.params, key, undefined)
+        }
+      }
       this.page.page = 1
     },
     onOpenAdvance() {

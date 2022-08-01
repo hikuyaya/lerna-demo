@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 14:17:15
+ * @LastEditTime: 2022-08-01 15:33:06
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -50,6 +50,11 @@
         <el-col :span="8">
           <el-form-item label="备注" prop="remark">
             <el-input v-model="info.remark"></el-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="8" v-if="operateType !== 'add'">
+          <el-form-item label="编码" prop="scCode">
+            <el-input v-model="info.scCode" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>

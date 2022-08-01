@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:22:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 09:41:40
+ * @LastEditTime: 2022-08-01 09:15:07
  * @FilePath: \personnelweb\src\views\salary-plan\shop-limit\shopLimit.vue
  * @Description: 门店对公额度
 -->
@@ -227,7 +227,7 @@ export default {
   computed: {
     importCompFailColumns: function () {
       return this.importCompColumns.concat([
-        { label: '失败原因', prop: 'failwhy' }
+        { label: '失败原因', prop: 'errorMessage' }
       ])
     }
   }

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-12 14:12:14
+ * @LastEditTime: 2022-08-01 13:53:09
  * @FilePath: \personnelweb\src\views\staff\workingage\components\AddComp.vue
  * @Description: 
 -->
@@ -29,9 +29,9 @@
         width="100px"></yid-table-column>
       <yid-table-column label="姓名" prop="eeName" width="100px">
       </yid-table-column>
-      <yid-table-column label="原延续工龄" prop="servyear" width="100px">
+      <yid-table-column label="原延续工龄" prop="curservyear" width="100px">
       </yid-table-column>
-      <yid-table-column label="原延续工龄备注" prop="curservyear" width="176px">
+      <yid-table-column label="原延续工龄备注" prop="csmemo" width="176px">
       </yid-table-column>
       <yid-table-column label="新延续工龄" width="176px">
         <template slot-scope="scope">

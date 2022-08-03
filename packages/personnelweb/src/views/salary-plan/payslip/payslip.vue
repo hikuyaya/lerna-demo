@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:27:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 16:56:57
+ * @LastEditTime: 2022-08-02 11:17:53
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\payslip.vue
  * @Description: 
 -->
@@ -123,79 +123,6 @@ export default {
           format: 'yyyy年MM月',
           'value-format': 'yyyy-MM'
         }
-      ],
-      importCompColumns: [
-        { label: '员工编码', prop: 'eeCode' },
-        { label: '员工姓名', prop: 'eeName' },
-        {
-          label: '原状态',
-          prop: 'beStatus',
-          render: row => {
-            if (row.beStatus == 1) {
-              return '在职'
-            } else if (row.beStatus == 2) {
-              return '离职'
-            } else if (row.beStatus == 3) {
-              return '长假'
-            } else {
-              return '其他'
-            }
-          }
-        },
-        {
-          label: '新状态',
-          prop: 'afStatus',
-          render: row => {
-            if (row.afStatus == 1) {
-              return '在职'
-            } else if (row.afStatus == 2) {
-              return '离职'
-            } else if (row.afStatus == 3) {
-              return '长假'
-            } else {
-              return '其他'
-            }
-          }
-        },
-        {
-          label: '离职原因',
-          prop: 'maintenanceLeave',
-          render: row => {
-            if (row.maintenanceLeave == '01') {
-              return '正常离职'
-            } else if (row.maintenanceLeave == '02') {
-              return '无业绩离职'
-            } else if (row.maintenanceLeave == '03') {
-              return '分店报离'
-            }
-          }
-        }
-      ],
-      importCompFailColumns: [
-        { label: '员工编码', prop: 'eeCode' },
-        { label: '员工姓名', prop: 'eeName' },
-        {
-          label: '原状态',
-          prop: 'beStatus'
-        },
-        {
-          label: '新状态',
-          prop: 'afStatus'
-        },
-        {
-          label: '离职原因',
-          prop: 'maintenanceLeave',
-          render: row => {
-            if (row.maintenanceLeave == '01') {
-              return '正常离职'
-            } else if (row.maintenanceLeave == '02') {
-              return '无业绩离职'
-            } else if (row.maintenanceLeave == '03') {
-              return '分店报离'
-            }
-          }
-        },
-        { label: '失败原因', prop: 'failwhy' }
       ],
       tableData: []
     }

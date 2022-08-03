@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:18:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-22 17:46:39
+ * @LastEditTime: 2022-08-02 17:27:46
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\adjust.vue
  * @Description: 
 -->
@@ -24,11 +24,13 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column
-          label="单号"
-          prop="billNo"
-          width="130px"
-          fixed></yid-table-column>
+        <yid-table-column label="单号" prop="billCode" width="130px" fixed>
+          <template slot-scope="scope">
+            <el-link type="primary" @click="onShowDetail(scope.row)">{{
+              scope.row.billCode
+            }}</el-link>
+          </template>
+        </yid-table-column>
         <yid-table-column label="员工姓名" prop="eeName" width="80px" fixed>
         </yid-table-column>
         <yid-table-column
@@ -56,7 +58,7 @@
                   ? '待审核'
                   : scope.row.approvalStatus == 3
                   ? '已审核'
-                  : '其他'
+                  : scope.row.approvalStatus
               }}</el-tag
             >
           </template>
@@ -64,16 +66,23 @@
 
         <yid-table-column
           label="门店编码"
-          prop="batchNo"
+          prop="shopCode"
           width="80px"></yid-table-column>
         <yid-table-column
           label="门店名称"
-          prop="batchNo"
+          prop="shopName"
           width="80px"></yid-table-column>
-        <yid-table-column
-          label="来源"
-          prop="batchNo"
-          width="60px"></yid-table-column>
+        <yid-table-column label="来源" prop="sourceType" width="60px">
+          <template slot-scope="scope">
+            {{
+              scope.row.sourceType == 1
+                ? '手动'
+                : scope.row.sourceType == 2
+                ? '同步'
+                : scope.row.sourceType
+            }}
+          </template>
+        </yid-table-column>
 
         <yid-table-column
           label="创建人"
@@ -93,7 +102,7 @@
           width="150px"></yid-table-column>
         <yid-table-column
           label="审批人"
-          prop="updatedBy"
+          prop="approvalEename"
           width="100px"></yid-table-column>
         <yid-table-column
           label="审批时间"
@@ -131,8 +140,13 @@
         v-if="addCompVisible"
         ref="addCompRef"
         :value="selectRow"
-        :statusReasonList="statusReasonList" />
-      <span slot="footer" class="dialog-footer">
+        :salcompData="salcompData"
+        :asetofbooksData="asetofbooksData"
+        :operateType="operateType" />
+      <span slot="footer" class="dialog-footer" v-if="operateType === 'detail'">
+        <el-button @click="addCompVisible = false">关 闭</el-button>
+      </span>
+      <span slot="footer" class="dialog-footer" v-else>
         <el-button type="primary" @click="onSubmit">确 定</el-button>
         <el-button @click="addCompVisible = false">取 消</el-button>
       </span>
@@ -157,14 +171,17 @@
       :visible.sync="importCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="800px">
+      width="1200px">
       <import-comp
         v-if="importCompVisible"
         ref="importCompRef"
         :columns="importCompColumns"
         :failColumns="importCompFailColumns"
-        :importAction="`${$yid.config.API.BASE}api-pers/employeestatemaintenance/convertSystem`"
-        :downloadUrl="`${$yid.config.API.BASE}api-pers/employeestatemaintenance/downSysTemplate`"
+        :importAction="`${$yid.config.API.BASE}api-pers/employeesalbill/checkSalBill`"
+        :downloadUrl="`${$yid.config.API.BASE}api-pers/template/downExcel`"
+        :downloadParams="{
+          templateName: '薪酬调整单模板.xls'
+        }"
         @save="handleImportSave"
         @approve="handleImportApprove" />
       <span slot="footer" class="dialog-footer">
@@ -177,13 +194,14 @@
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
 import RemoveComp from './components/RemoveComp.vue'
+// import RemoveComp from '@src/components/business/RemoveComp.vue'
 import ImportComp from '@src/components/business/ImportComp.vue'
 import service from '@src/service'
 export default {
   components: { SearchTop, AddComp, RemoveComp, ImportComp },
   data() {
     return {
-      addCompVisible: true,
+      addCompVisible: false,
       removeCompVisible: false,
       importCompVisible: false,
       operateType: 'add',
@@ -201,19 +219,19 @@ export default {
         },
         {
           label: '员工编码',
-          prop: 'batchNo',
+          prop: 'eeCode',
           type: 'input',
           width: '15%'
         },
         {
           label: '门店编码',
-          prop: 'bbCode',
+          prop: 'shopCode',
           type: 'input',
           width: '15%'
         },
         {
           label: '门店名称',
-          prop: 'bbCode',
+          prop: 'shopName',
           type: 'input',
           width: '15%'
         },
@@ -221,103 +239,91 @@ export default {
           label: '状态',
           prop: 'approvalStatus',
           type: 'select',
+          labelWidth: '0.8rem',
           options: [
-            { label: '未审核', value: 1 },
-            { label: '已审核', value: 2 }
+            { label: '待审核', value: 2 },
+            { label: '已审核', value: 3 }
           ],
           width: '12%'
         }
       ],
       defaultParams: {
-        approvalStatus: 1
+        approvalStatus: 2
       },
       importCompColumns: [
         { label: '员工编码', prop: 'eeCode' },
         { label: '员工姓名', prop: 'eeName' },
         {
-          label: '原状态',
-          prop: 'beStatus',
-          render: row => {
-            if (row.beStatus == 1) {
-              return '在职'
-            } else if (row.beStatus == 2) {
-              return '离职'
-            } else if (row.beStatus == 3) {
-              return '长假'
-            } else {
-              return '其他'
-            }
-          }
+          label: '类型',
+          prop: 'scName'
         },
         {
-          label: '新状态',
-          prop: 'afStatus',
-          render: row => {
-            if (row.afStatus == 1) {
-              return '在职'
-            } else if (row.afStatus == 2) {
-              return '离职'
-            } else if (row.afStatus == 3) {
-              return '长假'
-            } else {
-              return '其他'
-            }
-          }
+          label: '申请金额',
+          prop: 'money'
         },
         {
-          label: '离职原因',
-          prop: 'maintenanceLeave',
-          render: row => {
-            if (row.maintenanceLeave == '01') {
-              return '正常离职'
-            } else if (row.maintenanceLeave == '02') {
-              return '无业绩离职'
-            } else if (row.maintenanceLeave == '03') {
-              return '分店报离'
-            }
-          }
+          label: '时效',
+          prop: 'typename'
+        },
+        {
+          label: '执行开始',
+          prop: 'startTime'
+        },
+        {
+          label: '执行结束',
+          prop: 'endTime'
+        },
+        {
+          label: '备注',
+          prop: 'memo'
         }
       ],
-      importCompFailColumns: [
-        { label: '员工编码', prop: 'eeCode' },
-        { label: '员工姓名', prop: 'eeName' },
-        {
-          label: '原状态',
-          prop: 'beStatus'
-        },
-        {
-          label: '新状态',
-          prop: 'afStatus'
-        },
-        {
-          label: '离职原因',
-          prop: 'maintenanceLeave',
-          render: row => {
-            if (row.maintenanceLeave == '01') {
-              return '正常离职'
-            } else if (row.maintenanceLeave == '02') {
-              return '无业绩离职'
-            } else if (row.maintenanceLeave == '03') {
-              return '分店报离'
-            }
-          }
-        },
-        { label: '失败原因', prop: 'failwhy' }
-      ],
+
       tableData: [],
-      statusReasonList: []
+      salcompData: [],
+      asetofbooksData: [
+        {
+          ssName: '美发工资帐套',
+          ssCode: 'ZT0002'
+        },
+        {
+          ssName: '美容工资帐套',
+          ssCode: 'ZT0003'
+        }
+      ]
     }
   },
   created() {
-    this.queryStatusReasonList()
+    this.querySalcomp()
+    // this.queryAsetofbooks()
   },
   mounted() {
     this.queryList()
   },
+  computed: {
+    importCompFailColumns: function () {
+      return this.importCompColumns.concat([
+        {
+          label: '失败原因',
+          prop: 'failmsg'
+        }
+      ])
+    }
+  },
   methods: {
-    async queryStatusReasonList() {
-      const { data } = await service.dic.getStatusReasonList()
-      this.statusReasonList = data
+    async querySalcomp() {
+      // 查询固定项
+      const { data } = await service.salarySetting.composition.all({
+        inputType: 1
+      })
+      this.salcompData = data
+    },
+    async queryAsetofbooks() {
+      const { data } = await service.salarySetting.asetofbooks.list({
+        page: 1,
+        limit: 1000
+      })
+      this.asetofbooksData = data
     },
     queryList() {
       this.onSearch()
@@ -334,11 +340,14 @@ export default {
       this.type = 'approve'
       this.removeCompVisible = true
     },
-    onDelete() {},
+    onDelete() {
+      this.type = 'remove'
+      this.removeCompVisible = true
+    },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.status.list
+      const fetch = service.salaryPlan.adjust.list
       this.$refs.table.reloadData({
         fetch,
         params
@@ -355,10 +364,9 @@ export default {
       this.addCompVisible = true
     },
     async onSubmit() {
-      const result = this.$refs.addCompRef.getData()
+      const result = await this.$refs.addCompRef.getData()
       console.log(result)
-      if (!result.length) {
-        this.$message.error('请选择员工')
+      if (!result) {
         return
       }
       await service.staff.status.save({

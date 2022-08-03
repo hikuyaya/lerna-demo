@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-01 16:33:50
+ * @LastEditTime: 2022-08-02 15:41:12
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -60,6 +60,11 @@
           :format="option.format || 'yyyy年MM月dd日'"
           placement="bottom"
           :value-format="option['value-format'] || 'yyyy-MM-dd'"
+          :placeholder="
+            option.placeholder
+              ? `${option.placeholder}`
+              : `请输入${option.label}`
+          "
           :style="{
             width: option.widgetWidth ? option.widgetWidth : '100%'
           }">
@@ -71,7 +76,7 @@
           v-model="params[option.prop]"
           :placeholder="
             option.placeholder
-              ? `请输入${option.placeholder}`
+              ? `${option.placeholder}`
               : `请输入${option.label}`
           "
           :controls="option.controls"

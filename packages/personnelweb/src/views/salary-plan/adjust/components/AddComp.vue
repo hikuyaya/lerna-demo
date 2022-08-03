@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-25 09:27:39
+ * @LastEditTime: 2022-08-03 09:10:36
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\AddComp.vue
  * @Description: 
 -->
@@ -12,8 +12,8 @@
     <el-form ref="form" :model="info" label-width="90px">
       <el-row>
         <el-col :span="7">
-          <el-form-item label="选择员工" prop="staffInfo">
-            <el-input disabled v-model="staffInfo"></el-input>
+          <el-form-item label="选择员工" prop="eeName">
+            <el-input disabled v-model="info.eeName"></el-input>
           </el-form-item>
         </el-col>
         <el-col v-if="operateType !== 'detail'" :span="1" class="pd-l-16">
@@ -32,84 +32,105 @@
       <title-header title="账套学习金" class="mg-b-16" />
       <el-row>
         <el-col :span="8">
-          <el-form-item label="工资账套" prop="zt">
-            <el-select v-model="info.zt" class="w90">
-              <el-option label="美发工资账套" value="1"></el-option>
-              <el-option label="美容工资账套" value="2"></el-option>
+          <el-form-item label="工资账套" prop="ssCode">
+            <el-select
+              v-model="info.ssCode"
+              filterable
+              :disabled="['detail'].includes(operateType)">
+              <el-option
+                v-for="item in asetofbooksData"
+                :key="item.ssCode"
+                :label="item.ssName"
+                :value="item.ssCode"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="学习金金额" prop="xxjje">
+          <el-form-item label="学习金金额" prop="tutje">
             <el-input-number
-              v-model="info.xxjje"
+              v-model="info.tutje"
               :controls="false"
               :min="0"
-              class="w90" />
+              class="w90"
+              :disabled="['detail'].includes(operateType)" />
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="已缴纳学习金" prop="yjnxxj">
+          <el-form-item label="已缴纳学习金" prop="tutjeCom">
             <el-input-number
-              v-model="info.yjnxxj"
+              v-model="info.tutjeCom"
               :controls="false"
               :min="0"
-              class="w90" />
+              class="w90"
+              :disabled="['detail'].includes(operateType)" />
           </el-form-item>
         </el-col>
       </el-row>
       <title-header title="固定项" class="mg-b-16" />
       <el-row>
         <el-col :span="8">
-          <el-form-item label="固定项" prop="gdx">
-            <el-select v-model="info.gdx" class="w90">
-              <el-option label="基本工资" value="1"></el-option>
-              <el-option label="保底差额" value="2"></el-option>
-              <el-option label="新入职底薪" value="3"></el-option>
-              <el-option label="岗位底薪" value="4"></el-option>
+          <el-form-item label="固定项" prop="scCode">
+            <el-select
+              v-model="info.scCode"
+              filterable
+              @change="handleScCodeChange"
+              :disabled="['detail'].includes(operateType)">
+              <el-option
+                v-for="item in salcompData"
+                :key="item.scCode"
+                :label="item.scName"
+                :value="item.scCode"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="固定项金额" prop="gdxje">
+          <el-form-item label="固定项金额" prop="money">
             <el-input-number
-              v-model="info.gdxje"
+              v-model="info.money"
               :controls="false"
               :min="0"
-              class="w90" />
+              class="w90"
+              :disabled="['detail'].includes(operateType)" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
         <el-col :span="8">
-          <el-form-item label="时效" prop="sx">
-            <el-radio-group v-model="info.sx">
+          <el-form-item label="时效" prop="type">
+            <el-radio-group
+              v-model="info.type"
+              :disabled="['detail'].includes(operateType)">
               <el-radio :label="1">临时</el-radio>
-              <el-radio :label="0">长期</el-radio>
+              <el-radio :label="2">长期</el-radio>
             </el-radio-group>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item v-show="info.sx == 1" label="执行开始" prop="zxks">
+          <el-form-item
+            v-show="info.type == 1"
+            label="执行开始"
+            prop="startTime">
             <el-date-picker
-              v-model="info.zxks"
+              v-model="info.startTime"
               type="date"
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              class="w90">
+              class="w90"
+              :disabled="['detail'].includes(operateType)">
             </el-date-picker>
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item v-show="info.sx == 1" label="执行结束" prop="zxjs">
+          <el-form-item v-show="info.type == 1" label="执行结束" prop="endTime">
             <el-date-picker
-              v-model="info.zxjs"
+              v-model="info.endTime"
               type="date"
               format="yyyy年MM月dd日"
               placement="bottom"
               value-format="yyyy-MM-dd"
-              class="w90">
+              class="w90"
+              :disabled="['detail'].includes(operateType)">
             </el-date-picker>
           </el-form-item>
         </el-col>
@@ -146,25 +167,44 @@ export default {
     },
     operateType: {
       type: String
+    },
+    salcompData: {
+      type: Array,
+      default: function () {
+        return []
+      }
+    },
+    asetofbooksData: {
+      type: Array,
+      default: function () {
+        return []
+      }
     }
   },
   components: {
     ChooseSingleItem,
     TitleHeader
   },
-  computed: {
-    staffInfo: function () {
-      if (this.info.eeCode) {
-        const name = this.info.eeName + '-' + this.info.eeCode
-        this.$set(this.info, 'staffInfo', name)
-        return name
-      }
-      return ''
-    }
-  },
+  computed: {},
   data() {
+    const validateMoney = (rule, value, callback) => {
+      if ('' === value || undefined === value || null === value) {
+        callback()
+      } else if (value >= 0) {
+        callback()
+      } else {
+        callback(new Error('请输入合法固定项金额'))
+      }
+    }
     return {
       info: {},
+      rules: {
+        eeName: [{ required: true, message: '请选择员工' }],
+        ssCode: [{ required: true, message: '请选择工资账套' }],
+        tutje: [{ required: true, message: '请输入学习金金额' }],
+        tutjeCom: [{ required: true, message: '请输入已缴纳学习金' }],
+        money: [{ validator: validateMoney }]
+      },
       tableData: [],
       chooseStaffVisible: false,
       chooseStaffColumns: [
@@ -206,49 +246,85 @@ export default {
           type: 'input',
           width: '20%'
         }
-      ]
+      ],
+      staffScCodeList: [] // 选择固定项时，到此列表中筛选出来对应对象，如果有则回填固定项金额、时效等
     }
   },
   methods: {
-    handleSelectStaff(staff) {
+    async handleSelectStaff(staff) {
       console.log(staff)
-      const copyStaff = { ...staff, beStatus: staff.status }
-      let newAfStatus = 0
-      // 新状态根据原状态计算得到默认值：原状态为离职时，新状态默认选中在职，原状态为在职时，默认选中离职
-      if (copyStaff.status == 1) {
-        newAfStatus = 2
-      } else if (copyStaff.status == 2) {
-        newAfStatus = 1
-      }
-      copyStaff.afStatus = newAfStatus
-      // 自动填充变更日期字段
-      copyStaff.changeDate = new Date().formatDate('yyyy-MM-dd')
-      this.tableData = [copyStaff]
+      let copyStaff = JSON.parse(JSON.stringify(staff))
+      const { data: sal } = await service.salaryPlan.adjust.queryEmployeesal({
+        eeCode: copyStaff.eeCode
+      })
+      const { data: staffScCodeList } =
+        await service.salaryPlan.adjust.getEmployeesalItem({
+          eeCode: copyStaff.eeCode
+        })
+      this.staffScCodeList = staffScCodeList
+      const [eeSal] = sal
+      copyStaff.ssCode = eeSal.ssCode
+      copyStaff.tutje = eeSal.tutje
+      copyStaff.tutjeCom = eeSal.tutjeCom
+      this.info = copyStaff
       this.chooseStaffVisible = false
     },
-    handleAfStatusChange(val) {
-      const copy = this.tableData[0]
-      if ([1, 3].includes(val)) {
-        // 在职、长假 清空离职原因
-        copy.maintenanceLeave = ''
+    handleScCodeChange(scCode) {
+      const item = this.staffScCodeList.find(v => scCode === v.scCode)
+      if (!item) {
+        return
       }
-      this.tableData = [copy]
+      const { money, type, startTime, endTime } = item
+      this.$set(this.info, 'money', money)
+      this.$set(this.info, 'type', type)
+      this.$set(this.info, 'startTime', startTime)
+      this.$set(this.info, 'endTime', endTime)
     },
-    getData() {
-      return this.tableData
-      // return this.tableData?.map(d => {
-      //   return {
-      //     eeCode: d.eeCode,
-      //     afPslcode: d.afPslcode,
-      //     afPslLevel: d.afPslLevel,
-      //     positionCode: d.positionCode,
-      //     postType: d.type,
-      //     isApproval: 0,
-      //     remark: d.remark,
-      //     afPsllevel1: d.afPsllevel1,
-      //     afPslcode1: d.afPslcode1
-      //   }
-      // })
+    async getData() {
+      let result = await this.$refs.form
+        .validate()
+        .catch(err => console.error(err))
+      // 临时
+      if (this.info.type === 1 && this.info.endTime > this.info.startTime) {
+        this.$message.error('执行结束时间不能早于执行开始时间')
+        return false
+      }
+      // 校验通过
+      if (result) {
+        // 选择长期 删除 开始时间、结束时间
+        if (this.info.type === 2) {
+          delete this.info.startTime
+          delete this.info.endTime
+        }
+        const {
+          eeCode,
+          eeName,
+          ssCode,
+          scCode,
+          money,
+          tutje,
+          tutjeCom,
+          type,
+          startTime,
+          endTime
+        } = this.info
+        const { ssName } = this.asetofbooksData.find(v => v.ssCode === ssCode)
+        const { scName } = this.salcompData.find(v => v.scCode === scCode)
+        return {
+          eeCode,
+          eeName,
+          ssCode,
+          ssName,
+          scCode,
+          scName,
+          money,
+          tutje,
+          tutjeCom,
+          type,
+          startTime,
+          endTime
+        }
+      }
     }
   },
 
@@ -257,13 +333,6 @@ export default {
       immediate: true,
       handler: function (val) {
         this.info = JSON.parse(JSON.stringify(val))
-      }
-    },
-    'info.sx': {
-      handler: function (val) {
-        if (val == 1) {
-          //
-        }
       }
     }
   }

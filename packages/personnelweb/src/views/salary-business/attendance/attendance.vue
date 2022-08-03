@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:31:36
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 11:14:10
+ * @LastEditTime: 2022-08-02 11:27:30
  * @FilePath: \personnelweb\src\views\salary-business\attendance\attendance.vue
  * @Description: 出勤天数录入
 -->
@@ -189,7 +189,7 @@ export default {
       addCompVisible: false,
       rejectCompVisible: false,
       calculateCompVisible: false,
-      importCompVisible: true,
+      importCompVisible: false,
       operateType: 'add',
       selectRow: {},
       conditions: [
@@ -245,12 +245,24 @@ export default {
       this.calculateCompVisible = true
     },
     onSearch() {
-      const params = this.$refs.searchTop.getSearchParams()
-      // 身份证号转大写
-      params.idCard = params.idCard?.toUpperCase()
-      params.isDel = 0
+      let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.black.list
+      let dateParams = {
+        year: null,
+        month: null
+      }
+      if (params.date) {
+        const [year, month] = params.date.split('-')
+        dateParams = {
+          year,
+          month
+        }
+      }
+      params = {
+        ...params,
+        ...dateParams
+      }
+      const fetch = service.salaryBusiness.attendance.list
       this.$refs.table.reloadData({
         fetch,
         params

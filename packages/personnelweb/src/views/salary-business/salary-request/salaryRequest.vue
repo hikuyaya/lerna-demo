@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:32:44
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-27 17:11:59
+ * @LastEditTime: 2022-08-02 16:25:01
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\salaryRequest.vue
  * @Description: 
 -->
@@ -10,7 +10,7 @@
 <template>
   <div class="container">
     <el-collapse-transition>
-      <div v-if="!addCompVisible" class="content">
+      <div v-show="!addCompVisible" class="content">
         <search-top ref="searchTop" :options="conditions">
           <template #inlineBtn>
             <div class="flex flex-alignitems__center mg-l-12">

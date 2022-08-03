@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-07-14 10:02:10
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-14 14:24:01
- * @FilePath: \personnelweb\src\views\staff\status\components\RemoveComp.vue
+ * @LastEditTime: 2022-08-01 17:39:17
+ * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\RemoveComp.vue
  * @Description: 批量审批、删除
 -->
 
@@ -68,7 +68,7 @@ export default {
         this.$message.error('请输入批次号')
         return
       }
-      const { data } = await service.staff.status.getBillsByBatchNo({
+      const { data } = await service.salaryPlan.adjust.queryByBatch({
         batchNo: this.batchNo
       })
       this.num = data

@@ -1,9 +1,9 @@
 <!--
  * @Author: wqy
- * @Date: 2022-07-26 17:05:41
+ * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-02 11:35:07
- * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
+ * @LastEditTime: 2022-08-02 16:29:17
+ * @FilePath: \personnelweb\src\views\salary-business\special-request\components\AddComp.vue
  * @Description: 
 -->
 
@@ -179,7 +179,6 @@ export default {
         searchType: 1
       },
       rules: {
-        shopCode: [{ required: true, message: '请输入门店编码' }],
         year: [{ required: true, message: '请输入' }],
         month: [{ required: true, message: '请输入' }]
       },
@@ -253,7 +252,7 @@ export default {
     onQueryStaff() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.queryShop()
+          this.queryStaff()
           this.onSearch()
         }
       })
@@ -270,7 +269,7 @@ export default {
         this.datas = copyData
       }
     },
-    async queryShop() {
+    async queryStaff() {
       const { data } = await service.chain.shop.shopListWithPage({
         pcodename: this.info.shopCode,
         page: 1,

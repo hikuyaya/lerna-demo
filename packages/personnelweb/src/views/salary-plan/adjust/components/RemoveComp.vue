@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-14 10:02:10
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-01 17:39:17
+ * @LastEditTime: 2022-08-03 09:52:19
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\RemoveComp.vue
  * @Description: 批量审批、删除
 -->
@@ -87,7 +87,7 @@ export default {
           }
         )
           .then(async () => {
-            await service.staff.status.censorBillByBatchNo({
+            await service.salaryPlan.adjust.batchDelete({
               batchNo: this.batchNo
             })
             this.$message.success('操作成功')
@@ -102,7 +102,7 @@ export default {
           type: 'warning'
         })
           .then(async () => {
-            await service.staff.status.deleteBillByBatchNo({
+            await service.salaryPlan.adjust.batchDelete({
               batchNo: this.batchNo
             })
             this.$message.success('操作成功')

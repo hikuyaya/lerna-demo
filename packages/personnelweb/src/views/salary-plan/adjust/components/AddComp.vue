@@ -2,14 +2,14 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-03 09:10:36
+ * @LastEditTime: 2022-08-03 10:17:53
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\AddComp.vue
  * @Description: 
 -->
 
 <template>
   <div>
-    <el-form ref="form" :model="info" label-width="90px">
+    <el-form ref="form" :model="info" :rules="rules" label-width="100px">
       <el-row>
         <el-col :span="7">
           <el-form-item label="选择员工" prop="eeName">
@@ -85,10 +85,8 @@
         </el-col>
         <el-col :span="8">
           <el-form-item label="固定项金额" prop="money">
-            <el-input-number
+            <el-input
               v-model="info.money"
-              :controls="false"
-              :min="0"
               class="w90"
               :disabled="['detail'].includes(operateType)" />
           </el-form-item>
@@ -257,12 +255,13 @@ export default {
       const { data: sal } = await service.salaryPlan.adjust.queryEmployeesal({
         eeCode: copyStaff.eeCode
       })
+      // TODO 接口报错 暂时先屏蔽
       const { data: staffScCodeList } =
         await service.salaryPlan.adjust.getEmployeesalItem({
           eeCode: copyStaff.eeCode
         })
       this.staffScCodeList = staffScCodeList
-      const [eeSal] = sal
+      const [eeSal = {}] = sal
       copyStaff.ssCode = eeSal.ssCode
       copyStaff.tutje = eeSal.tutje
       copyStaff.tutjeCom = eeSal.tutjeCom
@@ -285,7 +284,7 @@ export default {
         .validate()
         .catch(err => console.error(err))
       // 临时
-      if (this.info.type === 1 && this.info.endTime > this.info.startTime) {
+      if (this.info.type === 1 && this.info.endTime < this.info.startTime) {
         this.$message.error('执行结束时间不能早于执行开始时间')
         return false
       }
@@ -306,11 +305,12 @@ export default {
           tutjeCom,
           type,
           startTime,
-          endTime
+          endTime,
+          id
         } = this.info
         const { ssName } = this.asetofbooksData.find(v => v.ssCode === ssCode)
         const { scName } = this.salcompData.find(v => v.scCode === scCode)
-        return {
+        let params = {
           eeCode,
           eeName,
           ssCode,
@@ -324,6 +324,7 @@ export default {
           startTime,
           endTime
         }
+        return id ? { ...params, id } : { ...params }
       }
     }
   },

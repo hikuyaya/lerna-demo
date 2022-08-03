@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-29 17:20:32
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-02 17:12:30
+ * @LastEditTime: 2022-08-03 10:16:43
  * @FilePath: \personnelweb\src\service\modules\salaryPlan\adjust.js
  * @Description:
  */
@@ -35,9 +35,14 @@ export function batchsaveSal(params) {
   return yid.http.post(`${prefix}/batchsaveSal`, params)
 }
 
+// 批量保存并审核
+export function batchaudSal(params) {
+  return yid.http.post(`${prefix}/batchaudSal`, params)
+}
+
 // 单个删除
 export function remove(id) {
-  return yid.http.delete(`${prefix}/DeleteMapping/${id}`, {})
+  return yid.http.get(`${prefix}/del/${id}`, {})
 }
 
 // 导入校验
@@ -47,17 +52,20 @@ export function checkSalBill(params) {
 
 // 单行审核
 export function audSalBill(params) {
-  return yid.http.post(`${prefix}/audSalBill`, params)
+  return yid.http.post(`${prefix}/audSalBill?id=${params.id}`, params)
 }
 
 // 批次号审核
 export function batchaudSals(params) {
-  return yid.http.post(`${prefix}/batchaudSals`, params)
+  return yid.http.post(
+    `${prefix}/batchaudSals?batchNo=${params.batchNo}`,
+    params
+  )
 }
 
 // 批次号删除
 export function batchDelete(params) {
-  return yid.http.delete(`${prefix}/batchDelete`, params)
+  return yid.http.delete(`${prefix}/batchDelete`, { params })
 }
 
 // 根据批次号查询数量
@@ -79,6 +87,7 @@ export default {
   checkSalBill,
   audSalBill,
   batchaudSals,
+  batchaudSal,
   batchDelete,
   queryByBatch,
   queryEmployeesal

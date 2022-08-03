@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:18:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-02 17:27:46
+ * @LastEditTime: 2022-08-03 09:52:29
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\adjust.vue
  * @Description: 
 -->
@@ -18,8 +18,8 @@
             <el-button type="primary" @click="onSearch">查询</el-button>
             <el-button type="primary" @click="onAdd">新增</el-button>
             <el-button type="primary" @click="onImport">导入</el-button>
-            <el-button type="primary" @click="onApprove">审核</el-button>
-            <el-button type="primary" @click="onRemove">删除</el-button>
+            <el-button type="primary" @click="onApprove()">审核</el-button>
+            <el-button type="primary" @click="onRemove()">删除</el-button>
           </div>
         </template>
       </search-top>
@@ -109,8 +109,8 @@
           prop="approvalTime"
           width="150px"></yid-table-column>
         <yid-table-column label="操作" min-width="100" fixed="right">
-          <template slot-scope="scope">
-            <!-- <template v-if="scope.row.approvalStatus === 2" slot-scope="scope"> -->
+          <!-- <template slot-scope="scope"> -->
+          <template v-if="scope.row.approvalStatus === 2" slot-scope="scope">
             <el-tooltip effect="dark" content="编辑" placement="top">
               <i
                 class="el-icon-edit c-pointer font-size-16rem mg-r-8"
@@ -248,7 +248,7 @@ export default {
         }
       ],
       defaultParams: {
-        approvalStatus: 2
+        // approvalStatus: 2
       },
       importCompColumns: [
         { label: '员工编码', prop: 'eeCode' },
@@ -336,13 +336,49 @@ export default {
     onImport() {
       this.importCompVisible = true
     },
-    onApprove() {
-      this.type = 'approve'
-      this.removeCompVisible = true
+    onApprove(row) {
+      if (row) {
+        this.$confirm(
+          `确认要对选择单据进行审核吗？审核后会立即生效`,
+          `审核确认`,
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            cancelButtonClass: 'btn-custom-cancel',
+            type: 'warning'
+          }
+        )
+          .then(async () => {
+            await service.salaryPlan.adjust.audSalBill({ id: row.id })
+            this.$message.success('操作成功')
+            // 刷新列表
+            await this.queryList()
+          })
+          .catch(() => {})
+      } else {
+        this.type = 'approve'
+        this.removeCompVisible = true
+      }
     },
-    onDelete() {
-      this.type = 'remove'
-      this.removeCompVisible = true
+    onDelete(row) {
+      if (row) {
+        this.$confirm(`确认要对单据进行删除吗？`, `删除确认`, {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          cancelButtonClass: 'btn-custom-cancel',
+          type: 'warning'
+        })
+          .then(async () => {
+            await service.salaryPlan.adjust.remove(row.id)
+            this.$message.success('操作成功')
+            // 刷新列表
+            await this.queryList()
+          })
+          .catch(() => {})
+      } else {
+        this.type = 'remove'
+        this.removeCompVisible = true
+      }
     },
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
@@ -369,13 +405,21 @@ export default {
       if (!result) {
         return
       }
-      await service.staff.status.save({
-        employeeStateMaintenanceVOS: result
+
+      this.$confirm(`您确认保存此调整单信息吗？`, `确认保存`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'btn-custom-cancel',
+        type: 'warning'
       })
-      this.$message.success('操作成功')
-      this.addCompVisible = false
-      // 刷新列表
-      await this.queryList()
+        .then(async () => {
+          await service.salaryPlan.adjust.save(result)
+          this.$message.success('操作成功')
+          this.addCompVisible = false
+          // 刷新列表
+          await this.queryList()
+        })
+        .catch(() => {})
     },
     onRemove() {
       this.type = 'remove'
@@ -386,58 +430,17 @@ export default {
       await this.queryList()
     },
     async handleImportApprove(successData) {
-      const params = successData.map(v => {
-        return {
-          eeCode: v.eeCode,
-          bbCode: v.bbCode,
-          eeName: v.eeName,
-          beStatus: v.beStatus,
-          afStatus: v.afStatus,
-          maintenanceLeave: v.maintenanceLeave,
-          changeDate: v.changeDate,
-          remark: v.remark
-        }
-      })
-      await service.staff.status.saveBillsAndCensor({
-        employeeStateMaintenanceVOS: params
-      })
+      const params = [...successData]
+      await service.salaryPlan.adjust.batchaudSal(params)
       this.handleImportSuccess()
     },
     async handleImportSave(successData) {
-      const params = successData.map(v => {
-        return {
-          eeCode: v.eeCode,
-          bbCode: v.bbCode,
-          eeName: v.eeName,
-          beStatus: v.beStatus,
-          afStatus: v.afStatus,
-          maintenanceLeave: v.maintenanceLeave,
-          changeDate: v.changeDate,
-          remark: v.remark
-        }
-      })
-      await service.staff.status.save({
-        employeeStateMaintenanceVOS: params
-      })
+      const params = [...successData]
+      await service.salaryPlan.adjust.batchsaveSal(params)
       this.handleImportSuccess()
     },
     handleRemoveSuccess() {
       this.removeCompVisible = false
-      this.queryList()
-    },
-    // 移除确定
-    async onRemoveSubmit() {
-      const result = await this.$refs.removeCompRef.getData()
-      if (!result) {
-        return
-      }
-      await service.staff.black.remove({
-        removeRemark: result.reason,
-        id: this.selectRow.id
-      })
-      this.$message.success('操作成功')
-      this.removeCompVisible = false
-      // 刷新列表
       this.queryList()
     }
   }

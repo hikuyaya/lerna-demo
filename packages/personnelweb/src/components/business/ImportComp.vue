@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-12 17:34:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-03 11:20:38
+ * @LastEditTime: 2022-08-04 11:37:44
  * @FilePath: \personnelweb\src\components\business\ImportComp.vue
  * @Description: 
 -->
@@ -185,8 +185,14 @@ export default {
       }
     },
     handleBeforeUpload(file) {
-      const isExcel =
-        file.type.indexOf('sheet') !== -1 || file.type.indexOf('excel') !== -1
+      const [, suffix] = file.name?.split('.')
+      // 原判断逻辑（谢正好电脑导入时file.type为空字符串 window7系统 wps软件）
+      // const isExcel =
+      //   file.type.indexOf('sheet') !== -1 || file.type.indexOf('excel') !== -1
+      let isExcel = false
+      if (suffix && ['xls', 'xlsx'].includes(suffix.toLowerCase())) {
+        isExcel = true
+      }
       const limitSize = file.size / 1024 / 1024 < 10
       if (!isExcel) {
         this.$yid.util.error('上传excel只能是 xls 或 xlsx 格式')

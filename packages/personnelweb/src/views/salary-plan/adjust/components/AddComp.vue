@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-03 17:18:31
+ * @LastEditTime: 2022-08-04 10:50:33
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\AddComp.vue
  * @Description: 
 -->
@@ -21,6 +21,7 @@
             type="primary"
             icon="el-icon-search"
             circle
+            :disabled="operateType !== 'add'"
             @click="chooseStaffVisible = true"></el-button>
         </el-col>
         <el-col :span="8">
@@ -285,9 +286,15 @@ export default {
         .validate()
         .catch(err => console.error(err))
       // 临时
-      if (this.info.type === 1 && this.info.endTime < this.info.startTime) {
-        this.$message.error('执行结束时间不能早于执行开始时间')
-        return false
+      if (this.info.type === 1) {
+        if (this.info.endTime < this.info.startTime) {
+          this.$message.error('执行结束时间不能早于执行开始时间')
+          return false
+        }
+        if (!this.info.endTime || !this.info.startTime) {
+          this.$message.error('执行开始时间、执行结束时间不能为空')
+          return false
+        }
       }
       // 校验通过
       if (result) {
@@ -306,11 +313,11 @@ export default {
           tutjeCom,
           type,
           startTime,
-          endTime,
-          id
+          endTime
         } = this.info
-        const { ssName } = this.asetofbooksData.find(v => v.ssCode === ssCode)
-        const { scName } = this.salcompData.find(v => v.scCode === scCode)
+        const { ssName } =
+          this.asetofbooksData.find(v => v.ssCode === ssCode) || {}
+        const { scName } = this.salcompData.find(v => v.scCode === scCode) || {}
         let params = {
           eeCode,
           eeName,
@@ -325,7 +332,9 @@ export default {
           startTime,
           endTime
         }
-        return id ? { ...params, id } : { ...params }
+        return this.operateType === 'edit'
+          ? { ...params, id: this.info.id }
+          : { ...params }
       }
     }
   },

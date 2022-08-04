@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:18:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-03 09:52:29
+ * @LastEditTime: 2022-08-04 10:55:43
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\adjust.vue
  * @Description: 
 -->
@@ -429,13 +429,21 @@ export default {
       this.importCompVisible = false
       await this.queryList()
     },
-    async handleImportApprove(successData) {
-      const params = [...successData]
+    async handleImportApprove() {
+      const flag = this.$refs.importCompRef.validateSave()
+      if (!flag) {
+        return
+      }
+      const params = this.$refs.importCompRef.successData
       await service.salaryPlan.adjust.batchaudSal(params)
       this.handleImportSuccess()
     },
-    async handleImportSave(successData) {
-      const params = [...successData]
+    async handleImportSave() {
+      const flag = this.$refs.importCompRef.validateSave()
+      if (!flag) {
+        return
+      }
+      const params = this.$refs.importCompRef.successData
       await service.salaryPlan.adjust.batchsaveSal(params)
       this.handleImportSuccess()
     },

@@ -2,18 +2,55 @@
  * @Author: wqy
  * @Date: 2022-08-02 11:20:20
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-02 11:27:16
+ * @LastEditTime: 2022-08-04 10:04:18
  * @FilePath: \personnelweb\src\service\modules\salaryBusiness\attendance.js
  * @Description:
  */
 import yid from '@src/library'
-const prefix = 'api-pers/employeesalbill'
+const prefix = 'api-pers/workattendancedaybill'
 
-// 列表
+// 考勤天数录入单列表
 export function list(params) {
   return yid.http.get(`${prefix}/list`, { params })
 }
 
+export function save(params) {
+  return yid.http.post(`${prefix}`, params)
+}
+
+export function update(params) {
+  return yid.http.put(`${prefix}`, params)
+}
+
+export function recalculate() {
+  return yid.http.get(`${prefix}/recalculate`, {})
+}
+
+// 门店获取工资条名单列表
+export function getEmployeeList(params) {
+  return yid.http.get(`${prefix}/getEmployeeList`, { params })
+}
+
+// 导入校验
+export function validate(params) {
+  return yid.http.post(`${prefix}/validation`, params)
+}
+
+export function approve(params) {
+  return yid.http.get(`${prefix}/approval`, { params })
+}
+
+export function detail(id) {
+  return yid.http.get(`${prefix}/${id}`, {})
+}
+
 export default {
-  list
+  list,
+  save,
+  update,
+  getEmployeeList,
+  validate,
+  recalculate,
+  approve,
+  detail
 }

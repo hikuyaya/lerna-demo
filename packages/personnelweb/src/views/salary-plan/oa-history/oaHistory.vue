@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:28:18
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-01 16:37:29
+ * @LastEditTime: 2022-08-03 11:02:32
  * @FilePath: \personnelweb\src\views\salary-plan\oa-history\oaHistory.vue
  * @Description: 
 -->
@@ -106,10 +106,6 @@ export default {
         fetch,
         params
       })
-    },
-    async handleSaveSuccess() {
-      this.addCompVisible = false
-      await this.queryList()
     }
   }
 }

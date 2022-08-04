@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-03 10:17:53
+ * @LastEditTime: 2022-08-03 17:18:31
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\AddComp.vue
  * @Description: 
 -->
@@ -253,7 +253,8 @@ export default {
       console.log(staff)
       let copyStaff = JSON.parse(JSON.stringify(staff))
       const { data: sal } = await service.salaryPlan.adjust.queryEmployeesal({
-        eeCode: copyStaff.eeCode
+        eeCode: copyStaff.eeCode,
+        isDel: 0
       })
       // TODO 接口报错 暂时先屏蔽
       const { data: staffScCodeList } =

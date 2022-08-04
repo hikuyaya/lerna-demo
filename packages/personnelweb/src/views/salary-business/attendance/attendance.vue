@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:31:36
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-02 11:27:30
+ * @LastEditTime: 2022-08-04 10:06:25
  * @FilePath: \personnelweb\src\views\salary-business\attendance\attendance.vue
  * @Description: 出勤天数录入
 -->
@@ -23,17 +23,17 @@
           </template>
         </search-top>
         <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-          <yid-table-column label="单号" prop="batchNo" width="100px" fixed>
+          <yid-table-column label="单号" prop="billCode" width="140px" fixed>
             <template slot-scope="scope">
               <el-link type="primary" @click="onShowDetail(scope.row)">{{
-                scope.row.batchNo
+                scope.row.billCode
               }}</el-link>
             </template>
           </yid-table-column>
           <yid-table-column
             label="门店编码"
             prop="shopCode"
-            width="150px"
+            width="100px"
             fixed></yid-table-column>
           <yid-table-column
             label="门店名称"
@@ -52,10 +52,14 @@
             fixed></yid-table-column>
           <yid-table-column
             label="合计人数"
-            prop="count"
+            prop="employeeCount"
             width="100px"
             fixed></yid-table-column>
-          <yid-table-column label="状态" prop="approvalStatus" fixed>
+          <yid-table-column
+            label="状态"
+            prop="approvalStatus"
+            width="100px"
+            fixed>
             <template slot-scope="scope">
               {{
                 scope.row.approvalStatus == 1
@@ -66,14 +70,13 @@
                   ? '已审核'
                   : scope.row.approvalStatus == 0
                   ? '已驳回'
-                  : '其他'
+                  : scope.row.approvalStatu
               }}
             </template>
           </yid-table-column>
           <yid-table-column
             label="驳回原因"
-            prop="createdBy"
-            width="100px"></yid-table-column>
+            prop="backMessage"></yid-table-column>
           <yid-table-column
             label="创建人"
             prop="createdBy"
@@ -84,23 +87,42 @@
             width="150px"></yid-table-column>
           <yid-table-column
             label="审批人"
-            prop="removeBy"
+            prop="approvalEename"
             width="100px"></yid-table-column>
           <yid-table-column
             label="审批时间"
-            prop="removeDate"
+            prop="approvalTime"
             width="150px"></yid-table-column>
           <yid-table-column label="操作" width="100" fixed="right">
             <template slot-scope="scope">
-              <el-tooltip effect="dark" content="驳回" placement="top">
+              <!-- 待审核（只显示驳回、复核按钮） -->
+              <el-tooltip
+                v-if="scope.row.approvalStatus == 2"
+                effect="dark"
+                content="驳回"
+                placement="top">
                 <i
                   class="el-icon-s-release c-pointer mg-r-8 font-size-16rem"
                   @click="onReject(scope.row)"></i>
               </el-tooltip>
-              <el-tooltip effect="dark" content="审核" placement="top">
+              <el-tooltip
+                v-if="scope.row.approvalStatus == 2"
+                effect="dark"
+                content="审核"
+                placement="top">
                 <i
                   class="el-icon-s-check c-pointer font-size-16rem"
                   @click="onApprove(scope.row)"></i>
+              </el-tooltip>
+              <!-- 已驳回（只显示编辑按钮） -->
+              <el-tooltip
+                v-if="scope.row.approvalStatus == 0"
+                effect="dark"
+                content="编辑"
+                placement="top">
+                <i
+                  class="el-icon-edit c-pointer mg-r-8 font-size-16rem"
+                  @click="onEdit(scope.row)"></i>
               </el-tooltip>
             </template>
           </yid-table-column>
@@ -114,17 +136,12 @@
         ref="addCompRef"
         :value="selectRow"
         :operateType="operateType"
-        @back="addCompVisible = false" />
+        @back="handleBack"
+        @success="handleAddSuccess" />
     </el-collapse-transition>
 
     <el-dialog
-      :title="
-        operateType === 'add'
-          ? '新增'
-          : operateType === 'edit'
-          ? '修改'
-          : '详情'
-      "
+      title="确认驳回"
       :visible.sync="rejectCompVisible"
       :close-on-click-modal="false"
       append-to-body
@@ -135,61 +152,20 @@
         <el-button @click="rejectCompVisible = false">取 消</el-button>
       </span>
     </el-dialog>
-    <el-dialog
-      title="重新计算"
-      :visible.sync="calculateCompVisible"
-      :close-on-click-modal="false"
-      append-to-body
-      width="480px">
-      <calculate-comp v-if="calculateCompVisible" ref="calculateCompRef" />
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onCalculateSubmit">确 定</el-button>
-        <el-button @click="calculateCompVisible = false">取 消</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      title="导入数据到页面"
-      :visible.sync="importCompVisible"
-      :close-on-click-modal="false"
-      append-to-body
-      width="800px">
-      <import-comp
-        v-if="importCompVisible"
-        ref="importCompRef"
-        :importAction="`${$yid.config.API.BASE}api-pers/employeestatemaintenance/convertSystem`"
-        @save="handleImportSave">
-        <!-- <import-comp
-        v-if="importCompVisible"
-        ref="importCompRef"
-        :columns="importCompColumns"
-        :failColumns="importCompFailColumns"
-        :importAction="`${$yid.config.API.BASE}api-pers/employeestatemaintenance/convertSystem`"
-        :downloadUrl="`${$yid.config.API.BASE}api-pers/employeestatemaintenance/downSysTemplate`"
-        @save="handleImportSave"
-        @approve="handleImportApprove"> -->
-        <el-button type="primary" @click="handleSave">保存</el-button>
-      </import-comp>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="importCompVisible = false">取 消</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 <script>
 import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
 import RejectComp from '@src/components/business/RejectComp'
-import CalculateComp from './components/CalculateComp'
-import ImportComp from '@src/components/business/ImportComp'
 import service from '@src/service'
 export default {
-  components: { SearchTop, AddComp, RejectComp, CalculateComp, ImportComp },
+  components: { SearchTop, AddComp, RejectComp },
   data() {
     return {
       addCompVisible: false,
       rejectCompVisible: false,
-      calculateCompVisible: false,
-      importCompVisible: false,
+      type: '', // remove or approve
       operateType: 'add',
       selectRow: {},
       conditions: [
@@ -205,7 +181,7 @@ export default {
         },
         {
           label: '月',
-          prop: 'mouth',
+          prop: 'month',
           type: 'input-number',
           labelWidth: '0.6rem',
           width: '12%',
@@ -242,26 +218,22 @@ export default {
       this.addCompVisible = true
     },
     onCalculate() {
-      this.calculateCompVisible = true
+      this.$confirm(`您确认要重新计算吗？`, `重新计算`, {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        cancelButtonClass: 'btn-custom-cancel',
+        type: 'warning'
+      })
+        .then(async () => {
+          await service.salaryBusiness.attendance.recalculate()
+          this.$message.success('操作成功')
+          await this.queryList()
+        })
+        .catch(() => {})
     },
     onSearch() {
       let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
-      let dateParams = {
-        year: null,
-        month: null
-      }
-      if (params.date) {
-        const [year, month] = params.date.split('-')
-        dateParams = {
-          year,
-          month
-        }
-      }
-      params = {
-        ...params,
-        ...dateParams
-      }
       const fetch = service.salaryBusiness.attendance.list
       this.$refs.table.reloadData({
         fetch,
@@ -273,10 +245,12 @@ export default {
       this.operateType = 'edit'
       this.addCompVisible = true
     },
-    onReject() {
+    onReject(row) {
+      this.type = 'approve'
+      this.selectRow = row
       this.rejectCompVisible = true
     },
-    onApprove() {
+    onApprove(row) {
       this.$confirm(`您确认要审核此条单据吗？`, `确认审核`, {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -284,11 +258,12 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          await service.staff.contract.deleteBillByBatchNo({
-            batchNo: this.batchNo
+          await service.salaryBusiness.attendance.approve({
+            id: row.id,
+            status: 0
           })
           this.$message.success('操作成功')
-          this.$emit('refresh')
+          await this.queryList()
         })
         .catch(() => {})
     },
@@ -296,28 +271,6 @@ export default {
       this.selectRow = row
       this.operateType = 'detail'
       this.addCompVisible = true
-    },
-    async handleImportSave(successData) {
-      const params = successData.map(v => {
-        return {
-          eeCode: v.eeCode,
-          bbCode: v.bbCode,
-          eeName: v.eeName,
-          beStatus: v.beStatus,
-          afStatus: v.afStatus,
-          maintenanceLeave: v.maintenanceLeave,
-          changeDate: v.changeDate,
-          remark: v.remark
-        }
-      })
-      await service.staff.status.save({
-        employeeStateMaintenanceVOS: params
-      })
-      this.handleImportSuccess()
-    },
-    async handleImportSuccess() {
-      this.importCompVisible = false
-      await this.queryList()
     },
     async onSubmit() {
       // const result = await this.$refs.addCompRef.getData()
@@ -331,31 +284,29 @@ export default {
       // 刷新列表
       this.queryList()
     },
-    handleSave() {},
     async onRejectSubmit() {
       const result = await this.$refs.rejectCompRef.getData()
       if (!result) {
         return
       }
-      // TODO
-      return
-      const idList = this.multipleSelection.map(v => v.id)
-      await service.staff.shop.approve({
-        idList,
-        status: 0,
-        message: result.message
+      await service.salaryBusiness.attendance.approve({
+        id: this.selectRow.id,
+        status: 3,
+        backMessage: result.message
       })
       this.$message.success('操作成功')
       this.rejectCompVisible = false
       // 刷新列表
       await this.queryList()
     },
-    async onCalculateSubmit() {
-      const result = await this.$refs.calculateCompRef.getData()
-      if (!result) {
-        return
-      }
-      this.calculateCompVisible = false
+    async handleAddSuccess() {
+      this.addCompVisible = false
+      await this.$nextTick()
+      await this.queryList()
+    },
+    async handleBack() {
+      this.addCompVisible = false
+      await this.$nextTick()
       await this.queryList()
     }
   }
@@ -365,6 +316,8 @@ export default {
 .container {
   // display: flex;
   height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
   .content {
     // flex: 1;
   }

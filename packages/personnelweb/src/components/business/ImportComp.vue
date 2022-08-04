@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-12 17:34:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 12:22:23
+ * @LastEditTime: 2022-08-03 11:20:38
  * @FilePath: \personnelweb\src\components\business\ImportComp.vue
  * @Description: 
 -->
@@ -21,6 +21,7 @@
             class="upload-demo"
             accept=".xls, .xlsx"
             :show-file-list="false"
+            :data="importData"
             :headers="authHeader"
             :action="importAction"
             :before-upload="handleBeforeUpload"
@@ -118,14 +119,20 @@ export default {
     failColumns: {
       type: Array
     },
-    importAction: String,
-    downloadUrl: String,
+    importAction: String, // 上传url
+    importData: {
+      type: Object,
+      default: function () {
+        return {}
+      }
+    }, // 上传时额外的参数
+    downloadUrl: String, // 下载模板url
     downloadParams: {
       type: Object,
       default: function () {
         return {}
       }
-    }
+    } // 下载模板额外的参数
   },
   data() {
     return {

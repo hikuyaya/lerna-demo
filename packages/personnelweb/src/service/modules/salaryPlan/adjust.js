@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-29 17:20:32
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-03 10:16:43
+ * @LastEditTime: 2022-08-03 17:19:04
  * @FilePath: \personnelweb\src\service\modules\salaryPlan\adjust.js
  * @Description:
  */
@@ -13,11 +13,6 @@ const prefix = 'api-pers/employeesalbill'
 // 列表
 export function list(params) {
   return yid.http.get(`${prefix}/list`, { params })
-}
-
-// 员工学习金查询
-export function getEmployeesalByCode() {
-  return yid.http.get(`api-pers/employeesal/list/all`)
 }
 
 // 员工固定工资项查询
@@ -80,7 +75,6 @@ export function queryEmployeesal(params) {
 
 export default {
   list,
-  getEmployeesalByCode,
   getEmployeesalItem,
   save,
   remove,

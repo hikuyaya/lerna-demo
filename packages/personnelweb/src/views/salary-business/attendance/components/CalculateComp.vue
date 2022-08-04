@@ -2,17 +2,17 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:42:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-02 11:13:50
+ * @LastEditTime: 2022-08-04 10:03:17
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\CalculateComp.vue
  * @Description: 
 -->
 
 <template>
-  <el-form ref="form" :model="info" :rules="rules">
+  <el-form ref="form" :model="info" :rules="rules" label-width="80px">
     <p class="orange mg-b-12">
       *请选择需要重新计算的月份，重新计算月份需要先导入实际出勤天数*
     </p>
-    <el-form-item label="月份" prop="date">
+    <el-form-item label="月份" prop="date" :required="true">
       <el-date-picker
         v-model="info.date"
         type="month"
@@ -29,10 +29,20 @@
 import moment from 'moment'
 export default {
   data() {
+    const validateDate = (rule, value, callback) => {
+      if (!value) {
+        callback(new Error('请选择'))
+      } else if (value > this.now) {
+        callback(new Error('选择日期不能大于当前日期'))
+      }
+      callback()
+    }
     return {
       info: {},
+      now: {},
       rules: {
-        date: [{ required: true, message: '请选择月份' }]
+        // date: [{ required: true, message: '请选择月份' }]
+        date: [{ validator: validateDate }]
       }
     }
   },
@@ -48,6 +58,7 @@ export default {
         month,
         date
       }
+      this.now = date
     },
     async getData() {
       const result = await this.$refs.form

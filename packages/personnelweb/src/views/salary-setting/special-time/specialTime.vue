@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:14:58
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 17:03:10
+ * @LastEditTime: 2022-08-05 17:29:09
  * @FilePath: \personnelweb\src\views\salary-setting\special-time\specialTime.vue
  * @Description: 
 -->
@@ -79,7 +79,7 @@ export default {
       conditions: [
         {
           label: '门店编码', // 标签
-          prop: 'eeName', // 绑定的字段
+          prop: 'shopCode', // 绑定的字段
           // label宽度
           type: 'input',
           width: '20%' // 整个组件占的宽度

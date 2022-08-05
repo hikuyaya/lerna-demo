@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-29 17:20:32
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-03 17:19:04
+ * @LastEditTime: 2022-08-05 10:27:57
  * @FilePath: \personnelweb\src\service\modules\salaryPlan\adjust.js
  * @Description:
  */
@@ -80,6 +80,7 @@ export default {
   remove,
   checkSalBill,
   audSalBill,
+  batchsaveSal,
   batchaudSals,
   batchaudSal,
   batchDelete,

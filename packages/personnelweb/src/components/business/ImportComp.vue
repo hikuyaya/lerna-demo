@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-12 17:34:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-04 11:37:44
+ * @LastEditTime: 2022-08-04 15:10:19
  * @FilePath: \personnelweb\src\components\business\ImportComp.vue
  * @Description: 
 -->
@@ -34,7 +34,7 @@
       </div>
       <div v-if="uploaded">
         <slot>
-          <el-button type="primary" @click="handleSave">保存</el-button>
+          <el-button type="primary" @click="handleSave()">保存</el-button>
           <el-button type="primary" @click="handleSave('approve')"
             >保存并审核</el-button
           >

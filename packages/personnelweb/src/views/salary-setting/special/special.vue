@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:09:38
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 14:40:26
+ * @LastEditTime: 2022-08-04 15:17:07
  * @FilePath: \personnelweb\src\views\salary-setting\special\special.vue
  * @Description: 
 -->
@@ -38,7 +38,7 @@
           </template>
         </yid-table-column>
         <yid-table-column label="备注" prop="remark"></yid-table-column>
-        <yid-table-column label="状态" prop="status" width="70px">
+        <!-- <yid-table-column label="状态" prop="status" width="70px">
           <template slot-scope="scope">
             {{
               scope.row.status == 1
@@ -48,7 +48,7 @@
                 : scope.row.status
             }}
           </template>
-        </yid-table-column>
+        </yid-table-column> -->
         <yid-table-column label="操作" width="80px">
           <template slot-scope="scope">
             <el-link type="primary" @click="onEdit(scope.row)">修改</el-link>
@@ -113,18 +113,18 @@ export default {
             { label: '所有门店', value: '3' }
           ],
           width: '15%'
-        },
-        {
-          label: '状态',
-          prop: 'status',
-          type: 'select',
-          labelWidth: '0.8rem',
-          options: [
-            { label: '正常', value: '1' },
-            { label: '停用', value: '2' }
-          ],
-          width: '15%'
         }
+        // {
+        //   label: '状态',
+        //   prop: 'status',
+        //   type: 'select',
+        //   labelWidth: '0.8rem',
+        //   options: [
+        //     { label: '正常', value: '1' },
+        //     { label: '停用', value: '2' }
+        //   ],
+        //   width: '15%'
+        // }
       ],
       tableData: [],
       positionAll: [],

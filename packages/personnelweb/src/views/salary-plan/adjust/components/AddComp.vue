@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-04 10:50:33
+ * @LastEditTime: 2022-08-04 15:13:51
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\AddComp.vue
  * @Description: 
 -->
@@ -257,7 +257,7 @@ export default {
         eeCode: copyStaff.eeCode,
         isDel: 0
       })
-      // TODO 接口报错 暂时先屏蔽
+
       const { data: staffScCodeList } =
         await service.salaryPlan.adjust.getEmployeesalItem({
           eeCode: copyStaff.eeCode
@@ -267,6 +267,8 @@ export default {
       copyStaff.ssCode = eeSal.ssCode
       copyStaff.tutje = eeSal.tutje
       copyStaff.tutjeCom = eeSal.tutjeCom
+      copyStaff.shopCode = copyStaff.bbCode
+      copyStaff.shopName = copyStaff.bbName
       this.info = copyStaff
       this.chooseStaffVisible = false
     },
@@ -308,6 +310,8 @@ export default {
           eeName,
           ssCode,
           scCode,
+          shopCode,
+          shopName,
           money,
           tutje,
           tutjeCom,
@@ -330,7 +334,9 @@ export default {
           tutjeCom,
           type,
           startTime,
-          endTime
+          endTime,
+          shopCode,
+          shopName
         }
         return this.operateType === 'edit'
           ? { ...params, id: this.info.id }

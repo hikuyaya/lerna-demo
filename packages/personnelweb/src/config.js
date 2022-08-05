@@ -459,40 +459,20 @@ export const MENU = {
     {
       id: 62,
       pid: 6,
-      name: '会员统计分析',
-      title: '会员统计分析',
-      path: '/member/statistics',
-      component: 'member/statistics',
+      name: '离职学习金调整',
+      title: '离职学习金调整',
+      path: '/study-fund/leave',
+      component: 'study-fund/leave/leave',
       icon: null,
       canShow: true
     },
     {
       id: 63,
       pid: 6,
-      name: '顾客评价记录',
-      title: '顾客评价记录',
-      path: '/member/reviews',
-      component: 'member/reviews',
-      icon: null,
-      canShow: true
-    },
-    {
-      id: 64,
-      pid: 6,
-      name: '基础设置',
-      title: '基础设置',
-      path: '/member/config',
-      component: 'member/config',
-      icon: null,
-      canShow: true
-    },
-    {
-      id: 65,
-      pid: 6,
-      name: '会员状态管理',
-      title: '会员状态管理',
-      path: '/member/statusOper',
-      component: 'member/statusOper',
+      name: '学习金标签维护',
+      title: '学习金标签维护',
+      path: '/study-fund/tag',
+      component: 'study-fund/tag/tag',
       icon: null,
       canShow: true
     },

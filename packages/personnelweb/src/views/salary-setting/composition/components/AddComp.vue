@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-01 15:33:06
+ * @LastEditTime: 2022-08-05 17:18:02
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -182,23 +182,32 @@ export default {
       this.chooseMenuVisible = false
       this.tableData = menus
     },
+    validate() {
+      const item = (this.tableData || []).find(v => !v.shopType)
+      if (item) {
+        this.$message.error(`${item.name} 适用门店类型 为空，请补齐！`)
+        return false
+      }
+      return true
+    },
     async getData() {
       const result = await this.$refs.form
         .validate()
         .catch(err => console.error(err))
-      if (result) {
-        const menus = (this.tableData || []).map(v => {
-          return {
-            menuId: this.operateType === 'edit' ? v.menuId : v.id,
-            menuName: v.name,
-            type: v.shopType
-          }
-        })
+      if (!result || !this.validate()) {
+        return
+      }
+      const menus = (this.tableData || []).map(v => {
         return {
-          ...this.info,
-          status: 1,
-          menus
+          menuId: this.operateType === 'edit' ? v.menuId : v.id,
+          menuName: v.name,
+          type: v.shopType
         }
+      })
+      return {
+        ...this.info,
+        status: 1,
+        menus
       }
     }
   },

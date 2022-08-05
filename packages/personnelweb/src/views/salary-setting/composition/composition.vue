@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:02:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 14:23:25
+ * @LastEditTime: 2022-08-05 17:21:03
  * @FilePath: \personnelweb\src\views\salary-setting\composition\composition.vue
  * @Description: 
 -->
@@ -33,7 +33,7 @@
                 ? '输入项'
                 : scope.row.inputType == 3
                 ? '提成项'
-                : ''
+                : scope.row.inputType
             }}
           </template>
         </yid-table-column>
@@ -46,7 +46,7 @@
                 ? '减项'
                 : scope.row.signType == 0
                 ? '非计算项'
-                : ''
+                : scope.row.signType
             }}
           </template>
         </yid-table-column>
@@ -161,8 +161,8 @@ export default {
           options: [
             { label: '所有', value: '' },
             { label: '增项', value: '1' },
-            { label: '减项', value: '2' },
-            { label: '非计算项', value: '3' }
+            { label: '减项', value: '-1' },
+            { label: '非计算项', value: '0' }
           ],
           width: '14%'
         },

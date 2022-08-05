@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 16:15:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-02 11:20:56
+ * @LastEditTime: 2022-08-05 09:44:45
  * @FilePath: \personnelweb\src\service\index.js
  * @Description:
  */
@@ -27,6 +27,7 @@ import staff from './modules/staff'
 import salarySetting from './modules/salarySetting'
 import salaryPlan from './modules/salaryPlan'
 import salaryBusiness from './modules/salaryBusiness'
+import studyFund from './modules/studyFund'
 
 export default {
   IM,
@@ -42,5 +43,6 @@ export default {
   salarySetting,
   salaryPlan,
   salaryBusiness,
+  studyFund,
   report
 }

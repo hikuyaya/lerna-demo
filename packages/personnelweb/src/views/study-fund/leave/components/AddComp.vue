@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-05 10:41:35
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 14:37:51
+ * @LastEditTime: 2022-08-05 16:21:44
  * @FilePath: \personnelweb\src\views\study-fund\leave\components\AddComp.vue
  * @Description: 
 -->
@@ -35,7 +35,7 @@
       <div>审核人：{{ info.approvalEename || '--' }}</div>
       <div>审核时间：{{ info.approvalTime || '--' }}</div>
     </div>
-    <yid-table :data="tableData" ref="table" class="mg-t-12">
+    <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
       <yid-table-column label="单号" prop="billCode"> </yid-table-column>
       <yid-table-column label="员工姓名" prop="eeName"> </yid-table-column>
       <yid-table-column label="员工编码" prop="eeCode"></yid-table-column>
@@ -87,12 +87,8 @@ export default {
     }
   },
   components: {},
-  created() {
-    if (this.operateType === 'add') {
-      this.initDate()
-    } else {
-      this.queryDetail()
-    }
+  mounted() {
+    this.queryDetail()
   },
   data() {
     return {
@@ -107,17 +103,20 @@ export default {
   },
 
   methods: {
-    // 新增时初始化年月
-    initDate() {
-      let date = moment(new Date()).subtract(1, 'months').format('YYYY-MM')
-      const [year, month] = date.split('-')
-      this.info = {
-        year,
-        month
-      }
+    async queryDetail() {
+      this.onSearch()
     },
-    async queryDetail() {},
-    async onSearch() {}
+    async onSearch() {
+      const params = {
+        batchNo: this.info.batchNo
+      }
+      params.limit = this.$refs.table.Pagination.internalPageSize
+      const fetch = service.studyFund.leave.list
+      this.$refs.table.reloadData({
+        fetch,
+        params
+      })
+    }
   },
 
   watch: {

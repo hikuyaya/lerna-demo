@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-03 10:37:59
+ * @LastEditTime: 2022-08-05 16:02:10
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -15,6 +15,7 @@
         :label="option.label"
         prefix="："
         :width="option.width"
+        :required="option.required"
         :labelWidth="option.labelWidth || '1rem'">
         <el-select
           v-if="option.type === 'select'"
@@ -43,11 +44,11 @@
           v-else-if="option.type === 'daterange'"
           v-model="params[option.prop]"
           type="daterange"
-          format="yyyy 年 MM 月 dd 日"
+          format="yyyy年MM月dd日"
           start-placeholder="开始日期"
           end-placeholder="结束日期"
           placement="bottom"
-          value-format="timestamp"
+          :value-format="option['value-format'] || 'yyyy-MM-dd'"
           :style="{
             width: option.widgetWidth ? option.widgetWidth : '100%'
           }">

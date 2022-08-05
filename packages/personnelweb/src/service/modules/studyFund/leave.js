@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-05 10:45:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 14:21:18
+ * @LastEditTime: 2022-08-05 16:19:52
  * @FilePath: \personnelweb\src\service\modules\studyFund\leave.js
  * @Description:
  */
@@ -36,7 +36,10 @@ export function batchQuery(params) {
 
 // 批次审核
 export function batchAduBill(params) {
-  return yid.http.post(`${prefix}/batchAduBill`, params)
+  return yid.http.post(
+    `${prefix}/batchAduBill?batchNo=${params.batchNo}`,
+    params
+  )
 }
 
 // 批次删单

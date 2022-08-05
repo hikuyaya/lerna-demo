@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:18:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-04 15:10:54
+ * @LastEditTime: 2022-08-05 16:55:07
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\adjust.vue
  * @Description: 
 -->
@@ -98,7 +98,7 @@
           width="100px"></yid-table-column>
         <yid-table-column
           label="修改时间"
-          prop="approvalTime"
+          prop="updatedTime"
           width="150px"></yid-table-column>
         <yid-table-column
           label="审批人"

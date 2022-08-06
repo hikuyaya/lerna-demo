@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-04 15:13:51
+ * @LastEditTime: 2022-08-06 09:27:48
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\AddComp.vue
  * @Description: 
 -->
@@ -253,6 +253,7 @@ export default {
     async handleSelectStaff(staff) {
       console.log(staff)
       let copyStaff = JSON.parse(JSON.stringify(staff))
+      delete copyStaff.type
       const { data: sal } = await service.salaryPlan.adjust.queryEmployeesal({
         eeCode: copyStaff.eeCode,
         isDel: 0

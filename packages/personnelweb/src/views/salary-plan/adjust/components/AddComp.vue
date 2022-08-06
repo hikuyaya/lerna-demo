@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-06 09:27:48
+ * @LastEditTime: 2022-08-06 16:33:34
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\AddComp.vue
  * @Description: 
 -->
@@ -147,6 +147,9 @@
         :columns="chooseStaffColumns"
         :actionUrl="chooseSingleStaffActionUrl"
         :conditions="chooseStaffConditions"
+        :defaultParams="{
+          searchType: 0
+        }"
         @select="handleSelectStaff"></choose-single-item>
     </el-dialog>
   </div>

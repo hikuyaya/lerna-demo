@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-01 15:27:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 16:06:40
+ * @LastEditTime: 2022-08-05 17:59:58
  * @FilePath: \personnelweb\src\views\study-fund\refund\refund.vue
  * @Description: 学习金退费名单
 -->
@@ -168,7 +168,7 @@ export default {
   },
   created() {},
   mounted() {
-    this.queryList()
+    // this.queryList()
   },
   methods: {
     queryList() {

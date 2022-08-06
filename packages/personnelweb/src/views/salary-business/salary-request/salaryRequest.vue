@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:32:44
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 09:38:48
+ * @LastEditTime: 2022-08-06 17:38:53
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\salaryRequest.vue
  * @Description: 
 -->
@@ -15,48 +15,59 @@
           <template #inlineBtn>
             <div class="flex flex-alignitems__center mg-l-12">
               <el-button type="primary" @click="onSearch">查询</el-button>
+              <el-button type="primary" @click="onReset">重置</el-button>
               <el-button type="primary" @click="onAdd">新增</el-button>
             </div>
           </template>
         </search-top>
         <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-          <yid-table-column label="单号" prop="batchNo" fixed>
+          <yid-table-column label="单号" prop="billCode" width="140px" fixed>
             <template slot-scope="scope">
               <el-link type="primary" @click="onShowDetail(scope.row)">{{
-                scope.row.batchNo
+                scope.row.billCode
               }}</el-link>
             </template>
           </yid-table-column>
           <yid-table-column
             label="年"
-            prop="effectYear"
+            prop="year"
             width="80px"
             fixed></yid-table-column>
           <yid-table-column
             label="月"
-            prop="effectMonth"
+            prop="month"
             width="80px"
             fixed></yid-table-column>
           <yid-table-column
             label="合计金额"
-            prop="money"
+            prop="moneyTotal"
             width="120px"
             fixed></yid-table-column>
           <yid-table-column
             label="收入合计"
-            prop="year"
+            prop="addTotal"
             width="100px"
             fixed></yid-table-column>
           <yid-table-column
             label="支出合计"
-            prop="year"
+            prop="subTotal"
             width="100px"
             fixed></yid-table-column>
           <yid-table-column
             label="审核锁定"
-            prop="year"
+            prop="approvalLockStatus"
             width="100px"
-            fixed></yid-table-column>
+            fixed>
+            <template slot-scope="scope">
+              {{
+                scope.row.approvalLockStatus == 1
+                  ? '已锁定'
+                  : scope.row.approvalLockStatus == 0
+                  ? '未锁定'
+                  : scope.row.approvalLockStatus
+              }}
+            </template>
+          </yid-table-column>
           <yid-table-column
             label="审核状态"
             prop="approvalStatus"
@@ -72,14 +83,14 @@
                   ? '已审核'
                   : scope.row.approvalStatus == 0
                   ? '已驳回'
-                  : '其他'
+                  : scope.row.approvalStatus
               }}
             </template>
           </yid-table-column>
 
           <yid-table-column
             label="驳回原因"
-            prop="remark"
+            prop="backReason"
             width="120px"></yid-table-column>
 
           <yid-table-column
@@ -92,17 +103,28 @@
             width="150px"></yid-table-column>
 
           <yid-table-column label="操作" min-width="100" fixed="right">
-            <!-- <template slot-scope="scope"> -->
+            <!-- 已审核（不显示任何按钮）、已驳回（显示编辑按钮） -->
             <template slot-scope="scope">
+              <!-- 待审核（只显示撤回：需要判断审核锁定状态为已锁定时不出现此按钮） -->
+              <el-tooltip
+                v-if="
+                  scope.row.approvalStatus == 2 &&
+                  scope.row.approvalLockStatus == 0
+                "
+                effect="dark"
+                content="撤回"
+                placement="top">
+                <i
+                  class="el-icon-s-release c-pointer mg-r-8 font-size-16rem"
+                  @click="onReject(scope.row)"></i>
+              </el-tooltip>
+              <!-- 待提交（只显示编辑按钮）、已驳回（显示编辑按钮） -->
+
+              <!--  v-if="[0, 1].includes(scope.row.approvalStatus)" -->
               <el-tooltip effect="dark" content="编辑" placement="top">
                 <i
                   class="el-icon-edit c-pointer font-size-16rem mg-r-8"
                   @click="onEdit(scope.row)"></i>
-              </el-tooltip>
-              <el-tooltip effect="dark" content="撤回" placement="top">
-                <i
-                  class="el-icon-s-release c-pointer mg-r-8 font-size-16rem"
-                  @click="onReject(scope.row)"></i>
               </el-tooltip>
             </template>
           </yid-table-column>
@@ -115,7 +137,9 @@
         ref="addCompRef"
         :value="selectRow"
         :operateType="operateType"
-        @back="addCompVisible = false" />
+        :salCompMenus="salCompMenus"
+        @back="handleBack"
+        @success="handleSuccess" />
     </el-collapse-transition>
   </div>
 </template>
@@ -127,7 +151,7 @@ export default {
   components: { SearchTop, AddComp },
   data() {
     return {
-      addCompVisible: true,
+      addCompVisible: false,
       importCompVisible: false,
       operateType: 'add',
       type: '', // approve 或者 remove
@@ -145,7 +169,7 @@ export default {
         },
         {
           label: '月',
-          prop: 'mouth',
+          prop: 'month',
           type: 'input-number',
           labelWidth: '0.6rem',
           width: '12%',
@@ -169,7 +193,7 @@ export default {
             { label: '待提交', value: 1 },
             { label: '待审核', value: 2 },
             { label: '已审核', value: 3 },
-            { label: '已驳回', value: 4 }
+            { label: '已驳回', value: 0 }
           ]
         }
       ],
@@ -246,14 +270,27 @@ export default {
         },
         { label: '失败原因', prop: 'failwhy' }
       ],
-      tableData: []
+      tableData: [],
+      salCompMenus: []
     }
   },
-  created() {},
+  created() {
+    this.getSalCompMenus()
+  },
   mounted() {
     this.queryList()
   },
   methods: {
+    async onReset() {
+      this.$refs.searchTop.reset()
+      this.onSearch()
+    },
+    async getSalCompMenus() {
+      const { data } = await service.salarySetting.composition.menuList({
+        pname: '薪酬业务'
+      })
+      this.salCompMenus = data
+    },
     queryList() {
       this.onSearch()
     },
@@ -266,7 +303,7 @@ export default {
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
-      const fetch = service.staff.status.billList
+      const fetch = service.salaryBusiness.salaryRequest.list
       this.$refs.table.reloadData({
         fetch,
         params
@@ -290,13 +327,20 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          // TODO
-          await service.staff.shop.remove(row.id)
+          await service.salaryBusiness.salaryRequest.revoke(row.id)
           this.$message.success('操作成功')
           // 刷新列表
           await this.queryList()
         })
         .catch(() => {})
+    },
+    handleBack() {
+      this.addCompVisible = false
+    },
+    async handleSuccess() {
+      this.handleBack()
+      this.$message.success('操作成功')
+      await this.queryList()
     },
     async onSubmit() {
       const result = this.$refs.addCompRef.getData()
@@ -320,6 +364,8 @@ export default {
 .container {
   // display: flex;
   height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
   .content {
     // flex: 1;
   }

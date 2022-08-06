@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-22 09:38:12
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 14:26:13
+ * @LastEditTime: 2022-08-06 09:57:52
  * @FilePath: \personnelweb\src\views\salary-setting\position-asetofbooks\components\AddComp.vue
  * @Description: 
 -->
@@ -130,15 +130,15 @@ export default {
         },
         {
           label: '计算类型', // 标签
-          prop: 'eeName', // 绑定的字段
+          prop: 'signType', // 绑定的字段
           // label宽度
           type: 'select',
           width: '30%', // 整个组件占的宽度
           options: [
             { label: '所有', value: '' },
             { label: '增项', value: '1' },
-            { label: '减项', value: '2' },
-            { label: '非计算项', value: '3' }
+            { label: '减项', value: '-1' },
+            { label: '非计算项', value: '0' }
           ]
           // widgetWidth: '200px', // 控件的宽度
           // required: true // 是否必填

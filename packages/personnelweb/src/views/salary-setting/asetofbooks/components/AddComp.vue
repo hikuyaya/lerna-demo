@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 17:30:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 16:36:07
+ * @LastEditTime: 2022-08-06 09:57:42
  * @FilePath: \personnelweb\src\views\salary-setting\asetofbooks\components\AddComp.vue
  * @Description: 
 -->
@@ -199,8 +199,8 @@ export default {
           options: [
             { label: '所有', value: '' },
             { label: '增项', value: '1' },
-            { label: '减项', value: '2' },
-            { label: '非计算项', value: '3' }
+            { label: '减项', value: '-1' },
+            { label: '非计算项', value: '0' }
           ]
         }
       ],

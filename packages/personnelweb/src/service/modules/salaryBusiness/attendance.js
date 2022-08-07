@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 11:20:20
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-04 10:04:18
+ * @LastEditTime: 2022-08-07 09:39:42
  * @FilePath: \personnelweb\src\service\modules\salaryBusiness\attendance.js
  * @Description:
  */
@@ -44,6 +44,11 @@ export function detail(id) {
   return yid.http.get(`${prefix}/${id}`, {})
 }
 
+// 查询固定工资明细
+export function getByEeCode(params) {
+  return yid.http.get(`${prefix}/getByEeCode`, { params })
+}
+
 export default {
   list,
   save,
@@ -52,5 +57,6 @@ export default {
   validate,
   recalculate,
   approve,
-  detail
+  detail,
+  getByEeCode
 }

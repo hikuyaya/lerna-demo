@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-06 17:35:10
+ * @LastEditTime: 2022-08-07 09:52:26
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
@@ -119,6 +119,7 @@
         <yid-table-column label="职务" prop="psName" fixed></yid-table-column>
         <yid-table-column label="级别" prop="pslName" fixed></yid-table-column>
         <yid-table-column
+          v-if="operateType === 'detail'"
           label="合计金额"
           prop="totalMoney"
           fixed></yid-table-column>
@@ -136,6 +137,12 @@
               :min="0"
               class="w100">
             </el-input-number>
+            <el-link
+              v-else-if="column.inputType != 2"
+              type="primary"
+              @click="onShowDetail(scope.row, column)"
+              >{{ scope.row[column.label] }}</el-link
+            >
             <span v-else>{{ scope.row[column.label] }}</span>
           </template>
         </yid-table-column>
@@ -185,11 +192,28 @@
         <el-button @click="importCompVisible = false">取 消</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog
+      title="计算详细"
+      :visible.sync="detailCompVisible"
+      :close-on-click-modal="false"
+      append-to-body
+      width="800px">
+      <detail-comp
+        v-if="detailCompVisible"
+        :value="{
+          ...selectRow,
+          ...info
+        }"
+        :column="selectColumn"
+        :operateType="operateType"></detail-comp>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import ImportComp from '@src/components/business/ImportComp'
+import DetailComp from './DetailComp.vue'
 import service from '@src/service'
 import moment from 'moment'
 import { mapGetters } from 'vuex'
@@ -213,7 +237,8 @@ export default {
     }
   },
   components: {
-    ImportComp
+    ImportComp,
+    DetailComp
   },
   created() {
     const menu = this.salCompMenus.find(
@@ -240,6 +265,9 @@ export default {
       },
       menuId: '',
       importCompVisible: false,
+      detailCompVisible: false,
+      selectRow: {},
+      selectColumn: {},
       tableData: [],
       rules: {
         year: [{ required: true, message: '请输入' }],
@@ -449,6 +477,11 @@ export default {
         await service.salaryBusiness.salaryRequest.update(params)
       }
       this.$emit('success')
+    },
+    onShowDetail(row, column) {
+      this.selectRow = row
+      this.selectColumn = column
+      this.detailCompVisible = true
     },
     buildSaveParams() {
       const that = this

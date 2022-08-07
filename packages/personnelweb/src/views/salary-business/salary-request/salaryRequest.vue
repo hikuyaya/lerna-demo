@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:32:44
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-06 17:38:53
+ * @LastEditTime: 2022-08-06 17:43:15
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\salaryRequest.vue
  * @Description: 
 -->
@@ -90,8 +90,7 @@
 
           <yid-table-column
             label="驳回原因"
-            prop="backReason"
-            width="120px"></yid-table-column>
+            prop="backReason"></yid-table-column>
 
           <yid-table-column
             label="创建人"
@@ -102,7 +101,7 @@
             prop="createdTime"
             width="150px"></yid-table-column>
 
-          <yid-table-column label="操作" min-width="100" fixed="right">
+          <yid-table-column label="操作" width="120" fixed="right">
             <!-- 已审核（不显示任何按钮）、已驳回（显示编辑按钮） -->
             <template slot-scope="scope">
               <!-- 待审核（只显示撤回：需要判断审核锁定状态为已锁定时不出现此按钮） -->

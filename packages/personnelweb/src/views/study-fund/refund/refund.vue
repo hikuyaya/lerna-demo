@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-01 15:27:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 10:58:16
+ * @LastEditTime: 2022-08-07 14:07:01
  * @FilePath: \personnelweb\src\views\study-fund\refund\refund.vue
  * @Description: 学习金退费名单
 -->
@@ -136,6 +136,7 @@ import SearchTop from '@src/components/base/SearchTop'
 import History from './components/History'
 import Log from './components/Log'
 import service from '@src/service'
+import download from '@src/library/http/download'
 export default {
   components: { SearchTop, History, Log },
   data() {
@@ -197,8 +198,20 @@ export default {
     queryList() {
       this.onSearch()
     },
-    async onExport() {
-      await service.studyFund.refund.expEesaltk()
+    onExport() {
+      let params = this.$refs.searchTop.getSearchParams()
+      if (!params.time?.length) {
+        this.$message.error('请选择离职创建时间！')
+        return
+      }
+      const [startRq, endRq] = params.time
+      params.startRq = startRq
+      params.endRq = endRq
+      delete params.time
+      download(
+        `${this.$yid.config.API.BASE}api-pers/eexxjadjbill/expEesaltk`,
+        params
+      )
     },
     async onReset() {
       this.$refs.searchTop.reset()

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 11:10:06
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 17:14:14
+ * @LastEditTime: 2022-08-07 13:39:29
  * @FilePath: \personnelweb\src\views\staff\black\black.vue
  * @Description: 黑名单管理
 -->
@@ -150,13 +150,12 @@ export default {
     }
   },
   mounted() {
-    this.queryBlackList()
+    this.queryList()
   },
   methods: {
-    queryBlackList() {
+    queryList() {
       this.onSearch()
     },
-    onOpenAdvance() {},
     onAdd() {
       this.operateType = 'add'
       this.selectRow = {}
@@ -193,7 +192,7 @@ export default {
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表
-      this.queryBlackList()
+      this.queryList()
     },
     onRemove(row) {
       this.selectRow = row
@@ -212,7 +211,7 @@ export default {
       this.$message.success('操作成功')
       this.removeCompVisible = false
       // 刷新列表
-      this.queryBlackList()
+      await this.queryList()
     }
   }
 }

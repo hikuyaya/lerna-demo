@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:02:15
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 17:21:03
+ * @LastEditTime: 2022-08-07 11:38:37
  * @FilePath: \personnelweb\src\views\salary-setting\composition\composition.vue
  * @Description: 
 -->
@@ -249,7 +249,7 @@ export default {
           this.$message.success('操作成功')
           this.addCompVisible = false
           // 刷新列表
-          this.queryList()
+          await this.queryList()
         })
         .catch(() => {})
     }

@@ -1,12 +1,11 @@
 <!--
  * @Author: wqy
- * @Date: 2022-08-07 09:31:05
+ * @Date: 2022-08-07 17:43:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 18:00:12
- * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\DetailComp.vue
+ * @LastEditTime: 2022-08-07 17:58:36
+ * @FilePath: \personnelweb\src\views\salary-business\special-request\components\Detail.vue
  * @Description: 
 -->
-
 <template>
   <div>
     <div class="flex info-row">
@@ -68,18 +67,16 @@ export default {
   methods: {
     async queryDetail() {
       const { shopCode, eeCode, year, month } = this.value
-      const { scCode } = this.column
       let params = {
         shopCode,
         eeCode,
         year,
-        month,
-        scCode
+        month
       }
-      const { data } = await service.salaryBusiness.attendance.getByEeCode(
+      const { data } = await service.salaryBusiness.specialRequest.getEmpBdInfo(
         params
       )
-      this.tableData = data?.workAttendanceDayBillDetailVOList || []
+      this.tableData = data
     }
   },
   watch: {

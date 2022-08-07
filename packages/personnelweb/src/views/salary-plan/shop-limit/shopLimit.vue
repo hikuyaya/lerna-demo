@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:22:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-01 09:15:07
+ * @LastEditTime: 2022-08-07 17:31:49
  * @FilePath: \personnelweb\src\views\salary-plan\shop-limit\shopLimit.vue
  * @Description: 门店对公额度
 -->
@@ -166,7 +166,6 @@ export default {
     onImport() {
       this.importCompVisible = true
     },
-    onDelete() {},
     onSearch() {
       const params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-05 10:41:35
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 16:21:44
+ * @LastEditTime: 2022-08-07 16:59:07
  * @FilePath: \personnelweb\src\views\study-fund\leave\components\AddComp.vue
  * @Description: 
 -->
@@ -26,7 +26,7 @@
             ? '已审核'
             : info.approvalStatus == 0
             ? '已驳回'
-            : info.approvalStatu
+            : info.approvalStatus
         }}</span>
       </div>
       <div>批次号：{{ info.batchNo || '--' }}</div>

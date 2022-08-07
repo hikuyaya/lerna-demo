@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-04 09:23:44
+ * @LastEditTime: 2022-08-07 16:58:53
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -70,7 +70,7 @@
             ? '已审核'
             : info.approvalStatus == 0
             ? '已驳回'
-            : info.approvalStatu
+            : info.approvalStatus
         }}</span>
       </div>
       <div>单号：{{ info.billCode }}</div>
@@ -238,7 +238,7 @@ export default {
   methods: {
     // 新增时初始化年月
     initDate() {
-      let date = moment(new Date()).subtract(1, 'months').format('YYYY-MM')
+      let date = moment(new Date()).subtract(1, 'months').format('YYYY-M')
       const [year, month] = date.split('-')
       this.info = {
         year,
@@ -396,7 +396,7 @@ export default {
           }
           console.log(params)
           // return
-          if (this.operateType === 'save') {
+          if (this.operateType === 'add') {
             await service.salaryBusiness.attendance.save(params)
           } else {
             await service.salaryBusiness.attendance.update({

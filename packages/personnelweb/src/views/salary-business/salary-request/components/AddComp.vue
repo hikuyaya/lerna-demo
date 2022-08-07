@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 09:52:26
+ * @LastEditTime: 2022-08-07 16:58:59
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
@@ -76,7 +76,7 @@
             ? '已审核'
             : info.approvalStatus == 0
             ? '已驳回'
-            : info.approvalStatu
+            : info.approvalStatus
         }}</span>
       </div>
       <div>收入合计：{{ info.addTotal }}</div>
@@ -293,7 +293,7 @@ export default {
   methods: {
     // 新增时初始化年月
     initDate() {
-      let date = moment(new Date()).subtract(1, 'months').format('YYYY-MM')
+      let date = moment(new Date()).subtract(1, 'months').format('YYYY-M')
       const [year, month] = date.split('-')
       this.info = {
         year,

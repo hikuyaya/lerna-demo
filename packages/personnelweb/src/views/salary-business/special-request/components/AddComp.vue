@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-02 16:29:17
+ * @LastEditTime: 2022-08-07 17:50:08
  * @FilePath: \personnelweb\src\views\salary-business\special-request\components\AddComp.vue
  * @Description: 
 -->
@@ -15,14 +15,26 @@
       >
       <el-button
         type="primary"
-        v-if="tableData.length"
-        @click="onSave"
+        v-if="operateType !== 'detail' && tableData.length"
+        @click="onSave(1)"
         class="mg-b-24"
         >保存</el-button
       >
+      <el-button
+        type="primary"
+        v-if="operateType !== 'detail' && tableData.length"
+        @click="onSave(2)"
+        class="mg-b-24"
+        >提交</el-button
+      >
     </div>
 
-    <el-form ref="form" :model="info" :rules="rules" label-width="80px">
+    <el-form
+      v-if="operateType === 'add'"
+      ref="form"
+      :model="info"
+      :rules="rules"
+      label-width="80px">
       <el-row>
         <el-col :span="4">
           <el-form-item label="年" prop="year">
@@ -47,72 +59,112 @@
           </el-form-item>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" class="mg-l-12" @click="onQueryStaff"
+          <el-button
+            type="primary"
+            class="mg-l-12"
+            @click="chooseStaffVisible = true"
             >获取员工</el-button
           >
         </el-col>
       </el-row>
     </el-form>
-    <template v-if="shop.shopname">
-      <div class="flex info-row">
-        <div>门店：{{ shop.shopname }}</div>
-        <div>编码：{{ shop.shopcode }}</div>
-        <div>工资月份：{{ info.year }}-{{ info.month }}</div>
-        <div>
-          合计人员：<span class="red">{{ tableData.length }}</span>
-        </div>
+    <div v-else class="flex info-row">
+      <div>单号：{{ info.billCode }}</div>
+      <div>申请月份：{{ info.year }}-{{ info.month }}</div>
+      <div>合计人数：{{ info.employeeTotal }}</div>
+      <div>
+        状态：<span class="red bold">{{
+          info.approvalStatus == 1
+            ? '待提交'
+            : info.approvalStatus == 2
+            ? '待审核'
+            : info.approvalStatus == 3
+            ? '已审核'
+            : info.approvalStatus == 0
+            ? '已驳回'
+            : info.approvalStatus
+        }}</span>
       </div>
-      <div class="mg-t-24 mg-b-12">
-        <el-button type="primary" @click="onAdd">添加员工</el-button>
+      <div>合计金额：{{ info.moneyTotal }}</div>
+      <div>驳回原因：{{ info.backReason }}</div>
+    </div>
+    <template v-if="tableData.length">
+      <div class="mg-t-24 mg-b-12 tar">
+        <el-button
+          type="primary"
+          v-if="['edit'].includes(operateType)"
+          @click="chooseStaffVisible = true"
+          >获取员工</el-button
+        >
+        <el-button
+          type="primary"
+          v-if="['add', 'edit'].includes(operateType)"
+          @click="onImport"
+          >导入</el-button
+        >
       </div>
       <yid-table :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="门店编码" prop="shopCode"></yid-table-column>
-        <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
         <yid-table-column
           label="员工姓名"
           prop="eeName"
           width="100px"></yid-table-column>
         <yid-table-column label="员工编码" prop="eeCode"></yid-table-column>
+        <yid-table-column label="门店编码" prop="shopCode"></yid-table-column>
+        <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
         <yid-table-column label="职务" prop="psName"></yid-table-column>
-        <yid-table-column label="员工状态" prop="employeeStatus" width="120px">
+        <yid-table-column label="级别" prop="psLevelName"></yid-table-column>
+        <yid-table-column label="级别1" prop="psLevel1Name"></yid-table-column>
+        <yid-table-column
+          label="提成合计"
+          prop="actualCommission"></yid-table-column>
+        <yid-table-column label="保底提成" prop="expectCommission">
           <template slot-scope="scope">
-            {{
-              scope.row.employeeStatus == 1
-                ? '正常'
-                : scope.row.employeeStatus == 2
-                ? '离职'
-                : scope.row.employeeStatus
-            }}
+            <el-link type="primary" @click="onShowDetail(scope.row)">{{
+              scope.row.expectCommission || '查看'
+            }}</el-link>
           </template>
         </yid-table-column>
-        <yid-table-column label="岗位类型" prop="type" width="120px">
+        <yid-table-column
+          label="理论保底差额"
+          prop="theoryCommission"></yid-table-column>
+        <yid-table-column label="特殊工资项" prop="speCode">
           <template slot-scope="scope">
-            <!-- <el-select v-model="scope.row.type" v-if="scope.row.add">
-              <el-option label="主职" :value="1"></el-option>
-              <el-option label="兼职" :value="2"></el-option>
-            </el-select> -->
-            <span v-if="scope.row.add">兼职</span>
-            <span v-else>
-              {{
-                scope.row.type == 1
-                  ? '主职'
-                  : scope.row.type == 2
-                  ? '兼职'
-                  : scope.row.type
-              }}
-            </span>
+            <el-select
+              v-if="operateType !== 'detail'"
+              v-model="scope.row.speCode"
+              filterable>
+              <el-option
+                v-for="(item, index) in salcompSpecList"
+                :key="index"
+                :label="item.speName"
+                :value="item.speCode">
+              </el-option>
+            </el-select>
+            <span v-else>{{ scope.row.speName }}</span>
           </template>
         </yid-table-column>
-        <yid-table-column label="备注" prop="remark">
+        <yid-table-column label="金额" prop="money">
           <template slot-scope="scope">
-            <el-input v-model="scope.row.remark" v-if="scope.row.add">
-            </el-input>
-            <span v-else>
-              {{ scope.row.remark }}
-            </span>
+            <el-input-number
+              v-if="operateType !== 'detail'"
+              v-model="scope.row.money"
+              :controls="false"
+              :min="0"
+              class="w90">
+            </el-input-number>
+            <span v-else>{{ scope.row.money }}</span>
           </template>
         </yid-table-column>
-        <yid-table-column label="操作">
+        <yid-table-column label="申请原因及计算描述" prop="remark">
+          <template slot-scope="scope">
+            <el-input
+              v-if="operateType !== 'detail'"
+              v-model="scope.row.remark"></el-input>
+            <span v-else>{{ scope.row.remark }}</span>
+          </template>
+        </yid-table-column>
+
+        <yid-table-column label="操作" v-if="operateType !== 'detail'">
           <template slot-scope="scope">
             <el-popconfirm
               title="确定删除吗？"
@@ -127,6 +179,32 @@
     </template>
 
     <el-dialog
+      title="导入数据到页面"
+      :visible.sync="importCompVisible"
+      :close-on-click-modal="false"
+      append-to-body
+      width="800px">
+      <import-comp
+        v-if="importCompVisible"
+        ref="importCompRef"
+        :importAction="`${$yid.config.API.BASE}api-pers/specsalarybill/convertSystem`"
+        :importData="{
+          year: info.year,
+          month: info.month
+        }"
+        :downloadUrl="`${$yid.config.API.BASE}api-pers/specsalarybill/downSysTemplate`"
+        :columns="importCompColumns"
+        :failColumns="importCompFailColumns">
+        <el-button type="primary" @click="handleImportSave"
+          >导入到页面</el-button
+        >
+      </import-comp>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="importCompVisible = false">取 消</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
       title="选择人员"
       :visible.sync="chooseStaffVisible"
       :close-on-click-modal="false"
@@ -137,14 +215,32 @@
         :columns="chooseStaffColumns"
         :actionUrl="chooseStaffActionUrl"
         :conditions="chooseStaffConditions"
+        :pagination="false"
         :defaultParams="defaultParams"
         @select="handleSelectStaffs"></choose-multiple-item>
+    </el-dialog>
+
+    <el-dialog
+      title="计算详细"
+      :visible.sync="detailCompVisible"
+      :close-on-click-modal="false"
+      append-to-body
+      width="800px">
+      <detail
+        v-if="detailCompVisible"
+        :value="{
+          ...selectRow,
+          ...info
+        }"></detail>
     </el-dialog>
   </div>
 </template>
 
 <script>
+import ImportComp from '@src/components/business/ImportComp'
 import ChooseMultipleItem from '@src/components/business/ChooseMultipleItem.vue'
+import Detail from './Detail.vue'
+import moment from 'moment'
 import service from '@src/service'
 export default {
   props: {
@@ -156,143 +252,240 @@ export default {
     },
     operateType: {
       type: String
+    },
+    salcompSpecList: {
+      type: Array,
+      default: function () {
+        return []
+      }
     }
   },
   components: {
-    ChooseMultipleItem
+    ImportComp,
+    ChooseMultipleItem,
+    Detail
   },
-  computed: {
-    tableData: function () {
-      return [...this.datas, ...this.adds]
+  created() {
+    if (this.operateType === 'add') {
+      this.initDate()
+    } else if (this.operateType === 'edit') {
+      this.defaultParams = {
+        year: this.value.year,
+        month: this.value.month
+      }
     }
   },
   data() {
     return {
-      info: {
-        year: new Date().getFullYear(),
-        month: new Date().getMonth()
-      },
-      shop: {},
-      datas: [], // 查出的本店人员数据
-      adds: [], // 添加进来的其他店人员数据
-      defaultParams: {
-        searchType: 1
-      },
+      info: {},
+      defaultParams: {},
+      importCompVisible: false,
+      detailCompVisible: false,
+      selectRow: {},
+      tableData: [],
       rules: {
+        shopCode: [{ required: true, message: '请输入门店编码' }],
         year: [{ required: true, message: '请输入' }],
-        month: [{ required: true, message: '请输入' }]
+        month: [{ required: true, message: '请输入' }],
+        actualDayCount: [{ required: true, message: '请输入' }]
       },
       chooseStaffVisible: false,
+      chooseStaffActionUrl: service.salaryBusiness.specialRequest.getHrspecemps,
       chooseStaffColumns: [
         { label: '员工姓名', prop: 'eeName' },
         { label: '员工编码', prop: 'eeCode' },
-        { label: '岗位名称', prop: 'postName' },
-        { label: '门店编码', prop: 'bbCode' },
-        { label: '门店名称', prop: 'bbName' },
-        { label: '职务', prop: 'positionName' },
-        { label: '级别', prop: 'positionLevelName' },
-        { label: '级别1', prop: 'level1Name' }
+        { label: '门店', prop: 'shopName' },
+        { label: '入职日期', prop: 'entryDate' },
+        { label: '职务', prop: 'psName' },
+        { label: '级别', prop: 'psLevelName' }
       ],
-      chooseStaffActionUrl: service.staff.level.getByEeCode,
       chooseStaffConditions: [
-        {
-          label: '员工姓名', // 标签
-          prop: 'eeName', // 绑定的字段
-          // label宽度
-          type: 'input',
-          width: '20%' // 整个组件占的宽度
-          // widgetWidth: '200px', // 控件的宽度
-          // required: true // 是否必填
-        },
         {
           label: '员工编码',
           prop: 'eeCode',
-          type: 'input', // 搜索类型
-          width: '20%'
+          type: 'input',
+          width: '30%'
         },
         {
-          label: '门店编码',
-          prop: 'bbCode',
+          label: '员工姓名',
+          prop: 'eeName',
           type: 'input',
-          width: '20%'
-        },
-        {
-          label: '门店名称',
-          prop: 'bbName',
-          type: 'input',
-          width: '20%'
+          width: '30%'
         }
-      ]
+      ],
+      importCompColumns: [
+        { label: '员工编码', prop: 'eeCode' },
+        { label: '员工姓名', prop: 'eeName' },
+        { label: '特殊工资项', prop: 'speName' },
+        { label: '金额', prop: 'money' }
+      ],
+      dynamicColumns: []
+    }
+  },
+  computed: {
+    importCompFailColumns: function () {
+      return this.importCompColumns.concat([
+        { label: '失败原因', prop: 'failwhy' }
+      ])
     }
   },
   methods: {
-    handleSelectStaffs(staffs) {
-      console.log(staffs)
-      const addStaffs = staffs.map(v => {
-        return {
-          eeCode: v.eeCode,
-          eeName: v.eeName,
-          shopName: this.shop.shopname,
-          shopCode: this.shop.shopcode,
-          psCode: v.positionCode,
-          psName: v.positionName,
-          psLevelName: v.positionLevelName,
-          psLevelCode: v.positionLevelCode,
-          employeeStatus: v.type,
-          type: 2, // 1主职 2兼职
-          remark: '',
-          psLevel1Name: v.level1Name,
-          psLevel1Code: v.level1Code,
-          add: true
+    // 新增时初始化年月
+    initDate() {
+      let date = moment(new Date()).subtract(1, 'months').format('YYYY-M')
+      const [year, month] = date.split('-')
+      this.info = {
+        year,
+        month
+      }
+      this.defaultParams = {
+        year,
+        month
+      }
+    },
+    // 构造动态数据、列
+    buildDynamic(data) {
+      let columns = []
+      for (let i = 0; i < data.length; i++) {
+        const d = data[i]
+        for (let j = 0; j < d.employeeSalItemVOList.length; j++) {
+          const salItem = d.employeeSalItemVOList[j]
+          const label = salItem.scName
+          const value = salItem.money
+          d[label] = value
+          if (i === 0) {
+            columns.push({
+              label,
+              value
+            })
+          }
         }
-      })
-      this.adds = [...addStaffs]
-      this.chooseStaffVisible = false
+      }
+      return {
+        columns,
+        data
+      }
     },
     onQueryStaff() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.queryStaff()
-          this.onSearch()
+          this.queryCanSave()
+          // this.onSearch()
         }
       })
     },
-    onDeleteRow(index, row) {
-      const tableDataLength = this.tableData.length
-      if (row.add) {
-        const copyData = [...this.adds]
-        copyData.splice(index - tableDataLength, 1)
-        this.adds = copyData
-      } else {
-        const copyData = [...this.datas]
-        copyData.splice(index, 1)
-        this.datas = copyData
+    handleSelectStaffs(staffs) {
+      console.log(staffs)
+      this.chooseStaffVisible = false
+      // this.tableData = staffs
+      // 以页面上的数据为主，做∪
+      let copyData = JSON.parse(JSON.stringify(this.tableData))
+
+      for (let i = 0; i < staffs.length; i++) {
+        const d = staffs[i]
+        console.log(i, d)
+        const contain = this.calContaine(d, this.tableData)
+        if (!contain) {
+          copyData.push(d)
+        }
+      }
+      this.tableData = copyData
+    },
+    calContaine(d, tableData) {
+      let flag = false
+      for (let i = 0; i < tableData.length; i++) {
+        const t = tableData[i]
+        if (t.eeCode === d.eeCode) {
+          flag = true
+          break
+        }
+      }
+      return flag
+    },
+    async queryCanSave() {
+      const { resp_code } =
+        await service.salaryBusiness.specialRequest.enterHrspecemps({
+          year: this.info.year,
+          month: this.info.month
+        })
+      if (resp_code === 200) {
+        this.chooseStaffVisible = true
       }
     },
-    async queryStaff() {
-      const { data } = await service.chain.shop.shopListWithPage({
-        pcodename: this.info.shopCode,
-        page: 1,
-        limit: 10
-      })
-      this.shop = data?.[0]
+    onDeleteRow(index, row) {
+      const copyData = [...this.tableData]
+      copyData.splice(index, 1)
+      this.tableData = copyData
     },
     async onSearch() {
+      const { year, month } = this.info
       let params = {
-        ...this.info,
+        year,
+        month,
         page: 1,
         limit: 1000
       }
-      const { data } = await service.salaryPlan.payslip.list(params)
-      this.datas = [...data]
+      const { data } = await service.salaryBusiness.attendance.getEmployeeList(
+        params
+      )
+
+      const { data: tableData, columns } = this.buildDynamic(data)
+
+      this.dynamicColumns = columns
+
+      if (this.operateType === 'edit') {
+        // 以查出来的数据为主，做∪
+        let copyData = JSON.parse(JSON.stringify(this.tableData))
+
+        for (let i = 0; i < data.length; i++) {
+          const d = data[i]
+          console.log(i, d)
+          const contain = this.calContaine(d, this.tableData)
+          if (!contain) {
+            copyData.push(d)
+          }
+        }
+        this.tableData = copyData
+      } else {
+        this.tableData = tableData
+      }
     },
-    onAdd() {
-      this.chooseStaffVisible = true
+
+    onImport() {
+      this.importCompVisible = true
+    },
+    onShowDetail(row) {
+      this.selectRow = row
+      this.detailCompVisible = true
+    },
+    async handleImportSave() {
+      const flag = this.$refs.importCompRef.validateSave()
+      if (!flag) {
+        return
+      }
+      const importData = this.$refs.importCompRef.tableData
+      this.tableData = importData
+      this.importCompVisible = false
     },
     getData() {
       return this.tableData
     },
-    async onSave() {
+    validate() {
+      const item = this.tableData.find(
+        v => !v.speCode || (!v.money && v.money !== 0)
+      )
+      if (item) {
+        this.$message.error(`员工：${item.eeName} 录入信息存在空项，请补齐！`)
+        return false
+      }
+      return true
+    },
+    async onSave(type) {
+      // 1 保存 2 提交
+      const flag = this.validate()
+      if (!flag) {
+        return
+      }
       this.$confirm(`您确认保存页面信息吗？`, `确认保存`, {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -300,13 +493,41 @@ export default {
         type: 'warning'
       })
         .then(async () => {
+          const copyTableData = JSON.parse(JSON.stringify(this.tableData))
+          let tableData = copyTableData.map(v => {
+            const item = this.salcompSpecList.find(s => v.speCode === s.speCode)
+            v.speName = item.speName
+            return {
+              ...v
+            }
+          })
           let params = {
-            ...this.info,
-            monthRptHreesalVOList: this.tableData
+            shopCode: this.tableData[0].shopCode,
+            shopName: this.tableData[0].shopName,
+            shopType: this.tableData[0].shopType,
+            year: this.info.year,
+            month: this.info.month,
+            details: tableData
+          }
+          if (this.operateType === 'edit') {
+            params = {
+              ...params,
+              id: this.info.id
+            }
           }
           console.log(params)
           // return
-          await service.salaryPlan.payslip.save(params)
+          if (type === 1) {
+            await service.salaryBusiness.specialRequest.save(params)
+          } else if (type === 2) {
+            // 获取billCode
+            const { data } = await service.salaryBusiness.specialRequest.save(
+              params
+            )
+            await service.salaryBusiness.specialRequest.submit({
+              billCode: data.billCode
+            })
+          }
           this.$message.success('操作成功')
           this.$emit('success')
         })
@@ -318,10 +539,11 @@ export default {
     value: {
       immediate: true,
       handler: function (val) {
-        if (this.operateType === 'add') {
-          return
+        const copyVal = JSON.parse(JSON.stringify(val))
+        this.info = copyVal
+        if (this.operateType !== 'add') {
+          this.tableData = copyVal.details
         }
-        this.info = JSON.parse(JSON.stringify(val))
       }
     }
   }

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:27:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-02 11:17:53
+ * @LastEditTime: 2022-08-07 17:31:44
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\payslip.vue
  * @Description: 
 -->
@@ -140,7 +140,6 @@ export default {
       this.selectRow = {}
       this.addCompVisible = true
     },
-    onDelete() {},
     onSearch() {
       let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize

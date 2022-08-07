@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-01 15:27:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 17:59:58
+ * @LastEditTime: 2022-08-07 10:58:16
  * @FilePath: \personnelweb\src\views\study-fund\refund\refund.vue
  * @Description: 学习金退费名单
 -->
@@ -24,9 +24,9 @@
         </template>
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column label="门店编码" prop="shopCode" width="100px" fixed>
+        <yid-table-column label="门店编码" prop="bbCode" width="100px" fixed>
         </yid-table-column>
-        <yid-table-column label="门店名称" prop="shopName" width="120px" fixed>
+        <yid-table-column label="门店名称" prop="bbName" width="120px" fixed>
         </yid-table-column>
         <yid-table-column
           label="员工编码"
@@ -38,87 +38,110 @@
           prop="eeName"
           width="100px"
           fixed></yid-table-column>
-        <yid-table-column
-          label="性别"
-          prop="sex"
-          width="100px"
-          fixed></yid-table-column>
+        <yid-table-column label="性别" prop="sex" width="100px" fixed>
+          <template slot-scope="scope">
+            {{
+              scope.row.sex == '1'
+                ? '男'
+                : scope.row.sex == '2'
+                ? '女'
+                : scope.row.sex
+            }}
+          </template>
+        </yid-table-column>
         <yid-table-column
           label="职务"
-          prop="psName"
+          prop="positionName"
           width="120px"
           fixed></yid-table-column>
 
-        <yid-table-column
-          label="退费历史"
-          prop="betutjeRet"
-          width="100px"></yid-table-column>
+        <yid-table-column label="退费历史" prop="tfnum" width="100px">
+          <template slot-scope="scope">
+            <el-link type="primary" @click="onShowHistory(scope.row)">{{
+              scope.row.tfnum || '查看'
+            }}</el-link>
+          </template>
+        </yid-table-column>
         <yid-table-column
           label="证件号"
-          prop="remark"
+          prop="cardNumber"
           width="200px"></yid-table-column>
         <yid-table-column
           label="银行卡号"
-          prop="remark"
+          prop="bankAccount"
           width="200px"></yid-table-column>
         <yid-table-column
           label="银行"
-          prop="bandCode"
+          prop="bankName"
           width="120px"></yid-table-column>
 
         <yid-table-column
           label="学习金金额"
-          prop="betutje"
+          prop="tutje"
           width="100px"></yid-table-column>
-        <yid-table-column
-          label="已缴纳学习金"
-          prop="betutjeCom"
-          width="120px"></yid-table-column>
+        <yid-table-column label="已缴纳学习金" prop="tutjeCom" width="120px">
+          <template slot-scope="scope">
+            <el-link type="primary" @click="onShowTutjeCom(scope.row)">{{
+              scope.row.tutjeCom
+            }}</el-link>
+          </template>
+        </yid-table-column>
 
         <yid-table-column
           label="入职日期"
-          prop="createdTime"
+          prop="entrydate"
           width="150px"></yid-table-column>
         <yid-table-column
           label="离职日期"
-          prop="approvalTime"
+          prop="changeDate"
           width="150px"></yid-table-column>
         <yid-table-column
           label="联系电话"
-          prop="approvalTime"
+          prop="mobile"
           width="120px"></yid-table-column>
         <yid-table-column
           label="汇款账户名"
-          prop="approvalTime"
+          prop="accountname"
           width="120px"></yid-table-column>
       </yid-table>
     </div>
 
     <el-dialog
-      title="新增状态维护"
-      :visible.sync="addCompVisible"
+      title="学习金退费记录"
+      :visible.sync="historyCompVisible"
       :close-on-click-modal="false"
       append-to-body
       width="1200px">
-      <add-comp v-if="addCompVisible" ref="addCompRef" :value="selectRow" />
+      <history v-if="historyCompVisible" :value="selectRow" />
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onSubmit">确 定</el-button>
-        <el-button @click="addCompVisible = false">取 消</el-button>
+        <el-button @click="historyCompVisible = false">关 闭</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+      title="学习金日志"
+      :visible.sync="logCompVisible"
+      :close-on-click-modal="false"
+      append-to-body
+      width="1200px">
+      <log v-if="logCompVisible" :value="selectRow" />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="logCompVisible = false">关 闭</el-button>
       </span>
     </el-dialog>
   </div>
 </template>
 <script>
 import SearchTop from '@src/components/base/SearchTop'
-// import RemoveComp from '@src/components/business/RemoveComp.vue'
+import History from './components/History'
+import Log from './components/Log'
 import service from '@src/service'
 export default {
-  components: { SearchTop },
+  components: { SearchTop, History, Log },
   data() {
     return {
-      addCompVisible: false,
-      removeCompVisible: false,
-      importCompVisible: false,
+      historyCompVisible: false,
+      logCompVisible: false,
       operateType: 'add',
       type: '', // approve 或者 remove
       selectRow: {},
@@ -143,13 +166,13 @@ export default {
         },
         {
           label: '门店编码',
-          prop: 'eeCode',
+          prop: 'bbCode',
           type: 'input',
           width: '18%'
         },
         {
           label: '离职原因',
-          prop: 'maintenanceLeave',
+          prop: 'rgCode',
           type: 'select',
           options: [
             { label: '正常离职', value: '01' },
@@ -174,14 +197,6 @@ export default {
     queryList() {
       this.onSearch()
     },
-    onAdd() {
-      this.operateType = 'add'
-      this.selectRow = {}
-      this.addCompVisible = true
-    },
-    onImport() {
-      this.importCompVisible = true
-    },
     async onExport() {
       await service.studyFund.refund.expEesaltk()
     },
@@ -195,9 +210,9 @@ export default {
         this.$message.error('请选择离职创建时间！')
         return
       }
-      const [startTime, endTime] = params.time
-      params.startTime = startTime
-      params.endTime = endTime
+      const [startRq, endRq] = params.time
+      params.startRq = startRq
+      params.endRq = endRq
       delete params.time
       params.limit = this.$refs.table.Pagination.internalPageSize
       const fetch = service.studyFund.refund.list
@@ -206,69 +221,13 @@ export default {
         params
       })
     },
-    onEdit(row) {
+    onShowHistory(row) {
       this.selectRow = row
-      this.operateType = 'edit'
-      this.addCompVisible = true
+      this.historyCompVisible = true
     },
-    onShowDetail(row) {
+    onShowTutjeCom(row) {
       this.selectRow = row
-      this.operateType = 'detail'
-      this.addCompVisible = true
-    },
-    async onSubmit() {
-      const result = await this.$refs.addCompRef.getData()
-      console.log(result)
-      if (!result) {
-        return
-      }
-
-      this.$confirm(`您确认保存此调整单信息吗？`, `确认保存`, {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        cancelButtonClass: 'btn-custom-cancel',
-        type: 'warning'
-      })
-        .then(async () => {
-          await service.salaryPlan.adjust.save(result)
-          this.$message.success('操作成功')
-          this.addCompVisible = false
-          // 刷新列表
-          await this.queryList()
-        })
-        .catch(() => {})
-    },
-    async handleAddSuccess() {
-      this.addCompVisible = false
-      await this.$nextTick()
-      await this.queryList()
-    },
-    async handleBack() {
-      this.addCompVisible = false
-      await this.$nextTick()
-      await this.queryList()
-    },
-    onRemove() {
-      this.type = 'remove'
-      this.removeCompVisible = true
-    },
-    async handleImportSuccess() {
-      this.importCompVisible = false
-      await this.queryList()
-    },
-    async handleImportApprove(successData) {
-      const params = this.$refs.importCompRef.successData
-      await service.studyFund.leave.saveSudBill(successData)
-      this.handleImportSuccess()
-    },
-    async handleImportSave(successData) {
-      const params = this.$refs.importCompRef.successData
-      await service.studyFund.leave.save(successData)
-      this.handleImportSuccess()
-    },
-    handleRemoveSuccess() {
-      this.removeCompVisible = false
-      this.queryList()
+      this.logCompVisible = true
     }
   }
 }

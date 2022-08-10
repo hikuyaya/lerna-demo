@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-01 15:27:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 14:07:01
+ * @LastEditTime: 2022-08-10 08:56:47
  * @FilePath: \personnelweb\src\views\study-fund\refund\refund.vue
  * @Description: 学习金退费名单
 -->
@@ -160,8 +160,8 @@ export default {
           prop: 'type',
           type: 'select',
           options: [
-            { label: '美发门店', value: '1' },
-            { label: '美容门店', value: '2' }
+            { label: '美发门店', value: 'MF' },
+            { label: '美容门店', value: 'MR' }
           ],
           width: '15%'
         },

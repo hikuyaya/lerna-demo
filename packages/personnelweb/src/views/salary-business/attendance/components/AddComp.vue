@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 16:58:53
+ * @LastEditTime: 2022-08-10 09:49:58
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -172,6 +172,7 @@
 import ImportComp from '@src/components/business/ImportComp'
 import moment from 'moment'
 import service from '@src/service'
+
 export default {
   props: {
     value: {
@@ -182,7 +183,8 @@ export default {
     },
     operateType: {
       type: String
-    }
+    },
+    menuId: String || Number
   },
   components: {
     ImportComp
@@ -304,11 +306,13 @@ export default {
     },
     async onSearch() {
       const { year, month } = this.info
+      const { menuId } = this
       let params = {
         year,
         month,
         page: 1,
-        limit: 1000
+        limit: 1000,
+        menuId
       }
       const { data } = await service.salaryBusiness.attendance.getEmployeeList(
         params
@@ -392,7 +396,8 @@ export default {
             shopName: this.tableData[0].shopName,
             year: this.info.year,
             month: this.info.month,
-            workAttendanceDayBillDetailVOList: this.tableData
+            workAttendanceDayBillDetailVOList: this.tableData,
+            menuId: this.menuId
           }
           console.log(params)
           // return

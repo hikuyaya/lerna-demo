@@ -1,7 +1,16 @@
+/*
+ * @Author: wqy
+ * @Date: 2022-06-15 14:05:18
+ * @LastEditors: wqy
+ * @LastEditTime: 2022-08-10 09:30:40
+ * @FilePath: \personnelweb\src\store\modules\user.js
+ * @Description:
+ */
 const state = {
   userToken: '',
   userInfo: {},
-  msg: ''
+  msg: '',
+  salaryBusinessMenu: []
 }
 
 const mutations = {
@@ -23,6 +32,11 @@ const mutations = {
 
   showMsg(state) {
     state.msg = '你有一条新的系统消息'
+  },
+
+  setSalaryBusinessMenu(state, payload) {
+    console.log('38', payload)
+    state.salaryBusinessMenu = payload
   }
 }
 
@@ -56,6 +70,10 @@ const getters = {
   },
   menus: state => {
     return state.userInfo.menus
+  },
+  salaryBusinessMenu: state => {
+    console.log(75, state)
+    return state.salaryBusinessMenu
   }
 }
 export default {

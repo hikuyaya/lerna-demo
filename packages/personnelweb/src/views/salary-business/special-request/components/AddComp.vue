@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 17:50:08
+ * @LastEditTime: 2022-08-10 09:39:58
  * @FilePath: \personnelweb\src\views\salary-business\special-request\components\AddComp.vue
  * @Description: 
 -->
@@ -370,7 +370,6 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.queryCanSave()
-          // this.onSearch()
         }
       })
     },
@@ -416,39 +415,6 @@ export default {
       const copyData = [...this.tableData]
       copyData.splice(index, 1)
       this.tableData = copyData
-    },
-    async onSearch() {
-      const { year, month } = this.info
-      let params = {
-        year,
-        month,
-        page: 1,
-        limit: 1000
-      }
-      const { data } = await service.salaryBusiness.attendance.getEmployeeList(
-        params
-      )
-
-      const { data: tableData, columns } = this.buildDynamic(data)
-
-      this.dynamicColumns = columns
-
-      if (this.operateType === 'edit') {
-        // 以查出来的数据为主，做∪
-        let copyData = JSON.parse(JSON.stringify(this.tableData))
-
-        for (let i = 0; i < data.length; i++) {
-          const d = data[i]
-          console.log(i, d)
-          const contain = this.calContaine(d, this.tableData)
-          if (!contain) {
-            copyData.push(d)
-          }
-        }
-        this.tableData = copyData
-      } else {
-        this.tableData = tableData
-      }
     },
 
     onImport() {

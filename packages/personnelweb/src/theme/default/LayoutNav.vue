@@ -139,7 +139,7 @@ export default {
       })
       this.showSjMenu = true
     },
-    getMenu() {
+    async getMenu() {
       console.log('menu', process.env.VUE_APP_ISCUSTOMMENU)
       if (process.env.VUE_APP_ISCUSTOMMENU == 0) {
         const menuList = yid.util.deepClone(yid.config.MENU.LIST)
@@ -153,14 +153,15 @@ export default {
         this.menuTree = menuTree
         //  console.log(this.menuTree);
       } else {
-        service.user.menu().then(res => {
-          let menu = res.data
-          // this.menuTree = menu;
-          this.menuTreeData = menu
-          this.menuTree = this.menuTreeData
-          // console.log('menu1', menu)
-          // console.log('menu2', this.menuTree)
-        })
+        const { data: menu } = await service.user.menu()
+        this.menuTreeData = menu
+        this.menuTree = this.menuTreeData
+        // 薪酬业务菜单
+        const { data: salaryBusinessMenu } =
+          await service.salarySetting.composition.menuList({
+            pname: '薪酬业务'
+          })
+        this.$store.commit('user/setSalaryBusinessMenu', salaryBusinessMenu)
       }
     },
     change(value) {

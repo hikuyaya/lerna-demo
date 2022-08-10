@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:32:44
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-06 17:43:15
+ * @LastEditTime: 2022-08-10 09:26:09
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\salaryRequest.vue
  * @Description: 
 -->
@@ -273,9 +273,7 @@ export default {
       salCompMenus: []
     }
   },
-  created() {
-    this.getSalCompMenus()
-  },
+  created() {},
   mounted() {
     this.queryList()
   },
@@ -283,12 +281,6 @@ export default {
     async onReset() {
       this.$refs.searchTop.reset()
       this.onSearch()
-    },
-    async getSalCompMenus() {
-      const { data } = await service.salarySetting.composition.menuList({
-        pname: '薪酬业务'
-      })
-      this.salCompMenus = data
     },
     queryList() {
       this.onSearch()

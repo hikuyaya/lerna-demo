@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-07 10:28:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 11:04:01
+ * @LastEditTime: 2022-08-10 08:53:46
  * @FilePath: \personnelweb\src\views\study-fund\refund\components\History.vue
  * @Description: 
 -->
@@ -19,11 +19,11 @@
         width="100px"></yid-table-column>
       <yid-table-column
         label="学习金金额"
-        prop="afBetutje"
+        prop="betutje"
         width="100px"></yid-table-column>
-      <yid-table-column label="已缴纳学习金" prop="aftutjeCom" width="120px">
+      <yid-table-column label="已缴纳学习金" prop="betutjeCom" width="120px">
       </yid-table-column>
-      <yid-table-column label="已退学习金" prop="aftutjeRet" width="120px">
+      <yid-table-column label="已退学习金" prop="betutRet" width="120px">
       </yid-table-column>
       <yid-table-column label="工资方案ID" prop="salId" width="120px">
       </yid-table-column>

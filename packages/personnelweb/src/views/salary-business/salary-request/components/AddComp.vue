@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 16:58:59
+ * @LastEditTime: 2022-08-10 09:42:29
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
@@ -228,12 +228,6 @@ export default {
     },
     operateType: {
       type: String
-    },
-    salCompMenus: {
-      type: Array,
-      default: function () {
-        return []
-      }
     }
   },
   components: {
@@ -242,12 +236,10 @@ export default {
   },
   created() {
     const menu = this.salCompMenus.find(
-      v =>
-        v.name === '薪酬申报单' ||
-        v.url.indexOf('/salary-business/salary-request') !== -1
+      v => window.location.href.indexOf(v.url) !== -1
     )
     if (!menu) {
-      this.$message.error('无对应薪酬申报单菜单信息')
+      this.$message.error('无对应菜单信息')
       return
     }
     this.menuId = menu.id
@@ -282,7 +274,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      userInfo: 'user/userInfo'
+      userInfo: 'user/userInfo',
+      salCompMenus: 'user/salaryBusinessMenu'
     }),
     importCompFailColumns: function () {
       return this.importCompColumns.concat([

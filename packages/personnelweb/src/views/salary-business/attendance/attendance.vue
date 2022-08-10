@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:31:36
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-04 10:06:25
+ * @LastEditTime: 2022-08-10 09:48:29
  * @FilePath: \personnelweb\src\views\salary-business\attendance\attendance.vue
  * @Description: 出勤天数录入
 -->
@@ -136,6 +136,7 @@
         ref="addCompRef"
         :value="selectRow"
         :operateType="operateType"
+        :menuId="menuId"
         @back="handleBack"
         @success="handleAddSuccess" />
     </el-collapse-transition>
@@ -159,6 +160,7 @@ import SearchTop from '@src/components/base/SearchTop'
 import AddComp from './components/AddComp.vue'
 import RejectComp from '@src/components/business/RejectComp'
 import service from '@src/service'
+import { mapGetters } from 'vuex'
 export default {
   components: { SearchTop, AddComp, RejectComp },
   data() {
@@ -166,6 +168,7 @@ export default {
       addCompVisible: false,
       rejectCompVisible: false,
       type: '', // remove or approve
+      menuId: '',
       operateType: 'add',
       selectRow: {},
       conditions: [
@@ -205,6 +208,21 @@ export default {
       tableData: []
     }
   },
+  computed: {
+    ...mapGetters({
+      salCompMenus: 'user/salaryBusinessMenu'
+    })
+  },
+  created() {
+    const menu = this.salCompMenus.find(
+      v => window.location.href.indexOf(v.url) !== -1
+    )
+    if (!menu) {
+      this.$message.error('无对应菜单信息')
+      return
+    }
+    this.menuId = menu.id
+  },
   mounted() {
     this.queryList()
   },
@@ -225,7 +243,9 @@ export default {
         type: 'warning'
       })
         .then(async () => {
-          await service.salaryBusiness.attendance.recalculate()
+          await service.salaryBusiness.attendance.recalculate({
+            menuId: this.menuId
+          })
           this.$message.success('操作成功')
           await this.queryList()
         })

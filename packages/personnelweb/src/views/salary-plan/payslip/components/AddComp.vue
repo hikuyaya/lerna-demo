@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-01 14:07:38
+ * @LastEditTime: 2022-08-10 09:24:25
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
@@ -85,7 +85,7 @@
               scope.row.employeeStatus == 1
                 ? '正常'
                 : scope.row.employeeStatus == 2
-                ? '离职'
+                ? '正常离职'
                 : scope.row.employeeStatus
             }}
           </template>

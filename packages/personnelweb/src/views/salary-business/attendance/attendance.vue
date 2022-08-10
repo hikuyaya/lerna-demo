@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:31:36
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 09:48:29
+ * @LastEditTime: 2022-08-10 17:05:48
  * @FilePath: \personnelweb\src\views\salary-business\attendance\attendance.vue
  * @Description: 出勤天数录入
 -->
@@ -280,7 +280,7 @@ export default {
         .then(async () => {
           await service.salaryBusiness.attendance.approve({
             id: row.id,
-            status: 0
+            status: 3
           })
           this.$message.success('操作成功')
           await this.queryList()
@@ -311,7 +311,7 @@ export default {
       }
       await service.salaryBusiness.attendance.approve({
         id: this.selectRow.id,
-        status: 3,
+        status: 0,
         backMessage: result.message
       })
       this.$message.success('操作成功')

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 11:20:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 09:59:08
+ * @LastEditTime: 2022-08-10 11:36:30
  * @FilePath: \personnelweb\src\service\modules\salaryBusiness\index.js
  * @Description:
  */
@@ -10,10 +10,12 @@ import attendance from './attendance'
 import specialRequest from './specialRequest'
 import salaryRequest from './salaryRequest'
 import specialApprove from './specialApprove'
+import salaryApprove from './salaryApprove'
 
 export default {
   attendance,
   specialRequest,
   salaryRequest,
-  specialApprove
+  specialApprove,
+  salaryApprove
 }

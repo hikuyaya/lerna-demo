@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:32:44
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 09:26:09
+ * @LastEditTime: 2022-08-10 16:37:40
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\salaryRequest.vue
  * @Description: 
 -->
@@ -117,10 +117,13 @@
                   class="el-icon-s-release c-pointer mg-r-8 font-size-16rem"
                   @click="onReject(scope.row)"></i>
               </el-tooltip>
-              <!-- 待提交（只显示编辑按钮）、已驳回（显示编辑按钮） -->
 
-              <!--  v-if="[0, 1].includes(scope.row.approvalStatus)" -->
-              <el-tooltip effect="dark" content="编辑" placement="top">
+              <!-- 待提交（只显示编辑按钮）、已驳回（显示编辑按钮） -->
+              <el-tooltip
+                v-if="[0, 1].includes(scope.row.approvalStatus)"
+                effect="dark"
+                content="编辑"
+                placement="top">
                 <i
                   class="el-icon-edit c-pointer font-size-16rem mg-r-8"
                   @click="onEdit(scope.row)"></i>

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 09:49:58
+ * @LastEditTime: 2022-08-10 16:57:23
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -102,6 +102,10 @@
 
         <yid-table-column label="当月天数">
           {{ targetMonthDays }}
+          <template slot-scope="scope">
+            <span v-if="operateType === 'add'">{{ targetMonthDays }}</span>
+            <span v-else>{{ scope.row.expectDayCount }}</span>
+          </template>
         </yid-table-column>
         <yid-table-column label="出勤天数">
           <template slot-scope="scope">
@@ -282,10 +286,10 @@ export default {
       }
     },
     onQueryStaff() {
-      this.calTargetMonthDays()
       if (this.operateType === 'add') {
         this.$refs.form.validate(valid => {
           if (valid) {
+            this.calTargetMonthDays()
             this.onSearch()
           }
         })

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-04 11:10:06
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 13:39:29
+ * @LastEditTime: 2022-08-10 11:15:50
  * @FilePath: \personnelweb\src\views\staff\black\black.vue
  * @Description: 黑名单管理
 -->
@@ -192,7 +192,7 @@ export default {
       this.$message.success('操作成功')
       this.addCompVisible = false
       // 刷新列表
-      this.queryList()
+      await this.queryList()
     },
     onRemove(row) {
       this.selectRow = row

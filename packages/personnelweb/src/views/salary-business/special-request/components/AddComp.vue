@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 09:39:58
+ * @LastEditTime: 2022-08-10 10:35:24
  * @FilePath: \personnelweb\src\views\salary-business\special-request\components\AddComp.vue
  * @Description: 
 -->
@@ -124,9 +124,11 @@
             }}</el-link>
           </template>
         </yid-table-column>
-        <yid-table-column
-          label="理论保底差额"
-          prop="theoryCommission"></yid-table-column>
+        <yid-table-column label="理论保底差额" prop="theoryCommission">
+          <template slot-scope="scope">
+            <span class="red">{{ scope.row.theoryCommission }}</span>
+          </template>
+        </yid-table-column>
         <yid-table-column label="特殊工资项" prop="speCode">
           <template slot-scope="scope">
             <el-select

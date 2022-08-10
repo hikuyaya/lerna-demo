@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 11:20:20
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 09:39:42
+ * @LastEditTime: 2022-08-10 16:18:31
  * @FilePath: \personnelweb\src\service\modules\salaryBusiness\attendance.js
  * @Description:
  */
@@ -22,8 +22,8 @@ export function update(params) {
   return yid.http.put(`${prefix}`, params)
 }
 
-export function recalculate() {
-  return yid.http.get(`${prefix}/recalculate`, {})
+export function recalculate(params) {
+  return yid.http.get(`${prefix}/recalculate`, { params })
 }
 
 // 门店获取工资条名单列表

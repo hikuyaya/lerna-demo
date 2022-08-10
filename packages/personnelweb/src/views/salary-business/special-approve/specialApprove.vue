@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:33:21
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 11:15:34
+ * @LastEditTime: 2022-08-10 11:14:32
  * @FilePath: \personnelweb\src\views\salary-business\special-approve\specialApprove.vue
  * @Description: 
 -->
@@ -141,7 +141,7 @@ export default {
     return {
       addCompVisible: false,
       importCompVisible: false,
-      approveCompVisible: true,
+      approveCompVisible: false,
       operateType: 'add',
       type: '', // approve 或者 remove
       selectRow: {},

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 17:18:02
+ * @LastEditTime: 2022-08-11 17:43:25
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -179,8 +179,39 @@ export default {
       this.chooseMenuVisible = true
     },
     handleSelect(menus) {
+      console.log(menus)
+      let copyData = JSON.parse(JSON.stringify(this.tableData))
+      for (let i = 0; i < menus.length; i++) {
+        const d = menus[i]
+        const contain = this.calContaine(d, this.tableData)
+        if (!contain) {
+          copyData.push({
+            menuId: d.id,
+            menuName: d.name,
+            name: d.name
+          })
+        }
+      }
+
       this.chooseMenuVisible = false
-      this.tableData = menus
+      this.tableData = copyData?.map(v => {
+        return {
+          ...v,
+          shopType: v.shopType
+        }
+      })
+      console.log(this.tableData)
+    },
+    calContaine(d, tableData) {
+      let flag = false
+      for (let i = 0; i < tableData.length; i++) {
+        const t = tableData[i]
+        if (d.id == t.menuId) {
+          flag = true
+          break
+        }
+      }
+      return flag
     },
     validate() {
       const item = (this.tableData || []).find(v => !v.shopType)

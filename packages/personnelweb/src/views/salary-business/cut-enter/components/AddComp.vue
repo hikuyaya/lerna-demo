@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-11 15:49:59
+ * @LastEditTime: 2022-08-11 16:18:14
  * @FilePath: \personnelweb\src\views\salary-business\cut-enter\components\AddComp.vue
  * @Description: 
 -->
@@ -63,6 +63,7 @@
           <el-button type="primary" class="mg-l-12" @click="onQueryStaff"
             >获取员工</el-button
           >
+          <el-button type="primary" @click="onImport">导入</el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -95,20 +96,6 @@
       </div>
     </div>
     <template v-if="tableData.length">
-      <div class="mg-t-24 mg-b-12 tar">
-        <el-button
-          type="primary"
-          v-if="['edit'].includes(operateType)"
-          @click="onQueryStaff"
-          >获取员工</el-button
-        >
-        <el-button
-          type="primary"
-          v-if="['add', 'edit'].includes(operateType)"
-          @click="onImport"
-          >导入</el-button
-        >
-      </div>
       <yid-table :data="tableData" ref="table" class="mg-t-12">
         <yid-table-column
           label="员工姓名"
@@ -194,27 +181,12 @@
         :pagination="false"
         @select="handleSelectStaffs"></choose-multiple-item>
     </el-dialog>
-
-    <el-dialog
-      title="计算详细"
-      :visible.sync="detailCompVisible"
-      :close-on-click-modal="false"
-      append-to-body
-      width="800px">
-      <detail
-        v-if="detailCompVisible"
-        :value="{
-          ...selectRow,
-          ...info
-        }"></detail>
-    </el-dialog>
   </div>
 </template>
 
 <script>
 import ImportComp from '@src/components/business/ImportComp'
 import ChooseMultipleItem from '@src/components/business/ChooseMultipleItem.vue'
-import Detail from './Detail.vue'
 import moment from 'moment'
 import service from '@src/service'
 export default {
@@ -228,14 +200,16 @@ export default {
     operateType: {
       type: String
     },
+    searchType: {
+      type: Number
+    },
     menuId: {
       type: String || Number
     }
   },
   components: {
     ImportComp,
-    ChooseMultipleItem,
-    Detail
+    ChooseMultipleItem
   },
   created() {
     if (this.operateType === 'add') {
@@ -245,7 +219,7 @@ export default {
         year: this.value.year,
         month: this.value.month,
         menuId: this.menuId,
-        type: 2,
+        type: this.searchType,
         shopType: this.info.shopType
       }
       this.queryDetail()
@@ -311,7 +285,7 @@ export default {
       this.defaultParams = {
         year,
         month,
-        type: 2,
+        type: this.searchType,
         menuId: this.menuId
       }
     },
@@ -355,7 +329,6 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.chooseStaffVisible = true
-          // this.queryCanSave()
         }
       })
     },
@@ -394,17 +367,7 @@ export default {
       }
       return flag
     },
-    async queryCanSave() {
-      const { data } =
-        await service.salaryBusiness.cutEnter.queryMonthRptHreesalList({
-          year: this.info.year,
-          month: this.info.month,
-          shopCode: this.info.shopCode,
-          type: 2,
-          menuId: this.menuId
-        })
-      console.log(data)
-    },
+
     onDeleteRow(index, row) {
       const copyData = [...this.tableData]
       copyData.splice(index, 1)
@@ -412,8 +375,12 @@ export default {
     },
 
     onImport() {
-      this.importCompVisible = true
-      this.$set(this.defaultParams, 'shopType', this.info.shopType)
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.importCompVisible = true
+          this.$set(this.defaultParams, 'shopType', this.info.shopType)
+        }
+      })
     },
     onShowDetail(row) {
       this.selectRow = row
@@ -425,7 +392,13 @@ export default {
         return
       }
       const importData = this.$refs.importCompRef.tableData
-      this.tableData = importData
+      const { data: tableData, columns } = this.buildDynamic(
+        importData,
+        'details'
+      )
+      console.log(tableData, columns)
+      this.tableData = tableData
+      this.dynamicColumns = columns
       this.importCompVisible = false
     },
     getData() {

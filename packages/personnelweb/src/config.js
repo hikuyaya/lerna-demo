@@ -394,7 +394,8 @@ export const MENU = {
       name: '奖金录入单',
       title: '奖金录入单',
       path: '/salary-business/bonus-enter',
-      component: 'salary-business/bonus-enter/bonusEnter',
+      // component: 'salary-business/bonus-enter/bonusEnter',
+      component: 'salary-business/cut-enter/cutEnter',
       icon: null,
       canShow: true
     },

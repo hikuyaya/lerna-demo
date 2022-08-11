@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:39:38
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-11 15:50:09
+ * @LastEditTime: 2022-08-11 16:06:26
  * @FilePath: \personnelweb\src\views\salary-business\cut-enter\cutEnter.vue
  * @Description: 
 -->
@@ -103,6 +103,7 @@
         :value="selectRow"
         :menuId="menuId"
         :operateType="operateType"
+        :searchType="searchType"
         @back="addCompVisible = false"
         @success="handleSaveSuccess" />
     </el-collapse-transition>
@@ -139,6 +140,7 @@ export default {
       removeCompVisible: false,
       operateType: 'add',
       type: '', // approve 或者 remove
+      searchType: 2,
       selectRow: {},
       menuId: '',
       conditions: [
@@ -213,6 +215,7 @@ export default {
       return
     }
     this.menuId = menu.id
+    this.searchType = window.location.href.indexOf('bonus-enter') !== -1 ? 1 : 2
   },
   mounted() {
     this.queryList()
@@ -277,7 +280,7 @@ export default {
     onSearch() {
       let params = this.$refs.searchTop.getSearchParams()
       params.isDel = 0
-      params.type = 2 // 1 奖金 2 扣款
+      params.type = this.searchType // 1 奖金 2 扣款
       params.limit = this.$refs.table.Pagination.internalPageSize
 
       const fetch = service.salaryBusiness.cutEnter.list

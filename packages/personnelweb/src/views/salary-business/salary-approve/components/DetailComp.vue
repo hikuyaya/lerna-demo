@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-10 11:34:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 18:13:56
+ * @LastEditTime: 2022-08-11 14:46:59
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\components\DetailComp.vue
  * @Description: 
 -->
@@ -66,7 +66,7 @@ export default {
         for (const key in copyVal) {
           if (Object.hasOwnProperty.call(copyVal, key)) {
             const value = copyVal[key]
-            var reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g')
+            let reg = new RegExp('[\\u4E00-\\u9FFF]+', 'g')
             if (reg.test(key)) {
               // 是汉字开头的
               dynamicColumns.push({

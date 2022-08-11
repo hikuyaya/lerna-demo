@@ -1,3 +1,11 @@
+<!--
+ * @Author: wqy
+ * @Date: 2022-08-10 18:16:48
+ * @LastEditors: wqy
+ * @LastEditTime: 2022-08-11 11:12:06
+ * @FilePath: \personnelweb\src\App.vue
+ * @Description: 
+-->
 <template>
   <div id="app">
     <router-view />
@@ -13,10 +21,10 @@ export default {
   },
   created() {
     document.title = yid.config.SYSTEM.TITLE
-    const dev = process.env.NODE_ENV === 'development'
-    if (dev) {
-      return
-    }
+    // const dev = process.env.NODE_ENV === 'development'
+    // if (dev) {
+    //   return
+    // }
     // setTimeout(() => {
     //   yid.service.IM.initIM()
     // }, 1000)

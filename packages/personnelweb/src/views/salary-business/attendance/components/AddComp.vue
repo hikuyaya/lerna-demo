@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 16:57:23
+ * @LastEditTime: 2022-08-11 14:39:52
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -257,18 +257,19 @@ export default {
       )
 
       const { data: tableData, columns } = this.buildDynamic(
-        data.workAttendanceDayBillDetailVOList
+        data.workAttendanceDayBillDetailVOList,
+        'employeeSalItemVOList'
       )
       this.dynamicColumns = columns
       this.tableData = tableData
     },
     // 构造动态数据、列
-    buildDynamic(data) {
+    buildDynamic(data, key) {
       let columns = []
       for (let i = 0; i < data.length; i++) {
         const d = data[i]
-        for (let j = 0; j < d.employeeSalItemVOList.length; j++) {
-          const salItem = d.employeeSalItemVOList[j]
+        for (let j = 0; j < d[key].length; j++) {
+          const salItem = d[key][j]
           const label = salItem.scName
           const value = salItem.money
           d[label] = value

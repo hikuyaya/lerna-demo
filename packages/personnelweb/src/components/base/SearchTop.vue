@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 16:02:10
+ * @LastEditTime: 2022-08-11 11:18:15
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -127,6 +127,7 @@
             :label="option.label"
             prefix="："
             :width="option.width"
+            :required="option.required"
             :labelWidth="option.labelWidth || '1rem'">
             <el-select
               v-if="option.type === 'select'"
@@ -157,15 +158,49 @@
               v-else-if="option.type === 'daterange'"
               v-model="params[option.prop]"
               type="daterange"
-              format="yyyy 年 MM 月 dd 日"
+              format="yyyy年MM月dd日"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
               placement="bottom"
-              value-format="timestamp"
+              :value-format="option['value-format'] || 'yyyy-MM-dd'"
               :style="{
                 width: option.widgetWidth ? option.widgetWidth : '100%'
               }">
             </el-date-picker>
+
+            <el-date-picker
+              v-else-if="option.type === 'date'"
+              v-model="params[option.prop]"
+              :type="option.dateType"
+              :format="option.format || 'yyyy年MM月dd日'"
+              placement="bottom"
+              :value-format="option['value-format'] || 'yyyy-MM-dd'"
+              :placeholder="
+                option.placeholder
+                  ? `${option.placeholder}`
+                  : `请输入${option.label}`
+              "
+              :style="{
+                width: option.widgetWidth ? option.widgetWidth : '100%'
+              }">
+              ></el-date-picker
+            >
+
+            <el-input-number
+              v-else-if="option.type === 'input-number'"
+              v-model="params[option.prop]"
+              :placeholder="
+                option.placeholder
+                  ? `${option.placeholder}`
+                  : `请输入${option.label}`
+              "
+              :controls="option.controls"
+              :min="option.min"
+              :max="option.max"
+              :style="{
+                width: option.widgetWidth ? option.widgetWidth : '100%'
+              }">
+            </el-input-number>
 
             <el-input
               v-else
@@ -174,7 +209,7 @@
               clearable
               :placeholder="
                 option.placeholder
-                  ? `请输入${option.placeholder}`
+                  ? `${option.placeholder}`
                   : `请输入${option.label}`
               "
               :style="{
@@ -192,7 +227,6 @@
 </template>
 
 <script>
-import FormArea from '@src/components/base/FormArea.vue'
 import FormItem from '@src/components/base/FormItem.vue'
 import { deepClone } from '@src/library/helper/util'
 import TreeSelect from '@src/components/base/TreeSelect.vue'
@@ -218,7 +252,6 @@ export default {
   },
   components: {
     FormItem,
-    FormArea,
     TreeSelect
   },
   data() {
@@ -237,6 +270,29 @@ export default {
     }
   },
   methods: {
+    requiredValidate() {
+      let flag = true
+      const requiredItems = this.options
+        .filter(v => v.required)
+        ?.map(v => {
+          return v.prop
+        })
+      if (requiredItems.length && !Object.keys(this.params).length) {
+        return false
+      }
+      for (const key in this.params) {
+        if (Object.hasOwnProperty.call(this.params, key)) {
+          if (
+            requiredItems.includes(key) &&
+            (key === '' || key === null || key === undefined)
+          ) {
+            flag = false
+            break
+          }
+        }
+      }
+      return flag
+    },
     getSearchParams() {
       const params = {}
       for (const key in this.params) {

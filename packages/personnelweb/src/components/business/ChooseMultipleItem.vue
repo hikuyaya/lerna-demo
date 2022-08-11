@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 17:06:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-29 11:37:33
+ * @LastEditTime: 2022-08-11 11:19:20
  * @FilePath: \personnelweb\src\components\business\ChooseMultipleItem.vue
  * @Description: 
 -->
@@ -101,6 +101,10 @@ export default {
       this.onSearch()
     },
     onSearch() {
+      if (!this.$refs.searchTop.requiredValidate()) {
+        this.$message.error('查询必填项或必选项不能为空')
+        return
+      }
       let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination?.internalPageSize
       params = {

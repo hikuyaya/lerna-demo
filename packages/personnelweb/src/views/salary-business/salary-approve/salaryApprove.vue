@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 18:15:32
+ * @LastEditTime: 2022-08-11 14:37:18
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
@@ -372,21 +372,22 @@ export default {
       })
       this.info = data
       const { data: tableData, columns } = this.buildDynamic(
-        data?.salaryList || []
+        data?.salaryList || [],
+        'salaryItemVOList'
       )
       this.tableData = tableData
       this.dynamicColumns = columns
       console.log(tableData, columns)
     },
     // 构造动态数据、列
-    buildDynamic(data) {
+    buildDynamic(data, key) {
       let columns = []
       for (let i = 0; i < data.length; i++) {
         const d = data[i]
-        for (let j = 0; j < d.salaryItemVOList.length; j++) {
-          const salItem = d.salaryItemVOList[j]
+        for (let j = 0; j < d[key].length; j++) {
+          const salItem = d[key][j]
           const label = salItem.scName
-          const value = salItem.money
+          const value = salItem.money || undefined
           d[label] = value
           if (i === 0) {
             columns.push({
@@ -401,6 +402,7 @@ export default {
         data
       }
     },
+
     getSummaries(param) {
       const { columns, data } = param
       const sums = []

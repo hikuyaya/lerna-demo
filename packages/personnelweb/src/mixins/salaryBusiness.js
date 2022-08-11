@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-06 11:08:46
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-06 12:46:36
+ * @LastEditTime: 2022-08-11 14:36:57
  * @FilePath: \personnelweb\src\mixins\salaryBusiness.js
  * @Description:
  */
@@ -22,7 +22,7 @@ export default {
         for (let j = 0; j < d[key].length; j++) {
           const salItem = d[key][j]
           const label = salItem.scName
-          const value = salItem.money
+          const value = salItem.money || undefined
           d[label] = value
           if (i === 0) {
             columns.push({

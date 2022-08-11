@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 09:42:29
+ * @LastEditTime: 2022-08-11 14:39:31
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
@@ -520,13 +520,6 @@ export default {
           return
         }
         this.info = JSON.parse(JSON.stringify(val))
-      }
-    },
-    'info.sx': {
-      handler: function (val) {
-        if (val == 1) {
-          //
-        }
       }
     }
   }

@@ -1,9 +1,9 @@
 <!--
  * @Author: wqy
- * @Date: 2022-07-26 17:05:41
+ * @Date: 2022-08-11 16:31:10
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 09:33:09
- * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
+ * @LastEditTime: 2022-08-12 09:34:40
+ * @FilePath: \personnelweb\src\views\salary-business\pay-request\components\AddComp.vue
  * @Description: 
 -->
 
@@ -16,9 +16,16 @@
       <el-button
         type="primary"
         v-if="operateType !== 'detail' && tableData.length"
-        @click="onSave"
+        @click="onSave(1)"
         class="mg-b-24"
         >保存</el-button
+      >
+      <el-button
+        type="primary"
+        v-if="operateType !== 'detail' && tableData.length"
+        @click="onSave(2)"
+        class="mg-b-24"
+        >提交</el-button
       >
     </div>
 
@@ -52,44 +59,22 @@
           </el-form-item>
         </el-col>
         <el-col :span="4">
+          <el-form-item label="打款类型" prop="billType">
+            <el-select v-model="info.billType">
+              <el-option value="1" label="预留款申请"></el-option>
+              <el-option value="2" label="营业款申请"></el-option>
+              <el-option value="3" label="营业款和预留款共同申请"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="4">
           <el-button type="primary" class="mg-l-12" @click="onQueryStaff"
             >获取员工</el-button
           >
         </el-col>
       </el-row>
     </el-form>
-    <div v-else class="flex info-row">
-      <div>导入月份：{{ info.year }}-{{ info.month }}</div>
-      <div>
-        审核状态：<span class="red bold">{{
-          info.approvalStatus == 1
-            ? '待提交'
-            : info.approvalStatus == 2
-            ? '待审核'
-            : info.approvalStatus == 3
-            ? '已审核'
-            : info.approvalStatus == 0
-            ? '已驳回'
-            : info.approvalStatus
-        }}</span>
-      </div>
-      <div>单号：{{ info.billCode }}</div>
-    </div>
     <template v-if="tableData.length">
-      <div class="mg-t-24 mg-b-12 tar">
-        <el-button
-          type="primary"
-          v-if="['edit'].includes(operateType)"
-          @click="onQueryStaff"
-          >获取员工</el-button
-        >
-        <el-button
-          type="primary"
-          v-if="['add', 'edit'].includes(operateType)"
-          @click="onImport"
-          >导入</el-button
-        >
-      </div>
       <yid-table :data="tableData" ref="table" class="mg-t-12">
         <yid-table-column
           label="员工姓名"
@@ -99,76 +84,31 @@
         <yid-table-column label="职务" prop="psName"></yid-table-column>
         <yid-table-column label="门店编码" prop="shopCode"></yid-table-column>
         <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
-
-        <yid-table-column label="当月天数">
-          {{ targetMonthDays }}
+        <yid-table-column
+          label="实发工资"
+          prop="actualMoney"></yid-table-column>
+        <yid-table-column
+          label="未发工资"
+          prop="surplusMoney"></yid-table-column>
+        <yid-table-column label="打款工资" prop="payMoney">
           <template slot-scope="scope">
-            <span v-if="operateType === 'add'">{{ targetMonthDays }}</span>
-            <span v-else>{{ scope.row.expectDayCount }}</span>
-          </template>
-        </yid-table-column>
-        <yid-table-column label="出勤天数">
-          <template slot-scope="scope">
-            <span v-if="operateType === 'detail'">
-              {{ scope.row.actualDayCount }}
-            </span>
-            <el-input-number
-              v-else
-              v-model="scope.row.actualDayCount"
-              :controls="false"
-              :min="1"
-              :max="targetMonthDays"
-              class="w100">
-            </el-input-number>
+            <!-- 打款工资：当未发工资为0的时候，则不能输入打款工资 -->
+            <template v-if="!scope.row.surplusMoney"> </template>
+            <template v-else>
+              <el-input-number
+                v-model="scope.row.payMoney"
+                :min="0"
+                :max="scope.row.surplusMoney"
+                :controls="false"></el-input-number>
+            </template>
           </template>
         </yid-table-column>
         <yid-table-column
-          v-for="column in dynamicColumns"
-          :key="column.eeCode"
-          :label="column.label"
-          :prop="column.label"></yid-table-column>
-        <yid-table-column label="操作" v-if="operateType !== 'detail'">
-          <template slot-scope="scope">
-            <el-popconfirm
-              title="确定删除吗？"
-              @confirm="onDeleteRow(scope.$index, scope.row)">
-              <i
-                slot="reference"
-                class="el-icon-remove-outline c-pointer font-size-22px"></i>
-            </el-popconfirm>
-          </template>
-        </yid-table-column>
+          v-if="operateType === 'detail'"
+          label="打款后剩余工资"
+          prop="paySurplusMoney"></yid-table-column>
       </yid-table>
     </template>
-
-    <el-dialog
-      title="导入数据到页面"
-      :visible.sync="importCompVisible"
-      :close-on-click-modal="false"
-      append-to-body
-      width="800px">
-      <import-comp
-        v-if="importCompVisible"
-        ref="importCompRef"
-        :importAction="`${$yid.config.API.BASE}api-pers/workattendancedaybill/validation`"
-        :importData="{
-          year: info.year,
-          month: info.month
-        }"
-        :downloadUrl="`${$yid.config.API.BASE}api-pers/template/downExcel`"
-        :downloadParams="{
-          templateName: '出勤天数导入模板.xls'
-        }"
-        :columns="importCompColumns"
-        :failColumns="importCompFailColumns">
-        <el-button type="primary" @click="handleImportSave"
-          >导入到页面</el-button
-        >
-      </import-comp>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="importCompVisible = false">取 消</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
@@ -210,10 +150,9 @@ export default {
       importCompVisible: false,
       tableData: [],
       rules: {
-        shopCode: [{ required: true, message: '请输入门店编码' }],
         year: [{ required: true, message: '请输入' }],
         month: [{ required: true, message: '请输入' }],
-        actualDayCount: [{ required: true, message: '请输入' }]
+        billType: [{ required: true, message: '请选择' }]
       },
       chooseStaffVisible: false,
       chooseStaffColumns: [
@@ -290,7 +229,7 @@ export default {
       if (this.operateType === 'add') {
         this.$refs.form.validate(valid => {
           if (valid) {
-            this.calTargetMonthDays()
+            // this.calTargetMonthDays()
             this.onSearch()
           }
         })
@@ -298,54 +237,17 @@ export default {
         this.onSearch()
       }
     },
-    onDeleteRow(index, row) {
-      const copyData = [...this.tableData]
-      copyData.splice(index, 1)
-      this.tableData = copyData
-    },
-    calTargetMonthDays() {
-      this.targetMonthDays = moment(
-        `${this.info.year}-${this.info.month}`,
-        'YYYY-MM'
-      ).daysInMonth()
-    },
     async onSearch() {
-      const { year, month } = this.info
-      const { menuId } = this
+      const { year, month, billType } = this.info
       let params = {
         year,
         month,
-        page: 1,
-        limit: 1000,
-        menuId
+        billType
       }
-      const { data } = await service.salaryBusiness.attendance.getEmployeeList(
-        params
-      )
+      const { data } =
+        await service.salaryBusiness.payRequest.getSalaryPayEmployee(params)
 
-      const { data: tableData, columns } = this.buildDynamic(
-        data || [],
-        'employeeSalItemVOList'
-      )
-
-      this.dynamicColumns = columns
-
-      if (this.operateType === 'edit') {
-        // 以查出来的数据为主，做∪
-        let copyData = JSON.parse(JSON.stringify(this.tableData))
-
-        for (let i = 0; i < data.length; i++) {
-          const d = data[i]
-          console.log(i, d)
-          const contain = this.calContaine(d, this.tableData)
-          if (!contain) {
-            copyData.push(d)
-          }
-        }
-        this.tableData = copyData
-      } else {
-        this.tableData = tableData
-      }
+      this.tableData = data
     },
     calContaine(d, tableData) {
       let flag = false
@@ -387,40 +289,58 @@ export default {
       }
       return true
     },
-    async onSave() {
-      const flag = this.validate()
-      if (!flag) {
-        return
+    async onSave(type) {
+      const { year, month, billType, id } = this.info
+      let params = {
+        year,
+        month,
+        billType,
+        details: this.tableData
       }
-      this.$confirm(`您确认保存页面信息吗？`, `确认保存`, {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        cancelButtonClass: 'btn-custom-cancel',
-        type: 'warning'
-      })
-        .then(async () => {
-          let params = {
-            shopCode: this.tableData[0].shopCode,
-            shopName: this.tableData[0].shopName,
-            year: this.info.year,
-            month: this.info.month,
-            workAttendanceDayBillDetailVOList: this.tableData,
-            menuId: this.menuId
-          }
-          console.log(params)
-          // return
-          if (this.operateType === 'add') {
-            await service.salaryBusiness.attendance.save(params)
-          } else {
-            await service.salaryBusiness.attendance.update({
-              ...params,
-              id: this.info.id
-            })
-          }
-          this.$message.success('操作成功')
-          this.$emit('success')
+      if (type === 1) {
+        this.$confirm(`您确认保存页面信息吗？`, `确认保存`, {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          cancelButtonClass: 'btn-custom-cancel',
+          type: 'warning'
         })
-        .catch(() => {})
+          .then(async () => {
+            if (this.operateType === 'edit') {
+              params.id = id
+            }
+            await service.salaryBusiness.payRequest.save(params)
+            this.$message.success('操作成功')
+            this.$emit('success')
+          })
+          .catch(() => {})
+      } else {
+        // 提交
+        this.$confirm(
+          `您确认要提交页面信息吗？提交后在审核人审核之前不可修改`,
+          `确认提交`,
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            cancelButtonClass: 'btn-custom-cancel',
+            type: 'warning'
+          }
+        )
+          .then(async () => {
+            if (this.operateType === 'edit') {
+              params.id = id
+            }
+            const { data } = await service.salaryBusiness.payRequest.save(
+              params
+            )
+            const { billCode } = data
+            await service.salaryBusiness.payRequest.submit({
+              billCode
+            })
+            this.$message.success('操作成功')
+            this.$emit('success')
+          })
+          .catch(() => {})
+      }
     }
   },
 

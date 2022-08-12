@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-11 16:18:14
+ * @LastEditTime: 2022-08-12 09:33:52
  * @FilePath: \personnelweb\src\views\salary-business\cut-enter\components\AddComp.vue
  * @Description: 
 -->
@@ -294,7 +294,10 @@ export default {
         isDel: 0,
         batchNo: this.info.batchNo
       })
-      const { data: tableData, columns } = this.buildDynamic(data, 'details')
+      const { data: tableData, columns } = this.buildDynamic(
+        data || [],
+        'details'
+      )
 
       this.tableData = tableData
       this.dynamicColumns = columns
@@ -338,7 +341,7 @@ export default {
       this.chooseStaffVisible = false
       // this.tableData = staffs
       // 以页面上的数据为主，做∪
-      let copyData = JSON.parse(JSON.stringify(this.tableData))
+      let copyData = JSON.parse(JSON.stringify(this.tableData)) || []
 
       for (let i = 0; i < staffs.length; i++) {
         const d = staffs[i]
@@ -391,7 +394,7 @@ export default {
       if (!flag) {
         return
       }
-      const importData = this.$refs.importCompRef.tableData
+      const importData = this.$refs.importCompRef.tableData || []
       const { data: tableData, columns } = this.buildDynamic(
         importData,
         'details'

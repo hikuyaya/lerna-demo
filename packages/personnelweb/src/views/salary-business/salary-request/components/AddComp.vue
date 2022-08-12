@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-11 14:39:31
+ * @LastEditTime: 2022-08-12 09:34:48
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
@@ -299,7 +299,7 @@ export default {
       )
 
       const { data: tableData, columns } = this.buildDynamic(
-        data.salaryApplyBillEmployeeVOList,
+        data.salaryApplyBillEmployeeVOList || [],
         'salaryApplyBillItemVOList'
       )
       this.dynamicColumns = columns
@@ -368,7 +368,7 @@ export default {
         })
 
       const { data: tableData, columns } = this.buildDynamic(
-        data.salaryApplyBillEmployeeVOList,
+        data.salaryApplyBillEmployeeVOList || [],
         'salaryApplyBillItemVOList'
       )
 
@@ -397,7 +397,7 @@ export default {
       if (!flag) {
         return
       }
-      const importData = this.$refs.importCompRef.tableData
+      const importData = this.$refs.importCompRef.tableData || []
 
       const { data: tableData, columns } = this.buildDynamic(
         importData,

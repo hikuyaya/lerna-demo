@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 09:24:25
+ * @LastEditTime: 2022-08-12 18:03:19
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
@@ -26,7 +26,10 @@
       <el-row>
         <el-col :span="4">
           <el-form-item label="门店编码" prop="shopCode">
-            <el-input v-model="info.shopCode" class="w100"></el-input>
+            <el-input
+              v-model="info.shopCode"
+              :disabled="locked"
+              class="w100"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="4">
@@ -36,6 +39,7 @@
               :controls="false"
               :min="1970"
               :max="new Date().getFullYear()"
+              :disabled="locked"
               class="w100">
             </el-input-number>
           </el-form-item>
@@ -47,6 +51,7 @@
               :controls="false"
               :min="1"
               :max="12"
+              :disabled="locked"
               class="w100">
             </el-input-number>
           </el-form-item>
@@ -177,8 +182,10 @@ export default {
         year: new Date().getFullYear(),
         month: new Date().getMonth()
       },
+      locked: false, // 门店编码、年、月是否需要被锁定
       shop: {},
       datas: [], // 查出的本店人员数据
+      copyDatas: [], // 缓存本地人员数据 用来比较：从弹窗加进来的人员是本店员工时
       adds: [], // 添加进来的其他店人员数据
       defaultParams: {
         searchType: 1
@@ -234,7 +241,47 @@ export default {
   methods: {
     handleSelectStaffs(staffs) {
       console.log(staffs)
-      const addStaffs = staffs.map(v => {
+      /**
+       * 去重
+       * 1.属于本店员工this.copyDatas并且不在this.datas中，加入到this.datas中
+       * 2.不属于本店员工this.copyData并且不在this.adds中，加入到this.adds中
+       */
+      let datas = []
+      let adds = []
+      for (let i = 0; i < staffs.length; i++) {
+        const d = staffs[i]
+        const containCopyDatas = this.calContaine(d, this.copyDatas)
+        const containDatas = this.calContaine(d, this.datas)
+        const containAdds = this.calContaine(d, this.adds)
+        console.log('containCopyDatas', containCopyDatas)
+        console.log('containDatas', containDatas)
+        console.log('containAdds', containAdds)
+        if (containCopyDatas && !containDatas) {
+          datas.push(d)
+        } else if (!containCopyDatas && !containAdds) {
+          adds.push(d)
+        }
+      }
+
+      datas = datas.map(v => {
+        return {
+          eeCode: v.eeCode,
+          eeName: v.eeName,
+          shopName: this.shop.shopname,
+          shopCode: this.shop.shopcode,
+          psCode: v.positionCode,
+          psName: v.positionName,
+          psLevelName: v.positionLevelName,
+          psLevelCode: v.positionLevelCode,
+          employeeStatus: v.type,
+          type: 1, // 1主职 2兼职
+          remark: '',
+          psLevel1Name: v.level1Name,
+          psLevel1Code: v.level1Code,
+          add: true
+        }
+      })
+      adds = adds.map(v => {
         return {
           eeCode: v.eeCode,
           eeName: v.eeName,
@@ -252,13 +299,30 @@ export default {
           add: true
         }
       })
-      this.adds = [...addStaffs]
+      const tempGlobalAdds = JSON.parse(JSON.stringify(this.adds))
+      const tempGlobalDatas = JSON.parse(JSON.stringify(this.datas))
+      this.adds = [...tempGlobalAdds, ...adds]
+      this.datas = [...tempGlobalDatas, ...datas]
+
       this.chooseStaffVisible = false
+    },
+    calContaine(d, tableData) {
+      let flag = false
+      for (let i = 0; i < tableData.length; i++) {
+        const t = tableData[i]
+        if (t.eeCode === d.eeCode) {
+          flag = true
+          break
+        }
+      }
+      return flag
     },
     onQueryStaff() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.queryShop()
+          if (!this.shop.shopname) {
+            this.queryShop()
+          }
           this.onSearch()
         }
       })
@@ -290,6 +354,10 @@ export default {
         limit: 1000
       }
       const { data } = await service.salaryPlan.payslip.list(params)
+      if (data.length && !this.locked) {
+        this.locked = true
+        this.copyDatas = JSON.parse(JSON.stringify(data))
+      }
       this.datas = [...data]
     },
     onAdd() {

@@ -480,7 +480,7 @@ export const MENU = {
     {
       id: 7,
       pid: null,
-      name: '营业记录',
+      name: '员工报表',
       title: null,
       path: null,
       icon: 'iconfont-channelmanagement'
@@ -488,20 +488,20 @@ export const MENU = {
     {
       id: 71,
       pid: 7,
-      name: '服务单记录',
-      title: '服务单记录',
-      path: '/record/serviceBill',
-      component: 'record/serviceBill',
+      name: '门店员工信息',
+      title: '门店员工信息',
+      path: '/staff-report/shop-staff-info',
+      component: 'staff-report/shop-staff-info/shopStaffInfo',
       icon: null,
       canShow: true
     },
     {
       id: 72,
       pid: 7,
-      name: '开卡充值记录',
-      title: '开卡充值记录',
-      path: '/record/recharge',
-      component: 'record/recharge',
+      name: '员工信息表',
+      title: '员工信息表',
+      path: '/staff-report/staff-info',
+      component: 'staff-report/staff-info/staffInfo',
       icon: null,
       canShow: true
     },
@@ -588,7 +588,7 @@ export const MENU = {
     {
       id: 8,
       pid: null,
-      name: '基础设置',
+      name: '薪酬报表',
       title: null,
       path: null,
       icon: 'iconfont-channelmanagement'
@@ -596,10 +596,10 @@ export const MENU = {
     {
       id: 81,
       pid: 8,
-      name: '职位配置',
-      title: '职位配置',
-      path: '/setting/dept',
-      component: 'setting/dept',
+      name: '审核前薪酬单',
+      title: '审核前薪酬单',
+      path: '/salary-report/pre-approve-salary',
+      component: 'salary-report/pre-approve-salary/preApproveSalary',
       icon: null,
       canShow: true
     },

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 11:20:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-11 16:34:40
+ * @LastEditTime: 2022-08-12 10:04:15
  * @FilePath: \personnelweb\src\service\modules\salaryBusiness\index.js
  * @Description:
  */
@@ -13,6 +13,7 @@ import specialApprove from './specialApprove'
 import salaryApprove from './salaryApprove'
 import cutEnter from './cutEnter'
 import payRequest from './payRequest'
+import payApprove from './payApprove'
 
 export default {
   attendance,
@@ -21,5 +22,6 @@ export default {
   specialApprove,
   salaryApprove,
   cutEnter,
-  payRequest
+  payRequest,
+  payApprove
 }

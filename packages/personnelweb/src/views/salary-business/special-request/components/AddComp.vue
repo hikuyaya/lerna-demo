@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-11 10:11:18
+ * @LastEditTime: 2022-08-12 15:58:09
  * @FilePath: \personnelweb\src\views\salary-business\special-request\components\AddComp.vue
  * @Description: 
 -->
@@ -62,9 +62,15 @@
           <el-button
             type="primary"
             class="mg-l-12"
-            @click="chooseStaffVisible = true"
+            @click="queryCanSave('staff')"
             >获取员工</el-button
           >
+          <el-button
+            type="primary"
+            class="mg-l-12"
+            @click="queryCanSave('import')">
+            导入
+          </el-button>
         </el-col>
       </el-row>
     </el-form>
@@ -89,20 +95,6 @@
       <div>驳回原因：{{ info.backReason }}</div>
     </div>
     <template v-if="tableData.length">
-      <div class="mg-t-24 mg-b-12 tar">
-        <el-button
-          type="primary"
-          v-if="['edit'].includes(operateType)"
-          @click="chooseStaffVisible = true"
-          >获取员工</el-button
-        >
-        <el-button
-          type="primary"
-          v-if="['add', 'edit'].includes(operateType)"
-          @click="onImport"
-          >导入</el-button
-        >
-      </div>
       <yid-table :data="tableData" ref="table" class="mg-t-12">
         <yid-table-column
           label="员工姓名"
@@ -345,13 +337,6 @@ export default {
         month
       }
     },
-    onQueryStaff() {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          this.queryCanSave()
-        }
-      })
-    },
     handleSelectStaffs(staffs) {
       console.log(staffs)
       this.chooseStaffVisible = false
@@ -380,24 +365,24 @@ export default {
       }
       return flag
     },
-    async queryCanSave() {
+    async queryCanSave(type) {
       const { resp_code } =
         await service.salaryBusiness.specialRequest.enterHrspecemps({
           year: this.info.year,
           month: this.info.month
         })
       if (resp_code === 200) {
-        this.chooseStaffVisible = true
+        if (type === 'staff') {
+          this.chooseStaffVisible = true
+        } else if (type === 'import') {
+          this.importCompVisible = true
+        }
       }
     },
     onDeleteRow(index, row) {
       const copyData = [...this.tableData]
       copyData.splice(index, 1)
       this.tableData = copyData
-    },
-
-    onImport() {
-      this.importCompVisible = true
     },
     onShowDetail(row) {
       this.selectRow = row

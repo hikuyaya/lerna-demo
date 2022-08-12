@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-06 16:33:34
+ * @LastEditTime: 2022-08-12 11:00:02
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\AddComp.vue
  * @Description: 
 -->
@@ -74,6 +74,7 @@
             <el-select
               v-model="info.scCode"
               filterable
+              clearable
               @change="handleScCodeChange"
               :disabled="['detail'].includes(operateType)">
               <el-option
@@ -191,6 +192,9 @@ export default {
   data() {
     const validateMoney = (rule, value, callback) => {
       if ('' === value || undefined === value || null === value) {
+        if (this.info.scCode) {
+          callback(new Error('请输入固定项金额'))
+        }
         callback()
       } else if (value >= 0) {
         callback()
@@ -237,13 +241,13 @@ export default {
           width: '20%'
         },
         {
-          label: '机构编码',
+          label: '门店编码',
           prop: 'bbCode',
           type: 'input',
           width: '20%'
         },
         {
-          label: '机构名称',
+          label: '门店名称',
           prop: 'bbName',
           type: 'input',
           width: '20%'
@@ -267,6 +271,18 @@ export default {
           eeCode: copyStaff.eeCode
         })
       this.staffScCodeList = staffScCodeList
+      if (staffScCodeList.length) {
+        const first = staffScCodeList[0]
+        const { scCode, money, type, endTime, startTime } = first
+        copyStaff = {
+          ...copyStaff,
+          scCode,
+          money,
+          type,
+          endTime,
+          startTime
+        }
+      }
       const [eeSal = {}] = sal
       copyStaff.ssCode = eeSal.ssCode
       copyStaff.tutje = eeSal.tutje
@@ -291,6 +307,13 @@ export default {
       let result = await this.$refs.form
         .validate()
         .catch(err => console.error(err))
+      if (this.info.scCode) {
+        // 选择了固定项，则固定项金额(已在validate中判断)、时效必填
+        if (!this.info.type) {
+          this.$message.error('请选择时效')
+          return false
+        }
+      }
       // 临时
       if (this.info.type === 1) {
         if (this.info.endTime < this.info.startTime) {

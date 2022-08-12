@@ -1,9 +1,9 @@
 <!--
  * @Author: wqy
- * @Date: 2022-08-11 16:31:10
+ * @Date: 2022-08-12 10:03:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 16:40:59
- * @FilePath: \personnelweb\src\views\salary-business\pay-request\components\AddComp.vue
+ * @LastEditTime: 2022-08-12 10:03:21
+ * @FilePath: \personnelweb\src\views\salary-business\pay-approve\components\AddComp.vue
  * @Description: 
 -->
 
@@ -74,35 +74,6 @@
         </el-col>
       </el-row>
     </el-form>
-    <div v-else class="flex info-row">
-      <div>申请月份：{{ info.year }}-{{ info.month }}</div>
-      <div>
-        打款类型：{{
-          info.billType == 1
-            ? '预留款申请'
-            : info.billType == 2
-            ? '营业款申请'
-            : info.billType == 3
-            ? '营业款和预留款共同申请'
-            : info.billType
-        }}
-      </div>
-      <div>
-        状态：<span class="red bold">{{
-          info.approvalStatus == 1
-            ? '待提交'
-            : info.approvalStatus == 2
-            ? '待审核'
-            : info.approvalStatus == 3
-            ? '已审核'
-            : info.approvalStatus == 0
-            ? '已驳回'
-            : info.approvalStatus
-        }}</span>
-      </div>
-      <div>驳回原因：{{ info.backReason }}</div>
-      <div>单号：{{ info.billCode }}</div>
-    </div>
     <template v-if="tableData.length">
       <yid-table :data="tableData" ref="table" class="mg-t-12">
         <yid-table-column
@@ -122,10 +93,7 @@
         <yid-table-column label="打款工资" prop="payMoney">
           <template slot-scope="scope">
             <!-- 打款工资：当未发工资为0的时候，则不能输入打款工资 -->
-            <template
-              v-if="!scope.row.surplusMoney || operateType === 'detail'">
-              {{ scope.row.payMoney }}
-            </template>
+            <template v-if="!scope.row.surplusMoney"> </template>
             <template v-else>
               <el-input-number
                 v-model="scope.row.payMoney"
@@ -145,6 +113,7 @@
 </template>
 
 <script>
+import ImportComp from '@src/components/business/ImportComp'
 import moment from 'moment'
 import service from '@src/service'
 
@@ -158,9 +127,12 @@ export default {
     },
     operateType: {
       type: String
-    }
+    },
+    menuId: String || Number
   },
-  components: {},
+  components: {
+    ImportComp
+  },
   created() {
     if (this.operateType === 'add') {
       this.initDate()
@@ -171,6 +143,10 @@ export default {
   data() {
     return {
       info: {},
+      defaultParams: {
+        searchType: 1
+      },
+      targetMonthDays: 0, // 当月
       importCompVisible: false,
       tableData: [],
       rules: {
@@ -216,7 +192,16 @@ export default {
       }
     },
     async queryDetail() {
-      this.tableData = this.info.details
+      const { data } = await service.salaryBusiness.attendance.detail(
+        this.value.id
+      )
+
+      const { data: tableData, columns } = this.buildDynamic(
+        data.workAttendanceDayBillDetailVOList || [],
+        'employeeSalItemVOList'
+      )
+      this.dynamicColumns = columns
+      this.tableData = tableData
     },
     // 构造动态数据、列
     buildDynamic(data, key) {

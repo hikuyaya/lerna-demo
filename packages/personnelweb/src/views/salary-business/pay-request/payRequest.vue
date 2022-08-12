@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:44:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 09:22:55
+ * @LastEditTime: 2022-08-12 10:12:32
  * @FilePath: \personnelweb\src\views\salary-business\pay-request\payRequest.vue
  * @Description: 
 -->
@@ -39,17 +39,17 @@
             fixed></yid-table-column>
           <yid-table-column
             label="合计工资"
-            prop="employeeCount"
+            prop="totalMoney"
             width="100px"
             fixed></yid-table-column>
           <yid-table-column
             label="打款工资"
-            prop="employeeCount"
+            prop="payMoney"
             width="100px"
             fixed></yid-table-column>
           <yid-table-column
             label="剩余工资"
-            prop="employeeCount"
+            prop="surplusMoney"
             width="100px"
             fixed></yid-table-column>
           <yid-table-column
@@ -71,13 +71,29 @@
               }}
             </template>
           </yid-table-column>
-          <yid-table-column
-            label="是否锁定"
-            prop="backMessage"></yid-table-column>
-          <yid-table-column
-            label="是否打款"
-            prop="backMessage"></yid-table-column>
-          <yid-table-column label="打款类型" prop="billType">
+          <yid-table-column label="是否锁定" prop="isLock">
+            <template slot-scope="scope">
+              {{
+                scope.row.isLock == 1
+                  ? '是'
+                  : scope.row.isLock == 0
+                  ? '否'
+                  : scope.row.isLock
+              }}
+            </template>
+          </yid-table-column>
+          <yid-table-column label="是否打款" prop="isPay">
+            <template slot-scope="scope">
+              {{
+                scope.row.isPay == 1
+                  ? '是'
+                  : scope.row.isPay == 0
+                  ? '否'
+                  : scope.row.isPay
+              }}
+            </template>
+          </yid-table-column>
+          <yid-table-column label="打款类型" prop="billType" width="150px">
             <template slot-scope="scope">
               {{
                 scope.row.billType == 1
@@ -92,7 +108,8 @@
           </yid-table-column>
           <yid-table-column
             label="驳回原因"
-            prop="backMessage"></yid-table-column>
+            prop="backReason"
+            width="150px"></yid-table-column>
           <yid-table-column
             label="创建人"
             prop="createdBy"
@@ -110,10 +127,10 @@
             prop="approvalTime"
             width="150px"></yid-table-column>
           <yid-table-column label="操作" width="100" fixed="right">
+            <!-- 待提交（只显示编辑按钮）、待审核（未锁定时显示撤回按钮，锁定后不显示撤回按钮）、已驳回（显示编辑按钮）、已审核（不显示任何按钮） -->
             <template slot-scope="scope">
-              <!-- 待审核（显示撤回按钮） -->
               <el-tooltip
-                v-if="scope.row.approvalStatus == 2"
+                v-if="scope.row.approvalStatus == 2 && scope.row.isLock == 0"
                 effect="dark"
                 content="撤回"
                 placement="top">
@@ -121,7 +138,7 @@
                   class="el-icon-s-release c-pointer mg-r-8 font-size-16rem"
                   @click="onReject(scope.row)"></i>
               </el-tooltip>
-              <!-- 已驳回（只显示编辑按钮） -->
+
               <el-tooltip
                 v-if="[0, 1].includes(scope.row.approvalStatus)"
                 effect="dark"
@@ -179,20 +196,6 @@ export default {
       selectRow: {},
       conditions: [
         {
-          label: '员工姓名',
-          prop: 'eeName',
-          type: 'input',
-          width: '16%',
-          placeholder: '员工姓名'
-        },
-        {
-          label: '员工编码',
-          prop: 'eeCode',
-          type: 'input',
-          width: '16%',
-          placeholder: '员工编码'
-        },
-        {
           label: '年',
           prop: 'year',
           type: 'input-number',
@@ -217,7 +220,7 @@ export default {
           prop: 'approvalStatus',
           type: 'select', // 搜索类型
           labelWidth: '0.8rem',
-          width: '12%',
+          width: '15%',
           options: [
             { label: '待提交', value: 1 },
             { label: '待审核', value: 2 },
@@ -229,7 +232,7 @@ export default {
           label: '打款类型',
           prop: 'billType',
           type: 'select', // 搜索类型
-          width: '15%',
+          width: '22%',
           options: [
             { label: '预留款申请', value: '1' },
             { label: '营业款申请', value: '2' },
@@ -277,23 +280,19 @@ export default {
       this.addCompVisible = true
     },
     onReject(row) {
-      this.type = 'approve'
-      this.selectRow = row
-      this.rejectCompVisible = true
-    },
-    onApprove(row) {
-      this.$confirm(`您确认要审核此条单据吗？`, `确认审核`, {
+      // 保存
+      this.$confirm(`您确认要对此单据进行撤回吗？`, `确认撤回`, {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         cancelButtonClass: 'btn-custom-cancel',
         type: 'warning'
       })
         .then(async () => {
-          await service.salaryBusiness.attendance.approve({
-            id: row.id,
-            status: 3
+          await service.salaryBusiness.payRequest.revoke({
+            billCode: row.billCode
           })
           this.$message.success('操作成功')
+          // 刷新列表
           await this.queryList()
         })
         .catch(() => {})

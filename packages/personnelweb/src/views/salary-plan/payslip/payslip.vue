@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:27:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 17:31:44
+ * @LastEditTime: 2022-08-12 14:12:38
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\payslip.vue
  * @Description: 
 -->
@@ -106,20 +106,20 @@ export default {
           label: '门店编码',
           prop: 'shopCode',
           type: 'input',
-          width: '15%'
+          width: '18%'
         },
         {
           label: '门店名称',
           prop: 'shopName',
           type: 'input',
-          width: '15%'
+          width: '18%'
         },
         {
           label: '工资年月',
           prop: 'date',
           type: 'date',
           dateType: 'month',
-          width: '15%',
+          width: '20%',
           format: 'yyyy年MM月',
           'value-format': 'yyyy-MM'
         }

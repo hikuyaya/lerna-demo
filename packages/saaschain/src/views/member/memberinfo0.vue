@@ -963,7 +963,7 @@
                     <yid-table-column label="剩余数量" min-width="80" prop="surplusNum"></yid-table-column>
                     <yid-table-column label="发生时间" min-width="180" prop="saleTime"></yid-table-column>
                     <yid-table-column label="门店" min-width="80" prop="shopname"></yid-table-column>
-                    <yid-table-column label="操作人" min-width="100" prop="oper"></yid-table-column>
+                    <yid-table-column label="操作人" min-width="100" prop="updatedBy"></yid-table-column>
                 </yid-table>
             </div>
             <div class="meminfo" v-show="meminfoDialog.showNum==6">

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-22 15:47:26
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-06 09:58:07
+ * @LastEditTime: 2022-08-12 13:59:37
  * @FilePath: \personnelweb\src\views\salary-setting\special-time\components\AddComp.vue
  * @Description: 
 -->
@@ -68,18 +68,11 @@ export default {
   },
   data() {
     const validateSalaryDay = (rule, value, callback) => {
-      // if (!value) {
-      //   callback(new Error('请输入手机号'))
-      // } else {
-      //   const reg = new RegExp(/^1[3456789]\d{9}$/)
-      //   if (reg.test(value)) {
-      //     callback()
-      //   } else {
-      //     callback(new Error('请输入11位手机号'))
-      //   }
-      // }
+      const reg = new RegExp(/^\d*$/)
       if ('' === value || undefined === value || null === value) {
         callback()
+      } else if (!reg.test(value)) {
+        callback(new Error('请输入合法限定申请日'))
       } else if (value > 0 && value <= 31) {
         callback()
       } else {

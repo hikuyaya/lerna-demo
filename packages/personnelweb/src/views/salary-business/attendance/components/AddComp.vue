@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-15 13:47:25
+ * @LastEditTime: 2022-08-15 15:32:01
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -101,7 +101,6 @@
         <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
 
         <yid-table-column label="当月天数">
-          {{ targetMonthDays }}
           <template slot-scope="scope">
             <span v-if="operateType === 'add'">{{ targetMonthDays }}</span>
             <span v-else>{{ scope.row.expectDayCount }}</span>
@@ -112,6 +111,7 @@
             <span v-if="operateType === 'detail'">
               {{ scope.row.actualDayCount }}
             </span>
+
             <el-input-number
               v-else
               v-model="scope.row.actualDayCount"
@@ -194,9 +194,10 @@ export default {
   components: {
     ImportComp
   },
-  created() {
+  async created() {
     if (this.operateType === 'add') {
-      this.initDate()
+      await this.initDate()
+      await this.calTargetMonthDays()
     } else {
       this.queryDetail()
     }
@@ -272,7 +273,8 @@ export default {
         for (let j = 0; j < d[key].length; j++) {
           const salItem = d[key][j]
           const label = salItem.scName
-          const value = salItem.money
+          const value =
+            this.operateType === 'add' ? salItem.money : salItem.actualMoney
           d[label] = value
           if (i === 0) {
             columns.push({
@@ -291,7 +293,6 @@ export default {
       if (this.operateType === 'add') {
         this.$refs.form.validate(valid => {
           if (valid) {
-            this.calTargetMonthDays()
             this.onSearch()
           }
         })

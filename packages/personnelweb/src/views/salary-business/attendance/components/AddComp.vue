@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-15 15:32:01
+ * @LastEditTime: 2022-08-15 17:54:47
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -196,11 +196,11 @@ export default {
   },
   async created() {
     if (this.operateType === 'add') {
-      await this.initDate()
-      await this.calTargetMonthDays()
+      this.initDate()
     } else {
       this.queryDetail()
     }
+    await this.calTargetMonthDays()
   },
   data() {
     return {

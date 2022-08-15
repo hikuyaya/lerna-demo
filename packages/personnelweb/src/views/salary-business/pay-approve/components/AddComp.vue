@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-12 10:03:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 10:03:21
+ * @LastEditTime: 2022-08-15 15:56:13
  * @FilePath: \personnelweb\src\views\salary-business\pay-approve\components\AddComp.vue
  * @Description: 
 -->
@@ -13,102 +13,65 @@
       <el-button type="primary" @click="$emit('back')" class="mg-b-24"
         >返回</el-button
       >
-      <el-button
-        type="primary"
-        v-if="operateType !== 'detail' && tableData.length"
-        @click="onSave(1)"
-        class="mg-b-24"
-        >保存</el-button
-      >
-      <el-button
-        type="primary"
-        v-if="operateType !== 'detail' && tableData.length"
-        @click="onSave(2)"
-        class="mg-b-24"
-        >提交</el-button
-      >
     </div>
-
-    <el-form
-      v-if="operateType === 'add'"
-      ref="form"
-      :model="info"
-      :rules="rules"
-      label-width="80px">
-      <el-row>
-        <el-col :span="4">
-          <el-form-item label="年" prop="year">
-            <el-input-number
-              v-model="info.year"
-              :controls="false"
-              :min="1970"
-              :max="new Date().getFullYear()"
-              class="w100">
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="4">
-          <el-form-item label="月" prop="month">
-            <el-input-number
-              v-model="info.month"
-              :controls="false"
-              :min="1"
-              :max="12"
-              class="w100">
-            </el-input-number>
-          </el-form-item>
-        </el-col>
-        <el-col :span="6">
-          <el-form-item label="打款类型" prop="billType">
-            <el-select v-model="info.billType" class="w100">
-              <el-option value="1" label="预留款申请"></el-option>
-              <el-option value="2" label="营业款申请"></el-option>
-              <el-option value="3" label="营业款和预留款共同申请"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
-        <el-col :span="4">
-          <el-button type="primary" class="mg-l-12" @click="onQueryStaff"
-            >获取员工</el-button
-          >
-        </el-col>
-      </el-row>
-    </el-form>
-    <template v-if="tableData.length">
-      <yid-table :data="tableData" ref="table" class="mg-t-12">
-        <yid-table-column
-          label="员工姓名"
-          prop="eeName"
-          width="100px"></yid-table-column>
-        <yid-table-column label="员工编码" prop="eeCode"></yid-table-column>
-        <yid-table-column label="职务" prop="psName"></yid-table-column>
-        <yid-table-column label="门店编码" prop="shopCode"></yid-table-column>
-        <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
-        <yid-table-column
-          label="实发工资"
-          prop="actualMoney"></yid-table-column>
-        <yid-table-column
-          label="未发工资"
-          prop="surplusMoney"></yid-table-column>
-        <yid-table-column label="打款工资" prop="payMoney">
-          <template slot-scope="scope">
-            <!-- 打款工资：当未发工资为0的时候，则不能输入打款工资 -->
-            <template v-if="!scope.row.surplusMoney"> </template>
-            <template v-else>
-              <el-input-number
-                v-model="scope.row.payMoney"
-                :min="0"
-                :max="scope.row.surplusMoney"
-                :controls="false"></el-input-number>
-            </template>
-          </template>
-        </yid-table-column>
-        <yid-table-column
-          v-if="operateType === 'detail'"
-          label="打款后剩余工资"
-          prop="paySurplusMoney"></yid-table-column>
-      </yid-table>
-    </template>
+    <div class="flex info-row">
+      <div class="w20"><span>单号：</span> {{ info.billCode }}</div>
+      <div class="w20"><span>门店：</span> {{ info.shopName }}</div>
+      <div class="w20"><span>编码：</span> {{ info.shopCode }}</div>
+      <div class="w20">
+        <span>申请月份：</span
+        ><span class="red bold">{{ info.year }}-{{ info.month }}</span>
+      </div>
+      <div class="w20">
+        <span>审核状态：</span>
+        <span
+          class="bold"
+          :class="info.approvalStatus == 3 ? 'green' : 'red'"
+          >{{
+            info.approvalStatus == 1
+              ? '待提交'
+              : info.approvalStatus == 2
+              ? '待审核'
+              : info.approvalStatus == 3
+              ? '已审核'
+              : info.approvalStatus == 0
+              ? '已驳回'
+              : info.approvalStatus
+          }}</span
+        >
+      </div>
+    </div>
+    <div class="flex info-row">
+      <div class="w20"><span>创建时间：</span> {{ info.createdTime }}</div>
+      <div class="w20"><span>创建人：</span> {{ info.createdBy }}</div>
+      <div class="w20"><span>审核人：</span> {{ info.approvalEename }}</div>
+      <div class="w20">
+        <span>审核时间：</span>
+        {{ info.approvalTime }}
+      </div>
+    </div>
+    <yid-table :data="tableData" ref="table" class="mg-t-12">
+      <yid-table-column
+        label="序号"
+        type="index"
+        width="60px"></yid-table-column>
+      <yid-table-column
+        label="员工姓名"
+        prop="eeName"
+        width="100px"></yid-table-column>
+      <yid-table-column label="员工编码" prop="eeCode"></yid-table-column>
+      <yid-table-column label="职务" prop="psName"></yid-table-column>
+      <yid-table-column label="应发工资" prop="actualMoney"></yid-table-column>
+      <yid-table-column label="未发工资" prop="surplusMoney"></yid-table-column>
+      <yid-table-column label="打款工资" prop="payMoney"></yid-table-column>
+      <yid-table-column label="打款后工资" prop="paySurplusMoney">
+      </yid-table-column>
+      <yid-table-column label="对公打款" prop="publicMoney"> </yid-table-column>
+      <yid-table-column label="对私打款" prop="privateMoney">
+      </yid-table-column>
+      <yid-table-column label="剩余对公额度" prop="publicSurplusMoney">
+      </yid-table-column>
+    </yid-table>
   </div>
 </template>
 
@@ -133,13 +96,7 @@ export default {
   components: {
     ImportComp
   },
-  created() {
-    if (this.operateType === 'add') {
-      this.initDate()
-    } else {
-      this.queryDetail()
-    }
-  },
+  created() {},
   data() {
     return {
       info: {},
@@ -289,59 +246,6 @@ export default {
         return false
       }
       return true
-    },
-    async onSave(type) {
-      const { year, month, billType, id } = this.info
-      let params = {
-        year,
-        month,
-        billType,
-        details: this.tableData
-      }
-      if (type === 1) {
-        this.$confirm(`您确认保存页面信息吗？`, `确认保存`, {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          cancelButtonClass: 'btn-custom-cancel',
-          type: 'warning'
-        })
-          .then(async () => {
-            if (this.operateType === 'edit') {
-              params.id = id
-            }
-            await service.salaryBusiness.payRequest.save(params)
-            this.$message.success('操作成功')
-            this.$emit('success')
-          })
-          .catch(() => {})
-      } else {
-        // 提交
-        this.$confirm(
-          `您确认要提交页面信息吗？提交后在审核人审核之前不可修改`,
-          `确认提交`,
-          {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            cancelButtonClass: 'btn-custom-cancel',
-            type: 'warning'
-          }
-        )
-          .then(async () => {
-            if (this.operateType === 'edit') {
-              params.id = id
-            }
-            const { data } = await service.salaryBusiness.payRequest.save(
-              params
-            )
-            const { billCode } = data
-            await service.salaryBusiness.payRequest.submit({
-              billCode
-            })
-            this.$message.success('操作成功')
-            this.$emit('success')
-          })
-          .catch(() => {})
-      }
     }
   },
 
@@ -349,11 +253,9 @@ export default {
     value: {
       immediate: true,
       handler: function (val) {
-        if (this.operateType === 'add') {
-          return
-        }
         const copyVal = JSON.parse(JSON.stringify(val))
         this.info = copyVal
+        this.tableData = copyVal.details
       }
     }
   }
@@ -364,8 +266,15 @@ export default {
 .info-row {
   display: flex;
   margin: 12px 24px;
-  & > div {
-    margin-right: 48px;
+  span {
+    &:nth-child(1) {
+      text-align: right;
+      width: 80px;
+      display: inline-block;
+    }
+    &:nth-child(2) {
+      text-align: left;
+    }
   }
 }
 </style>

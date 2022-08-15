@@ -35,12 +35,6 @@ export const USER = {
   APPID: 'yid.user.appid'
 }
 
-export const OPERATE_TYPE = {
-  ADD: 'add',
-  EDIT: 'edit',
-  DETAIL: 'detail'
-}
-
 // StaffProfile组件入参语义化
 export const STAFF_PROFILE_TYPE = {
   ENTRY: 'entry', // 入职申请

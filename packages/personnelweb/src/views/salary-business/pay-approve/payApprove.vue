@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:45:10
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 10:18:26
+ * @LastEditTime: 2022-08-15 14:09:51
  * @FilePath: \personnelweb\src\views\salary-business\pay-approve\payApprove.vue
  * @Description: 
 -->
@@ -19,6 +19,7 @@
               <el-button type="primary" @click="onUnLock">一键解锁</el-button>
               <el-button type="primary" @click="onApprove">审核</el-button>
               <el-button type="primary" @click="onReject">驳回</el-button>
+              <el-button type="primary" @click="onReject">取消审核</el-button>
             </div>
           </template>
         </search-top>
@@ -202,53 +203,58 @@ export default {
           label: '门店类型',
           prop: 'shopType',
           type: 'select', // 搜索类型
-          width: '15%',
+          width: '14%',
           options: [
             { label: '美发门店', value: '1' },
             { label: '美容门店', value: '2' }
-          ]
+          ],
+          prefix: false
         },
         {
           label: '门店编码',
           prop: 'shopCode',
           type: 'input', // 搜索类型
-          width: '15%',
-          placeholder: '门店编码'
+          width: '14%',
+          placeholder: '请输入',
+          prefix: false
         },
         {
           label: '年',
           prop: 'year',
           type: 'input-number',
-          labelWidth: '0.6rem',
+          labelWidth: '0.5rem',
           controls: false,
           min: 1970,
           max: new Date().getFullYear(),
-          width: '10%',
-          placeholder: '输入年'
+          width: '8.5%',
+          placeholder: '年',
+          prefix: false
         },
         {
           label: '月',
           prop: 'month',
           type: 'input-number',
-          labelWidth: '0.6rem',
-          width: '10%',
+          labelWidth: '0.5rem',
+          width: '7.5%',
           controls: false,
           min: 1,
           max: 12,
-          placeholder: '输入月'
+          placeholder: '月',
+          prefix: false
         },
         {
           label: '状态',
           prop: 'approvalStatus',
           type: 'select', // 搜索类型
-          labelWidth: '0.8rem',
-          width: '12%',
+          labelWidth: '0.6rem',
+          width: '10.8%',
           options: [
             { label: '待提交', value: 1 },
             { label: '待审核', value: 2 },
             { label: '已审核', value: 3 },
             { label: '已驳回', value: 0 }
-          ]
+          ],
+          prefix: false
         }
       ],
       tableData: []

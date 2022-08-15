@@ -2,13 +2,13 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 09:34:48
+ * @LastEditTime: 2022-08-15 14:29:14
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
 
 <template>
-  <div>
+  <div class="h100">
     <el-button type="primary" @click="$emit('back')" class="mg-b-24"
       >返回</el-button
     >
@@ -98,7 +98,11 @@
           >导入</el-button
         >
       </div>
-      <yid-table :data="tableData" ref="table" class="mg-t-12">
+      <yid-table
+        :data="tableData"
+        height="calc(100% - 160px)"
+        ref="table"
+        class="mg-t-12">
         <yid-table-column
           label="员工姓名"
           prop="eeName"

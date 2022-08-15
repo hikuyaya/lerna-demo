@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 18:03:19
+ * @LastEditTime: 2022-08-15 13:38:51
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
@@ -291,8 +291,8 @@ export default {
           psName: v.positionName,
           psLevelName: v.positionLevelName,
           psLevelCode: v.positionLevelCode,
-          employeeStatus: v.type,
-          type: 2, // 1主职 2兼职
+          employeeStatus: v.employeeStatus,
+          type: v.eeCode === this.info.shopCode ? v.type : 2, // 属于本店员工取他本身的type，否则是2
           remark: '',
           psLevel1Name: v.level1Name,
           psLevel1Code: v.level1Code,
@@ -345,7 +345,9 @@ export default {
         page: 1,
         limit: 10
       })
-      this.shop = data?.[0]
+      if (data.length) {
+        this.shop = data?.[0]
+      }
     },
     async onSearch() {
       let params = {
@@ -354,7 +356,7 @@ export default {
         limit: 1000
       }
       const { data } = await service.salaryPlan.payslip.list(params)
-      if (data.length && !this.locked) {
+      if (!this.locked) {
         this.locked = true
         this.copyDatas = JSON.parse(JSON.stringify(data))
       }

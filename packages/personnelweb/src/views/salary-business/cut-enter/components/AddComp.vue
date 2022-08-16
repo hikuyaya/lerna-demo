@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 15:29:23
+ * @LastEditTime: 2022-08-16 15:52:48
  * @FilePath: \personnelweb\src\views\salary-business\cut-enter\components\AddComp.vue
  * @Description: 
 -->
@@ -31,7 +31,7 @@
       <el-row>
         <el-col :span="4">
           <el-form-item label="门店类型" prop="shopType">
-            <el-select v-model="info.shopType">
+            <el-select v-model="info.shopType" :disabled="locked">
               <el-option label="美发门店" :value="1"></el-option>
               <el-option label="美容门店" :value="2"></el-option>
             </el-select>
@@ -44,6 +44,7 @@
               :controls="false"
               :min="1970"
               :max="new Date().getFullYear()"
+              :disabled="locked"
               class="w100">
             </el-input-number>
           </el-form-item>
@@ -55,6 +56,7 @@
               :controls="false"
               :min="1"
               :max="12"
+              :disabled="locked"
               class="w100">
             </el-input-number>
           </el-form-item>
@@ -231,6 +233,7 @@ export default {
       defaultParams: {},
       importCompVisible: false,
       detailCompVisible: false,
+      locked: false, // 门店编码、年、月是否需要被锁定
       selectRow: {},
       tableData: [],
       rules: {
@@ -465,6 +468,15 @@ export default {
       handler: function (val) {
         const copyVal = JSON.parse(JSON.stringify(val))
         this.info = copyVal
+      }
+    },
+    tableData: {
+      handler: function (val) {
+        if (val && val.length) {
+          if (!this.locked) {
+            this.locked = true
+          }
+        }
       }
     }
   }

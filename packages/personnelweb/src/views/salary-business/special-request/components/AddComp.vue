@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 10:53:12
+ * @LastEditTime: 2022-08-16 15:38:26
  * @FilePath: \personnelweb\src\views\salary-business\special-request\components\AddComp.vue
  * @Description: 
 -->
@@ -43,6 +43,7 @@
               :controls="false"
               :min="1970"
               :max="new Date().getFullYear()"
+              :disabled="locked"
               class="w100">
             </el-input-number>
           </el-form-item>
@@ -54,6 +55,7 @@
               :controls="false"
               :min="1"
               :max="12"
+              :disabled="locked"
               class="w100">
             </el-input-number>
           </el-form-item>
@@ -273,6 +275,7 @@ export default {
   data() {
     return {
       info: {},
+      locked: false, // 门店编码、年、月是否需要被锁定
       defaultParams: {},
       importCompVisible: false,
       detailCompVisible: false,
@@ -473,6 +476,15 @@ export default {
         this.info = copyVal
         if (this.operateType !== 'add') {
           this.tableData = copyVal.details
+        }
+      }
+    },
+    tableData: {
+      handler: function (val) {
+        if (val && val.length) {
+          if (!this.locked) {
+            this.locked = true
+          }
         }
       }
     }

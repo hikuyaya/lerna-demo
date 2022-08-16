@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 10:59:45
+ * @LastEditTime: 2022-08-16 15:41:34
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -118,7 +118,7 @@
               v-else
               v-model="scope.row.actualDayCount"
               :controls="false"
-              :min="1"
+              :min="0"
               :max="targetMonthDays"
               :precision="0"
               class="w100">
@@ -387,7 +387,12 @@ export default {
       return this.tableData
     },
     validate() {
-      const item = this.tableData.find(v => !v.actualDayCount)
+      const item = this.tableData.find(
+        v =>
+          v.actualDayCount === '' ||
+          v.actualDayCount === undefined ||
+          v.actualDayCount === null
+      )
       if (item) {
         this.$message.error(`员工：${item.eeName} 出勤天数为空，请补齐！`)
         return false

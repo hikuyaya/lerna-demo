@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:41:52
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 09:38:47
+ * @LastEditTime: 2022-08-16 15:20:52
  * @FilePath: \personnelweb\src\views\staff\status\status.vue
  * @Description: 员工状态维护
 -->
@@ -81,7 +81,13 @@
 
         <yid-table-column label="状态" prop="approvalStatus" width="80px" fixed>
           <template slot-scope="scope">
-            {{ scope.row.approvalStatus == 1 ? '未审核' : '已审核' }}
+            {{
+              scope.row.approvalStatus == 1
+                ? '未审核'
+                : scope.row.approvalStatus == 1
+                ? '已审核'
+                : scope.row.approvalStatus
+            }}
           </template>
         </yid-table-column>
         <yid-table-column

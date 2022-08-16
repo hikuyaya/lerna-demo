@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:39:38
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-11 16:06:26
+ * @LastEditTime: 2022-08-16 15:19:58
  * @FilePath: \personnelweb\src\views\salary-business\cut-enter\cutEnter.vue
  * @Description: 
 -->
@@ -65,14 +65,10 @@
             <template slot-scope="scope">
               {{
                 scope.row.approvalStatus == 1
-                  ? '待提交'
-                  : scope.row.approvalStatus == 2
                   ? '待审核'
-                  : scope.row.approvalStatus == 3
+                  : scope.row.approvalStatus == 2
                   ? '已审核'
-                  : scope.row.approvalStatus == 0
-                  ? '已驳回'
-                  : scope.row.approvalStatu
+                  : scope.row.approvalStatus
               }}
             </template>
           </yid-table-column>
@@ -157,8 +153,8 @@ export default {
           labelWidth: '0.8rem',
           width: '20%',
           options: [
-            { label: '待审核', value: 2 },
-            { label: '已审核', value: 3 }
+            { label: '待审核', value: 1 },
+            { label: '已审核', value: 2 }
           ]
         }
       ],

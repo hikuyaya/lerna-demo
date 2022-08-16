@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:44:45
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-28 15:47:34
+ * @LastEditTime: 2022-08-16 15:21:43
  * @FilePath: \personnelweb\src\views\staff\contract\contract.vue
  * @Description: 合同状态维护
 -->
@@ -75,7 +75,7 @@
                 ? '未审核'
                 : scope.row.approvalStatus == 2
                 ? '已审核'
-                : ''
+                : scope.row.approvalStatus
             }}
           </template>
         </yid-table-column>

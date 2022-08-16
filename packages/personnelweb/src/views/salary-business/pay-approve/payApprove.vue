@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:45:10
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-15 18:01:13
+ * @LastEditTime: 2022-08-16 10:29:17
  * @FilePath: \personnelweb\src\views\salary-business\pay-approve\payApprove.vue
  * @Description: 
 -->
@@ -184,14 +184,12 @@
       :visible.sync="cancelApproveCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="500px">
+      width="600px">
       <cancel-approve-comp
         v-if="cancelApproveCompVisible"
-        ref="cancelApproveCompRef" />
+        ref="cancelApproveCompRef"
+        @refresh="handleCancelApproveSuccess" />
       <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="onCancelApproveSubmit"
-          >确 定</el-button
-        >
         <el-button @click="cancelApproveCompVisible = false">取 消</el-button>
       </span>
     </el-dialog>
@@ -201,7 +199,7 @@
       :visible.sync="operateCompVisible"
       :close-on-click-modal="false"
       append-to-body
-      width="500px">
+      width="600px">
       <operate-comp
         v-if="operateCompVisible"
         ref="operateCompRef"
@@ -439,9 +437,11 @@ export default {
     },
     onCancelApprove() {
       //
+      this.cancelApproveCompVisible = true
     },
-    onCancelApproveSubmit() {
+    async handleCancelApproveSuccess() {
       //
+      await this.queryList()
     },
     async onRejectSubmit() {
       const result = await this.$refs.rejectCompRef.getData()

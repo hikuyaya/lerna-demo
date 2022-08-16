@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 15:58:09
+ * @LastEditTime: 2022-08-16 10:06:53
  * @FilePath: \personnelweb\src\views\salary-business\special-request\components\AddComp.vue
  * @Description: 
 -->
@@ -289,7 +289,6 @@ export default {
         { label: '员工姓名', prop: 'eeName' },
         { label: '员工编码', prop: 'eeCode' },
         { label: '门店', prop: 'shopName' },
-        { label: '入职日期', prop: 'entryDate' },
         { label: '职务', prop: 'psName' },
         { label: '级别', prop: 'psLevelName' }
       ],

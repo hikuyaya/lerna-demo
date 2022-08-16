@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:03:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-11 17:43:25
+ * @LastEditTime: 2022-08-16 11:24:20
  * @FilePath: \personnelweb\src\views\salary-setting\composition\components\AddComp.vue
  * @Description: 
 -->
@@ -186,6 +186,7 @@ export default {
         const contain = this.calContaine(d, this.tableData)
         if (!contain) {
           copyData.push({
+            id: d.id,
             menuId: d.id,
             menuName: d.name,
             name: d.name
@@ -230,7 +231,7 @@ export default {
       }
       const menus = (this.tableData || []).map(v => {
         return {
-          menuId: this.operateType === 'edit' ? v.menuId : v.id,
+          menuId: v.menuId,
           menuName: v.name,
           type: v.shopType
         }

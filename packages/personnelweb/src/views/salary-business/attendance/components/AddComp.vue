@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-15 17:54:47
+ * @LastEditTime: 2022-08-16 10:59:45
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -36,6 +36,7 @@
               :controls="false"
               :min="1970"
               :max="new Date().getFullYear()"
+              :disabled="locked"
               class="w100">
             </el-input-number>
           </el-form-item>
@@ -47,6 +48,7 @@
               :controls="false"
               :min="1"
               :max="12"
+              :disabled="locked"
               class="w100">
             </el-input-number>
           </el-form-item>
@@ -209,6 +211,7 @@ export default {
         searchType: 1
       },
       targetMonthDays: 0, // 当月
+      locked: false, // 门店编码、年、月是否需要被锁定
       importCompVisible: false,
       tableData: [],
       rules: {
@@ -324,7 +327,9 @@ export default {
       const { data } = await service.salaryBusiness.attendance.getEmployeeList(
         params
       )
-
+      if (!this.locked) {
+        this.locked = true
+      }
       const { data: tableData, columns } = this.buildDynamic(
         data || [],
         'employeeSalItemVOList'

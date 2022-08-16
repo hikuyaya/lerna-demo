@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-01 15:27:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 08:56:47
+ * @LastEditTime: 2022-08-16 10:53:27
  * @FilePath: \personnelweb\src\views\study-fund\refund\refund.vue
  * @Description: 学习金退费名单
 -->
@@ -58,7 +58,7 @@
         <yid-table-column label="退费历史" prop="tfnum" width="100px">
           <template slot-scope="scope">
             <el-link type="primary" @click="onShowHistory(scope.row)">{{
-              scope.row.tfnum || '查看'
+              scope.row.tfnum
             }}</el-link>
           </template>
         </yid-table-column>

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 10:06:53
+ * @LastEditTime: 2022-08-16 10:53:12
  * @FilePath: \personnelweb\src\views\salary-business\special-request\components\AddComp.vue
  * @Description: 
 -->
@@ -112,7 +112,7 @@
         <yid-table-column label="保底提成" prop="expectCommission">
           <template slot-scope="scope">
             <el-link type="primary" @click="onShowDetail(scope.row)">{{
-              scope.row.expectCommission || '查看'
+              scope.row.expectCommission
             }}</el-link>
           </template>
         </yid-table-column>
@@ -130,6 +130,7 @@
               <el-option
                 v-for="(item, index) in salcompSpecList"
                 :key="index"
+                :disabled="item.status === '2'"
                 :label="item.speName"
                 :value="item.speCode">
               </el-option>

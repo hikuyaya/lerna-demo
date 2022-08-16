@@ -2,13 +2,16 @@
  * @Author: wqy
  * @Date: 2022-07-21 17:06:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-11 11:19:20
+ * @LastEditTime: 2022-08-16 14:28:14
  * @FilePath: \personnelweb\src\components\business\ChooseMultipleItem.vue
  * @Description: 
 -->
 <template>
   <div>
-    <search-top ref="searchTop" :options="conditions">
+    <search-top
+      ref="searchTop"
+      :options="conditions"
+      :defaultParams="defaultParams">
       <template #inlineBtn>
         <div class="flex flex-alignitems__center mg-l-12">
           <el-button type="primary" @click="onSearch">查询</el-button>
@@ -107,15 +110,16 @@ export default {
       }
       let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination?.internalPageSize
-      params = {
-        ...params,
-        ...this.defaultParams
-      }
+      // params = {
+      //   ...params,
+      //   ...this.defaultParams
+      // }
       const fetch = this.actionUrl
       this.$refs.table.reloadData({
         fetch,
         params
       })
+      this.$emit('query', params)
     },
     onSure() {
       if (!this.multipleSelection.length) {
@@ -126,6 +130,16 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val
+    }
+  },
+  defaultParams: {
+    immediate: true,
+    handler: function (val) {
+      if (val) {
+        this.params = {
+          ...val
+        }
+      }
     }
   }
 }

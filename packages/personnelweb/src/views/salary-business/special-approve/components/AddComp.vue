@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-10 09:54:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 10:55:36
+ * @LastEditTime: 2022-08-16 10:53:23
  * @FilePath: \personnelweb\src\views\salary-business\special-approve\components\AddComp.vue
  * @Description: 
 -->
@@ -64,7 +64,7 @@
       <yid-table-column label="保底提成" prop="expectCommission">
         <template slot-scope="scope">
           <el-link type="primary" @click="onShowDetail(scope.row)">{{
-            scope.row.expectCommission || '查看'
+            scope.row.expectCommission
           }}</el-link>
         </template>
       </yid-table-column>

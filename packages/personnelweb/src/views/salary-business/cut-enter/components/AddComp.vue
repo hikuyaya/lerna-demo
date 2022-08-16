@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 09:33:52
+ * @LastEditTime: 2022-08-16 15:29:23
  * @FilePath: \personnelweb\src\views\salary-business\cut-enter\components\AddComp.vue
  * @Description: 
 -->
@@ -331,6 +331,7 @@ export default {
     onQueryStaff() {
       this.$refs.form.validate(valid => {
         if (valid) {
+          this.defaultParams.shopType = this.info.shopType
           this.chooseStaffVisible = true
         }
       })

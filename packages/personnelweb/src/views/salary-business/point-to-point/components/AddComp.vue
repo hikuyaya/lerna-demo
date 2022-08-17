@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-16 11:09:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 15:17:35
+ * @LastEditTime: 2022-08-16 17:05:44
  * @FilePath: \personnelweb\src\views\salary-business\point-to-point\components\AddComp.vue
  * @Description: 
 -->
@@ -30,7 +30,9 @@
     <template v-if="tableData.length">
       <yid-table :data="tableData" ref="table" class="mg-t-12">
         <yid-table-column label="序号" type="index"></yid-table-column>
-        <yid-table-column label="打款单编码" prop="billCode"></yid-table-column>
+        <yid-table-column
+          label="打款单编码"
+          prop="paySalaryBillCode"></yid-table-column>
         <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
         <yid-table-column label="门店编码" prop="shopCode"></yid-table-column>
 

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 17:55:24
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 11:00:02
+ * @LastEditTime: 2022-08-17 09:53:07
  * @FilePath: \personnelweb\src\views\salary-plan\adjust\components\AddComp.vue
  * @Description: 
 -->
@@ -258,7 +258,7 @@ export default {
   },
   methods: {
     async handleSelectStaff(staff) {
-      console.log(staff)
+      this.info = {}
       let copyStaff = JSON.parse(JSON.stringify(staff))
       delete copyStaff.type
       const { data: sal } = await service.salaryPlan.adjust.queryEmployeesal({
@@ -307,12 +307,25 @@ export default {
       let result = await this.$refs.form
         .validate()
         .catch(err => console.error(err))
+
       if (this.info.scCode) {
         // 选择了固定项，则固定项金额(已在validate中判断)、时效必填
         if (!this.info.type) {
           this.$message.error('请选择时效')
           return false
         }
+        if (
+          this.info.money === undefined ||
+          this.info.money === null ||
+          this.info.money === ''
+        ) {
+          this.$message.error('固定金额不能为空')
+          return false
+        }
+      } else {
+        // 没有选固定项，则将金额、类型都删掉
+        this.info.money = undefined
+        this.info.type = undefined
       }
       // 临时
       if (this.info.type === 1) {

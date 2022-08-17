@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-12 15:02:18
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 16:18:59
+ * @LastEditTime: 2022-08-17 09:22:45
  * @FilePath: \personnelweb\src\views\salary-report\pre-approve-salary\preApproveSalary.vue
  * @Description: 
 -->
@@ -17,7 +17,11 @@
           </div>
         </template>
       </search-top>
-      <yid-table :data="tableData" ref="table" class="mg-t-12">
+      <yid-table
+        :data="tableData"
+        ref="table"
+        class="mg-t-12"
+        height="calc(100% - 38px)">
         <yid-table-column label="员工姓名" prop="eeName" width="100px" fixed>
         </yid-table-column>
         <yid-table-column
@@ -27,8 +31,8 @@
           fixed></yid-table-column>
         <yid-table-column
           label="门店名称"
-          prop="shopCode"
-          width="150px"
+          prop="shopName"
+          width="100px"
           fixed></yid-table-column>
         <yid-table-column
           label="职务"
@@ -46,16 +50,7 @@
           :label="column.label"
           :prop="column.label">
           <template slot-scope="scope">
-            <span v-if="operateType === 'detail'">{{
-              scope.row[column.label]
-            }}</span>
-            <el-input-number
-              v-else
-              v-model="scope.row[column.label]"
-              :controls="false"
-              :min="0"
-              class="w100">
-            </el-input-number>
+            {{ scope.row[column.label] }}
           </template>
         </yid-table-column>
       </yid-table>
@@ -121,7 +116,6 @@ export default {
         data || [],
         'salaryApplyBillItemVOList'
       )
-
       this.tableData = tableData
       this.dynamicColumns = columns
     },
@@ -138,11 +132,13 @@ export default {
           if (i === 0) {
             columns.push({
               label,
-              value
+              value,
+              inputType: salItem.inputtype
             })
           }
         }
       }
+      columns.sort((prev, next) => prev.inputType - next.inputType)
       return {
         columns,
         data
@@ -158,8 +154,11 @@ export default {
 .container {
   // display: flex;
   height: 100%;
+  overflow-x: hidden;
+  overflow-y: scroll;
   .content {
     // flex: 1;
+    height: 100%;
   }
 }
 </style>

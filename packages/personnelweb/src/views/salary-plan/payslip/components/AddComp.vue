@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-15 13:38:51
+ * @LastEditTime: 2022-08-17 10:09:05
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
@@ -101,16 +101,13 @@
               <el-option label="主职" :value="1"></el-option>
               <el-option label="兼职" :value="2"></el-option>
             </el-select> -->
-            <span v-if="scope.row.add">兼职</span>
-            <span v-else>
-              {{
-                scope.row.type == 1
-                  ? '主职'
-                  : scope.row.type == 2
-                  ? '兼职'
-                  : scope.row.type
-              }}
-            </span>
+            {{
+              scope.row.type == 1
+                ? '主职'
+                : scope.row.type == 2
+                ? '兼职'
+                : scope.row.type
+            }}
           </template>
         </yid-table-column>
         <yid-table-column label="备注" prop="remark">
@@ -292,7 +289,7 @@ export default {
           psLevelName: v.positionLevelName,
           psLevelCode: v.positionLevelCode,
           employeeStatus: v.employeeStatus,
-          type: v.eeCode === this.info.shopCode ? v.type : 2, // 属于本店员工取他本身的type，否则是2
+          type: v.bbCode === this.info.shopCode ? v.type : 2, // 属于本店员工取他本身的type，否则是2
           remark: '',
           psLevel1Name: v.level1Name,
           psLevel1Code: v.level1Code,

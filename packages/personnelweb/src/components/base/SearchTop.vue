@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-17 16:17:33
+ * @LastEditTime: 2022-08-17 17:54:43
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -292,13 +292,11 @@ export default {
       if (requiredItems.length && !Object.keys(this.params).length) {
         return false
       }
-      for (const key in this.params) {
-        if (Object.hasOwnProperty.call(this.params, key)) {
+      for (const i in requiredItems) {
+        if (Object.hasOwnProperty.call(requiredItems, i)) {
+          const key = requiredItems[i]
           const value = this.params[key]
-          if (
-            requiredItems.includes(key) &&
-            (value === '' || value === null || value === undefined)
-          ) {
+          if (value === '' || value === undefined || value === null) {
             flag = false
             break
           }

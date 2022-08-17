@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-12 15:02:18
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-17 13:40:27
+ * @LastEditTime: 2022-08-17 17:22:15
  * @FilePath: \personnelweb\src\views\salary-report\pre-approve-salary\preApproveSalary.vue
  * @Description: 
 -->
@@ -46,7 +46,7 @@
           fixed></yid-table-column>
         <yid-table-column
           label="级别"
-          prop="psName"
+          prop="pslName"
           width="150px"
           fixed></yid-table-column>
         <yid-table-column

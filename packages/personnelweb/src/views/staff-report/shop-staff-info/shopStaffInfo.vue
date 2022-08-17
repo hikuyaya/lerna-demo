@@ -2,14 +2,18 @@
  * @Author: wqy
  * @Date: 2022-08-12 11:32:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 11:42:34
+ * @LastEditTime: 2022-08-17 17:07:16
  * @FilePath: \personnelweb\src\views\staff-report\shop-staff-info\shopStaffInfo.vue
  * @Description: 
 -->
 <template>
   <div class="container">
     <div class="content">
-      <search-top ref="searchTop" :options="conditions">
+      <search-top
+        ref="searchTop"
+        :options="conditions"
+        :advanceOptions="advanceConditions"
+        @paramsChange="handleParamsChange">
         <template #inlineBtn>
           <div class="flex flex-alignitems__center mg-l-12">
             <el-button type="primary" @click="onSearch">查询</el-button>
@@ -20,101 +24,187 @@
       </search-top>
       <yid-table pagination :data="tableData" ref="table" class="mg-t-12">
         <yid-table-column
-          label="门店编码"
-          prop="shopCode"
+          label="员工姓名"
+          prop="eeName"
           width="100px"
           fixed></yid-table-column>
         <yid-table-column
-          label="门店名称"
-          prop="shopName"
+          label="员工编码"
+          prop="eeCode"
           width="120px"
           fixed></yid-table-column>
-        <yid-table-column
-          label="年"
-          prop="year"
-          width="80px"
-          fixed></yid-table-column>
-        <yid-table-column
-          label="月"
-          prop="month"
-          width="80px"
-          fixed></yid-table-column>
-        <yid-table-column
-          label="合计人数"
-          prop="employeeCount"
-          width="100px"
-          fixed></yid-table-column>
-        <yid-table-column
-          label="状态"
-          prop="approvalStatus"
-          width="100px"
-          fixed>
+        <yid-table-column label="性别" prop="sex" width="80px" fixed>
           <template slot-scope="scope">
             {{
-              scope.row.approvalStatus == 1
-                ? '待提交'
-                : scope.row.approvalStatus == 2
-                ? '待审核'
-                : scope.row.approvalStatus == 3
-                ? '已审核'
-                : scope.row.approvalStatus == 0
-                ? '已驳回'
-                : scope.row.approvalStatu
+              scope.row.sex === 1
+                ? '男'
+                : scope.row.sex === 2
+                ? '女'
+                : scope.row.sex
             }}
           </template>
         </yid-table-column>
         <yid-table-column
-          label="驳回原因"
-          prop="backMessage"></yid-table-column>
+          label="年龄"
+          prop="age"
+          width="80px"
+          fixed></yid-table-column>
         <yid-table-column
-          label="创建人"
-          prop="createdBy"
+          label="出生年月"
+          prop="birthday"
+          width="100px"
+          fixed></yid-table-column>
+        <yid-table-column
+          label="手机号"
+          prop="mobile"
+          width="100px"
+          fixed></yid-table-column>
+        <yid-table-column
+          label="学历"
+          prop="eduname"
           width="100px"></yid-table-column>
         <yid-table-column
-          label="创建时间"
-          prop="createdTime"
-          width="150px"></yid-table-column>
-        <yid-table-column
-          label="审批人"
-          prop="approvalEename"
+          label="职务"
+          prop="positionName"
           width="100px"></yid-table-column>
         <yid-table-column
-          label="审批时间"
-          prop="approvalTime"
-          width="150px"></yid-table-column>
-        <yid-table-column label="操作" width="100" fixed="right">
+          label="级别"
+          prop="positionLevelName"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="级别1"
+          prop="levelClevel1Name"
+          width="100px"></yid-table-column>
+        <yid-table-column label="是否股东" prop="shareholder" width="100px">
           <template slot-scope="scope">
-            <!-- 待审核（只显示驳回、复核按钮） -->
-            <el-tooltip
-              v-if="scope.row.approvalStatus == 2"
-              effect="dark"
-              content="驳回"
-              placement="top">
-              <i
-                class="el-icon-s-release c-pointer mg-r-8 font-size-16rem"
-                @click="onReject(scope.row)"></i>
-            </el-tooltip>
-            <el-tooltip
-              v-if="scope.row.approvalStatus == 2"
-              effect="dark"
-              content="审核"
-              placement="top">
-              <i
-                class="el-icon-s-check c-pointer font-size-16rem"
-                @click="onApprove(scope.row)"></i>
-            </el-tooltip>
-            <!-- 已驳回（只显示编辑按钮） -->
-            <el-tooltip
-              v-if="scope.row.approvalStatus == 0"
-              effect="dark"
-              content="编辑"
-              placement="top">
-              <i
-                class="el-icon-edit c-pointer mg-r-8 font-size-16rem"
-                @click="onEdit(scope.row)"></i>
-            </el-tooltip>
+            {{
+              scope.row.shareholder == 1
+                ? '是'
+                : scope.row.shareholder == 0
+                ? '否'
+                : scope.row.shareholder
+            }}
           </template>
         </yid-table-column>
+        <yid-table-column
+          label="门店编码"
+          prop="bbCode"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="门店名称"
+          prop="bbName"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="区"
+          prop="areaName"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="部"
+          prop="deptName"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="处"
+          prop="regionName"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="证件号"
+          prop="cardNumber"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="证件有效期"
+          prop="cardTermValidity"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="入职日期"
+          prop="entrydate"
+          width="100px"></yid-table-column>
+        <yid-table-column label="状态" prop="status" width="100px">
+          <template slot-scope="scope">
+            {{
+              scope.row.status == 1
+                ? '在职'
+                : scope.row.status == 2
+                ? '离职'
+                : scope.row.status == 3
+                ? '长假'
+                : scope.row.status
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column
+          label="试用期结束日期"
+          prop="trainingdate"
+          width="180px"></yid-table-column>
+        <yid-table-column label="合同状态" prop="contractStatus" width="100px">
+          <template slot-scope="scope">
+            {{
+              scope.row.contractStatus == 1
+                ? '有效'
+                : scope.row.contractStatus == 2
+                ? '无效'
+                : scope.row.contractStatus == 3
+                ? '到期'
+                : scope.row.contractStatus == 4
+                ? '其它'
+                : scope.row.contractStatus
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column
+          label="合同截止日期"
+          prop="htdate"
+          width="150px"></yid-table-column>
+        <yid-table-column
+          label="健康证有效期"
+          prop="healthdate"
+          width="150px"></yid-table-column>
+        <yid-table-column
+          label="连续工龄"
+          prop="servyear"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="延续工龄"
+          prop="curservyear"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="总工龄"
+          prop="sumyear"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="紧急联系人"
+          prop="emcontacts"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="紧急联系人电话"
+          prop="emtel"
+          width="180px"></yid-table-column>
+        <yid-table-column
+          label="工资账号"
+          prop="bankAccount"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="开户银行"
+          prop="bankCode"
+          width="100px"></yid-table-column>
+        <yid-table-column label="是否股东" prop="shareholder" width="100px">
+          <template slot-scope="scope">
+            {{
+              scope.row.shareholder == 1
+                ? '是'
+                : scope.row.shareholder == 0
+                ? '否'
+                : scope.row.shareholder
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column
+          label="分红账户"
+          prop="fhaccount"
+          width="100px"></yid-table-column>
+        <yid-table-column
+          label="家庭住址"
+          prop="address"
+          width="180px"></yid-table-column>
       </yid-table>
     </div>
   </div>
@@ -128,47 +218,114 @@ export default {
   components: { SearchTop },
   data() {
     return {
-      addCompVisible: false,
-      rejectCompVisible: false,
       type: '', // remove or approve
-      menuId: '',
       operateType: 'add',
       selectRow: {},
       conditions: [
         {
-          label: '年',
-          prop: 'year',
-          type: 'input-number',
-          labelWidth: '0.6rem',
-          controls: false,
-          min: 1970,
-          max: new Date().getFullYear(),
-          width: '12%'
+          label: '员工姓名',
+          prop: 'eeName',
+          type: 'input',
+          width: '20%'
         },
         {
-          label: '月',
-          prop: 'month',
-          type: 'input-number',
-          labelWidth: '0.6rem',
-          width: '12%',
-          controls: false,
-          min: 1,
-          max: 12
+          label: '员工编码',
+          prop: 'eeCode',
+          type: 'input',
+          width: '20%'
+        }
+      ],
+      advanceConditions: [
+        {
+          label: '手机号',
+          prop: 'mobile',
+          type: 'input',
+          width: '20%'
+        },
+        {
+          label: '证件号',
+          prop: 'cardNumber',
+          type: 'input',
+          width: '20%'
         },
         {
           label: '状态',
-          prop: 'approvalStatus',
+          prop: 'status',
           type: 'select', // 搜索类型
           width: '20%',
           options: [
-            { label: '所有', value: '' },
-            { label: '待审核', value: 2 },
-            { label: '已审核', value: 3 },
-            { label: '已驳回', value: 0 }
+            { label: '在职', value: 1 },
+            { label: '离职', value: 2 },
+            { label: '长假', value: 3 }
+          ]
+        },
+        {
+          label: '年龄>',
+          prop: 'age',
+          type: 'input',
+          width: '20%'
+        },
+        {
+          label: '连续工龄>',
+          prop: 'servyear',
+          type: 'input',
+          width: '20%'
+        },
+        {
+          label: '延续工龄>',
+          prop: 'curservyear',
+          type: 'input',
+          width: '20%'
+        },
+        {
+          label: '合同状态',
+          prop: 'contractStatus',
+          type: 'select', // 搜索类型
+          width: '20%',
+          options: [
+            { label: '有效', value: 1 },
+            { label: '无效', value: 2 },
+            { label: '到期', value: 3 },
+            { label: '其他', value: 4 }
+          ]
+        },
+        {
+          label: '职务',
+          prop: 'pscode',
+          type: 'select', // 搜索类型
+          width: '20%',
+          options: [],
+          emit: true // 需要派发出事件
+        },
+        {
+          label: '级别',
+          prop: 'pslcode',
+          type: 'select',
+          width: '20%',
+          options: []
+        },
+        {
+          label: '级别1',
+          prop: 'pslcode1',
+          type: 'select', // 搜索类型
+          width: '20%',
+          options: []
+        },
+        {
+          label: '是否股东',
+          prop: 'shareholder',
+          type: 'select', // 搜索类型
+          width: '20%',
+          options: [
+            { label: '是', value: 1 },
+            { label: '否', value: 0 }
           ]
         }
       ],
-      tableData: []
+      tableData: [],
+      positionList: [],
+      positionLevelList: [],
+      positionLevel1List: []
     }
   },
   computed: {
@@ -177,14 +334,7 @@ export default {
     })
   },
   created() {
-    const menu = this.salCompMenus.find(
-      v => window.location.href.indexOf(v.url) !== -1
-    )
-    if (!menu) {
-      this.$message.error('无对应菜单信息')
-      return
-    }
-    this.menuId = menu.id
+    this.queryPosition()
   },
   mounted() {
     this.queryList()
@@ -192,6 +342,92 @@ export default {
   methods: {
     queryList() {
       this.onSearch()
+    },
+    async queryPosition() {
+      const { data } = await service.base.duty.listAll()
+      this.positionList = data
+      this.buildConditionSelectOptions(this.advanceConditions, 'pscode', data, {
+        label: 'psname',
+        value: 'pscode'
+      })
+    },
+    async queryLevel(pscode) {
+      const { data } = await service.base.duty.positionLevelList({
+        pscode,
+        page: 1,
+        limit: 1000
+      })
+      this.positionLevelList = data
+
+      this.buildConditionSelectOptions(
+        this.advanceConditions,
+        'pslcode',
+        data,
+        {
+          label: 'pslname',
+          value: 'pslcode'
+        }
+      )
+    },
+    async queryLevel1(psCode) {
+      const { data } = await service.base.duty.positionLevel1List({
+        psCode,
+        page: 1,
+        limit: 1000
+      })
+      this.positionLevel1List = data
+
+      this.buildConditionSelectOptions(
+        this.advanceConditions,
+        'pslcode1',
+        data,
+        {
+          label: 'pslname',
+          value: 'pslcode'
+        }
+      )
+    },
+    buildConditionSelectOptions(searchConditions, field, data, property) {
+      const conditions = searchConditions.find(v => v.prop === field)
+      const conditionsIndex = searchConditions.findIndex(v => v.prop === field)
+      this.$set(searchConditions, conditionsIndex, {
+        ...conditions,
+        options: data.map(v => {
+          return {
+            label: v[property.label],
+            value: v[property.value]
+          }
+        })
+      })
+    },
+    handleParamsChange(val, field) {
+      console.log(val, field)
+      if (field === 'pscode') {
+        if (val) {
+          this.queryLevel(val)
+          this.queryLevel1(val)
+        } else {
+          // 清空level和level1
+          this.buildConditionSelectOptions(
+            this.advanceConditions,
+            'pslcode1',
+            [],
+            {
+              label: 'pslname',
+              value: 'pslcode'
+            }
+          )
+          this.buildConditionSelectOptions(
+            this.advanceConditions,
+            'pslcode',
+            [],
+            {
+              label: 'pslname',
+              value: 'pslcode'
+            }
+          )
+        }
+      }
     },
     onExport() {
       return

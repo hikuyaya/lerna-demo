@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-30 09:27:49
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 09:46:52
+ * @LastEditTime: 2022-08-17 15:28:00
  * @FilePath: \personnelweb\src\service\modules\base\duty.js
  * @Description: 职务、级别设置接口
  */
@@ -11,6 +11,10 @@ import yid from '@src/library'
 // 职务列表
 export function list(params) {
   return yid.http.get(`api-chain/position/list`, { params })
+}
+// 查询职务列表不分页
+export function listAll() {
+  return yid.http.get(`api-chain/position/list/all`, {})
 }
 // 级别列表
 export function positionLevelList(params) {
@@ -38,6 +42,7 @@ export function saveOrUpdate(params) {
 }
 export default {
   list,
+  listAll,
   positionLevelList,
   positionLevel1List,
   positionLevelOperate,

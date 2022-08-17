@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 12:23:35
+ * @LastEditTime: 2022-08-17 16:17:33
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -21,6 +21,7 @@
           v-if="option.type === 'select'"
           v-model="params[option.prop]"
           clearable
+          filterable
           :style="{ width: option.widgetWidth ? option.widgetWidth : '100%' }">
           <el-option
             v-for="(item, index) in option.options"
@@ -133,6 +134,8 @@
               v-if="option.type === 'select'"
               v-model="params[option.prop]"
               clearable
+              filterable
+              @change="val => handleSelectChange(val, option.prop, 'advance')"
               :style="{
                 width: option.widgetWidth ? option.widgetWidth : '100%'
               }">
@@ -269,7 +272,16 @@ export default {
       }
     }
   },
+  created() {},
   methods: {
+    handleSelectChange(val, field, conditionType) {
+      const condition =
+        conditionType === 'advance' ? this.advanceOptions : this.condition
+      const item = condition.find(v => v.prop === field)
+      if (item && item.emit) {
+        this.$emit('paramsChange', val, field)
+      }
+    },
     requiredValidate() {
       let flag = true
       const requiredItems = this.options

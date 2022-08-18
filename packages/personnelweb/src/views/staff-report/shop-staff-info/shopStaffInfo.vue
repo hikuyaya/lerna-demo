@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-12 11:32:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-18 10:21:07
+ * @LastEditTime: 2022-08-18 11:24:28
  * @FilePath: \personnelweb\src\views\staff-report\shop-staff-info\shopStaffInfo.vue
  * @Description: 
 -->
@@ -201,6 +201,17 @@
           label="分红账户"
           prop="fhaccount"
           width="100px"></yid-table-column>
+        <yid-table-column label="是否兼职" prop="type" width="80px">
+          <template slot-scope="scope">
+            {{
+              scope.row.type == 1
+                ? '正式'
+                : scope.row.type == 0
+                ? '兼职'
+                : scope.row.type
+            }}
+          </template>
+        </yid-table-column>
         <yid-table-column
           label="家庭住址"
           prop="address"

@@ -86,13 +86,9 @@
       <div>
         状态：<span class="red bold">{{
           info.approvalStatus == 1
-            ? '待提交'
-            : info.approvalStatus == 2
             ? '待审核'
-            : info.approvalStatus == 3
+            : info.approvalStatus == 2
             ? '已审核'
-            : info.approvalStatus == 0
-            ? '已驳回'
             : info.approvalStatus
         }}</span>
       </div>

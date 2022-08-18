@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-12 11:32:53
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-18 11:21:40
+ * @LastEditTime: 2022-08-18 15:17:48
  * @FilePath: \personnelweb\src\views\staff-report\staff-info\staffInfo.vue
  * @Description: 
 -->
@@ -249,6 +249,7 @@
 import SearchTop from '@src/components/base/SearchTop'
 import download from '@src/library/http/download'
 import service from '@src/service'
+import moment from 'moment'
 import { mapGetters } from 'vuex'
 export default {
   components: { SearchTop },
@@ -535,11 +536,31 @@ export default {
       }
     },
     onExport() {
-      let params = this.buildParams()
-      download(
-        `${this.$yid.config.API.BASE}api-pers/employeeotherinfo/expHemployeeInfos`,
-        params
-      )
+      let params = this.$refs.searchTop.getSearchParams()
+      const dateInThreeMonth = function (date) {
+        const [start, end] = date
+        const days = moment(end).diff(moment(start), 'day')
+        if (days > 90) {
+          return false
+        }
+        return true
+      }
+      if (
+        params.bbCode ||
+        (params.entryDate?.length && dateInThreeMonth(params.entryDate)) ||
+        (params.resignationDate?.length &&
+          dateInThreeMonth(params.resignationDate))
+      ) {
+        params = this.buildParams()
+        download(
+          `${this.$yid.config.API.BASE}api-pers/employeeotherinfo/expHemployeeInfos`,
+          params
+        )
+      } else {
+        this.$message.error(
+          '导出时门店编码、入职日期区间、离职日期区间三个条件必须输入一个，且日期区间不得超过3个月！'
+        )
+      }
     },
     buildParams() {
       let params = this.$refs.searchTop.getSearchParams()

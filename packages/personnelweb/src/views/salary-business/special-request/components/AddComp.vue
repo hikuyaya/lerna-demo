@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 15:38:26
+ * @LastEditTime: 2022-08-18 17:41:32
  * @FilePath: \personnelweb\src\views\salary-business\special-request\components\AddComp.vue
  * @Description: 
 -->
@@ -213,7 +213,10 @@
         :actionUrl="chooseStaffActionUrl"
         :conditions="chooseStaffConditions"
         :pagination="false"
-        :defaultParams="defaultParams"
+        :defaultParams="{
+          year: info.year,
+          month: info.month
+        }"
         @select="handleSelectStaffs"></choose-multiple-item>
     </el-dialog>
 
@@ -266,17 +269,13 @@ export default {
     if (this.operateType === 'add') {
       this.initDate()
     } else if (this.operateType === 'edit') {
-      this.defaultParams = {
-        year: this.value.year,
-        month: this.value.month
-      }
+      //
     }
   },
   data() {
     return {
       info: {},
       locked: false, // 门店编码、年、月是否需要被锁定
-      defaultParams: {},
       importCompVisible: false,
       detailCompVisible: false,
       selectRow: {},
@@ -332,10 +331,6 @@ export default {
       let date = moment(new Date()).subtract(1, 'months').format('YYYY-M')
       const [year, month] = date.split('-')
       this.info = {
-        year,
-        month
-      }
-      this.defaultParams = {
         year,
         month
       }

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-02 15:12:03
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 15:52:48
+ * @LastEditTime: 2022-08-18 17:45:05
  * @FilePath: \personnelweb\src\views\salary-business\cut-enter\components\AddComp.vue
  * @Description: 
 -->
@@ -149,9 +149,21 @@
         v-if="importCompVisible"
         ref="importCompRef"
         :importAction="`${$yid.config.API.BASE}api-pers/salaryinputbill/convertSystem`"
-        :importData="defaultParams"
+        :importData="{
+          year: info.year,
+          month: info.month,
+          menuId,
+          type: searchType,
+          shopType: info.shopType
+        }"
         :downloadUrl="`${$yid.config.API.BASE}api-pers/salaryinputbill/excel/exportMb`"
-        :downloadParams="defaultParams"
+        :downloadParams="{
+          year: info.year,
+          month: info.month,
+          menuId,
+          type: searchType,
+          shopType: info.shopType
+        }"
         :columns="importCompColumns"
         :failColumns="importCompFailColumns">
         <el-button type="primary" @click="handleImportSave"
@@ -174,7 +186,13 @@
         :columns="chooseStaffColumns"
         :actionUrl="chooseStaffActionUrl"
         :conditions="chooseStaffConditions"
-        :defaultParams="defaultParams"
+        :defaultParams="{
+          year: info.year,
+          month: info.month,
+          menuId,
+          type: searchType,
+          shopType: info.shopType
+        }"
         :queryImmedicatly="false"
         :pagination="false"
         @select="handleSelectStaffs"></choose-multiple-item>
@@ -213,20 +231,12 @@ export default {
     if (this.operateType === 'add') {
       this.initDate()
     } else {
-      this.defaultParams = {
-        year: this.value.year,
-        month: this.value.month,
-        menuId: this.menuId,
-        type: this.searchType,
-        shopType: this.info.shopType
-      }
       this.queryDetail()
     }
   },
   data() {
     return {
       info: {},
-      defaultParams: {},
       importCompVisible: false,
       detailCompVisible: false,
       locked: false, // 门店编码、年、月是否需要被锁定
@@ -281,12 +291,6 @@ export default {
         year,
         month
       }
-      this.defaultParams = {
-        year,
-        month,
-        type: this.searchType,
-        menuId: this.menuId
-      }
     },
     async queryDetail() {
       const { data } = await service.salaryBusiness.cutEnter.billListBybatchNo({
@@ -330,7 +334,6 @@ export default {
     onQueryStaff() {
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.defaultParams.shopType = this.info.shopType
           this.chooseStaffVisible = true
         }
       })
@@ -381,7 +384,6 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.importCompVisible = true
-          this.$set(this.defaultParams, 'shopType', this.info.shopType)
         }
       })
     },

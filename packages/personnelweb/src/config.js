@@ -606,10 +606,10 @@ export const MENU = {
     {
       id: 82,
       pid: 8,
-      name: '基础分类设置',
-      title: '基础分类设置',
-      path: '/setting/catalog',
-      component: 'setting/catalog',
+      name: '门店学习金',
+      title: '门店学习金',
+      path: '/salary-report/shop-study-fund',
+      component: 'salary-report/shop-study-fund/shopStudyFund',
       icon: null,
       canShow: true
     },

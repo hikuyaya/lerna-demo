@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-12 11:32:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-18 11:24:28
+ * @LastEditTime: 2022-08-18 17:50:35
  * @FilePath: \personnelweb\src\views\staff-report\shop-staff-info\shopStaffInfo.vue
  * @Description: 
 -->
@@ -442,6 +442,11 @@ export default {
       }
     },
     onExport() {
+      const data = this.$refs.table.getCurData()
+      if (!data.length) {
+        this.$message.error('暂无数据可以导出')
+        return
+      }
       let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
       params.bbCode = this.userInfo.shopcode

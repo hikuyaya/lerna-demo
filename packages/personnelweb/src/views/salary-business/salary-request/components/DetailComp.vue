@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-07 09:31:05
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 18:00:12
+ * @LastEditTime: 2022-08-18 10:07:21
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\DetailComp.vue
  * @Description: 
 -->
@@ -16,7 +16,7 @@
     <yid-table :data="tableData" ref="table" class="mg-t-12">
       <yid-table-column
         label="固定项"
-        prop="eeName"
+        prop="scName"
         width="100px"></yid-table-column>
       <yid-table-column label="固定金额" prop="expectMoney"></yid-table-column>
       <yid-table-column
@@ -26,7 +26,7 @@
         label="出勤天数"
         prop="actualDayCount"></yid-table-column>
       <yid-table-column label="实际金额" prop="actualMoney"></yid-table-column>
-      <yid-table-column label="有效时间">
+      <yid-table-column label="有效时间" width="160px">
         <template slot-scope="scope">
           {{
             scope.row.type == 2
@@ -76,10 +76,10 @@ export default {
         month,
         scCode
       }
-      const { data } = await service.salaryBusiness.attendance.getByEeCode(
+      const { data = {} } = await service.salaryBusiness.attendance.getByEeCode(
         params
       )
-      this.tableData = data?.workAttendanceDayBillDetailVOList || []
+      this.tableData = [data]
     }
   },
   watch: {

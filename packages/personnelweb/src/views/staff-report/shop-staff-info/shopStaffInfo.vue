@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-12 11:32:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-17 17:07:16
+ * @LastEditTime: 2022-08-18 10:21:07
  * @FilePath: \personnelweb\src\views\staff-report\shop-staff-info\shopStaffInfo.vue
  * @Description: 
 -->
@@ -73,7 +73,7 @@
           width="100px"></yid-table-column>
         <yid-table-column
           label="级别1"
-          prop="levelClevel1Name"
+          prop="level1Name"
           width="100px"></yid-table-column>
         <yid-table-column label="是否股东" prop="shareholder" width="100px">
           <template slot-scope="scope">
@@ -184,7 +184,7 @@
           width="100px"></yid-table-column>
         <yid-table-column
           label="开户银行"
-          prop="bankCode"
+          prop="bankName"
           width="100px"></yid-table-column>
         <yid-table-column label="是否股东" prop="shareholder" width="100px">
           <template slot-scope="scope">
@@ -330,6 +330,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      userInfo: 'user/userInfo',
       salCompMenus: 'user/salaryBusinessMenu'
     })
   },
@@ -430,24 +431,18 @@ export default {
       }
     },
     onExport() {
-      return
       let params = this.$refs.searchTop.getSearchParams()
-      if (!params.time?.length) {
-        this.$message.error('请选择离职创建时间！')
-        return
-      }
-      const [startRq, endRq] = params.time
-      params.startRq = startRq
-      params.endRq = endRq
-      delete params.time
+      params.limit = this.$refs.table.Pagination.internalPageSize
+      params.bbCode = this.userInfo.shopcode
       download(
-        `${this.$yid.config.API.BASE}api-pers/eexxjadjbill/expEesaltk`,
+        `${this.$yid.config.API.BASE}api-pers/employeeotherinfo/expHemployeeInfos`,
         params
       )
     },
     onSearch() {
       let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
+      params.bbCode = this.userInfo.shopcode
       const fetch = service.staffReport.shopStaffInfo.list
       this.$refs.table.reloadData({
         fetch,

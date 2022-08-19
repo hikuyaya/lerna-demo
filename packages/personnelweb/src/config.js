@@ -635,22 +635,12 @@ export const MENU = {
       canShow: true
     },
     {
-      id: 840,
-      pid: 8,
-      name: '套餐项目查看',
-      title: '套餐项目查看',
-      path: '/setting/packLookup',
-      component: 'setting/packLookup',
-      icon: null,
-      canShow: true
-    },
-    {
       id: 85,
       pid: 8,
-      name: '会员卡配置',
-      title: '会员卡配置',
-      path: '/setting/cardConfig',
-      component: 'setting/cardConfig',
+      name: '门店打款明细',
+      title: '门店打款明细',
+      path: '/salary-report/shop-payment-detail',
+      component: 'salary-report/shop-payment-detail/shopPaymentDetail',
       icon: null,
       canShow: true
     },

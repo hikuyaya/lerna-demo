@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 15:41:34
+ * @LastEditTime: 2022-08-19 11:18:41
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -105,7 +105,9 @@
         <yid-table-column label="当月天数">
           <template slot-scope="scope">
             <span v-if="operateType === 'add'">{{ targetMonthDays }}</span>
-            <span v-else>{{ scope.row.expectDayCount }}</span>
+            <span v-else>{{
+              scope.row.expectDayCount || targetMonthDays
+            }}</span>
           </template>
         </yid-table-column>
         <yid-table-column label="出勤天数">

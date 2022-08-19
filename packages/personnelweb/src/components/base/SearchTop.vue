@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-06-16 17:03:39
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-17 17:54:43
+ * @LastEditTime: 2022-08-19 11:30:42
  * @FilePath: \personnelweb\src\components\base\SearchTop.vue
  * @Description: 
 -->
@@ -348,7 +348,9 @@ export default {
       immediate: true,
       handler: function (val) {
         if (val) {
+          const params = JSON.parse(JSON.stringify(this.params))
           this.params = {
+            ...params,
             ...val
           }
         }

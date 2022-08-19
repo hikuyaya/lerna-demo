@@ -624,22 +624,13 @@ export const MENU = {
       canShow: true
     },
     {
-      id: 830,
-      pid: 8,
-      name: '服务项目配置',
-      title: '服务项目配置',
-      path: '/setting/servPriceConfig',
-      component: 'setting/servPriceConfig',
-      icon: null,
-      canShow: false
-    },
-    {
       id: 84,
       pid: 8,
-      name: '套餐项目配置',
-      title: '套餐项目配置',
-      path: '/setting/packConfig',
-      component: 'setting/packConfig',
+      name: '工资明细汇总',
+      title: '工资明细汇总',
+      path: '/salary-report/salary-detail-collection',
+      component:
+        'salary-report/salary-detail-collection/salaryDetailCollection',
       icon: null,
       canShow: true
     },

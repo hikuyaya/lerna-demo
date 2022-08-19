@@ -1,22 +1,27 @@
 <!--
  * @Author: wqy
- * @Date: 2022-08-12 15:02:18
+ * @Date: 2022-08-19 09:06:51
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-19 09:21:43
- * @FilePath: \personnelweb\src\views\salary-report\pre-approve-salary\preApproveSalary.vue
+ * @LastEditTime: 2022-08-19 10:24:40
+ * @FilePath: \personnelweb\src\views\salary-report\shop-salary-detail\shopSalaryDetail.vue
  * @Description: 
 -->
 <template>
   <div class="container">
     <div class="content">
-      <search-top ref="searchTop" :options="conditions">
+      <search-top ref="searchTop" :options="conditions" :defaultParams="params">
         <template #inlineBtn>
           <div class="flex flex-alignitems__center mg-l-12">
             <el-button type="primary" @click="onSearch">查询</el-button>
             <!-- <el-button type="primary" v-print="printObj" v-if="tableData.length"
               >打印</el-button
             > -->
-            <el-button type="primary" @click="onPrint">打印</el-button>
+            <el-button type="primary" @click="handlePrint(1)"
+              >打印收入表</el-button
+            >
+            <el-button type="primary" @click="handlePrint(-1)"
+              >打印支出表</el-button
+            >
           </div>
         </template>
       </search-top>
@@ -24,9 +29,7 @@
         :data="tableData"
         ref="table"
         class="mg-t-12"
-        height="calc(100% - 38px)"
-        show-summary
-        :summary-method="getSummaries">
+        height="calc(100% - 38px)">
         <yid-table-column label="员工姓名" prop="eeName" width="80px" fixed>
         </yid-table-column>
         <yid-table-column
@@ -50,7 +53,41 @@
           width="100px"
           fixed></yid-table-column>
         <yid-table-column
-          label="实际收入"
+          label="年"
+          prop="year"
+          width="80px"></yid-table-column>
+        <yid-table-column
+          label="月"
+          prop="month"
+          width="80px"></yid-table-column>
+        <yid-table-column label="审批状态" prop="approvalStatus" width="80px">
+          <template slot-scope="scope">
+            {{
+              scope.row.approvalStatus == 1
+                ? '待提交'
+                : scope.row.approvalStatus == 2
+                ? '待审核'
+                : scope.row.approvalStatus == 3
+                ? '已审核'
+                : scope.row.approvalStatus == 0
+                ? '已驳回'
+                : scope.row.approvalStatu
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column label="计算状态" prop="isCalc" width="80px">
+          <template slot-scope="scope">
+            {{
+              scope.row.isCalc == 1
+                ? '已计算'
+                : scope.row.isCalc == 0
+                ? '未计算'
+                : scope.row.approvalStatu
+            }}
+          </template>
+        </yid-table-column>
+        <yid-table-column
+          label="实发工资"
           prop="actualMoney"
           width="120px"></yid-table-column>
         <yid-table-column
@@ -73,11 +110,13 @@
       </yid-table>
       <div ref="printId" id="printId" class="print-area hide">
         <div class="print-title mg-b-16">
-          <span>审核前工资申请明细</span>
+          <span>工资明细表</span>
           <span
             >{{ userInfo.shopname }}--{{ params.year }}年{{
               params.month
-            }}月</span
+            }}月：{{
+              signType == 1 ? '收入' : signType == -1 ? '支出' : '未知'
+            }}表</span
           >
         </div>
         <table class="print-table" cellspacing="0" cellpadding="0" border="1">
@@ -88,7 +127,7 @@
               <td :width="headConfig['合计收入'] || '70px'">合计收入</td>
               <td :width="headConfig['合计支出'] || '70px'">合计支出</td>
               <td
-                v-for="column in dynamicColumns"
+                v-for="column in printDynamicColumns"
                 :key="'head' + column.label"
                 :width="headConfig[column.label] || '60px'">
                 {{ column.label }}
@@ -101,17 +140,10 @@
               <td>{{ item.actualMoney }}</td>
               <td>{{ item.addMoney }}</td>
               <td>{{ item.subMoney }}</td>
-              <td v-for="column in dynamicColumns" :key="'body' + column.label">
+              <td
+                v-for="column in printDynamicColumns"
+                :key="'body' + column.label">
                 {{ item[column.label] }}
-              </td>
-            </tr>
-            <tr>
-              <td>合计</td>
-              <td>{{ sum.actualMoneyTotal }}</td>
-              <td>{{ sum.addMoneyTotal }}</td>
-              <td>{{ sum.subMoneyTotal }}</td>
-              <td v-for="column in dynamicColumns" :key="'code' + column.label">
-                {{ scCodeMoneyTotal[column.code] }}
               </td>
             </tr>
           </tbody>
@@ -126,6 +158,7 @@ import service from '@src/service'
 import printJs from 'print-js'
 import html2canvas from 'html2canvas'
 import { mapGetters } from 'vuex'
+import moment from 'moment'
 
 export default {
   components: { SearchTop },
@@ -138,36 +171,48 @@ export default {
       params: {},
       conditions: [
         {
-          label: '年',
-          prop: 'year',
-          type: 'input-number',
-          labelWidth: '1rem',
-          controls: false,
-          min: 1970,
-          max: new Date().getFullYear(),
-          width: '15%',
+          label: '年月',
+          prop: 'date',
+          type: 'date',
+          dateType: 'month',
+          width: '18%',
+          format: 'yyyy年M月',
+          'value-format': 'yyyy-M',
           required: true
         },
         {
-          label: '月',
-          prop: 'month',
-          type: 'input-number',
-          labelWidth: '1rem',
-          width: '15%',
-          controls: false,
-          min: 1,
-          max: 12,
-          required: true
+          label: '员工状态',
+          prop: 'eeStatus',
+          type: 'select',
+          width: '14%',
+          options: [
+            { label: '在岗', value: '1' },
+            { label: '离岗', value: '2' }
+          ]
+        },
+        {
+          label: '计算状态',
+          prop: 'isCalc',
+          type: 'select',
+          width: '14%',
+          options: [
+            { label: '已计算', value: '1' },
+            { label: '未计算', value: '0' }
+          ]
         }
       ],
       tableData: [],
       dynamicColumns: [],
+      addDynamicColumns: [],
+      subDynamicColumns: [],
+      signType: null, // 1 增项 -1 减项
       printObj: {
         id: 'printId',
         popTitle: ' ',
         extraHead:
           '<meta http-equiv="Content-Language" content="zh-cn"/>,<style>  #printId { width: 100%; !important; } <style>'
       },
+      printVisible: false,
       headConfig: {},
       sum: {}, // 合计的数据
       scCodeMoneyTotal: {} // 动态列合计的数据
@@ -176,14 +221,28 @@ export default {
   created() {
     const json = require(`../../../../public/static/json/print.json`)
     this.headConfig = json
-    // this.queryList()
+    this.initDate()
   },
   computed: {
     ...mapGetters({
       userInfo: 'user/userInfo'
-    })
+    }),
+    printDynamicColumns() {
+      if (this.signType == 1) {
+        return this.addDynamicColumns
+      } else if (this.signType == -1) {
+        return this.subDynamicColumns
+      } else {
+        return []
+      }
+    }
   },
   methods: {
+    initDate() {
+      this.params = {
+        date: moment(new Date()).subtract(1, 'months').format('yyyy-M')
+      }
+    },
     queryList() {
       this.onSearch()
     },
@@ -192,37 +251,30 @@ export default {
         this.$message.error('查询必填项或必选项不能为空')
         return
       }
-      const params = this.$refs.searchTop.getSearchParams()
+      let params = this.$refs.searchTop.getSearchParams()
+      const [year, month] = params.date.split('-')
+      this.params = {
+        date: params.date
+      }
       delete params.page
       delete params.limit
-      const { data } = await service.salaryReport.preApproveSalary.list(params)
-      // let params = {
-      //   year: 2022,
-      //   month: 7
-      // }
-      // const { data } = await service.salaryReport.preApproveSalary.list(params)
-      const {
-        actualMoneyTotal,
-        addMoneyTotal,
-        subMoneyTotal,
-        scCodeMoneyTotal
-      } = data
-      this.sum = {
-        actualMoneyTotal,
-        addMoneyTotal,
-        subMoneyTotal
+      delete params.date
+      params = {
+        ...params,
+        year,
+        month
       }
-      this.scCodeMoneyTotal = scCodeMoneyTotal
+      const { data } = await service.salaryReport.shopSalaryDetail.list(params)
 
       const { data: tableData, columns } = this.buildDynamic(
-        data.salaryEmployeeList || [],
-        'salaryApplyBillItemVOList'
+        data || [],
+        'salaryItemVOList'
       )
-      this.params = params
       this.tableData = tableData
-      // this.dynamicColumns = columns
-      // columns.splice(0, columns.length - 10)
       this.dynamicColumns = columns
+      this.addDynamicColumns = columns.filter(v => v.signType === 1) // 增项动态列
+      this.subDynamicColumns = columns.filter(v => v.signType === -1) // 减项动态列
+      console.log(this.addDynamicColumns.length, this.subDynamicColumns.length)
     },
     // 构造动态数据、列
     buildDynamic(data, key) {
@@ -240,7 +292,8 @@ export default {
               label,
               value,
               code,
-              inputType: salItem.inputtype
+              inputType: salItem.inputtype,
+              signType: salItem.signtype
             })
           }
         }
@@ -251,36 +304,20 @@ export default {
         data
       }
     },
-    getSummaries(param) {
-      const that = this
-      const { columns } = param
-      const map = {
-        4: '合计',
-        5: this.sum.actualMoneyTotal,
-        6: this.sum.addMoneyTotal,
-        7: this.sum.subMoneyTotal
-      }
-      const sums = []
-      columns.forEach((column, index) => {
-        if (index < 4) {
-          sums[index] = ''
-          return
-        } else if ([4, 5, 6, 7].includes(index)) {
-          sums[index] = map[index]
-          return
-        }
-        sums[index] = that.scCodeMoneyTotal[column.property]
-      })
-
-      return sums
-    },
-    // printJs转图片打印
-    onPrint() {
+    async handlePrint(type) {
+      this.signType = type
       const data = this.$refs.table.getCurData()
       if (!data.length) {
         this.$message.error('暂无数据可以打印')
         return
       }
+      this.printVisible = true
+      await this.$nextTick()
+      this.onPrint()
+      this.printVisible = false
+    },
+    // printJs转图片打印
+    onPrint() {
       const printContent = this.$refs.printId
       printContent.classList.remove('hide')
       // 获取dom 宽度 高度

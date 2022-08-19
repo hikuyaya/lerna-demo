@@ -616,10 +616,10 @@ export const MENU = {
     {
       id: 83,
       pid: 8,
-      name: '服务项目配置',
-      title: '服务项目配置',
-      path: '/setting/servinfoConfig',
-      component: 'setting/servinfoConfig',
+      name: '门店工资明细',
+      title: '门店工资明细',
+      path: '/salary-report/shop-salary-detail',
+      component: 'salary-report/shop-salary-detail/shopSalaryDetail',
       icon: null,
       canShow: true
     },

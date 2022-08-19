@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-19 11:18:41
+ * @LastEditTime: 2022-08-19 17:10:24
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -131,7 +131,11 @@
           v-for="column in dynamicColumns"
           :key="column.eeCode"
           :label="column.label"
-          :prop="column.label"></yid-table-column>
+          :prop="column.label">
+          <template slot-scope="scope">
+            {{ scope.row[column.label] || 0 }}
+          </template>
+        </yid-table-column>
         <yid-table-column label="操作" v-if="operateType !== 'detail'">
           <template slot-scope="scope">
             <el-popconfirm
@@ -238,7 +242,8 @@ export default {
         { label: '员工姓名', prop: 'eeName' },
         { label: '出勤天数', prop: 'actualDayCount' }
       ],
-      dynamicColumns: []
+      dynamicColumns: [],
+      copyData: []
     }
   },
   computed: {
@@ -269,6 +274,7 @@ export default {
       )
       this.dynamicColumns = columns
       this.tableData = tableData
+      this.copyData = tableData
     },
     // 构造动态数据、列
     buildDynamic(data, key) {
@@ -352,8 +358,10 @@ export default {
           }
         }
         this.tableData = copyData
+        this.copyData = copyData
       } else {
         this.tableData = tableData
+        this.copyData = tableData
       }
     },
     calContaine(d, tableData) {
@@ -375,13 +383,35 @@ export default {
       if (!flag) {
         return
       }
+
       const importData = this.$refs.importCompRef.tableData
-      const copyTableData = JSON.parse(JSON.stringify(this.tableData))
-      for (let i = 0; i < copyTableData.length; i++) {
-        const element = copyTableData[i]
-        const item = importData.find(v => v.eeCode === element.eeCode) || {}
-        element.actualDayCount = item.actualDayCount
-        this.$set(this.tableData, i, element)
+
+      // 以查出来的数据为主，做∪
+      let copyData = JSON.parse(JSON.stringify(this.tableData))
+
+      for (let i = 0; i < importData.length; i++) {
+        const d = importData[i]
+        const contain = this.calContaine(d, this.tableData)
+        if (!contain) {
+          const tempData = this.copyData.find(v => v.eeCode === d.eeCode)
+          if (tempData) {
+            copyData.push({
+              ...tempData,
+              actualDayCount: d.actualDayCount
+            })
+          } else {
+            copyData.push(d)
+          }
+        }
+      }
+
+      for (let i = 0; i < copyData.length; i++) {
+        const element = copyData[i]
+        const item = importData.find(v => v.eeCode === element.eeCode)
+        if (item) {
+          element.actualDayCount = item.actualDayCount
+          this.$set(this.tableData, i, element)
+        }
       }
       this.importCompVisible = false
     },

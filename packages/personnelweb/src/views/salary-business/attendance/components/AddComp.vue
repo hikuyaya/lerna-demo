@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-19 17:10:24
+ * @LastEditTime: 2022-08-22 12:16:16
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -122,7 +122,8 @@
               :controls="false"
               :min="0"
               :max="targetMonthDays"
-              :precision="0"
+              :step-strictly="false"
+              :precision="1"
               class="w100">
             </el-input-number>
           </template>

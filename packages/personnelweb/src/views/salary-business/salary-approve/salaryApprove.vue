@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-11 14:37:18
+ * @LastEditTime: 2022-08-22 17:17:45
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
@@ -149,6 +149,7 @@
           :data="tableData"
           ref="table"
           class="mg-t-12"
+          height="calc(100% - 140px)"
           show-summary
           :summary-method="getSummaries">
           <yid-table-column label="序号" type="index" fixed> </yid-table-column>
@@ -264,6 +265,7 @@
       <detail-comp
         v-if="detailCompVisible"
         ref="detailCompRef"
+        :content="`您是否要驳回此门店薪酬申请？`"
         :value="selectRow" />
       <span slot="footer" class="dialog-footer">
         <el-button @click="detailCompVisible = false">取 消</el-button>
@@ -426,7 +428,7 @@ export default {
           }, 0)
           //   sums[index] += ' 元'
         } else {
-          sums[index] = 'N/A'
+          sums[index] = ''
         }
       })
 
@@ -548,6 +550,7 @@ export default {
   overflow-x: hidden;
   .content {
     // flex: 1;
+    height: 100%;
     .info-row {
       display: flex;
       margin: 12px 24px;

@@ -303,8 +303,8 @@ export const MENU = {
     {
       id: 44,
       pid: 4,
-      name: '门店工资条',
-      title: '门店工资条',
+      name: '门店工资名单',
+      title: '门店工资名单',
       path: '/salary-plan/payslip',
       component: 'salary-plan/payslip/payslip',
       icon: null,

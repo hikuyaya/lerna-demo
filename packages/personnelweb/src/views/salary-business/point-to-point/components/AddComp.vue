@@ -146,7 +146,7 @@ export default {
           label: '月',
           prop: 'month',
           type: 'input-number',
-          labelWidth: '0.8rem',
+          labelWidth: '0.6rem',
           placeholder: '月',
           width: '14%',
           controls: false,
@@ -160,7 +160,7 @@ export default {
           // label宽度
           type: 'select',
           width: '26%', // 整个组件占的宽度
-          labelWidth: '1.4rem',
+          labelWidth: '1.2rem',
           options: [
             { label: '美发门店', value: '1' },
             { label: '美容门店', value: '2' }
@@ -173,7 +173,7 @@ export default {
           // label宽度
           type: 'input',
           width: '26%', // 整个组件占的宽度
-          labelWidth: '1.2rem'
+          labelWidth: '1rem'
           // widgetWidth: '200px', // 控件的宽度
           // required: true // 是否必填
         }

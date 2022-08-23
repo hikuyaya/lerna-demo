@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-23 14:57:08
+ * @LastEditTime: 2022-08-23 15:19:56
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
@@ -65,17 +65,21 @@
           </div>
           <div class="w20">
             <span>审核状态：</span>
-            <span class="red bold">{{
-              info.approvalStatus == 1
-                ? '待提交'
-                : info.approvalStatus == 2
-                ? '待审核'
-                : info.approvalStatus == 3
-                ? '已审核'
-                : info.approvalStatus == 0
-                ? '已驳回'
-                : info.approvalStatus
-            }}</span>
+            <span
+              class="bold"
+              :class="info.approvalStatus == 3 ? 'green' : 'red'"
+              >{{
+                info.approvalStatus == 1
+                  ? '待提交'
+                  : info.approvalStatus == 2
+                  ? '待审核'
+                  : info.approvalStatus == 3
+                  ? '已审核'
+                  : info.approvalStatus == 0
+                  ? '已驳回'
+                  : info.approvalStatus
+              }}</span
+            >
           </div>
         </div>
         <div class="flex info-row">
@@ -156,7 +160,7 @@
           <yid-table-column
             label="员工姓名"
             prop="eeName"
-            width="100px"
+            width="80px"
             fixed></yid-table-column>
           <yid-table-column
             label="员工编码"

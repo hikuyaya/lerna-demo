@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-15 14:29:14
+ * @LastEditTime: 2022-08-23 09:35:50
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
@@ -100,9 +100,13 @@
       </div>
       <yid-table
         :data="tableData"
-        height="calc(100% - 160px)"
+        :height="
+          operateType === 'detail' ? 'calc(100% - 110px)' : 'calc(100% - 160px)'
+        "
         ref="table"
-        class="mg-t-12">
+        class="mg-t-12"
+        :show-summary="operateType === 'detail'"
+        :summary-method="getSummaries">
         <yid-table-column
           label="员工姓名"
           prop="eeName"
@@ -127,29 +131,41 @@
           label="合计金额"
           prop="totalMoney"
           fixed></yid-table-column>
-
-        <yid-table-column
-          v-for="column in dynamicColumns"
-          :key="column.eeCode"
-          :label="column.label"
-          :prop="column.label">
-          <template slot-scope="scope">
-            <el-input-number
-              v-if="column.inputType == 2 && operateType !== 'detail'"
-              v-model="scope.row[column.label]"
-              :controls="false"
-              :min="0"
-              class="w100">
-            </el-input-number>
-            <el-link
-              v-else-if="column.inputType != 2"
-              type="primary"
-              @click="onShowDetail(scope.row, column)"
-              >{{ scope.row[column.label] }}</el-link
-            >
-            <span v-else>{{ scope.row[column.label] }}</span>
-          </template>
-        </yid-table-column>
+        <template v-if="operateType !== 'detail'">
+          <yid-table-column
+            v-for="column in dynamicColumns"
+            :key="column.eeCode"
+            :label="column.label"
+            :prop="column.label">
+            <template slot-scope="scope">
+              <el-input-number
+                v-if="column.inputType == 2 && operateType !== 'detail'"
+                v-model="scope.row[column.label]"
+                :controls="false"
+                :min="0"
+                class="w100">
+              </el-input-number>
+              <el-link
+                v-else-if="column.inputType != 2"
+                type="primary"
+                @click="onShowDetail(scope.row, column)"
+                >{{ scope.row[column.label] }}</el-link
+              >
+              <span v-else>{{ scope.row[column.label] }}</span>
+            </template>
+          </yid-table-column>
+        </template>
+        <template v-else>
+          <yid-table-column
+            v-for="column in dynamicColumns"
+            :key="column.eeCode"
+            :label="column.label"
+            :prop="column.scCode">
+            <template slot-scope="scope">
+              {{ scope.row[column.label] }}
+            </template>
+          </yid-table-column>
+        </template>
         <yid-table-column label="操作" v-if="operateType !== 'detail'">
           <template slot-scope="scope">
             <el-popconfirm
@@ -273,7 +289,9 @@ export default {
         { label: '员工编码', prop: 'eeCode' },
         { label: '员工姓名', prop: 'eeName' }
       ],
-      dynamicColumns: []
+      dynamicColumns: [],
+      sum: {}, // 合计的数据
+      scCodeMoneyTotal: {} // 动态列合计的数据
     }
   },
   computed: {
@@ -301,11 +319,24 @@ export default {
       const { data } = await service.salaryBusiness.salaryRequest.detail(
         this.value.id
       )
-
+      const {
+        actualMoneyTotal,
+        addMoneyTotal,
+        subMoneyTotal,
+        scCodeMoneyTotal,
+        salaryApplyBillVO
+      } = data
       const { data: tableData, columns } = this.buildDynamic(
-        data.salaryApplyBillEmployeeVOList || [],
+        salaryApplyBillVO.salaryApplyBillEmployeeVOList || [],
         'salaryApplyBillItemVOList'
       )
+      this.sum = {
+        actualMoneyTotal,
+        addMoneyTotal,
+        subMoneyTotal
+      }
+      this.scCodeMoneyTotal = scCodeMoneyTotal
+
       this.dynamicColumns = columns
       this.tableData = tableData
     },
@@ -340,6 +371,27 @@ export default {
         columns,
         data
       }
+    },
+    getSummaries(param) {
+      const that = this
+      const { columns } = param
+      const map = {
+        5: '合计',
+        6: this.info.moneyTotal
+      }
+      const sums = []
+      columns.forEach((column, index) => {
+        if (index < 5) {
+          sums[index] = ''
+          return
+        } else if ([5, 6].includes(index)) {
+          sums[index] = map[index]
+          return
+        }
+        sums[index] = that.scCodeMoneyTotal[column.property]
+      })
+
+      return sums
     },
     handleSelectStaffs(staffs) {
       console.log(staffs)

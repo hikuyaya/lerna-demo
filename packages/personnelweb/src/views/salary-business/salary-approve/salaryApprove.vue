@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-22 17:17:45
+ * @LastEditTime: 2022-08-22 18:02:48
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
@@ -219,7 +219,11 @@
             v-for="column in dynamicColumns"
             :key="column.eeCode"
             :label="column.label"
-            :prop="column.label"></yid-table-column>
+            :prop="column.code">
+            <template slot-scope="scope">
+              {{ scope.row[column.label] }}
+            </template>
+          </yid-table-column>
         </yid-table>
       </template>
     </div>
@@ -328,7 +332,9 @@ export default {
         }
       ],
       tableData: [],
-      dynamicColumns: []
+      dynamicColumns: [],
+      sum: {}, // 合计的数据
+      scCodeMoneyTotal: {} // 动态列合计的数据
     }
   },
   computed: {
@@ -372,11 +378,26 @@ export default {
         ...params,
         menuId: this.menuId
       })
-      this.info = data
+      const {
+        actualMoneyTotal,
+        addMoneyTotal,
+        subMoneyTotal,
+        scCodeMoneyTotal,
+        approvalSalaryVO
+      } = data
+      this.info = approvalSalaryVO
       const { data: tableData, columns } = this.buildDynamic(
-        data?.salaryList || [],
+        approvalSalaryVO?.salaryList || [],
         'salaryItemVOList'
       )
+
+      this.sum = {
+        actualMoneyTotal,
+        addMoneyTotal,
+        subMoneyTotal
+      }
+      this.scCodeMoneyTotal = scCodeMoneyTotal
+
       this.tableData = tableData
       this.dynamicColumns = columns
       console.log(tableData, columns)
@@ -390,11 +411,13 @@ export default {
           const salItem = d[key][j]
           const label = salItem.scName
           const value = salItem.money || undefined
+          const code = salItem.scCode
           d[label] = value
           if (i === 0) {
             columns.push({
               label,
-              value
+              value,
+              code
             })
           }
         }
@@ -405,31 +428,53 @@ export default {
       }
     },
 
+    // getSummaries(param) {
+    //   const { columns, data } = param
+    //   const sums = []
+    //   columns.forEach((column, index) => {
+    //     if (index <= 4) {
+    //       sums[index] = ''
+    //       return
+    //     } else if (index === 5) {
+    //       sums[index] = '合计'
+    //       return
+    //     }
+    //     const values = data.map(item => Number(item[column.property]))
+    //     if (!values.every(value => isNaN(value))) {
+    //       sums[index] = values.reduce((prev, curr) => {
+    //         const value = Number(curr)
+    //         if (!isNaN(value)) {
+    //           return prev + curr
+    //         } else {
+    //           return prev
+    //         }
+    //       }, 0)
+    //       //   sums[index] += ' 元'
+    //     } else {
+    //       sums[index] = ''
+    //     }
+    //   })
+    //   return sums
+    // },
     getSummaries(param) {
-      const { columns, data } = param
+      const that = this
+      const { columns } = param
+      const map = {
+        5: '合计',
+        6: this.sum.addMoneyTotal,
+        7: this.sum.subMoneyTotal,
+        8: this.sum.actualMoneyTotal
+      }
       const sums = []
       columns.forEach((column, index) => {
-        if (index <= 4) {
+        if (index < 5) {
           sums[index] = ''
           return
-        } else if (index === 5) {
-          sums[index] = '合计'
+        } else if ([5, 6, 7, 8].includes(index)) {
+          sums[index] = map[index]
           return
         }
-        const values = data.map(item => Number(item[column.property]))
-        if (!values.every(value => isNaN(value))) {
-          sums[index] = values.reduce((prev, curr) => {
-            const value = Number(curr)
-            if (!isNaN(value)) {
-              return prev + curr
-            } else {
-              return prev
-            }
-          }, 0)
-          //   sums[index] += ' 元'
-        } else {
-          sums[index] = ''
-        }
+        sums[index] = that.scCodeMoneyTotal[column.property]
       })
 
       return sums

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-22 18:02:48
+ * @LastEditTime: 2022-08-23 14:10:31
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
@@ -417,11 +417,13 @@ export default {
             columns.push({
               label,
               value,
+              inputType: salItem.inputtype,
               code
             })
           }
         }
       }
+      columns.sort((prev, next) => prev.inputType - next.inputType)
       return {
         columns,
         data

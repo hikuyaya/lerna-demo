@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-23 14:50:51
+ * @LastEditTime: 2022-08-23 14:57:08
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
@@ -442,7 +442,7 @@ export default {
       }
     },
     sortSignType(columns) {
-      return columns.sort((prev, next) => prev.signType - next.signType)
+      return columns.sort((prev, next) => next.signType - prev.signType)
     },
     // getSummaries(param) {
     //   const { columns, data } = param

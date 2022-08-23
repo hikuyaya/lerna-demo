@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 17:30:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-06 09:57:42
+ * @LastEditTime: 2022-08-23 14:31:26
  * @FilePath: \personnelweb\src\views\salary-setting\asetofbooks\components\AddComp.vue
  * @Description: 
 -->
@@ -222,6 +222,8 @@ export default {
             } else if (row.inputType == '2') {
               return '输入项'
             } else if (row.inputType == '3') {
+              return '提成项'
+            } else {
               return row.inputType
             }
           }

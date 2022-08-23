@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-23 14:10:31
+ * @LastEditTime: 2022-08-23 14:50:51
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
@@ -400,7 +400,7 @@ export default {
 
       this.tableData = tableData
       this.dynamicColumns = columns
-      console.log(tableData, columns)
+      console.log(tableData, JSON.parse(JSON.stringify(columns)))
     },
     // 构造动态数据、列
     buildDynamic(data, key) {
@@ -418,18 +418,32 @@ export default {
               label,
               value,
               inputType: salItem.inputtype,
+              signType: salItem.signtype,
               code
             })
           }
         }
       }
       columns.sort((prev, next) => prev.inputType - next.inputType)
+
+      const inputType1 = this.sortSignType(
+        columns.filter(v => v.inputType === 1)
+      )
+      const inputType2 = this.sortSignType(
+        columns.filter(v => v.inputType === 2)
+      )
+      const inputType3 = this.sortSignType(
+        columns.filter(v => v.inputType === 3)
+      )
+
       return {
-        columns,
+        columns: [...inputType1, ...inputType2, ...inputType3],
         data
       }
     },
-
+    sortSignType(columns) {
+      return columns.sort((prev, next) => prev.signType - next.signType)
+    },
     // getSummaries(param) {
     //   const { columns, data } = param
     //   const sums = []

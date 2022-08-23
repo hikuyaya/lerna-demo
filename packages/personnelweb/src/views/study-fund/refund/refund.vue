@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-01 15:27:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 10:53:27
+ * @LastEditTime: 2022-08-23 17:35:03
  * @FilePath: \personnelweb\src\views\study-fund\refund\refund.vue
  * @Description: 学习金退费名单
 -->
@@ -185,6 +185,7 @@ export default {
       ],
       defaultParams: {
         // approvalStatus: 2
+        rgCode: '01' // 默认查询正常离职
       },
       tableData: [],
       salcompData: []
@@ -215,7 +216,7 @@ export default {
     },
     async onReset() {
       this.$refs.searchTop.reset()
-      this.onSearch()
+      // this.onSearch()
     },
     onSearch() {
       let params = this.$refs.searchTop.getSearchParams()

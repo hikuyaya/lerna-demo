@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-01 15:26:25
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 10:01:24
+ * @LastEditTime: 2022-08-23 17:33:53
  * @FilePath: \personnelweb\src\views\study-fund\query\query.vue
  * @Description: 学习金业务查询
 -->
@@ -126,9 +126,9 @@ export default {
           prop: 'isDel',
           render: row => {
             if (row.isDel == 1) {
-              return '有效'
-            } else if (row.isDel == 2) {
               return '无效'
+            } else if (row.isDel == 0) {
+              return '有效'
             } else {
               return row.isDel
             }

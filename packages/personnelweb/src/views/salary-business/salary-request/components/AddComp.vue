@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-23 09:35:50
+ * @LastEditTime: 2022-08-23 10:47:09
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
@@ -146,7 +146,7 @@
                 class="w100">
               </el-input-number>
               <el-link
-                v-else-if="column.inputType != 2"
+                v-else-if="column.inputType == 1"
                 type="primary"
                 @click="onShowDetail(scope.row, column)"
                 >{{ scope.row[column.label] }}</el-link

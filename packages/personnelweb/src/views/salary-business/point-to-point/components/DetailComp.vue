@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-16 11:09:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-18 10:07:04
+ * @LastEditTime: 2022-08-23 09:47:51
  * @FilePath: \personnelweb\src\views\salary-business\point-to-point\components\DetailComp.vue
  * @Description: 
 -->
@@ -76,10 +76,12 @@ export default {
         month,
         scCode
       }
-      const { data = {} } = await service.salaryBusiness.attendance.getByEeCode(
+      const { data } = await service.salaryBusiness.attendance.getByEeCode(
         params
       )
-      this.tableData = [data]
+      if (data) {
+        this.tableData = [data]
+      }
     }
   },
   watch: {

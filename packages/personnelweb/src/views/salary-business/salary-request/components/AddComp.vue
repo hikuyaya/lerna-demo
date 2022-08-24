@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-24 10:44:28
+ * @LastEditTime: 2022-08-24 14:02:22
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
@@ -40,6 +40,7 @@
               :controls="false"
               :min="1970"
               :max="new Date().getFullYear()"
+              :disabled="true"
               class="w100">
             </el-input-number>
           </el-form-item>
@@ -51,6 +52,7 @@
               :controls="false"
               :min="1"
               :max="12"
+              :disabled="true"
               class="w100">
             </el-input-number>
           </el-form-item>

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:27:23
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 17:57:22
+ * @LastEditTime: 2022-08-24 10:12:53
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\payslip.vue
  * @Description: 
 -->
@@ -177,6 +177,7 @@ export default {
   height: 100%;
   .content {
     // flex: 1;
+    height: 100%;
     overflow-x: hidden;
     overflow-y: scroll;
   }

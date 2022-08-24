@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:47:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 15:13:18
+ * @LastEditTime: 2022-08-24 10:05:21
  * @FilePath: \personnelweb\src\views\salary-business\point-to-point\pointToPoint.vue
  * @Description: 
 -->
@@ -64,24 +64,21 @@
             width="100px"></yid-table-column>
           <yid-table-column
             label="创建时间"
-            prop="createdTime"
-            width="150px"></yid-table-column>
+            prop="createdTime"></yid-table-column>
           <yid-table-column
             label="修改人"
             prop="updatedBy"
             width="100px"></yid-table-column>
           <yid-table-column
             label="修改时间"
-            prop="updatedTime"
-            width="150px"></yid-table-column>
+            prop="updatedTime"></yid-table-column>
           <yid-table-column
             label="审批人"
             prop="approvalEename"
             width="100px"></yid-table-column>
           <yid-table-column
             label="审批时间"
-            prop="approvalTime"
-            width="150px"></yid-table-column>
+            prop="approvalTime"></yid-table-column>
 
           <yid-table-column label="操作" width="120" fixed="right">
             <!-- 待审核（删除、编辑、审核按钮）、已审核（不显示任何按钮） -->

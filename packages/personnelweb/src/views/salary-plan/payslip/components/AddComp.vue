@@ -2,13 +2,13 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-17 10:09:05
+ * @LastEditTime: 2022-08-24 10:42:33
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
 
 <template>
-  <div>
+  <div class="container">
     <div>
       <el-button type="primary" @click="$emit('back')" class="mg-b-24"
         >返回</el-button
@@ -75,7 +75,11 @@
       <div class="mg-t-24 mg-b-12">
         <el-button type="primary" @click="onAdd">添加员工</el-button>
       </div>
-      <yid-table :data="tableData" ref="table" class="mg-t-12">
+      <yid-table
+        :data="tableData"
+        ref="table"
+        class="mg-t-12"
+        height="calc(100% - 198px)">
         <yid-table-column label="门店编码" prop="shopCode"></yid-table-column>
         <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
         <yid-table-column
@@ -402,6 +406,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.container {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 .info-row {
   display: flex;
   margin: 12px 24px;

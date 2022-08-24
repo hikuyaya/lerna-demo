@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-23 15:19:56
+ * @LastEditTime: 2022-08-24 10:44:04
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
@@ -403,7 +403,7 @@ export default {
       this.scCodeMoneyTotal = scCodeMoneyTotal
 
       this.tableData = tableData
-      this.dynamicColumns = columns
+      !this.dynamicColumns?.length && (this.dynamicColumns = columns)
       console.log(tableData, JSON.parse(JSON.stringify(columns)))
     },
     // 构造动态数据、列
@@ -429,7 +429,6 @@ export default {
         }
       }
       columns.sort((prev, next) => prev.inputType - next.inputType)
-
       const inputType1 = this.sortSignType(
         columns.filter(v => v.inputType === 1)
       )

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-23 10:47:09
+ * @LastEditTime: 2022-08-24 10:44:28
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
@@ -367,10 +367,22 @@ export default {
         }
       }
       columns.sort((prev, next) => prev.inputType - next.inputType)
+      const inputType1 = this.sortSignType(
+        columns.filter(v => v.inputType === 1)
+      )
+      const inputType2 = this.sortSignType(
+        columns.filter(v => v.inputType === 2)
+      )
+      const inputType3 = this.sortSignType(
+        columns.filter(v => v.inputType === 3)
+      )
       return {
-        columns,
+        columns: [...inputType1, ...inputType2, ...inputType3],
         data
       }
+    },
+    sortSignType(columns) {
+      return columns.sort((prev, next) => next.signType - prev.signType)
     },
     getSummaries(param) {
       const that = this
@@ -427,8 +439,8 @@ export default {
         data.salaryApplyBillEmployeeVOList || [],
         'salaryApplyBillItemVOList'
       )
+      !this.dynamicColumns?.length && (this.dynamicColumns = columns)
 
-      this.dynamicColumns = columns
       console.log(tableData, columns)
 
       if (this.operateType === 'edit') {

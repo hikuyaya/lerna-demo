@@ -403,7 +403,7 @@ export default {
       this.scCodeMoneyTotal = scCodeMoneyTotal
 
       this.tableData = tableData
-      !this.dynamicColumns?.length && (this.dynamicColumns = columns)
+      this.dynamicColumns = columns
       console.log(tableData, JSON.parse(JSON.stringify(columns)))
     },
     // 构造动态数据、列

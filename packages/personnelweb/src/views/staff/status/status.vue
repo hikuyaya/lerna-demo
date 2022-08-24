@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-05 14:41:52
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 15:20:52
+ * @LastEditTime: 2022-08-24 16:25:02
  * @FilePath: \personnelweb\src\views\staff\status\status.vue
  * @Description: 员工状态维护
 -->
@@ -84,7 +84,7 @@
             {{
               scope.row.approvalStatus == 1
                 ? '未审核'
-                : scope.row.approvalStatus == 1
+                : scope.row.approvalStatus == 2
                 ? '已审核'
                 : scope.row.approvalStatus
             }}

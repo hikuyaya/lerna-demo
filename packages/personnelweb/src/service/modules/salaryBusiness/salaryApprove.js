@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-10 11:35:57
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 13:42:01
+ * @LastEditTime: 2022-08-24 16:35:37
  * @FilePath: \personnelweb\src\service\modules\salaryBusiness\salaryApprove.js
  * @Description:
  */
@@ -17,7 +17,7 @@ export function detail(params) {
 
 // 审核锁定
 export function lockApprove(id) {
-  return yid.http.get(`${prefix}/${id}`, {})
+  return yid.http.get(`${prefix}/lockApproval/${id}`, {})
 }
 
 // 计算锁定

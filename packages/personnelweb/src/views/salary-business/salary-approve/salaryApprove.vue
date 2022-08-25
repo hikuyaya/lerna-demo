@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-24 10:44:04
+ * @LastEditTime: 2022-08-25 15:02:14
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
@@ -153,7 +153,7 @@
           :data="tableData"
           ref="table"
           class="mg-t-12"
-          height="calc(100% - 140px)"
+          :height="tableData.length ? 'calc(100% - 140px)' : ''"
           show-summary
           :summary-method="getSummaries">
           <yid-table-column label="序号" type="index" fixed> </yid-table-column>
@@ -600,8 +600,10 @@ export default {
       })
       this.$message.success('操作成功')
       this.rejectCompVisible = false
+      // 修改为已驳回状态
+      this.info.approvalStatus = 0
       // 刷新列表
-      await this.queryList()
+      // await this.queryList()
     }
   }
 }

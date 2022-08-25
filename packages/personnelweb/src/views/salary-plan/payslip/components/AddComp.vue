@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-25 11:08:40
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-24 10:42:33
+ * @LastEditTime: 2022-08-25 14:57:27
  * @FilePath: \personnelweb\src\views\salary-plan\payslip\components\AddComp.vue
  * @Description: 
 -->
@@ -79,7 +79,7 @@
         :data="tableData"
         ref="table"
         class="mg-t-12"
-        height="calc(100% - 198px)">
+        :height="tableData.length ? 'calc(100% - 198px)' : ''">
         <yid-table-column label="门店编码" prop="shopCode"></yid-table-column>
         <yid-table-column label="门店名称" prop="shopName"></yid-table-column>
         <yid-table-column

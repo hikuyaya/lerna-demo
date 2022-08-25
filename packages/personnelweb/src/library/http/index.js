@@ -162,7 +162,6 @@ axios.interceptors.response.use(
         return Promise.reject(response)
       }
     }
-
     // 其他返回状态码处理
     return Promise.reject(response)
   },
@@ -206,6 +205,9 @@ axios.interceptors.response.use(
           setTimeout(() => {
             router.replace($yid.config.SYSTEM.ROUTER_LOGIN)
           }, 500)
+          break
+        case 503:
+          $yid.util.error('503：连接远程服务失败，请稍后再试！')
           break
         default:
           //$yid.util.alert('Uncaught (in promise) Error: Request failed with status code ', '提示', 'error')

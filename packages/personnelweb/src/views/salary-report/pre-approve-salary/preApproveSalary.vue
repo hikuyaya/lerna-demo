@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-12 15:02:18
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-19 09:21:43
+ * @LastEditTime: 2022-08-25 14:50:18
  * @FilePath: \personnelweb\src\views\salary-report\pre-approve-salary\preApproveSalary.vue
  * @Description: 
 -->
@@ -24,7 +24,7 @@
         :data="tableData"
         ref="table"
         class="mg-t-12"
-        height="calc(100% - 38px)"
+        :height="tableData.length ? 'calc(100% - 38px)' : ''"
         show-summary
         :summary-method="getSummaries">
         <yid-table-column label="员工姓名" prop="eeName" width="80px" fixed>
@@ -71,7 +71,7 @@
           </template>
         </yid-table-column>
       </yid-table>
-      <div ref="printId" id="printId" class="print-area hide">
+      <!-- <div ref="printId" id="printId" class="print-area hide">
         <div class="print-title mg-b-16">
           <span>审核前工资申请明细</span>
           <span
@@ -116,7 +116,7 @@
             </tr>
           </tbody>
         </table>
-      </div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -219,10 +219,10 @@ export default {
         'salaryApplyBillItemVOList'
       )
       this.params = params
+      this.dynamicColumns = columns
       this.tableData = tableData
       // this.dynamicColumns = columns
       // columns.splice(0, columns.length - 10)
-      this.dynamicColumns = columns
     },
     // 构造动态数据、列
     buildDynamic(data, key) {

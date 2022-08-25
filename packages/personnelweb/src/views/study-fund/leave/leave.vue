@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-01 15:28:26
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-05 14:17:04
+ * @LastEditTime: 2022-08-25 15:48:44
  * @FilePath: \personnelweb\src\views\study-fund\leave\leave.vue
  * @Description: 离职学习金调整
 -->
@@ -79,6 +79,10 @@
             label="已退学习金"
             prop="betutjeRet"
             width="100px"></yid-table-column>
+          <yid-table-column
+            label="剩余缴纳学习金"
+            prop="aftutjeCom"
+            width="120px"></yid-table-column>
           <yid-table-column
             label="备注"
             prop="remark"

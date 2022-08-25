@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-01 15:28:49
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-07 11:38:11
+ * @LastEditTime: 2022-08-25 14:14:58
  * @FilePath: \personnelweb\src\views\study-fund\tag\tag.vue
  * @Description: 学习金标签维护
 -->
@@ -110,7 +110,7 @@ export default {
           labelWidth: '1.4rem',
           options: [
             { label: '是', value: '1' },
-            { label: '否', value: '2' }
+            { label: '否', value: '0' }
           ],
           width: '18%'
         }

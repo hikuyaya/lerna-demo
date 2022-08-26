@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-10 11:34:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-15 17:31:28
+ * @LastEditTime: 2022-08-26 14:38:43
  * @FilePath: \personnelweb\src\views\salary-business\pay-approve\components\BatchOperateComp.vue
  * @Description: 
 -->
@@ -105,7 +105,11 @@ export default {
   },
   data() {
     return {
-      info: {},
+      info: {
+        year: undefined,
+        month: undefined,
+        shopType: undefined
+      },
       rules: {
         year: [{ required: true, message: '请输入年' }],
         month: [{ required: true, message: '请输入月' }],
@@ -123,10 +127,8 @@ export default {
     initDate() {
       let date = moment(new Date()).subtract(1, 'months').format('YYYY-M')
       const [year, month] = date.split('-')
-      this.info = {
-        year,
-        month
-      }
+      this.info.year = year
+      this.info.month = month
     },
     async getData() {
       const result = await this.$refs.form

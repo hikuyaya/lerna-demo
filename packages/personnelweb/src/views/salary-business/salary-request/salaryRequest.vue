@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:32:44
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 16:37:40
+ * @LastEditTime: 2022-08-29 16:22:15
  * @FilePath: \personnelweb\src\views\salary-business\salary-request\salaryRequest.vue
  * @Description: 
 -->
@@ -295,8 +295,17 @@ export default {
     },
     onDelete() {},
     onSearch() {
-      const params = this.$refs.searchTop.getSearchParams()
+      let params = this.$refs.searchTop.getSearchParams()
       params.limit = this.$refs.table.Pagination.internalPageSize
+      if (params.date?.length) {
+        const [startTime, endTime] = params.date
+        params = {
+          ...params,
+          startTime: startTime + ' 00:00:00',
+          endTime: endTime + ' 23:59:59'
+        }
+        delete params.date
+      }
       const fetch = service.salaryBusiness.salaryRequest.list
       this.$refs.table.reloadData({
         fetch,

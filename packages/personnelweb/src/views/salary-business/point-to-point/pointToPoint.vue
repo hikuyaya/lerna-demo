@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:47:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-29 16:11:11
+ * @LastEditTime: 2022-08-29 16:26:04
  * @FilePath: \personnelweb\src\views\salary-business\point-to-point\pointToPoint.vue
  * @Description: 
 -->
@@ -216,8 +216,8 @@ export default {
       params.limit = this.$refs.table.Pagination.internalPageSize
       if (params.date && params.date.length) {
         const [createdTimeStart, createdTimeEnd] = params.date
-        params.createdTimeStart = createdTimeStart
-        params.createdTimeEnd = createdTimeEnd
+        params.createdTimeStart = createdTimeStart + ' 00:00:00'
+        params.createdTimeEnd = createdTimeEnd + ' 23:59:59'
       } else {
         params.createdTimeStart = undefined
         params.createdTimeEnd = undefined

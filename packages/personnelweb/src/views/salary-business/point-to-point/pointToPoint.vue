@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:47:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-24 10:05:21
+ * @LastEditTime: 2022-08-29 16:11:11
  * @FilePath: \personnelweb\src\views\salary-business\point-to-point\pointToPoint.vue
  * @Description: 
 -->
@@ -155,8 +155,8 @@ export default {
           type: 'select', // 搜索类型
           width: '14%',
           options: [
-            { label: '待审核', value: 2 },
-            { label: '已审核', value: 3 }
+            { label: '待审核', value: 1 },
+            { label: '已审核', value: 2 }
           ]
         },
         {

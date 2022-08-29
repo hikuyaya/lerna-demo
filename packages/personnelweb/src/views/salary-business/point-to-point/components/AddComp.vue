@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-16 11:09:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-29 10:07:21
+ * @LastEditTime: 2022-08-29 15:15:37
  * @FilePath: \personnelweb\src\views\salary-business\point-to-point\components\AddComp.vue
  * @Description: 
 -->
@@ -61,6 +61,7 @@
       append-to-body
       width="900px">
       <choose-multiple-item
+        v-if="chooseMultipleVisible"
         :conditions="chooseMultipleConditions"
         :pagination="false"
         :actionUrl="chooseMultipleActionUrl"
@@ -269,13 +270,18 @@ export default {
     },
     handleChooseMultiple(items) {
       console.log(items)
+      items = items.map(v => {
+        return {
+          ...v,
+          paySalaryBillCode: v.billCode
+        }
+      })
       // this.tableData = staffs
       // 以页面上的数据为主，做∪
       let copyData = JSON.parse(JSON.stringify(this.tableData))
 
       for (let i = 0; i < items.length; i++) {
         const d = items[i]
-        console.log(i, d)
         const contain = this.calContaine(d, this.tableData)
         if (!contain) {
           copyData.push(d)
@@ -288,7 +294,7 @@ export default {
       let flag = false
       for (let i = 0; i < tableData.length; i++) {
         const t = tableData[i]
-        if (t.billCode === d.billCode) {
+        if (t.paySalaryBillCode === d.billCode) {
           flag = true
           break
         }

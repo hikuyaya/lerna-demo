@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-10 11:34:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-26 14:38:43
+ * @LastEditTime: 2022-08-26 15:07:45
  * @FilePath: \personnelweb\src\views\salary-business\pay-approve\components\BatchOperateComp.vue
  * @Description: 
 -->
@@ -121,7 +121,6 @@ export default {
   methods: {
     initData() {
       this.initDate()
-      console.log('this.shopType', this.shopType)
       this.info.shopType = this.shopType
     },
     initDate() {

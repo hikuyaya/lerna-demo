@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-16 11:09:00
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 17:05:44
+ * @LastEditTime: 2022-08-29 10:07:21
  * @FilePath: \personnelweb\src\views\salary-business\point-to-point\components\AddComp.vue
  * @Description: 
 -->
@@ -367,7 +367,7 @@ export default {
           let params = {
             details: this.tableData.map(v => {
               return {
-                paySalaryBillCode: v.billCode,
+                paySalaryBillCode: v.paySalaryBillCode,
                 shopCode: v.shopCode,
                 shopName: v.shopName,
                 shopType: v.shopType,

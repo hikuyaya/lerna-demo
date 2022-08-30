@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-29 17:46:01
- * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
+ * @LastEditTime: 2022-08-30 16:52:41
+ * @FilePath: \lerna-demod:\project\personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
 
@@ -561,6 +561,18 @@ export default {
             menuId: this.menuId
           })
         count = data
+        if (
+          (result.shopType == 1 &&
+            this.info.shopCode.toUpperCase().indexOf('MF') != -1) ||
+          (result.shopType == 2 &&
+            this.info.shopCode.toUpperCase().indexOf('MR') != -1)
+        ) {
+          for (const i in this.tableData) {
+            if (Object.hasOwnProperty.call(this.tableData, i)) {
+              this.$set(this.tableData[i], 'isCalc', 1)
+            }
+          }
+        }
       } else if (this.batchOperateType === 'unLockCalculate') {
         const { data } =
           await service.salaryBusiness.salaryApprove.batchUnLockCalculate({
@@ -568,6 +580,18 @@ export default {
             menuId: this.menuId
           })
         count = data
+        if (
+          (result.shopType == 1 &&
+            this.info.shopCode.toUpperCase().indexOf('MF') != -1) ||
+          (result.shopType == 2 &&
+            this.info.shopCode.toUpperCase().indexOf('MR') != -1)
+        ) {
+          for (const i in this.tableData) {
+            if (Object.hasOwnProperty.call(this.tableData, i)) {
+              this.$set(this.tableData[i], 'isCalc', 0)
+            }
+          }
+        }
       } else if (this.batchOperateType === 'reject') {
         const { data } = await service.salaryBusiness.salaryApprove.batchBack({
           ...result,
@@ -576,7 +600,7 @@ export default {
         count = data
       }
       this.operateCompVisible = false
-      this.$alert(
+      await this.$alert(
         `您已成功对<span class="red"> ${count} </span>家门店进行${this.title.substr(
           2
         )}`,
@@ -585,7 +609,12 @@ export default {
           dangerouslyUseHTMLString: true
         }
       )
-      this.onSearch()
+      // 一键计算锁定 和 一键计算解锁 两个操作不调用后端接口（后端异步操作 查不到最新结果）
+      if (
+        !['lockCalculate', 'unLockCalculate'].includes(this.batchOperateType)
+      ) {
+        await this.onSearch()
+      }
     },
     onReject(row) {
       this.rejectCompVisible = true

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-26 17:05:41
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-22 12:16:16
+ * @LastEditTime: 2022-08-30 10:02:22
  * @FilePath: \personnelweb\src\views\salary-business\attendance\components\AddComp.vue
  * @Description: 
 -->
@@ -311,6 +311,7 @@ export default {
       } else {
         this.onSearch()
       }
+      this.calTargetMonthDays()
     },
     onDeleteRow(index, row) {
       const copyData = [...this.tableData]

@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-10 11:34:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-10 17:16:35
+ * @LastEditTime: 2022-08-30 09:42:03
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\components\OperateComp.vue
  * @Description: 
 -->
@@ -80,7 +80,8 @@ export default {
     return {
       info: {},
       rules: {
-        shopType: [{ required: true, message: '请选择门店类型' }]
+        shopType: [{ required: true, message: '请选择门店类型' }],
+        message: [{ required: true, message: '请输入驳回原因' }]
       },
       tableData: []
     }

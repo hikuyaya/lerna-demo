@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:35:08
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-25 15:02:14
+ * @LastEditTime: 2022-08-29 17:46:01
  * @FilePath: \personnelweb\src\views\salary-business\salary-approve\salaryApprove.vue
  * @Description: 
 -->
@@ -585,6 +585,7 @@ export default {
           dangerouslyUseHTMLString: true
         }
       )
+      this.onSearch()
     },
     onReject(row) {
       this.rejectCompVisible = true

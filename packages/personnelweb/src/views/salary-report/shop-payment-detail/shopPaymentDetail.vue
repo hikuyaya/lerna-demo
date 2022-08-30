@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-08-19 14:39:59
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-19 15:38:05
- * @FilePath: \personnelweb\src\views\salary-report\shop-payment-detail\shopPaymentDetail.vue
+ * @LastEditTime: 2022-08-30 15:28:40
+ * @FilePath: \lerna-demod:\project\personnelweb\src\views\salary-report\shop-payment-detail\shopPaymentDetail.vue
  * @Description: 
 -->
 <template>
@@ -160,18 +160,19 @@ export default {
     queryList() {
       this.onSearch()
     },
-    onExport() {
+    async onExport() {
       const data = this.$refs.table.getCurData()
       if (!data.length) {
         this.$message.error('暂无数据可以导出')
         return
       }
       let params = this.$refs.searchTop.getSearchParams()
-      download(
+      await download(
         `${this.$yid.config.API.BASE}api-pers/paysalarylogbilldetail/expPaySalaryReport`,
-        params
+        params,
+        'get'
       )
-      this.queryExportTimes()
+      await this.queryExportTimes()
     },
     onSearch() {
       if (!this.$refs.searchTop.requiredValidate()) {

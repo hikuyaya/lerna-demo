@@ -9,7 +9,7 @@ import axios from 'axios'
 const MSG_NOT_ALLOW_CONTENT_DISPOSITION =
   '无法获取 content-disposition, 请确保后端 CORS 的配置,允许访问该 content-disposition '
 
-export default (url, param, method = 'get') => {
+export default async (url, param, method = 'get') => {
   const downloadFile = response => {
     console.log('response', response.headers)
     if (!response.headers.hasOwnProperty('content-disposition')) {
@@ -42,7 +42,7 @@ export default (url, param, method = 'get') => {
   if (method.toLocaleLowerCase() === 'get') {
     const qs = require('qs')
 
-    axios({
+    await axios({
       url: `${url}?${qs.stringify(param, { arrayFormat: 'repeat' })}`,
       method: 'GET',
       responseType: 'blob',
@@ -54,7 +54,7 @@ export default (url, param, method = 'get') => {
 
   // POST 请求，参数处理
   else if (method.toLocaleLowerCase() === 'post') {
-    axios({
+    await axios({
       url,
       method: 'POST',
       data: param,

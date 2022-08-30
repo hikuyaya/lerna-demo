@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-07-27 16:31:16
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-24 14:02:22
- * @FilePath: \personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
+ * @LastEditTime: 2022-08-30 16:08:07
+ * @FilePath: \lerna-demod:\project\personnelweb\src\views\salary-business\salary-request\components\AddComp.vue
  * @Description: 
 -->
 
@@ -360,6 +360,7 @@ export default {
               label,
               value,
               inputType: salItem.inputtype,
+              signType: salItem.signtype || salItem.signType,
               scCode: salItem.scCode
             })
           }

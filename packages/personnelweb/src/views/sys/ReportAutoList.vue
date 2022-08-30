@@ -18,7 +18,7 @@
     :excel-all="loadexcel"
     @search-reset="searchReset"
     @on-load="onLoad">
-    <template slot="bottom" v-if="reportHead.isContent">
+    <template slot="tips" v-if="reportHead.isContent">
       <div class="bottom_content" v-html="reportHead.content"></div>
     </template>
     <template
@@ -104,7 +104,7 @@ export default {
         searchIndex: 0,
         searchIcon: false,
         searchShow: false,
-        searchShowBtn: true,
+        searchShowBtn: false,
         // title: '1111',
         excelTitle: '',
         header: true,
@@ -162,14 +162,20 @@ export default {
   computed: {
     crud() {
       return this.$refs.crud
+    },
+    form() {
+      return this.$refs.crud.$refs.headerSearch.$refs.form
     }
   },
   methods: {
+    getColumn(name) {
+      return this.findObject(this.aoption.column, name)
+    },
     fetch({ method, url, params, callback }) {
       if (method == 'GET') {
-        yid.http.get(url, {}).then(callback)
+        yid.http.get(url, {}).then(data => callback(this, data))
       } else if (method == 'POST') {
-        yid.http.post(url, params).then(callback)
+        yid.http.post(url, params).then(data => callback(this, data))
       }
     },
     vaildErrorItem(filed, error) {
@@ -266,7 +272,8 @@ export default {
             item => item.isSearch == true || item.isShow == true
           )
           // console.error(that.$route.meta.title)
-          if (head.name) that.$route.meta.title = head.name
+          // if (head.name)
+          //   that.$route.meta.title = head.name;
           that.reportHead = head
           this.aoption.excelTitle = head.name
           if (head.isDel == '1') {
@@ -535,10 +542,10 @@ export default {
         })
     },
     created() {
-      window.addEventListener('resize', () => {
-        this.aoption.height = calcHeightx(387)
-      })
-      this.aoption.height = calcHeightx(387)
+      // window.addEventListener('resize', () => {
+      //   this.aoption.height = calcHeightx(387);
+      // });
+      // this.aoption.height = calcHeightx(387);
     },
 
     async onLoad(page, params) {
@@ -636,7 +643,7 @@ export default {
       }
 
       if (this.defaultParams) {
-        Object.assign(params, this.defaultParams)
+        Object.assign(queryParam, this.defaultParams)
       }
       let requestData = this.formatParams(queryParam)
 
@@ -648,6 +655,23 @@ export default {
         this.$route.params.code,
         requestData
       )
+
+      if (this.js) {
+        try {
+          this.js.loadafter(this, res.data, requestData)
+        } catch (e) {
+          console.error(e)
+        }
+        //格式化输出所有数据
+        for (let i = 0; i < res.data.length; i++) {
+          let resKey = res.data[i]
+          for (let resKeyKey in resKey) {
+            try {
+              resKey[resKeyKey] = this.js.cellformat(this, resKeyKey, resKey)
+            } catch (e) {}
+          }
+        }
+      }
       return res
     },
     async searchChange(params, done) {
@@ -809,7 +833,7 @@ export default {
   -webkit-box-pack: justify;
   right: 10px;
   top: 20px;
-  z-index: 999999;
+  z-index: 999;
   -ms-flex-pack: justify;
   justify-content: space-between;
   /* position: relative; */
@@ -826,6 +850,7 @@ export default {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
 }
+
 //
 ///deep/ .el-table__cell {
 //  padding: 2px 0;
@@ -844,6 +869,13 @@ export default {
 //}
 
 .bottom_content {
-  font-size: 13px;
+  margin-top: 5px;
+  width: 100%;
+  padding-left: 10px;
+  margin-bottom: 5px;
+}
+
+/deep/ .avue-crud__search .el-card__body .avue-form {
+  margin: 0 !important;
 }
 </style>

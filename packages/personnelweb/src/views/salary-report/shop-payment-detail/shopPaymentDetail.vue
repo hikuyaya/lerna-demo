@@ -2,7 +2,7 @@
  * @Author: wqy
  * @Date: 2022-08-19 14:39:59
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-30 15:28:40
+ * @LastEditTime: 2022-08-30 15:58:25
  * @FilePath: \lerna-demod:\project\personnelweb\src\views\salary-report\shop-payment-detail\shopPaymentDetail.vue
  * @Description: 
 -->
@@ -15,7 +15,7 @@
             <el-button type="primary" @click="onSearch">查询</el-button>
             <!-- <el-button type="primary" @click="onReset">重置</el-button> -->
             <el-button type="primary" @click="onExport">导出</el-button>
-            <p v-if="exportTimes">
+            <p>
               <span class="mg-l-12">导出次数</span
               ><span class="mg-l-12">{{ exportTimes }}</span>
             </p>

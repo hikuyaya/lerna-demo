@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-06-22 17:45:13
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-21 13:58:05
- * @FilePath: \personnelweb\src\views\base\position\components\InfoAddComp.vue
+ * @LastEditTime: 2022-08-31 09:37:32
+ * @FilePath: \lerna-demod:\project\personnelweb\src\views\base\position\components\InfoAddComp.vue
  * @Description: 
 -->
 <template>
@@ -32,8 +32,8 @@
           <el-form-item label="同步分发" prop="bbids">
             <el-select
               v-model="info.bbids"
-              multiple
               :disabled="['detail', 'edit'].includes(operateType)"
+              multiple
               @change="onBbidsChange">
               <el-option
                 v-for="item in deptDataOptions"
@@ -82,6 +82,7 @@ export default {
   },
   data() {
     const validatePscode = (rule, value, callback) => {
+      console.log(85, value)
       // 只能输入
       if (!value) {
         callback(new Error('请输入职务编码'))
@@ -96,11 +97,28 @@ export default {
         }
       }
     }
+    const validateBbids = (rule, value, callback) => {
+      const that = this
+      if (value?.length) {
+        if (that.info.pscode?.indexOf('MF') > -1 && value?.toString() != 1) {
+          callback(new Error('美发职务只能同步到美发组'))
+        } else if (
+          that.info.pscode?.indexOf('MR') > -1 &&
+          value?.toString() != 2
+        ) {
+          callback(new Error('美容职务只能同步到美容组'))
+        } else {
+          callback()
+        }
+      }
+      callback()
+    }
     return {
       info: {},
       rules: {
         pscode: [{ required: true, validator: validatePscode }],
-        psname: [{ required: true, message: '请输入职务名称' }]
+        psname: [{ required: true, message: '请输入职务名称' }],
+        bbids: [{ validator: validateBbids }]
       },
       statusOptions: [
         { label: '正常', value: '1' },
@@ -131,6 +149,7 @@ export default {
       const result = await this.$refs.form
         .validate()
         .catch(err => console.error(err))
+
       if (result) {
         let params = {}
         if (this.info.bbids.length) {

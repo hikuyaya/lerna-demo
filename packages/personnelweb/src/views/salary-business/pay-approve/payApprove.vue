@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:45:10
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-16 10:29:17
- * @FilePath: \personnelweb\src\views\salary-business\pay-approve\payApprove.vue
+ * @LastEditTime: 2022-08-31 09:54:42
+ * @FilePath: \lerna-demod:\project\personnelweb\src\views\salary-business\pay-approve\payApprove.vue
  * @Description: 
 -->
 <template>
@@ -425,7 +425,7 @@ export default {
         count = data
       }
       this.operateCompVisible = false
-      this.$alert(
+      await this.$alert(
         `您已成功对<span class="red"> ${count} </span>家门店进行${this.title.substr(
           2
         )}`,
@@ -434,6 +434,7 @@ export default {
           dangerouslyUseHTMLString: true
         }
       )
+      await this.onSearch()
     },
     onCancelApprove() {
       //

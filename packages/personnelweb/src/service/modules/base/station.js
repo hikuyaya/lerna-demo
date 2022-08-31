@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-07-01 15:59:19
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-04 10:45:21
- * @FilePath: \personnelweb\src\service\modules\base\station.js
+ * @LastEditTime: 2022-08-31 09:42:10
+ * @FilePath: \lerna-demod:\project\personnelweb\src\service\modules\base\station.js
  * @Description: 岗位设置
  */
 import yid from '@src/library'
@@ -30,11 +30,16 @@ export function detail(id) {
 export function remove(id) {
   return yid.http.delete(`${prefix}/${id}`, null)
 }
+// 根据组织类型查询对应职务
+export function listByType(params) {
+  return yid.http.get(`api-chain/position/listByType`, { params })
+}
 
 export default {
   list,
   save,
   update,
   detail,
-  remove
+  remove,
+  listByType
 }

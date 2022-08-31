@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-06-22 14:26:01
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-20 09:22:51
- * @FilePath: \personnelweb\src\views\base\station\components\AddComp.vue
+ * @LastEditTime: 2022-08-31 10:45:25
+ * @FilePath: \lerna-demod:\project\personnelweb\src\views\base\station\components\AddComp.vue
  * @Description: 
 -->
 
@@ -30,9 +30,10 @@
           <el-form-item label="职务" prop="positionCode">
             <el-select
               v-model="info.positionCode"
-              @change="handleSelect"
+              @change="handleSelectPosition"
               filterable
-              :disabled="operateType !== 'add'">
+              :disabled="operateType !== 'add'"
+              class="w100">
               <el-option
                 v-for="(item, index) in positionList"
                 :key="index"
@@ -71,7 +72,8 @@
           <el-form-item label="状态" prop="status">
             <el-select
               v-model="info.status"
-              :disabled="operateType === 'detail'">
+              :disabled="operateType === 'detail'"
+              class="w100">
               <el-option
                 v-for="(item, index) in statusOptions"
                 :key="index"
@@ -91,6 +93,7 @@
 import Treeselect from '@riophae/vue-treeselect'
 // import the styles
 import '@riophae/vue-treeselect/dist/vue-treeselect.css'
+import service from '@src/service'
 
 export default {
   props: {
@@ -103,7 +106,7 @@ export default {
     operateType: {
       type: String
     },
-    positionList: {
+    allPositionList: {
       type: Array,
       default: function () {
         return []
@@ -113,6 +116,11 @@ export default {
   },
   components: {
     Treeselect
+  },
+  created() {
+    if (this.operateType !== 'add') {
+      this.positionList = this.allPositionList
+    }
   },
   data() {
     return {
@@ -127,6 +135,7 @@ export default {
         { label: '停用', value: 2 }
       ],
       treeSelectNode: {},
+      positionList: [],
       normalizer(node) {
         return {
           id: node.code,
@@ -137,7 +146,7 @@ export default {
     }
   },
   methods: {
-    handleSelect(selectedValue) {
+    handleSelectPosition(selectedValue) {
       const positionItem = this.positionList.find(
         p => p.pscode === selectedValue
       )
@@ -147,6 +156,17 @@ export default {
       console.log(node, instanceId)
       this.treeSelectNode = node
       this.$set(this.info, 'bbName', node.name)
+      // 清空职务
+      this.$set(this.info, 'positionCode', undefined)
+      this.queryPosition(node.type)
+    },
+    async queryPosition(type) {
+      const { data } = await service.base.station.listByType({
+        page: 1,
+        limit: 1000,
+        type
+      })
+      this.positionList = data
     },
     async getData() {
       const result = await this.$refs.form
@@ -172,18 +192,21 @@ export default {
     'info.bbCode': {
       handler: function (val) {
         console.log(val, this.treeSelectNode)
-        const postName = `${this.treeSelectNode.name}${
-          this.info.positionName || ''
-        }`
+        this.$set(this.info, 'positionName', undefined)
+        const postName = `${this.treeSelectNode.name}`
         this.$set(this.info, 'postName', postName)
       }
     },
     'info.positionCode': {
       handler: function (val) {
+        console.log('info.positionCode', val)
         const positionItem = this.positionList.find(p => p.pscode === val)
-        const postName = `${this.treeSelectNode.name || ''}${
-          positionItem.psname
-        }`
+        let postName
+        if (val) {
+          postName = `${this.treeSelectNode.name || ''}-${positionItem.psname}`
+        } else {
+          postName = `${this.treeSelectNode.name || ''}`
+        }
         this.$set(this.info, 'postName', postName)
       }
     }

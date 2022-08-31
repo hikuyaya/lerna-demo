@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-06-15 17:09:48
  * @LastEditors: wqy
- * @LastEditTime: 2022-07-07 14:01:13
- * @FilePath: \personnelweb\src\views\base\station\station.vue
+ * @LastEditTime: 2022-08-31 10:42:33
+ * @FilePath: \lerna-demod:\project\personnelweb\src\views\base\station\station.vue
  * @Description: 
 -->
 <template>
@@ -68,7 +68,7 @@
         ref="addCompRef"
         :value="selectRow"
         :operateType="operateType"
-        :positionList="positionList"
+        :allPositionList="positionList"
         :treeData="treeData" />
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="onSubmit">确 定</el-button>

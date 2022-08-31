@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-08-11 16:31:10
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-12 16:40:59
- * @FilePath: \personnelweb\src\views\salary-business\pay-request\components\AddComp.vue
+ * @LastEditTime: 2022-08-31 10:48:56
+ * @FilePath: \lerna-demod:\project\personnelweb\src\views\salary-business\pay-request\components\AddComp.vue
  * @Description: 
 -->
 
@@ -43,6 +43,7 @@
               :controls="false"
               :min="1970"
               :max="new Date().getFullYear()"
+              :disabled="locked"
               class="w100">
             </el-input-number>
           </el-form-item>
@@ -54,13 +55,14 @@
               :controls="false"
               :min="1"
               :max="12"
+              :disabled="locked"
               class="w100">
             </el-input-number>
           </el-form-item>
         </el-col>
         <el-col :span="6">
           <el-form-item label="打款类型" prop="billType">
-            <el-select v-model="info.billType" class="w100">
+            <el-select v-model="info.billType" :disabled="locked" class="w100">
               <el-option value="1" label="预留款申请"></el-option>
               <el-option value="2" label="营业款申请"></el-option>
               <el-option value="3" label="营业款和预留款共同申请"></el-option>
@@ -173,6 +175,7 @@ export default {
       info: {},
       importCompVisible: false,
       tableData: [],
+      locked: false, // 门店编码、年、月是否需要被锁定
       rules: {
         year: [{ required: true, message: '请输入' }],
         month: [{ required: true, message: '请输入' }],
@@ -262,7 +265,9 @@ export default {
       }
       const { data } =
         await service.salaryBusiness.payRequest.getSalaryPayEmployee(params)
-
+      if (!this.locked) {
+        this.locked = true
+      }
       this.tableData = data
     },
     calContaine(d, tableData) {

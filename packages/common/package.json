@@ -1,5 +1,5 @@
 {
-  "name": "monorepo-demo",
+  "name": "@demo/common",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",

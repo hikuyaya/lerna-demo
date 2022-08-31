@@ -2,13 +2,13 @@
  * @Author: wqy
  * @Date: 2022-08-12 10:03:11
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-15 15:56:13
+ * @LastEditTime: 2022-08-31 16:06:25
  * @FilePath: \personnelweb\src\views\salary-business\pay-approve\components\AddComp.vue
  * @Description: 
 -->
 
 <template>
-  <div>
+  <div class="h100">
     <div>
       <el-button type="primary" @click="$emit('back')" class="mg-b-24"
         >返回</el-button
@@ -50,7 +50,11 @@
         {{ info.approvalTime }}
       </div>
     </div>
-    <yid-table :data="tableData" ref="table" class="mg-t-12">
+    <yid-table
+      :data="tableData"
+      ref="table"
+      class="mg-t-12"
+      :height="tableData.length ? 'calc(100% - 128px)' : ''">
       <yid-table-column
         label="序号"
         type="index"
@@ -69,7 +73,7 @@
       <yid-table-column label="对公打款" prop="publicMoney"> </yid-table-column>
       <yid-table-column label="对私打款" prop="privateMoney">
       </yid-table-column>
-      <yid-table-column label="剩余对公额度" prop="publicSurplusMoney">
+      <yid-table-column label="剩余对公额度" prop="syPublicSurplusMoney">
       </yid-table-column>
     </yid-table>
   </div>

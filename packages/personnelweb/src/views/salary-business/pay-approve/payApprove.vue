@@ -2,8 +2,8 @@
  * @Author: wqy
  * @Date: 2022-07-21 14:45:10
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-31 09:54:42
- * @FilePath: \lerna-demod:\project\personnelweb\src\views\salary-business\pay-approve\payApprove.vue
+ * @LastEditTime: 2022-08-31 16:09:54
+ * @FilePath: \personnelweb\src\views\salary-business\pay-approve\payApprove.vue
  * @Description: 
 -->
 <template>
@@ -437,12 +437,11 @@ export default {
       await this.onSearch()
     },
     onCancelApprove() {
-      //
       this.cancelApproveCompVisible = true
     },
     async handleCancelApproveSuccess() {
-      //
-      await this.queryList()
+      this.cancelApproveCompVisible = false
+      this.queryList()
     },
     async onRejectSubmit() {
       const result = await this.$refs.rejectCompRef.getData()

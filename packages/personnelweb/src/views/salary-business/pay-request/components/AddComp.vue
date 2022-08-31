@@ -2,13 +2,13 @@
  * @Author: wqy
  * @Date: 2022-08-11 16:31:10
  * @LastEditors: wqy
- * @LastEditTime: 2022-08-31 10:48:56
+ * @LastEditTime: 2022-08-31 11:03:46
  * @FilePath: \lerna-demod:\project\personnelweb\src\views\salary-business\pay-request\components\AddComp.vue
  * @Description: 
 -->
 
 <template>
-  <div>
+  <div class="h100">
     <div>
       <el-button type="primary" @click="$emit('back')" class="mg-b-24"
         >返回</el-button
@@ -106,7 +106,11 @@
       <div>单号：{{ info.billCode }}</div>
     </div>
     <template v-if="tableData.length">
-      <yid-table :data="tableData" ref="table" class="mg-t-12">
+      <yid-table
+        :data="tableData"
+        ref="table"
+        class="mg-t-12"
+        :height="tableData.length ? 'calc(100% - 110px)' : ''">
         <yid-table-column
           label="员工姓名"
           prop="eeName"

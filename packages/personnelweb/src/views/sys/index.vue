@@ -5,7 +5,7 @@
       <div class="name">{{ userInfo.eename }}，欢迎你！</div>
       <div class="tag" style="margin-top: 30px">登录点：总部</div>
       <div class="tag">上次登录时间：{{ userInfo.lastlogin }}</div>
-      <div class="tag">用户名：{{ hideName(userName) }}</div>
+      <div class="tag">用户名：{{ testMe() }}</div>
     </div>
   </div>
 </template>
@@ -15,6 +15,7 @@ import yid from '@src/library'
 import Vue from 'vue'
 import VueClipboard from 'vue-clipboard2'
 import service from '../../service'
+import { testMe } from 'saaschain/src/utils/test'
 
 Vue.use(VueClipboard)
 
@@ -44,6 +45,7 @@ export default {
   created() {
     moment.locale()
     this.time = moment().format('YYYY年MM月DD日')
+    this.testMe()
   },
 
   mounted() {
@@ -51,6 +53,7 @@ export default {
   },
 
   methods: {
+    testMe,
     hideName(name) {
       if (name) {
         let count = name.length - 1
